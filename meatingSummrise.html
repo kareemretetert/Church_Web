@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ملخص الاجتماع</title>
+  <meta name="author" content="Kareem Hosny" />
+  <meta name="description" content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" />
+  <meta name="keywords" content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" />
+  <link rel="icon" href="imgsfile/icon.png" type="image/x-icon" />
+
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      direction: rtl;
+      background-color: #f0f8ff;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h1 {
+      color: #444;
+      font-size: 2rem;
+    }
+    .back-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background-image: linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196));
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      border: 2px solid #38373a;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background-color: #666;
+    }
+    .content {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    img, video {
+      max-width: 100%;
+      display: block;
+      margin: 20px auto;
+      border-radius: 8px;
+    }
+    .archive-card {
+      margin-bottom: 30px;
+    }
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="back-buttons">
+    <a class="btn" href="index.html">الصفحة الرئيسية ⬅</a>
+    <a class="btn" href="archive-final.html">الأرشيف</a>
+  </div>
+  <div class="header">
+    <h1 id="title">تحميل آخر تلخيص...</h1>
+    <p id="date"></p>
+  </div>
+  <div class="content">
+    <img id="image" style="display:none;">
+    <p id="content"></p>
+    <div id="video"></div>
+  </div>
+  <script>
+    fetch("summaries.json")
+.then(res => res.json())
+.then(list => {
+
+const a = list[0]   // آخر تلخيص
+
+document.getElementById("title").innerText = a.title
+document.getElementById("date").innerText = "📅 التاريخ: " + a.date
+document.getElementById("content").innerText = a.content
+
+const contentDiv = document.querySelector(".content")
+
+// عرض الصور
+if(a.images){
+a.images.forEach(img=>{
+const image=document.createElement("img")
+image.src=img.data
+contentDiv.appendChild(image)
+})
+}
+
+// عرض الفيديوهات
+if(a.videos){
+a.videos.forEach(v=>{
+const video=document.createElement("video")
+video.controls=true
+video.src=v.data
+contentDiv.appendChild(video)
+})
+}
+
+// عرض الملفات
+if(a.files){
+a.files.forEach(f=>{
+const link=document.createElement("a")
+link.href=f.data
+link.download=f.name
+link.innerText="📄 تحميل "+f.name
+link.style.display="block"
+link.style.margin="10px 0"
+contentDiv.appendChild(link)
+})
+}
+
+})
+  </script>
+</body>
+</html>

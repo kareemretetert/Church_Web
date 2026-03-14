@@ -1,0 +1,115 @@
+body {
+    margin: 0;
+    font-family: 'Cairo', sans-serif;
+    background-image: linear-gradient(to right,rgb(234, 245, 255),#f0f8ff);
+    color: #333;
+    direction: rtl;
+}
+
+.header {
+    background-color: #2e3a59;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.main-title {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+.intro-text {
+    font-size: 1.2em;
+    margin-top: 10px;
+}
+
+/* الشريط العلوي */
+.nav-bar {
+    background-color: #4a5670;
+    padding: 10px;
+}
+
+.nav-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-list li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.nav-list li a:hover {
+    color: #ffd700;
+}
+
+/* المحتوى */
+.main-content {
+    position: relative;
+    left: 450px;
+    top: 50px;
+    text-align: center;
+    padding: 30px;
+}
+
+.church-img {
+    position: relative;
+    left: 50px;
+    background-color: transparent;
+    max-width: 300px;
+    margin: 20px auto;
+    border-radius: 10px;
+    box-shadow: none;
+}
+
+/* النموذج */
+.feedback-form {
+    background-color: #fff;
+    padding: 20px;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+::selection{
+    background-color: rgba(212, 212, 212, 0.808);
+    color: #001cbdcc;
+}
+.feedback-form h2 {
+    margin-bottom: 10px;
+}
+
+.feedback-form label {
+    margin: 0 10px;
+    font-weight: bold;
+}
+
+.feedback-form button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #2e3a59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.feedback-form button:hover {
+    background-color: #1c243b;
+}
+
+/* التذييل */
+.footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #2e3a59;
+    color: white;
+    position: relative;
+    top: 22px;
+}
+

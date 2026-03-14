@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>لوحة إدارة الإعلانات</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      background: #f1f1f1;
+      padding: 20px;
+      direction: rtl;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #5c2c8a;
+    }
+    label {
+      margin-top: 10px;
+      font-weight: bold;
+      display: block;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #5c2c8a;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .section {
+      background: #fff;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 إدارة الإعلانات</h1>
+
+  <div class="section">
+    <h2>➕ إضافة إعلان جديد</h2>
+    <label>العنوان</label>
+    <input type="text" id="title" required>
+
+    <label>التاريخ</label>
+    <input type="date" id="date" required>
+
+    <label>المكان</label>
+    <input type="text" id="location" required>
+
+    <label>سعر الاشتراك</label>
+    <input type="text" id="price" required>
+
+    <label>تفاصيل الرحلة</label>
+    <textarea id="details" rows="4" required></textarea>
+
+    <label>اختيار صورة (اختياري)</label>
+    <input type="file" id="imageFile" accept="image/*">
+
+    <button onclick="generateNotice()">تحميل الإعلان</button>
+
+    <label>📥 تحديث ملف index.json</label>
+    <input type="file" id="indexInput" accept=".json">
+  </div>
+
+  <div class="section">
+    <h2>🗑️ حذف إعلان</h2>
+    <label>📄 اختر ملف الإعلان الذي تريد حذفه</label>
+    <input type="file" id="fileToDelete" accept=".json">
+
+    <label>📁 ثم اختر index.json الحالي ليتم تحديثه بعد الحذف</label>
+    <input type="file" id="indexDeleteInput" accept=".json">
+
+    <button onclick="deleteNotice()">حذف الإعلان وتحديث الملف</button>
+  </div>
+
+  <script>
+    let latestFileName = "";
+
+    const getBase64 = (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    };
+
+    async function generateNotice() {
+      const title = document.getElementById("title").value;
+      const date = document.getElementById("date").value;
+      const location = document.getElementById("location").value;
+      const price = document.getElementById("price").value;
+      const details = document.getElementById("details").value;
+      const imageInput = document.getElementById("imageFile");
+
+      if (!title || !date || !location || !price || !details) {
+        alert("يرجى ملء جميع الحقول الأساسية");
+        return;
+      }
+
+      let image = "";
+      if (imageInput.files[0]) {
+        image = await getBase64(imageInput.files[0]);
+      }
+
+      const notice = { title, date, location, price, details, image };
+      latestFileName = `${date}.json`;
+      const blob = new Blob([JSON.stringify(notice, null, 2)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = latestFileName;
+      a.click();
+    }
+
+    document.getElementById("indexInput").onchange = async function() {
+      const file = this.files[0];
+      if (!file || !latestFileName) return;
+      const text = await file.text();
+      let list = [];
+      try {
+        list = JSON.parse(text);
+      } catch {
+        alert("⚠️ ملف index غير صالح");
+        return;
+      }
+      list = [latestFileName, ...list.filter(name => name !== latestFileName)];
+      const blob = new Blob([JSON.stringify(list, null, 2)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.json";
+      a.click();
+    }
+
+    async function deleteNotice() {
+      const fileInput = document.getElementById("fileToDelete");
+      const indexInput = document.getElementById("indexDeleteInput");
+      if (!fileInput.files[0] || !indexInput.files[0]) {
+        alert("يرجى اختيار ملف الإعلان وملف index.json");
+        return;
+      }
+      const toDelete = fileInput.files[0].name;
+      const indexText = await indexInput.files[0].text();
+      let list = [];
+      try {
+        list = JSON.parse(indexText);
+      } catch {
+        alert("⚠️ ملف index غير صالح");
+        return;
+      }
+      const updated = list.filter(item => item !== toDelete);
+      const blob = new Blob([JSON.stringify(updated, null, 2)], {type: "application/json"});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "index.json";
+      a.click();
+    }
+  </script>
+</body>
+</html>

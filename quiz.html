@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+<html lang="ar">
+<head>
+ <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="author" content="Kareem Hosny" />
+<meta name="keywords" content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" />
+<meta name="description" content="كنيسة السيدة العذراء مريم اجتماع ثانوي" />
+<link rel="icon" href="imgsfile/icon.png" type="image/x-icon" />
+<title>من أنا؟ (شخصيات من الكتاب المقدس)</title>
+<style>
+    body { font-family: Arial; text-align: center; padding: 30px; 
+      background-color: #f0f8ff;}
+    .question { font-size: 18px; margin-bottom: 10px; }
+    .option { display: block; margin: 5px 0; }
+    button { margin-top: 20px; padding: 10px 20px; }
+    #resultBox { margin-top: 30px; background: #f9f9f9; padding: 20px; border-radius: 10px; display: none; }
+    .correction { color: red; margin-top: 10px; text-align: left; }
+    .af {
+  position: absolute;
+  top: 20px;
+  left: 35px;
+  background-image:linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196)) ;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid #38373a;
+  transition: background-color 0.3s initial, transform 0.2s initial;
+  z-index: 1000;
+  transform: scale(1.25);
+  width: 80px;
+}
+
+.af:hover {
+  background-color: #696969;
+  transform: scale(1.27);
+}
+  
+@media (max-width: 768px) {
+  body {
+    padding: 10px !important;
+    font-size: 1rem !important;
+  }
+  h1, h2, h3 {
+    font-size: 1.2rem !important;
+  }
+  input, select, button {
+    width: 90% !important;
+    font-size: 1rem !important;
+  }
+  .back-button, .af, .next-link, .back-btn {
+    left: 10px !important;
+    top: 10px !important;
+    transform: scale(1);
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .video-container {
+    grid-template-columns: 1fr !important;
+  }
+  .church-image, iframe, video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* تنسيق زر الرجوع ليكون أعلى المحتوى بدون تغطية العنوان */
+.af {
+  position: relative !important;
+  top: 0 !important;
+  left: 0 !important;
+  margin-bottom: 10px !important;
+  transform: none !important;
+  z-index: 10;
+}
+
+/* تحسين تجاوب الصفحة */
+@media (max-width: 1200px) {
+  .question { font-size: 17px; }
+  button { padding: 10px 18px; }
+}
+
+@media (max-width: 992px) {
+  .question { font-size: 16px; }
+  button { padding: 8px 16px; font-size: 14px; }
+}
+
+@media (max-width: 768px) {
+  .question { font-size: 15px; }
+  button { width: 100px; font-size: 13px; }
+}
+
+@media (max-width: 480px) {
+  .question { font-size: 14px; }
+  .option { font-size: 13px; }
+  button { width: 90px; padding: 6px 10px; font-size: 12px; }
+}
+
+/* تحسين تنسيق زر الإنهاء */
+button {
+  width: auto;
+  min-width: 100px;
+  font-size: 16px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  border-radius: 10px;
+  scale: 1.3;
+}
+
+/* تحسين تنسيق الاختيارات */
+.option {
+  font-size: 16px;
+  padding: 5px;
+  text-align: right;
+  margin-right: 10px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* تجاوب مع الشاشات الصغيرة */
+@media (max-width: 768px) {
+  button {
+    width: 130px !important;
+    font-size: 14px !important;
+    padding: 8px 14px !important;
+    scale: 1 !important;
+  }
+
+  .option {
+    font-size: 14px !important;
+    margin: 5px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  button {
+    width: 100px !important;
+    font-size: 13px !important;
+    padding: 6px 10px !important;
+  }
+
+  .option {
+    font-size: 13px !important;
+    text-align: center;
+  }
+}
+
+/* جعل النص بجانب دائرة الاختيار دائمًا */
+.option {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+  direction: rtl;
+  font-size: 16px;
+  margin: 5px 0;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.option input[type="radio"] {
+  flex-shrink: 0;
+}
+
+/* تحسين التنسيق على الشاشات الصغيرة */
+@media (max-width: 768px) {
+  .option {
+    font-size: 14px !important;
+    gap: 8px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .option {
+    font-size: 13px !important;
+    gap: 6px !important;
+  }
+}
+
+/* تقليل المسافة بين النص ودائرة الاختيار */
+.option {
+  gap: 4px !important;
+}
+
+@media (max-width: 768px) {
+  .option {
+    gap: 3px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .option {
+    gap: 2px !important;
+  }
+}
+</style>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/></head>
+<body>
+<header>
+<a class="af" href="compition.html">الرجوع</a>
+</header>
+<h2>من أنا؟ (شخصيات من الكتاب المقدس)</h2>
+<div id="quiz-container"></div>
+<button onclick="submitQuiz()" style="border-radius: 10px; scale: 1.3; width: 100px;">إنهاء</button>
+<div id="resultBox">
+<h3>نتيجتك:</h3>
+<p id="username"></p>
+<p id="score"></p>
+<p id="rank"></p>
+<div id="corrections"></div>
+</div>
+<script>
+    const questions = [
+      {
+        question: "أنا كنت قائد جيش آرامي، أصبت بالبرص وشُفيت بعدما غسلت نفسي في نهر الأردن سبع مرات. من أنا؟",
+        options: ["نُعمان السوري", "حابور", "يوآب", "أخآب"],
+        answer: "نُعمان السوري"
+      },
+      {
+        question: "أنا كنت صامتًا أمام الملك لما اتُّهمت، وقُتلت ظلمًا، وصارت قصتي رمزًا للمسيح. من أنا؟",
+        options: ["يوسف", "استفانوس", "إشعياء", "حَمَل العيد"],
+        answer: "يوسف"
+      },
+      {
+        question: "كنت ملكًا حكيمًا، لكني في شيخوختي سقطت بسبب النساء الأجنبيات. من أنا؟",
+        options: ["داود", "سليمان", "رحبعام", "أخاب"],
+        answer: "سليمان"
+      },
+      {
+        question: "أنا نبي بلعني الحوت وظللت في بطنه ثلاثة أيام. من أنا؟",
+        options: ["إيليا", "يونان", "هوشع", "إرميا"],
+        answer: "يونان"
+      },
+      {
+        question: "أنا كنت فتاة يهودية وأصبحت ملكة فارس، وأنقذت شعبي من الإبادة. من أنا؟",
+        options: ["راعوث", "أستير", "حنة", "مرثا"],
+        answer: "أستير"
+      }
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+
+    questions.forEach((q, index) => {
+      let html = `<div class="question"><b>س${index + 1}:</b> ${q.question}</div>`;
+      q.options.forEach(opt => {
+        html += `<label class="option">
+          <input type="radio" name="q${index}" value="${opt}"> ${opt}
+        </label>`;
+      });
+      quizContainer.innerHTML += `<div>${html}</div><hr>`;
+    });
+
+    function submitQuiz() {
+      let score = 0;
+      let correctionsHTML = "<h4>الإجابات الخاطئة:</h4>";
+      let wrongAnswers = 0;
+
+      questions.forEach((q, i) => {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        const correct = q.answer;
+
+        if (selected && selected.value === correct) {
+          score++;
+        } else {
+          wrongAnswers++;
+          const chosen = selected ? selected.value : "لم يتم اختيار إجابة";
+          correctionsHTML += `<div class='correction'>س${i + 1}: إجابتك كانت: <b>${chosen}</b><br>الإجابة الصحيحة: <b>${correct}</b></div>`;
+        }
+      });
+
+      const name = localStorage.getItem('quiz_username') || "بدون اسم";
+      const result = { name, score };
+
+      let allResults = JSON.parse(localStorage.getItem('quiz_results')) || [];
+      allResults.push(result);
+      localStorage.setItem('quiz_results', JSON.stringify(allResults));
+
+      const sorted = allResults.slice().sort((a, b) => b.score - a.score);
+      const rank = sorted.findIndex(r => r.name === name && r.score === score) + 1;
+
+      document.getElementById('username').innerText = `الاسم: ${name}`;
+      document.getElementById('score').innerText = `الدرجة: ${score} من ${questions.length}`;
+      document.getElementById('corrections').innerHTML = wrongAnswers ? correctionsHTML : "<p>كل إجاباتك صحيحة! ممتاز 👏</p>";
+      document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function goToResults() {
+      window.location.href = 'results.html';
+    }
+  </script>
+</body>
+</html>

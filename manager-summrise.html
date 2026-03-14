@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+
+<meta charset="UTF-8">
+<title>لوحة إدارة التلخيصات</title>
+
+<style>
+
+body{
+font-family:Tahoma;
+direction:rtl;
+background:#f4f4f4;
+padding:20px;
+}
+
+input,textarea,button{
+width:100%;
+margin-top:10px;
+padding:10px;
+}
+
+button{
+background:#4CAF50;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#3e8e41;
+}
+
+.card{
+border:1px solid #ccc;
+padding:10px;
+margin-top:10px;
+background:#fff;
+}
+
+.deleteBtn{
+background:#d9534f;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>إضافة تلخيص جديد</h2>
+
+<label>العنوان</label>
+<input id="title">
+
+<label>التاريخ</label>
+<input type="date" id="date">
+
+<label>المحتوى</label>
+<textarea id="content"></textarea>
+
+<label>إضافة صور</label>
+<input type="file" id="images" multiple accept="image/*">
+
+<label>إضافة فيديوهات</label>
+<input type="file" id="videos" multiple accept="video/*">
+
+<label>إضافة ملفات</label>
+<input type="file" id="files" multiple>
+
+<button id="publish">نشر التلخيص</button>
+
+<h2>التلخيصات الحالية</h2>
+
+<div id="summariesList"></div>
+
+<script>
+
+let summaries=[]
+
+async function loadSummaries(){
+
+try{
+
+const res=await fetch("summaries.json")
+summaries=await res.json()
+
+renderSummaries()
+
+}catch{
+
+document.getElementById("summariesList").innerHTML=
+"<p style='color:#777'>لا يمكن تحميل التلخيصات</p>"
+
+}
+
+}
+
+window.onload=loadSummaries
+
+
+function fileToBase64(file){
+return new Promise((resolve,reject)=>{
+
+const reader=new FileReader()
+
+reader.onload=()=>resolve({
+name:file.name,
+type:file.type,
+data:reader.result
+})
+
+reader.onerror=reject
+
+reader.readAsDataURL(file)
+
+})
+}
+
+async function readFiles(fileList){
+
+let arr=[]
+
+for(let f of fileList){
+
+arr.push(await fileToBase64(f))
+
+}
+
+return arr
+
+}
+
+document.getElementById("publish").onclick=async()=>{
+
+const title=document.getElementById("title").value
+const date=document.getElementById("date").value
+const content=document.getElementById("content").value
+
+if(!title || !date || !content){
+alert("اكتب كل البيانات")
+return
+}
+
+const images=await readFiles(document.getElementById("images").files)
+const videos=await readFiles(document.getElementById("videos").files)
+const files=await readFiles(document.getElementById("files").files)
+
+const newSummary={
+title:title,
+date:date,
+content:content,
+images:images,
+videos:videos,
+files:files
+}
+
+summaries.unshift(newSummary)
+await saveToServer()
+renderSummaries()
+
+downloadNewFile()
+
+alert("تم إنشاء التلخيص")
+
+}
+
+function renderSummaries(){
+
+const container=document.getElementById("summariesList")
+
+container.innerHTML=""
+
+if(!summaries || summaries.length===0){
+
+container.innerHTML="<p style='color:#777'>لا يوجد تلخيصات حالياً</p>"
+
+return
+
+}
+
+summaries.forEach((s,i)=>{
+
+if(!s || !s.title) return
+
+const title=s.title || "بدون عنوان"
+const date=s.date || "بدون تاريخ"
+const content=s.content || ""
+
+const card=document.createElement("div")
+
+card.className="card"
+
+card.innerHTML=`
+
+<b>${title}</b><br>
+
+📅 ${date}<br>
+
+${content.substring(0,80)}...<br><br>
+
+<button class="deleteBtn" onclick="deleteSummary(${i})">
+حذف التلخيص
+</button>
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+function deleteSummary(index){
+
+if(!confirm("هل تريد حذف هذا التلخيص؟")) return
+
+summaries.splice(index,1)
+saveToServer()
+renderSummaries()
+
+downloadNewFile()
+
+}
+
+function downloadNewFile(){
+
+const blob=new Blob(
+[JSON.stringify(summaries,null,2)],
+{type:"application/json"}
+)
+
+const url=URL.createObjectURL(blob)
+
+const a=document.createElement("a")
+
+a.href=url
+a.download="summaries.json"
+
+a.click()
+
+}
+async function saveToServer(){
+
+await fetch("/.netlify/functions/save",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(summaries)
+})
+
+}
+</script>
+
+</body>
+</html>

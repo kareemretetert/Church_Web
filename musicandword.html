@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+<title>كنيسة السيدة العذراء مريم بالعزية</title>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<link href="style.css" rel="stylesheet"/>
+<!-- Plyr CSS -->
+<link href="https://cdn.plyr.io/3.7.8/plyr.css" rel="stylesheet"/>
+<!-- Custom Styles -->
+<style>
+        body {
+            font-family: 'Tahoma', sans-serif;
+            background-color: #f7f7f7;
+            padding: 20px;
+            margin: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2em;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        
+        .video-box {
+            background: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        body:not(.search-active) .video-box:hover {
+    width: 575px;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+.video-box:hover {
+    cursor: pointer;
+    
+}
+
+        .video-box:nth-child(2) { animation-delay: 0.2s; }
+        .video-box:nth-child(3) { animation-delay: 0.4s; }
+        .video-box:nth-child(4) { animation-delay: 0.6s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .video-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            color: #444;
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+        }
+  
+    body {
+        font-family: 'Tahoma', sans-serif;
+        background-color: #f0f8ff;
+        padding: 20px;
+        margin: 0;
+        text-align: center;
+    }
+
+    h1 {
+        color: #333;
+        margin-bottom: 40px;
+        font-size: 2em;
+    }
+
+    .video-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* زودنا الحد الأدنى */
+        gap: 30px;
+        max-width: 1400px;
+        margin: auto;
+    }
+
+    .video-box {
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .video-box:nth-child(2) { animation-delay: 0.2s; }
+    .video-box:nth-child(3) { animation-delay: 0.4s; }
+    .video-box:nth-child(4) { animation-delay: 0.6s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .video-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+        color: #444;
+    }
+
+    video {
+        width: 100%;
+        height: 280px; /* زودنا الطول */
+        border-radius: 8px;
+        object-fit: cover;
+    }
+
+.nav-link {
+  display: inline-block;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.next-link {
+    position: relative;
+        right: 545px;
+        top: 100px;
+
+  text-decoration: none;
+  font-size: 18px;
+  color: #d3d3d3; /* اللون الأخضر */
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 2px solid #d3d3d3;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.next-link:hover {
+  background-color: #5eebdf79;
+  color: white;
+  transform: scale(1.05);
+}
+.link-text {
+  font-family: 'Arial', sans-serif;
+}
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background-color: #575353;
+  transform: scale(1.1);
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid #38373a;
+  transition: background-color 0.3s initial, transform 0.2s initial;
+  z-index: 1000;
+}
+
+.back-button:hover {
+  background-color: #696969;
+  
+}
+
+/* أنيميشن جديد ناعم للفيديوهات */
+.video-box {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: smoothFade 0.8s ease forwards;
+}
+
+.video-box:nth-child(1) { animation-delay: 0.1s; }
+.video-box:nth-child(2) { animation-delay: 0.3s; }
+.video-box:nth-child(3) { animation-delay: 0.5s; }
+.video-box:nth-child(4) { animation-delay: 0.7s; }
+
+@keyframes smoothFade {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+    
+@media (max-width: 768px) {
+  body {
+    padding: 10px !important;
+    font-size: 1rem !important;
+  }
+  h1, h2, h3 {
+    font-size: 1.2rem !important;
+  }
+  input, select, button {
+    width: 90% !important;
+    font-size: 1rem !important;
+  }
+  .back-button, .af, .next-link, .back-btn {
+    left: 10px !important;
+    top: 10px !important;
+    transform: scale(1);
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .video-container {
+    grid-template-columns: 1fr !important;
+  }
+  .church-image, iframe, video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* إزالة تأثير hover */
+.video-box:hover,
+body:not(.search-active) .video-box:hover {
+  width: auto !important;
+  background: none !important;
+  cursor: default !important;
+}
+
+/* ضبط زر الرجوع ليكون بجانب العنوان أو تحته */
+.back-button {
+  position: relative !important;
+  display: inline-block !important;
+  margin-bottom: 10px !important;
+  top: 0 !important;
+  left: 0 !important;
+  transform: none !important;
+}
+
+/* تجاوب متعدد الطبقات */
+@media (max-width: 1200px) {
+  .video-container {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem !important;
+  }
+  .video-title {
+    font-size: 1rem !important;
+  }
+  video {
+    height: 200px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.2rem !important;
+  }
+  .video-title {
+    font-size: 0.9rem !important;
+  }
+  video {
+    height: 180px !important;
+  }
+}
+
+/* توزيع عناصر التحكم بدون تراكب */
+.plyr__controls {
+  flex-wrap: nowrap !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 6px;
+  overflow-x: auto !important;
+  padding: 4px;
+}
+
+.plyr__controls > * {
+  flex: 0 0 auto !important;
+  max-width: 48px !important;
+  min-width: 30px !important;
+  font-size: 11px !important;
+  white-space: nowrap;
+}
+
+/* إزالة تأثير hover نهائياً */
+* {
+  transition: none !important;
+}
+.video-box:hover,
+body:not(.search-active) .video-box:hover,
+.next-link:hover,
+.back-button:hover,
+.plyr__controls > *:hover {
+  background: none !important;
+  transform: none !important;
+  color: inherit !important;
+}
+</style>
+</head>
+<body>
+<a class="back-button" href="index.html">الصفحة الرئيسية ⬅</a>
+<h1>ترانيم موسيقي وكلمات</h1>
+<!-- مربع البحث -->
+<div style="margin-bottom: 30px;">
+<input id="searchInput" placeholder="ابحث عن ترنيمة..." style="
+          padding: 12px 20px;
+          width: 300px;
+          max-width: 90%;
+          font-size: 16px;
+          border: 1px solid #ccc;
+          border-radius: 25px;
+          text-align: right;" type="text"/>
+</div>
+
+<div class="video-container" id="videoContainer">
+  <div class="video-box">
+  <div class="video-title">اصليله</div>
+  <video class="plyr" controls="" poster="imgsfile/اصليلة.jpg" preload="metadata">
+  <source src="vidoesfiles/ترانيم موسيقة وكلمات/اصليله موسيقة وكلمات.mp4" type="video/mp4"/>
+  </video>
+  </div>
+
+<div class="video-box">
+<div class="video-title">علشان خاطر العدرة يارب</div>
+<video class="plyr" controls="" poster="imgsfile/علشان خاطر العدرا يارب.jpg" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/علشان خاطر العدرة يارب.mp4" type="video/mp4"/>
+</video>
+</div>
+
+<div class="video-box">
+<div class="video-title">إلهنا عظيم</div>
+<video class="plyr" controls="" poster="imgsfile/ألهنا عظيم.jpg" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/الهنا عظيم موسيقة وكلمات.mp4" type="video/mp4"/>
+</video>
+</div>
+
+
+<div class="video-box">
+  <div class="video-title">مبتنساش</div>
+  <video class="plyr" controls="" poster="imgsfile/mab.jpg" preload="metadata">
+  <source src="vidoesfiles/ترانيم موسيقة وكلمات/موسيقى ترنيمة مابتنساش   طبقة1.mp4" type="video/mp4"/>
+  </video>
+  </div>
+
+
+<div class="video-box">
+  <div class="video-title">نوري يا كنيسة المسيح</div>
+  <video class="plyr" controls="" poster="imgsfile/dsd.jpg" preload="metadata">
+  <source src="vidoesfiles/ترانيم موسيقة وكلمات/موسيقى ترنيمة نورى يا كنيسة المسيح  (طبقة 1)  توزيع بولس باسيلى.mp4" type="video/mp4"/>
+  </video>
+  </div>
+
+<div class="video-box">
+  <div class="video-title">يا كنيسة افرحي</div>
+  <video class="plyr" controls="" poster="imgsfile/maxresdefault.jpg" preload="metadata">
+  <source src="vidoesfiles/ترانيم موسيقة وكلمات/videoplayback_optimized.mp4" type="video/mp4"/>
+  </video>
+  </div>
+
+
+
+
+<div class="video-box">
+<div class="video-title">ايها الفخار الاعظم</div>
+<video class="plyr" controls="" poster="imgsfile/ايها الفخار الاعظم.jpg" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/ايها الفخاري الاعظم  موسيقة وكلمات.mp4" type="video/mp4"/>
+</video>
+</div>
+
+<div class="video-box">
+<div class="video-title">اسمع صراخي سيدي</div>
+<video class="plyr" controls="" poster="imgsfile/اسمع صراخي.jpg" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/موسيقى ترنيمة إسمع صراخى ياسيدى.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">بيطمنى كلامك</div>
+<video class="plyr" controls="" poster="imgsfile/بيطمني كلامك.jpg" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/موسيقى ترنيمة بيطمنى كلامك.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">نعمتك غنية</div>
+<video class="plyr" controls="" poster="imgsfile/نعمتك غنية.jpg" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/موسيقى ترنيمة نعمتك غنية.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">انا اناء اسود كسير عليل</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/انا اناء اسود كسير عليل- ترانيم كلمة ولحن.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">ياللي حولت المرارة</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/ياللي حولت المرارة - موسيقى وكلمات.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">احفظني في رضاك</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/ترنيمة احفظني في رضاك.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">ربي يسوع الغالي</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/ترنيمة ربي يسوع الغالي- ترانيم كلمة ولحن.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">مالي سواك يا سيدي</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/مالي سواك يا سيدي- ترانيم كلمة ولحن.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">جراح حبيبي غالي عليا</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/جراح حبيبي غالية علي- ترانيم كلمة ولحن.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">سلامك فاق كل العقول</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/سلامك فاق العقول- موسيقى وكلمات.mp4" type="video/mp4"/>
+</video>
+</div>
+<div class="video-box">
+<div class="video-title">ملناش غيرك انت</div>
+<video class="plyr" controls="" preload="metadata">
+<source src="vidoesfiles/ترانيم موسيقة وكلمات/ملناش غيرك انت الهنا الحي بنترجاك.mp4" type="video/mp4"/>
+</video>
+</div>
+
+
+
+  
+
+
+</div>
+<!-- Plyr JS -->
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+<script>
+    const players = Plyr.setup('.plyr', {
+        controls: [
+            'play', 'progress', 'current-time', 'duration', 'mute', 'captions', 'download', 'fullscreen'
+        ],
+        
+        i18n: { restart: 'إعادة', play: 'تشغيل', pause: 'إيقاف مؤقت' }
+    });
+
+    const searchInput = document.getElementById('searchInput');
+    const videoBoxes = document.querySelectorAll('.video-box');
+
+    // تحديث حالة البحث تلقائياً
+    function updateSearchState() {
+        const query = searchInput.value.trim().toLowerCase();
+
+        // إضافة أو إزالة كلاس body بناءً على وجود نص
+        if (query.length > 0) {
+            document.body.classList.add('search-active');
+        } else {
+            document.body.classList.remove('search-active');
+        }
+
+        // فلترة الفيديوهات
+        videoBoxes.forEach(box => {
+            const title = box.querySelector('.video-title').textContent.toLowerCase();
+            box.style.display = title.includes(query) ? 'block' : 'none';
+        });
+    }
+
+    searchInput.addEventListener('input', updateSearchState);
+    searchInput.addEventListener('focus', updateSearchState);
+    searchInput.addEventListener('blur', updateSearchState);
+</script>
+</body>
+</html>

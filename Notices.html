@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Kareem Hosny" />
+  <meta name="description" content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" />
+  <meta name="keywords" content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" />
+  <link rel="icon" href="imgsfile/icon.png" type="image/x-icon" />
+  <title>الإعلانات</title>
+  <link rel="icon" href="imgsfile/icon.png">
+
+
+
+  <style>
+    body {
+      font-family: Tahoma, sans-serif;
+      background-color: #f0f8ff;
+      direction: rtl;
+      margin: 0;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #5c2c8a;
+      font-size: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      position: relative;
+      animation: fadeIn 0.5s ease;
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      text-align: center;
+      color: #333;
+    }
+    .card p {
+      margin: 5px 0;
+    }
+    .card img {
+      max-width: 100%;
+      margin: 10px auto;
+      border-radius: 8px;
+      display: block;
+    }
+    .delete-btn {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: crimson;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .back-btn {
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      padding: 10px 20px;
+      background: #5c2c8a;
+      color: white;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      max-width: 200px;
+    }
+    .empty-msg {
+      text-align: center;
+      color: #888;
+      font-size: 1.2rem;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(20px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📢 الإعلانات الحالية</h1>
+  </div>
+  <div class="container" id="noticeContainer"></div>
+  <p class="empty-msg" id="emptyMessage" style="display:none;">لا توجد إعلانات حالياً.</p>
+  <a class="back-btn" href="index.html">⬅ العودة للرئيسية</a>
+
+  <script>
+    const container = document.getElementById("noticeContainer");
+    const emptyMsg = document.getElementById("emptyMessage");
+    let indexFile = "noticesfile/index.json";
+
+    const loadNotices = async () => {
+      try {
+        const res = await fetch(indexFile);
+        const files = await res.json();
+
+        if (files.length === 0) {
+          emptyMsg.style.display = "block";
+          return;
+        }
+
+        files.forEach(file => {
+          fetch("noticesfile/" + file)
+            .then(res => res.json())
+            .then(data => {
+              const card = document.createElement("div");
+              card.className = "card";
+              card.innerHTML = `
+                <h2>${data.title}</h2>
+                <p>📅 التاريخ: ${data.date}</p>
+                <p>📍 المكان: ${data.location}</p>
+                <p>💰 السعر: ${data.price}</p>
+                <p>${data.details}</p>
+                ${data.image ? `<img src="${data.image}" />` : ""}
+                
+              `;
+
+              
+
+              container.appendChild(card);
+            });
+        });
+      } catch {
+        emptyMsg.style.display = "block";
+      }
+    };
+
+    const deleteNotice = async (filename) => {
+      try {
+        const res = await fetch(indexFile);
+        const list = await res.json();
+        const updated = list.filter(item => item !== filename);
+        const blob = new Blob([JSON.stringify(updated, null, 2)], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "index.json";
+        a.click();
+      } catch (e) {
+        alert("حدث خطأ أثناء حذف الإعلان.");
+      }
+    };
+
+    const checkEmpty = () => {
+      if (!container.children.length) {
+        emptyMsg.style.display = "block";
+      }
+    }
+
+    loadNotices();
+  </script>
+</body>
+</html>

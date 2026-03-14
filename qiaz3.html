@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, الكنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+  <title>لعبة المتاهة</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #e0f7ff;
+      font-family: 'Cairo', sans-serif;
+      position: relative;
+    }
+    canvas {
+      border: 4px solid #004080;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      touch-action: none;
+      max-width: 100%;
+      height: auto;
+    }
+    #timer {
+      margin: 10px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #004080;
+    }
+    #back-button {
+      margin-top: 15px;
+      padding: 10px 25px;
+      font-size: 1rem;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #back-button:hover {
+      background-color: #0056b3;
+    }
+    #win-message {
+      position: absolute;
+      top: 10%;
+      background-color: #28a745;
+      color: white;
+      padding: 15px 30px;
+      border-radius: 15px;
+      font-size: 1.5rem;
+      display: none;
+      z-index: 10;
+      text-align: center;
+      animation: pop 0.6s ease forwards;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+    @media (max-width: 450px) {
+      canvas {
+        width: 90vw;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="timer">الوقت: 0 ثانية</div>
+  <div id="win-message">برافو! وصلت للنهاية ✅</div>
+  <canvas id="mazeCanvas" width="400" height="400"></canvas>
+  <button id="back-button" onclick="history.back()">العودة</button>
+
+  <script>
+    const canvas = document.getElementById('mazeCanvas');
+    const ctx = canvas.getContext('2d');
+    const timerDisplay = document.getElementById('timer');
+    const winMessage = document.getElementById('win-message');
+
+    const rows = 20;
+    const cols = 20;
+    const cellSize = canvas.width / cols;
+
+    let grid = [];
+    let stack = [];
+    let player = { x: 0, y: 0, px: 0, py: 0 };
+    let timer = 0;
+    let timerInterval;
+    let gameEnded = false;
+    let keysPressed = {};
+    let dragging = false;
+let lastTouchTime = 0;
+    let lastTouch = null;
+    let finishImage = new Image();
+    finishImage.src = 'imgsfile/game/jes.png';
+
+    class Cell {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.walls = [true, true, true, true];
+        this.visited = false;
+        this.passed = false;
+      }
+      draw() {
+        const x = this.x * cellSize;
+        const y = this.y * cellSize;
+
+        if ((this.passed || (this.x === 0 && this.y === 0))) {
+          ctx.fillStyle = '#a6d9ff';
+          ctx.fillRect(x, y, cellSize, cellSize);
+        }
+
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        if (this.walls[0]) drawLine(x, y, x + cellSize, y);
+        if (this.walls[1]) drawLine(x + cellSize, y, x + cellSize, y + cellSize);
+        if (this.walls[2]) drawLine(x + cellSize, y + cellSize, x, y + cellSize);
+        if (this.walls[3]) drawLine(x, y + cellSize, x, y);
+      }
+    }
+
+    function drawLine(x1, y1, x2, y2) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    }
+
+    function setup() {
+      grid = [];
+      stack = [];
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          grid.push(new Cell(x, y));
+        }
+      }
+      let current = grid[0];
+      current.visited = true;
+      stack.push(current);
+
+      while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+        const next = getUnvisitedNeighbor(current);
+        if (next) {
+          next.visited = true;
+          stack.push(next);
+          removeWalls(current, next);
+        } else {
+          stack.pop();
+        }
+      }
+
+      player = { x: 0, y: 0, px: 0, py: 0 };
+      gameEnded = false;
+      timer = 0;
+      updateTimer();
+      if (timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timer++;
+        updateTimer();
+      }, 1000);
+
+      drawMaze();
+    }
+
+    function getUnvisitedNeighbor(cell) {
+      const neighbors = [];
+      const { x, y } = cell;
+      const directions = [
+        { dx: 0, dy: -1 },
+        { dx: 1, dy: 0 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 }
+      ];
+
+      for (let { dx, dy } of directions) {
+        const nx = x + dx;
+        const ny = y + dy;
+        if (nx >= 0 && ny >= 0 && nx < cols && ny < rows) {
+          const neighbor = grid[ny * cols + nx];
+          if (!neighbor.visited) {
+            neighbors.push(neighbor);
+          }
+        }
+      }
+
+      if (neighbors.length > 0) {
+        return neighbors[Math.floor(Math.random() * neighbors.length)];
+      }
+      return undefined;
+    }
+
+    function removeWalls(a, b) {
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      if (dx === 1) { a.walls[1] = false; b.walls[3] = false; }
+      else if (dx === -1) { a.walls[3] = false; b.walls[1] = false; }
+      if (dy === 1) { a.walls[2] = false; b.walls[0] = false; }
+      else if (dy === -1) { a.walls[0] = false; b.walls[2] = false; }
+    }
+
+    function drawMaze() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      grid.forEach(cell => cell.draw());
+      ctx.drawImage(finishImage, (cols - 1) * cellSize, (rows - 1) * cellSize, cellSize, cellSize);
+      drawPlayer();
+    }
+
+    function drawPlayer() {
+      const x = player.x * cellSize;
+      const y = player.y * cellSize;
+      ctx.fillStyle = '#007BFF';
+      ctx.beginPath();
+      ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize / 3, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function updateTimer() {
+      timerDisplay.textContent = `الوقت: ${timer} ثانية`;
+    }
+
+    function movePlayer(dx, dy) {
+      if (gameEnded) return;
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+      if (newX < 0 || newY < 0 || newX >= cols || newY >= rows) return;
+
+      const current = grid[player.y * cols + player.x];
+      const target = grid[newY * cols + newX];
+
+      const dir = dx === 1 ? 1 : dx === -1 ? 3 : dy === 1 ? 2 : 0;
+      if (!current.walls[dir]) {
+        player.x = newX;
+        player.y = newY;
+        target.passed = true;
+        drawMaze();
+
+        if (player.x === cols - 1 && player.y === rows - 1) {
+          gameEnded = true;
+          clearInterval(timerInterval);
+          winMessage.style.display = 'block';
+        }
+      }
+    }
+
+    document.addEventListener('keydown', e => keysPressed[e.key] = true);
+    document.addEventListener('keyup', e => delete keysPressed[e.key]);
+    setInterval(() => {
+      if (keysPressed['ArrowUp']) movePlayer(0, -1);
+      else if (keysPressed['ArrowDown']) movePlayer(0, 1);
+      else if (keysPressed['ArrowLeft']) movePlayer(-1, 0);
+      else if (keysPressed['ArrowRight']) movePlayer(1, 0);
+    }, 150);
+
+    canvas.addEventListener('touchstart', e => {
+      dragging = true;
+      lastTouch = e.touches[0];
+    });
+
+    canvas.addEventListener('touchmove', e => {
+  const now = Date.now();
+  if (now - lastTouchTime < 150) return;
+  lastTouchTime = now;
+      if (!dragging || gameEnded) return;
+
+      const newTouch = e.touches[0];
+      const dx = newTouch.clientX - lastTouch.clientX;
+      const dy = newTouch.clientY - lastTouch.clientY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+      const threshold = 2;
+
+      if (absX > threshold || absY > threshold) {
+        if (absX > absY) {
+          if (dx > 0) movePlayer(1, 0);
+          else movePlayer(-1, 0);
+        } else {
+          if (dy > 0) movePlayer(0, 1);
+          else movePlayer(0, -1);
+        }
+        lastTouch = newTouch;
+      }
+    });
+
+    canvas.addEventListener('touchend', () => {
+      dragging = false;
+    });
+
+    finishImage.onload = () => setup();
+  </script>
+</body>
+</html>

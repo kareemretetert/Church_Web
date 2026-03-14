@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+<meta content="كنيسة السيدة العذراء مريم اجتماع ثانوي" name="description"/>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<title>لعبة تحدي الذاكرة</title>
+<style>
+    body {
+      font-family: 'Arial';
+      background: linear-gradient(135deg, #e6ccff, #f0e6ff);
+      text-align: center;
+      direction: rtl;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #5a2c8b;
+      margin-top: 10px;
+    }
+    #back-button {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background-color: #8c2e6b;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 20px;
+      text-decoration: none;
+    }
+    #game-board {
+       display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-gap: 66px;
+      justify-content: center;
+      margin: 66px;
+      width: 600px;
+      position: absolute;
+      right: 350px;
+      bottom: 250px;
+    }
+    .card {
+      width: 100px;
+      height: 120px;
+      background-color: #d1b3ff;
+      border-radius: 12px;
+      cursor: pointer;
+      position: relative;
+      transition: transform 0.4s;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 12px;
+      display: none;
+      margin: 0;
+      padding: 0;
+    }
+    .caption {
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    .flipped img, .flipped .caption {
+      display: block;
+    }
+    #mistakes {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #8c2e6b;
+    }
+    #win-message {
+      display: none;
+      margin-top: 30px;
+      font-size: 24px;
+      color: #008000;
+      animation: pop 0.6s ease forwards;
+    }
+    @keyframes pop {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1.1); opacity: 1; }
+    }
+  
+@media (max-width: 768px) {
+  body {
+    padding: 10px !important;
+    font-size: 1rem !important;
+  }
+  h1, h2, h3 {
+    font-size: 1.2rem !important;
+  }
+  input, select, button {
+    width: 90% !important;
+    font-size: 1rem !important;
+  }
+  .back-button, .af, .next-link, .back-btn {
+    left: 10px !important;
+    top: 10px !important;
+    transform: scale(1);
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .video-container {
+    grid-template-columns: 1fr !important;
+  }
+  .church-image, iframe, video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+#win-message{
+  width: 25%;
+  position: absolute;
+  right: 40%;
+}
+/* تحسين تجاوب لوحة اللعبة والبطاقات */
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  margin: 30px auto 0;
+  padding: 10px;
+  box-sizing: border-box;
+  position: absolute;
+}
+
+.card {
+  width: 100%;
+  aspect-ratio: 5 / 6;
+  max-width: 100px;
+  background-color: #d1b3ff;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.4s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* تحسين عرض الصور داخل البطاقات */
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  display: none;
+}
+
+/* تجاوب أوسع للأجهزة الصغيرة جداً */
+@media (max-width: 600px) {
+  #game-board {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .card {
+    max-width: 90px;
+    height: auto;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+  }
+
+  #mistakes, #win-message {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  #game-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .card {
+    max-width: 80px;
+  }
+
+  h1 {
+    font-size: 1.2rem;
+  }
+}
+
+/* الشبكة الأساسية: 4 أعمدة */
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  margin: 30px auto 0;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* حجم الكروت الطبيعي */
+.card {
+  width: 100%;
+  height: 130px;
+  background-color: #d1b3ff;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.4s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* تقليل عدد الأعمدة وحجم الكروت للشاشات الصغيرة */
+@media (max-width: 768px) {
+  #game-board {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .card {
+    height: 110px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    height: 100px;
+  }
+
+}
+@media (max-width: 390px) {
+  .card {
+    height: 100px;
+  }
+  #back-button {
+      position: absolute;
+      top: 10px;
+      background-color: black;
+      transform: scale(0.7);
+      background-color: #8c2e6b;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 15px;
+      cursor: pointer;
+      font-size: 20px;
+      text-decoration: none;
+    }
+}
+/* تصغير المسافة بين الكروت عند الشاشات الواسعة */
+@media (min-width: 769px) {
+  #game-board {
+    gap: 6px !important;
+  }
+}
+
+/* إزالة البعد الأفقي تمامًا بين الكروت */
+#game-board {
+  gap: 0 !important;
+  column-gap: 0 !important;
+  grid-column-gap: 0 !important;
+  grid-gap: 0 !important;
+  padding: 0 !important;
+  margin: 20px auto 0 !important;
+  justify-content: center !important;
+}
+
+.card {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* تنسيق الكروت داخل game-board حسب العرض */
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto 0 !important;
+  padding: 10px;
+  gap: 0 !important;
+  column-gap: 0 !important;
+  row-gap: 8px !important; /* بُعد عمودي فقط */
+  position: absolute;
+  right: 350px;
+  bottom: 250px;
+  width: 600px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  height: 130px;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #d1b3ff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.4s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* تجاوب مع الأجهزة الصغيرة */
+@media (max-width: 992px) {
+  #game-board {
+    position: static !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    width: 100% !important;
+    padding: 10px !important;
+    margin: 20px auto 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    height: 110px !important;
+  }
+}
+
+/* تأكيد أن الصور تظهر فقط عند قلب الكرت */
+.card img,
+.card .caption {
+  display: none;
+}
+
+.card.flipped img,
+.card.flipped .caption {
+  display: block;
+}
+
+/* تنسيق الكروت داخل game-board حسب العرض */
+#game-board {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto 0 !important;
+  padding: 10px;
+  gap: 0 !important;
+  column-gap: 0 !important;
+  row-gap: 8px !important;
+  position: absolute;
+  right: 350px;
+  bottom: 250px;
+  width: 600px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.card {
+  width: 100%;
+  height: 130px;
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #d1b3ff;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.4s;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* تجاوب مع الأجهزة الصغيرة */
+@media (max-width: 992px) {
+  #game-board {
+    position: static !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    width: 100% !important;
+    padding: 10px !important;
+    margin: 20px auto 0 !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    height: 110px !important;
+  }
+  
+}
+
+/* زر العودة: جعله في الأعلى مع مساحة واضحة بدون تغطية */
+@media (max-width: 363px) and (min-width: 300px) {
+ 
+  
+  #back-button {
+    scale: 0.6;
+   position: relative;
+   top: 30px;
+  }
+
+  h1 {
+    margin-top: 60px !important; /* إزاحة العنوان للأسفل */
+  }
+}
+</style>
+</head>
+<body>
+<a href="compition.html" id="back-button">⬅ العودة</a>
+<h1>🎯 لعبة الذاكرة - ذاكرتك قوية؟</h1>
+<p>اضغط على البطاقات لتجد كل زوج متشابه 👀</p>
+<div id="game-board"></div>
+<div id="mistakes">عدد المحاولات الخاطئة: 0</div>
+<div id="win-message">🎉 برافو! خلصت اللعبة بنجاح</div>
+<a></a>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<script>
+  const images = [
+    'imgsfile/bg.png',
+    'imgsfile/game/jes.png',
+    'imgsfile/game/gargs.png',
+    'imgsfile/game/icon.png',
+    'imgsfile/game/miry.gif',
+    'imgsfile/game/mena.png',
+  ];
+
+  const board = document.getElementById('game-board');
+  const mistakesDisplay = document.getElementById('mistakes');
+  const winMessage = document.getElementById('win-message');
+  let cards = [];
+  let flipped = [];
+  let mistakes = 0;
+
+  function getLabel(src) {
+    const map = {
+      'imgsfile/bg.png':  'العذراء مريم',
+      'imgsfile/game/jes.png': 'السيد المسيح',
+      'imgsfile/game/gargs.png': 'ماري جرجس',
+      'imgsfile/game/icon.png': 'البابا شنودة الثالث',
+      'imgsfile/game/miry.gif': 'ماري مرقس',
+      'imgsfile/game/mena.png': 'ماري مينا',
+    };
+    return map[src] || '';
+  }
+
+  function shuffleArray(arr) {
+    return arr.concat(arr).sort(() => 0.5 - Math.random());
+  }
+
+  function createCard(src) {
+    const card = document.createElement('div');
+    card.classList.add('card');
+
+    const img = document.createElement('img');
+    img.src = src;
+
+    const caption = document.createElement('div');
+    caption.textContent = getLabel(src);
+    caption.classList.add('caption');
+
+    card.appendChild(img);
+    card.appendChild(caption);
+    card.dataset.image = src;
+    card.addEventListener('click', () => flipCard(card));
+    return card;
+  }
+
+  function flipCard(card) {
+    if (flipped.length < 2 && !card.classList.contains('flipped') && !card.classList.contains('matched')) {
+      card.classList.add('flipped');
+      flipped.push(card);
+
+      if (flipped.length === 2) {
+        setTimeout(checkMatch, 500); // تأخير نصف ثانية بعد قلب بطاقتين
+      }
+    }
+  }
+
+  function checkMatch() {
+    const [first, second] = flipped;
+    if (first.dataset.image === second.dataset.image) {
+      first.classList.add('matched');
+      second.classList.add('matched');
+      checkWin();
+    } else {
+      mistakes++;
+      mistakesDisplay.textContent = `عدد المحاولات الخاطئة: ${mistakes}`;
+      first.classList.remove('flipped');
+      second.classList.remove('flipped');
+    }
+    flipped = [];
+  }
+
+  function checkWin() {
+    if (document.querySelectorAll('.matched').length === cards.length) {
+      winMessage.style.display = 'block';
+    }
+  }
+
+  function initGame() {
+    const shuffledImages = shuffleArray(images);
+    shuffledImages.forEach(img => {
+      const card = createCard(img);
+      board.appendChild(card);
+      cards.push(card);
+    });
+  }
+
+  initGame();
+</script>
+</body>
+</html>

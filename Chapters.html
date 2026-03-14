@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+<meta charset="utf-8"/>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>الإصحاحات</title>
+
+
+
+<style>
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f8ff;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+    direction: rtl;
+}
+
+h1, label {
+    color: #2c3e50;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+}
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 30px;
+  background-image:linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196)) ;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid #38373a;
+  transition: background-color 0.3s initial, transform 0.2s initial;
+  z-index: 1000;
+  transform: scale(1.25);
+}
+
+.back-button:hover {
+  background-color: #696969;
+  
+}
+select {
+    width: 90%;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+#videoContainer {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* نسبة 16:9 */
+    height: 0;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 12px;
+    border: #2c3e50 3px solid;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin: 40px auto 0;
+}
+
+#videoContainer iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.show {
+    cursor: pointer;
+    width: 230px;
+    background-image: linear-gradient(to right, rgb(218, 218, 218), white);
+    border-radius: 10px;
+    padding: 10px 30px;
+    font-size: 16px;
+    margin: 5px;
+    transition: background 0.3s;
+}
+
+.show:hover {
+    background-image: linear-gradient(to right,#bbdef1b6,#73caf3bb);
+}
+
+.cli {
+    background-image: linear-gradient(to right,#8ee7fde5,#5cc8faef);
+    border: #444444 2px solid;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    form, select {
+        width: 90%;
+    }
+    .back-button, .af, .next-link, .back-btn {
+    left: 10px !important;
+    top: 10px !important;
+    transform: scale(1);
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+<a class="back-button" href="index.html">الصفحة الرئيسية ⬅</a>
+</header>
+<section style="max-width: 800px; margin: 40px auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center;">
+<h1> تفسير الكتاب المقدس</h1>
+<p style="font-size: 18px; line-height: 1.8; color: #444;">
+            هنا تقدر الوصول إلى تفسيرات مبسطة وعميقة لأسفار متنوعة من الكتاب المقدس مثل سفر التكوين، الخروج، ودانيال.
+          نهدف إلى تقديم فهم أوضح للنصوص المقدسة وربطها بحياتنا اليومية.
+        </p>
+<p style="font-size: 18px; line-height: 1.8; color: #444;">
+          التفسير لا يقتصر فقط على المعرفة، بل يساعدك على التأمل، واكتشاف الرسائل الروحية في كل إصحاح، ويقدم لك مفاتيح للحياة بالإيمان والفهم الصحيح لكلمة الله.
+        </p>
+</section>
+<div style="text-align: center; margin: 20px 0;">
+<button class="show" id="old" onclick="showOld()" style="padding: 10px 30px; font-size: 16px; margin: 5px;" type="button">📘 العهد القديم</button>
+<button class="show" id="new" onclick="showNew()" style="padding: 10px 30px; font-size: 16px; margin: 5px;" type="button">📗 العهد الجديد</button>
+</div>
+<div id="oldDiv">
+<form>
+<label for="ashah">اختار الإصحاح</label>
+<select id="ashah" name="الاصحاحات">
+<!-- كل أسفار العهد القديم زي ما هي -->
+<optgroup label="سفر التكوين">
+<option value="1g">الإصحاح 1</option>
+<option value="2g">الإصحاح 2</option>
+<option value="3g">الإصحاح 3</option>
+<option value="4g">الإصحاح 4</option>
+<option value="5g">الإصحاح 5</option>
+<option value="6g">الإصحاح 6</option>
+<option value="7g">الإصحاح 7</option>
+<option value="8g">الإصحاح 8</option>
+<option value="9g">الإصحاح 9</option>
+<option value="10g">الإصحاح 10</option>
+<option value="11g">الإصحاح 11</option>
+<option value="12g">الإصحاح 12</option>
+<option value="13g">الإصحاح 13</option>
+<option value="14g">الإصحاح 14</option>
+<option value="15g">الإصحاح 15</option>
+<option value="16g">الإصحاح 16</option>
+<option value="17g">الإصحاح 17</option>
+<option value="18g">الإصحاح 18</option>
+<option value="19g">الإصحاح 19</option>
+<option value="20g">الإصحاح 20</option>
+<option value="21g">الإصحاح 21</option>
+<option value="22g">الإصحاح 22</option>
+<option value="23g">الإصحاح 23</option>
+<option value="24g">الإصحاح 24</option>
+<option value="25g">الإصحاح 25</option>
+<option value="26g">الإصحاح 26</option>
+<option value="27g">الإصحاح 27</option>
+<option value="28g">الإصحاح 28</option>
+<option value="29g">الإصحاح 29</option>
+<option value="30g">الإصحاح 30</option>
+<option value="31g">الإصحاح 31</option>
+<option value="32g">الإصحاح 32</option>
+<option value="33g">الإصحاح 33</option>
+<option value="34g">الإصحاح 34</option>
+<option value="35g">الإصحاح 35</option>
+<option value="36g">الإصحاح 36</option>
+<option value="37g">الإصحاح 37</option>
+<option value="38g">الإصحاح 38</option>
+<option value="39g">الإصحاح 39</option>
+<option value="40g">الإصحاح 40</option>
+<option value="41g">الإصحاح 41</option>
+<option value="42g">الإصحاح 42</option>
+<option value="43g">الإصحاح 43</option>
+<option value="44g">الإصحاح 44</option>
+<option value="45g">الإصحاح 45</option>
+<option value="46g">الإصحاح 46</option>
+<option value="47g">الإصحاح 47</option>
+<option value="48g">الإصحاح 48</option>
+<option value="49g">الإصحاح 49</option>
+<option value="50g">الإصحاح 50</option>
+</optgroup>
+<optgroup label="سفر الخروج">
+<!-- سفر الخروج 1 إلى 40 -->
+<option value="1k">الاصحاح 1</option>
+<option value="2k">الاصحاح 2</option>
+<option value="3k">الاصحاح 3</option>
+<option value="4k">الاصحاح 4</option>
+<option value="5k">الاصحاح 5</option>
+<option value="6k">الاصحاح 6</option>
+<option value="7k">الاصحاح 7</option>
+<option value="8k">الاصحاح 8</option>
+<option value="9k">الاصحاح 9</option>
+<option value="10k">الاصحاح 10</option>
+<option value="11k">الاصحاح 11</option>
+<option value="12k">الاصحاح 12</option>
+<option value="13k">الاصحاح 13</option>
+<option value="14k">الاصحاح 14</option>
+<option value="15k">الاصحاح 15</option>
+<option value="16k">الاصحاح 16</option>
+<option value="17k">الاصحاح 17</option>
+<option value="18k">الاصحاح 18</option>
+<option value="19k">الاصحاح 19</option>
+<option value="20k">الاصحاح 20</option>
+<option value="21k">الاصحاح 21</option>
+<option value="22k">الاصحاح 22</option>
+<option value="23k">الاصحاح 23</option>
+<option value="24k">الاصحاح 24</option>
+<option value="25k">الاصحاح 25</option>
+<option value="26k">الاصحاح 26</option>
+<option value="27k">الاصحاح 27</option>
+<option value="28k">الاصحاح 28</option>
+<option value="29k">الاصحاح 29</option>
+<option value="30k">الاصحاح 30</option>
+<option value="31k">الاصحاح 31</option>
+<option value="32k">الاصحاح 32</option>
+<option value="33k">الاصحاح 33</option>
+<option value="34k">الاصحاح 34</option>
+<option value="35k">الاصحاح 35</option>
+<option value="36k">الاصحاح 36</option>
+<option value="37k">الاصحاح 37</option>
+<option value="38k">الاصحاح 38</option>
+<option value="39k">الاصحاح 39</option>
+<option value="40k">الاصحاح 40</option>
+</optgroup>
+<optgroup label="سفر دانيال">
+<option value="1d">الإصحاح 1</option>
+<option value="2d">الإصحاح 2</option>
+<option value="3d">الإصحاح 3</option>
+<option value="4d">الإصحاح 4</option>
+<option value="5d">الإصحاح 5</option>
+<option value="6d">الإصحاح 6</option>
+<option value="7d">الإصحاح 7</option>
+<option value="8d">الإصحاح 8</option>
+<option value="9d">الإصحاح 9</option>
+<option value="10d">الإصحاح 10</option>
+<option value="11d">الإصحاح 11</option>
+<option value="12d">الإصحاح 12</option>
+</optgroup>
+</select>
+</form>
+</div>
+<div id="newDiv" style="display: none;">
+<form>
+<label for="romiah">اختار الإصحاح</label>
+<select id="romiah">
+<optgroup label="إنجيل متى">
+<option value="m1">الإصحاح 1</option>
+<option value="m2">الإصحاح 2</option>
+<option value="m3">الإصحاح 3</option>
+<option value="m4">الإصحاح 4</option>
+<option value="m5">الإصحاح 5</option>
+<option value="m6">الإصحاح 6</option>
+<option value="m7">الإصحاح 7</option>
+<option value="m8">الإصحاح 8</option>
+<option value="m9">الإصحاح 9</option>
+<option value="m10">الإصحاح 10</option>
+<option value="m11">الإصحاح 11</option>
+<option value="m12">الإصحاح 12</option>
+<option value="m13">الإصحاح 13</option>
+<option value="m14">الإصحاح 14</option>
+<option value="m15">الإصحاح 15</option>
+<option value="m16">الإصحاح 16</option>
+<option value="m17">الإصحاح 17</option>
+<option value="m18">الإصحاح 18</option>
+<option value="m19">الإصحاح 19</option>
+<option value="m20">الإصحاح 20</option>
+<option value="m21">الإصحاح 21</option>
+<option value="m22">الإصحاح 22</option>
+<option value="m23">الإصحاح 23</option>
+<option value="m24">الإصحاح 24</option>
+<option value="m25">الإصحاح 25</option>
+<option value="m26">الإصحاح 26</option>
+<option value="m27">الإصحاح 27</option>
+<option value="m28">الإصحاح 28</option>
+</optgroup>
+<optgroup label="انجيل يوحنا">
+<option value="1y">1 الإصحاح</option>
+<option value="2y">2 الإصحاح</option>
+<option value="3y">3 الإصحاح</option>
+<option value="4y">4 الإصحاح</option>
+<option value="5y">5 الإصحاح</option>
+<option value="6y">6 الإصحاح</option>
+<option value="7y">7 الإصحاح</option>
+<option value="8y">8 الإصحاح</option>
+<option value="9y">9 الإصحاح</option>
+<option value="10y">10 الإصحاح</option>
+<option value="11y">11 الإصحاح</option>
+<option value="12y">12 الإصحاح</option>
+<option value="13y">13 الإصحاح</option>
+<option value="14y">14 الإصحاح</option>
+<option value="15y">15 الإصحاح</option>
+<option value="16y">16 الإصحاح</option>
+<option value="17y">17 الإصحاح</option>
+<option value="18y">18 الإصحاح</option>
+<option value="19y">19 الإصحاح</option>
+<option value="20y">20 الإصحاح</option>
+<option value="21y">21 الإصحاح</option>
+</optgroup>
+<optgroup label="إنجيل لوقا">
+  <option value="l1">الإصحاح 1 جزء 1</option>
+  <option value="l1b">الإصحاح 1 جزء 2</option>
+  <option value="l2">الإصحاح 2</option>
+  <option value="l3">الإصحاح 3</option>
+  <option value="l4">الإصحاح 4</option>
+  <option value="l5">الإصحاح 5</option>
+  <option value="l6">الإصحاح 6</option>
+  <option value="l7">الإصحاح 7</option>
+  <option value="l8">الإصحاح 8</option>
+  <option value="l9">الإصحاح 9</option>
+  <option value="l10">الإصحاح 10</option>
+  <option value="l11">الإصحاح 11</option>
+  <option value="l12">الإصحاح 12</option>
+  <option value="l13">الإصحاح 13</option>
+  <option value="l14">الإصحاح 14</option>
+  <option value="l15">الإصحاح 15</option>
+  <option value="l16">الإصحاح 16</option>
+  <option value="l17">الإصحاح 17</option>
+  <option value="l18">الإصحاح 18</option>
+  <option value="l19">الإصحاح 19</option>
+  <option value="l20">الإصحاح 20</option>
+  <option value="l21">الإصحاح 21</option>
+  <option value="l22">الإصحاح 22</option>
+  <option value="l23">الإصحاح 23</option>
+  <option value="l24">الإصحاح 24</option>
+  </optgroup>
+<optgroup label="رسالة رومية">
+<option value="r1">الإصحاح 1</option>
+<option value="r2">الإصحاح 2</option>
+<option value="r3">الإصحاح 3</option>
+<option value="r4">الإصحاح 4</option>
+<option value="r5">الإصحاح 5</option>
+<option value="r6">الإصحاح 6</option>
+<option value="r7">الإصحاح 7</option>
+<option value="r8">الإصحاح 8</option>
+<option value="r9">الإصحاح 9</option>
+<option value="r10">الإصحاح 10</option>
+<option value="r11">الإصحاح 11</option>
+<option value="r12">الإصحاح 12</option>
+<option value="r13">الإصحاح 13</option>
+<option value="r14">الإصحاح 14</option>
+<option value="r15">الإصحاح 15</option>
+<option value="r16">الإصحاح 16</option>
+</optgroup>
+</select>
+</form>
+</div>
+<div id="videoContainer">
+  <iframe id="videoFrame" allowfullscreen src=""></iframe>
+  </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+
+<script>
+   
+   window.onload = function () {
+    // تعيين الفيديو الأول تلقائيًا (تكوين 1)
+    const defaultValue = "1g";
+    document.getElementById("ashah").value = defaultValue;
+    videoFrame.src = videoMap[defaultValue];
+    oldc.classList.add('cli');
+};
+
+const oldc=document.getElementById('old');
+const newc=document.getElementById('new');
+    const videoMap = {
+        "1g": "https://www.youtube.com/embed/SoyCmgGbFlg",
+  "2g": "https://www.youtube.com/embed/aA9Pp76xQNc",
+  "3g": "https://www.youtube.com/embed/Lz5vnSObNsI",
+  "4g": "https://www.youtube.com/embed/_rCm7_ei5QU",
+  "5g": "https://www.youtube.com/embed/HvtWY6VcGTo",
+  "6g": "https://www.youtube.com/embed/6W-hO0TyL90",
+  "7g": "https://www.youtube.com/embed/_3snwHMiPx8",
+  "8g": "https://www.youtube.com/embed/5Ng8tIle6Bw",
+  "9g": "https://www.youtube.com/embed/Mvs2D2OLoK4",
+  "10g": "https://www.youtube.com/embed/F6hy_lya9xU",
+  "11g": "https://www.youtube.com/embed/uO8-qNiaDoY",
+  "12g": "https://www.youtube.com/embed/VTjrpFD4Eac",
+  "13g": "https://www.youtube.com/embed/oDOYcF7Txeg",
+  "14g": "https://www.youtube.com/embed/4K1O19gEMRA",
+  "15g": "https://www.youtube.com/embed/gAiAUpVOnlg",
+  "16g": "https://www.youtube.com/embed/0tq8eLYmV3U",
+  "17g": "https://www.youtube.com/embed/XA6BkqpKrVg",
+  "18g": "https://www.youtube.com/embed/BrafdKmj9Kw",
+  "19g": "https://www.youtube.com/embed/oKmX_fvePQA",
+  "20g": "https://www.youtube.com/embed/vP1L9WlOoaM",
+  "21g": "https://www.youtube.com/embed/DItIPZ_fBzs",
+  "22g": "https://www.youtube.com/embed/tD32bQgLexs",
+  "23g": "https://www.youtube.com/embed/8kjTGErR4Wc",
+  "24g": "https://www.youtube.com/embed/oetpmN3kw8U",
+  "25g": "https://www.youtube.com/embed/SMpxF6tjSGU",
+  "26g": "https://www.youtube.com/embed/FE1bk6QwdC4",
+  "27g": "https://www.youtube.com/embed/YFWPyZBmzyU",
+  "28g": "https://www.youtube.com/embed/qiTI3XSSM_g",
+  "29g": "https://www.youtube.com/embed/9VHWiudgGPg",
+  "30g": "https://www.youtube.com/embed/IkU6oql7ejQ",
+  "31g": "https://www.youtube.com/embed/h-hdabRhEik",
+  "32g": "https://www.youtube.com/embed/hIZZFoY9wMU",
+  "33g": "https://www.youtube.com/embed/Dd9JVu8y5WM",
+  "34g": "https://www.youtube.com/embed/YATITXEFb64",
+  "35g": "https://www.youtube.com/embed/M84vI2g5LMc",
+  "36g": "https://www.youtube.com/embed/Oe_ii4bHFoY",
+  "37g": "https://www.youtube.com/embed/GKqAXZGmSaM",
+  "38g": "https://www.youtube.com/embed/l5O7rWsxSv8",
+  "39g": "https://www.youtube.com/embed/CeQvCJQuT-A",
+  "40g": "https://www.youtube.com/embed/ZhRmrZqJCj4",
+  "41g": "https://www.youtube.com/embed/z0VNu-pc640",
+  "42g": "https://www.youtube.com/embed/hqNMznE3iJw",
+  "43g": "https://www.youtube.com/embed/TlSqYjT5ATA",
+  "44g": "https://www.youtube.com/embed/4PLcliDY664",
+  "45g": "https://www.youtube.com/embed/cEb_vRbcsAY",
+  "46g": "https://www.youtube.com/embed/Fin9nVcOtww",
+  "47g": "https://www.youtube.com/embed/hH0FE30MT-Q",
+  "48g": "https://www.youtube.com/embed/keA2qtiVkvw",
+  "49g": "https://www.youtube.com/embed/8Q_RpS3M6ww",
+  "50g": "https://www.youtube.com/embed/0JZCgY6gnO0",
+
+        "1k": "https://www.youtube.com/embed/dLnW7qXDRrU",
+        "2k": "https://www.youtube.com/embed/SCKi_-5iZOk",
+        "3k": "https://www.youtube.com/embed/WqzEm4MXMJo",
+        "4k": "https://www.youtube.com/embed/OooEKRI7exI",
+        "5k": "https://www.youtube.com/embed/Gml6vP7zAyw",
+        "6k": "https://www.youtube.com/embed/MNyU0JlIFSg",
+        "7k": "https://www.youtube.com/embed/BVO53Kilkqs",
+        "8k": "https://www.youtube.com/embed/_X7DBt7jGxw",
+        "9k": "https://www.youtube.com/embed/prqz_Yiz5qE",
+        "10k": "https://www.youtube.com/embed/IPLAc0XP9Os",
+        "11k": "https://www.youtube.com/embed/ROVupnsHvpQ",
+        "12k": "https://www.youtube.com/embed/5H2rc7EkQNk",
+        "13k": "https://www.youtube.com/embed/V8HChAo5hX8",
+        "14k": "https://www.youtube.com/embed/Hlt3RRXX-IQ",
+        "15k": "https://www.youtube.com/embed/v_-mBLM6mIs",
+        "16k": "https://www.youtube.com/embed/MtgCXy9uP3U",
+        "17k": "https://www.youtube.com/embed/cfc2OIEoHQU",
+        "18k": "https://www.youtube.com/embed/mqPaqF0ZgWE",
+        "19k": "https://www.youtube.com/embed/fi6jy-sSHt0",
+        "20k": "https://www.youtube.com/embed/xkNxrnRDcMQ",
+        "21k": "https://www.youtube.com/embed/isccgOwhxxA",
+        "22k": "https://www.youtube.com/embed/EBNhtZxW9Mk",
+        "23k": "https://www.youtube.com/embed/PPrndLnS5bw",
+        "24k": "https://www.youtube.com/embed/PEas7HmOCy4",
+        "25k": "https://www.youtube.com/embed/Iz4kPNt2C40",
+        "26k": "https://www.youtube.com/embed/16UhgMtLqsA",
+        "27k": "https://www.youtube.com/embed/0EXIQqNFggw",
+        "28k": "https://www.youtube.com/embed/660VorvoKyo",
+        "29k": "https://www.youtube.com/embed/zWV4rOdziJ8",
+        "30k": "https://www.youtube.com/embed/eRVKb9EUe8Q",
+        "31k": "https://www.youtube.com/embed/vXVYs_cr_Ys",
+        "32k": "https://www.youtube.com/embed/0yPjn_NGnCY",
+        "33k": "https://www.youtube.com/embed/uaAGzU5J3ms",
+        "34k": "https://www.youtube.com/embed/Ru9QABk_eqw",
+        "35k": "https://www.youtube.com/embed/bkCJN2PeUCM",
+        "36k": "https://www.youtube.com/embed/5uugTv6wsm8",
+        "37k": "https://www.youtube.com/embed/RH5Aaa2xZbI",
+        "38k": "https://www.youtube.com/embed/0v2Ti6LaAmI",
+        "39k": "https://www.youtube.com/embed/lwIp_Z4YP8Q",
+        "40k": "https://www.youtube.com/embed/P4aufB7TW_k",
+
+        "1d": "https://www.youtube.com/embed/3nCQc5bvpIA",
+  "2d": "https://www.youtube.com/embed/eOMRIT5oNBY",
+  "3d": "https://www.youtube.com/embed/k8W9rY58evc",
+  "4d": "https://www.youtube.com/embed/9Bxp7CN0pFk",
+  "5d": "https://www.youtube.com/embed/5tkkhjR75gY",
+  "6d": "https://www.youtube.com/embed/no1qYqY7ACw",
+  "7d": "https://www.youtube.com/embed/CTsJPxUOlgk",
+  "8d": "https://www.youtube.com/embed/CCwt8-f9TyA",
+  "9d": "https://www.youtube.com/embed/jnaRzyBG1XQ",
+  "10d": "https://www.youtube.com/embed/-GGroapWCR8",
+  "11d": "https://www.youtube.com/embed/vqlpt4_XTqE",
+  "12d": "https://www.youtube.com/embed/ety0KJthSp0",
+
+  "r1": "https://www.youtube.com/embed/lIcVX0lGHH4",
+"r2": "https://www.youtube.com/embed/WEzGCdzGp00",
+"r3": "https://www.youtube.com/embed/c7b-gfPE20g",
+"r4": "https://www.youtube.com/embed/MP4AAnFi5Xo",
+"r5": "https://www.youtube.com/embed/gohlonlj_y8",
+"r6": "https://www.youtube.com/embed/VxhAVCVdY8k",
+"r7": "https://www.youtube.com/embed/whUoNrjV5u4",
+"r8": "https://www.youtube.com/embed/h8jvaKSwh88",
+"r9": "https://www.youtube.com/embed/zHq_YoIb8Y0",
+"r10": "https://www.youtube.com/embed/Vw-HBZIJjbk",
+"r11": "https://www.youtube.com/embed/KVmCUqShPDU",
+"r12": "https://www.youtube.com/embed/RBUjvTbjy78",
+"r13": "https://www.youtube.com/embed/ratl_coHfRE",
+"r14": "https://www.youtube.com/embed/9OgB5pxcLyo",
+"r15": "https://www.youtube.com/embed/Hhgog9t7exc",
+"r16": "https://www.youtube.com/embed/VN8DihwyOi8",
+
+"1y": "https://www.youtube.com/embed/-6DDEaTTL5E",
+    "2y": "https://www.youtube.com/embed/FgbRiU0_JuM",
+    "3y": "https://www.youtube.com/embed/igXWLqkL1js",
+    "4y": "https://www.youtube.com/embed/RPWg8oAt6aU",
+    "5y": "https://www.youtube.com/embed/m70GSpH54KI",
+    "6y": "https://www.youtube.com/embed/ZPf4TNi1hEs",
+    "7y": "https://www.youtube.com/embed/5htJIJtnK9I",
+    "8y": "https://www.youtube.com/embed/2Bef8IvdfaM",
+    "9y": "https://www.youtube.com/embed/6h_8_5IrA2k",
+    "10y": "https://www.youtube.com/embed/hfs6qXDzV-E",
+    "11y": "https://www.youtube.com/embed/Kq59nqAa8Ao",
+    "12y": "https://www.youtube.com/embed/1bgPNrfVC24",
+    "13y": "https://www.youtube.com/embed/KvMXlxkRzjs",
+    "14y": "https://www.youtube.com/embed/iyrbvh-fSZw",
+    "15y": "https://www.youtube.com/embed/QSKqjbYfGvE",
+    "16y": "https://www.youtube.com/embed/p-u8dmmQgrI",
+    "17y": "https://www.youtube.com/embed/YyBAX7zulxE",
+    "18y": "https://www.youtube.com/embed/VRLsHo7d-qc",
+    "19y": "https://www.youtube.com/embed/6lszyBWsgvY",
+    "20y": "https://www.youtube.com/embed/HhFhd_8ysbY",
+    "21y": "https://www.youtube.com/embed/yCVRALz1yMA",
+
+"m1": "https://www.youtube.com/embed/58kggAdEmvo?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m2": "https://www.youtube.com/embed/s5c4cyYYFDM?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m3": "https://www.youtube.com/embed/RFJP6N3CXz8?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m4": "https://www.youtube.com/embed/c_SX0XZPYIo?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m5": "https://www.youtube.com/embed/xHYsm4eOoQI?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m6": "https://www.youtube.com/embed/LU48ViYWIyM?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m7": "https://www.youtube.com/embed/kZ5CZ74vZ-A?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m8": "https://www.youtube.com/embed/97KOGPObDHE?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m9": "https://www.youtube.com/embed/X5yRE9Wbup8?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m10": "https://www.youtube.com/embed/6pBcIjddZuM?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m11": "https://www.youtube.com/embed/lLJo7SY5EP0?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m12": "https://www.youtube.com/embed/doVK_amfgoA?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m13": "https://www.youtube.com/embed/QlAMEYKgEKY?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m14": "https://www.youtube.com/embed/upoj_C_WoM4?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m15": "https://www.youtube.com/embed/pqPrLO0XooI?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m16": "https://www.youtube.com/embed/ON9rWk5J-qk?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m17": "https://www.youtube.com/embed/Q_wL5wEW1MY?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m18": "https://www.youtube.com/embed/Mfiz08pzUs0?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m19": "https://www.youtube.com/embed/nV_IsfKM1To?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m20": "https://www.youtube.com/embed/o3iV3_9D5Xs?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m21": "https://www.youtube.com/embed/OASmGeTTEpw?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m22": "https://www.youtube.com/embed/M5BpMtD86TM?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m23": "https://www.youtube.com/embed/CvPpHn0hsas?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m24": "https://www.youtube.com/embed/BZbnyuk22RU?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m25": "https://www.youtube.com/embed/SUHaxIVcDkg?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m26": "https://www.youtube.com/embed/Ty6DF2I5teU?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m27": "https://www.youtube.com/embed/K--zZe8HcIk?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+"m28": "https://www.youtube.com/embed/ONPj5IinV8w?list=PLQ2-BTI8z3FNQ0--1j9tlC7FnEVbdpw-6",
+
+"l1": "https://www.youtube.com/embed/7a7nCJoEdLc?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l1b": "https://www.youtube.com/embed/1IgrW-jpvTE?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l2": "https://www.youtube.com/embed/yE3uOB7DQaM?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l3": "https://www.youtube.com/embed/owl1aEw4QSc?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l4": "https://www.youtube.com/embed/0n1PKaVd_uo?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l5": "https://www.youtube.com/embed/U1UPGrjdr9E?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l6": "https://www.youtube.com/embed/qw9rkl4cwEQ?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l7": "https://www.youtube.com/embed/8lwlcXTTeFk?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l8": "https://www.youtube.com/embed/a2ZbRJJLkU8?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l9": "https://www.youtube.com/embed/Coyr3BVJPK0?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l10": "https://www.youtube.com/embed/faqpa4XKrxY?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l11": "https://www.youtube.com/embed/7fGKf_8VZuc?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l12": "https://www.youtube.com/embed/iIofm16_CwI?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l13": "https://www.youtube.com/embed/jslsQY6b_e8?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l14": "https://www.youtube.com/embed/uED7Fbm64WE?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l15": "https://www.youtube.com/embed/q1pq7u5VvUY?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l16": "https://www.youtube.com/embed/VIymByH1nrs?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l17": "https://www.youtube.com/embed/PFf1pJq32r0?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l18": "https://www.youtube.com/embed/HhxgJz6-ocY?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l19": "https://www.youtube.com/embed/2Q9KYPK0kl0?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l20": "https://www.youtube.com/embed/jqW_w26A8YI?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l21": "https://www.youtube.com/embed/4B-eVjpIH04?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l22": "https://www.youtube.com/embed/zCEQ-yfovHU?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l23": "https://www.youtube.com/embed/GMkBfzWO4DU?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+"l24": "https://www.youtube.com/embed/2dOHGh23z3A?list=PLQ2-BTI8z3FN10ykyQQGNR6SLpHDXfERO",
+
+    };
+
+    const selectElement = document.getElementById("ashah");
+    const videoFrame = document.getElementById("videoFrame");
+
+    selectElement.addEventListener("change", function () {
+        const selectedValue = this.value;
+        const videoUrl = videoMap[selectedValue];
+        videoFrame.src = videoUrl || "";
+    }
+    );
+    const romiahSelect = document.getElementById("romiah");
+
+romiahSelect.addEventListener("change", function () {
+  const selectedValue = this.value;
+  videoFrame.src = videoMap[selectedValue] || "";
+});
+
+function showOld() {
+   
+    oldc.classList.add('cli');
+    newc.classList.remove('cli');
+    const defaultValue = "1g";
+    document.getElementById("ashah").value = defaultValue;
+    videoFrame.src = videoMap[defaultValue];
+
+  document.getElementById("oldDiv").style.display = "block";
+  document.getElementById("newDiv").style.display = "none";
+}
+
+function showNew() {
+  
+    newc.classList.add('cli');
+    oldc.classList.remove('cli');
+        const defaultValue = "m1";
+    document.getElementById("romiah").value = defaultValue;
+    videoFrame.src = videoMap[defaultValue];
+
+  document.getElementById("oldDiv").style.display = "none";
+  document.getElementById("newDiv").style.display = "block";
+}
+</script>
+</body>
+</html>

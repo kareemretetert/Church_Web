@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+<html lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<title>المسابقات</title>
+<style>
+    body { 
+      font-family: Arial; 
+      text-align: center; 
+      margin-top: 100px; 
+      direction: rtl; 
+      background-color: #f0f8ff;
+    }
+    input { padding: 10px; width: 250px; font-size: 16px; }
+    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
+    .he{ 
+      border:  5px black double;
+      border-radius: 30px;
+      padding: 20px;
+      background: #87b2e4;
+     height: 300px;
+     width: 80%;
+     text-align: center;
+     position: relative;
+     right: 100px;
+    }
+.but{
+  width: 30%;
+  margin: 40px;
+  border-radius: 15px;
+  background: #8cc3e2;
+}
+.af {
+  position: absolute;
+  top: 20px;
+  left: 35px;
+  background-image:linear-gradient(to left,#98bfd6d2,rgb(70, 160, 196)) ;
+  color: white;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: bold;
+  text-decoration: none;
+  border: 2px solid #38373a;
+  transition: background-color 0.3s initial, transform 0.2s initial;
+  z-index: 1000;
+  transform: scale(1.25);
+  width: 100px;
+}
+
+.af:hover {
+  background-color: #696969;
+  
+}
+.te{
+  border-radius: 15px;
+  background: #b6dcee;
+  
+}
+  
+@media (max-width: 768px) {
+  body {
+    padding: 10px !important;
+    font-size: 1rem !important;
+  }
+  h1, h2, h3 {
+    font-size: 1.2rem !important;
+  }
+  .but{
+    position: relative;
+    left: 30px;
+    width: 50px;
+  }
+  input, select, button {
+    width: 90% !important;
+    font-size: 1rem !important;
+  }
+  .back-button, .af, .next-link, .back-btn {
+    left: 10px !important;
+    top: 10px !important;
+    transform: scale(1);
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .video-container {
+    grid-template-columns: 1fr !important;
+  }
+  .church-image, iframe, video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+<a class="af" href="index.html">الصفحة الرئيسية ⬅</a>
+<div class="he">
+<h1>مسابقة من انا (من الكتاب المقدس)</h1>
+<h2>اكتب اسمك عشان تشارك في المسابقة</h2>
+<input class="te" id="username" placeholder="اكتب اسمك" type="text"/>
+<br/>
+<button class="but" onclick="startQuiz()">ابدأ المسابقة</button>
+</div>
+<br/>
+<br/>
+<br/>
+<div class="he">
+<h1>لعبة تحدي الذاكرة - ذاكرتك قوية؟</h1>
+<h2>اكتب اسمك عشان تشارك في اللعبة</h2>
+<input class="te" id="username2" placeholder="اكتب اسمك" type="text"/>
+<br/>
+<button class="but" onclick="startQuiz2()">ابدأ التحدي</button>
+</div>
+<br/>
+<br/>
+<br/>
+<div class="he">
+  <h1>لعبة المتاهة- حاول توصل للنهاية بسرعة</h1>
+  <h2>اكتب اسمك عشان تشارك في اللعبة</h2>
+  <input class="te" id="username3" placeholder="اكتب اسمك" type="text"/>
+  <br/>
+  <button class="but" onclick="startQuiz3()">ابدأ اللعبة</button>
+  </div>
+<script>
+    function startQuiz() {
+      const name = document.getElementById('username').value.trim();
+      if (!name) {
+        alert("من فضلك اكتب اسمك");
+        return;
+      }
+
+      const results = JSON.parse(localStorage.getItem('quiz_results')) || [];
+      const nameExists = results.some(r => r.name === name);
+
+
+      localStorage.setItem('quiz_username', name);
+      window.location.href = 'quiz.html'; // دي صفحة \"من أنا؟\"
+    }
+    function startQuiz2() {
+      const name2 = document.getElementById('username2').value.trim();
+      if (!name2) {
+        alert("من فضلك اكتب اسمك");
+        return;
+      }
+
+      const results2 = JSON.parse(localStorage.getItem('quiz_results')) || [];
+      const nameExists2 = results2.some(r => r.name === name2);
+
+      localStorage.setItem('quiz_username', name2);
+      window.location.href = 'quiz2.html'; // دي صفحة \"من أنا؟\"
+    }
+    function startQuiz3() {
+      const name3 = document.getElementById('username3').value.trim();
+      if (!name3) {
+        alert("من فضلك اكتب اسمك");
+        return;
+      }
+
+      const results3 = JSON.parse(localStorage.getItem('quiz_results')) || [];
+      const nameExists3 = results3.some(r => r.name === name3);
+
+      localStorage.setItem('quiz_username', name3);
+      window.location.href = 'qiaz3.html'; // دي صفحة \"من أنا؟\"
+    }
+
+
+
+  
+  </script>
+</body>
+</html>

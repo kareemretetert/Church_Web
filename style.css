@@ -1,0 +1,11 @@
+::selection{
+  background-color: rgba(212, 212, 212, 0.808);
+  color: #001cbdcc;
+}
+body {
+  margin: 0;
+  font-family: 'Cairo', sans-serif;
+  background-color: #f0f8ff;
+  color: #333;
+  direction: rtl;
+}

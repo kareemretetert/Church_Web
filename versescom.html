@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي, آية وتفسير" name="keywords"/>
+<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+<title>مسابقة آية وتفسير</title>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f8ff;
+      color: #333;
+      line-height: 1.8;
+    }
+    ::selection{
+    background-color: rgba(212, 212, 212, 0.808);
+    color: #001cbdcc;
+}
+    header {
+      background-color: #6a1b9a;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      border-bottom: 5px solid #4a148c;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .main-content {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .verse-box, .explanation-box {
+        
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 1.5rem;
+      padding: 1.5rem;
+      transition: max-height 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+    }
+
+    .verse-box h3, .explanation-box h3 {
+      margin: 0 0 1rem;
+      font-weight: 600;
+    }
+
+    .highlight {
+      background-color: #ffeb3b;
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+    }
+
+    .toggle-btns {
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .toggle-btns h2 {
+      cursor: pointer;
+      display: inline-block;
+      background-color: #6a1b9a;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      margin: 0 0.5rem;
+      font-size: 1rem;
+      transition: background 0.3s;
+      position: relative;
+      bottom: 20px;
+    }
+
+    .toggle-btns h2:hover {
+      background-color: #4a148c;
+    }
+
+    .hidden {
+      max-height: 0 !important;
+      opacity: 0 !important;
+      padding: 0 1.5rem !important;
+      overflow: hidden;
+    }
+
+    @media (max-width: 600px) {
+      .main-content {
+        padding: 1rem;
+      }
+    }
+
+    .nav-link {
+  display: inline-block;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.next-link {
+    position: relative;
+        right: 545px;
+        bottom: 55px;
+
+  text-decoration: none;
+  font-size: 18px;
+  color: #d3d3d3; /* اللون الأخضر */
+  font-weight: bold;
+  padding: 10px 20px;
+  border: 2px solid #d3d3d3;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+
+.next-link:hover {
+  background-color: #5eebdf79;
+  color: white;
+  transform: scale(1.05);
+}
+
+.link-text {
+  font-family: 'Arial', sans-serif;
+}
+.footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #2e3a59;
+    color: white;
+}
+
+.verse-box, .explanation-box {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  animation: fadeZoomInUp 0.8s ease forwards;
+}
+
+.verse-box:nth-of-type(2) { animation-delay: 0.2s; }
+.verse-box:nth-of-type(4) { animation-delay: 0.4s; }
+.verse-box:nth-of-type(6) { animation-delay: 0.6s; }
+.verse-box:nth-of-type(8) { animation-delay: 0.8s; }
+.verse-box:nth-of-type(10) { animation-delay: 1s; }
+
+@keyframes fadeZoomInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+  
+@media (max-width: 768px) {
+  body {
+    padding: 10px !important;
+    font-size: 1rem !important;
+  }
+  h1, h2, h3 {
+    font-size: 1.2rem !important;
+  }
+  input, select, button {
+    width: 90% !important;
+    font-size: 1rem !important;
+  }
+  .back-button, .af, .next-link, .back-btn {
+    left: 10px !important;
+    top: 10px !important;
+    transform: scale(1);
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .video-container {
+    grid-template-columns: 1fr !important;
+  }
+  .church-image, iframe, video {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+}
+
+/* تجاوب كامل حسب أي أبعاد شاشة */
+@media (max-width: 992px) {
+  header, .main-content, .verse-box, .explanation-box, .toggle-btns, footer {
+    text-align: center !important;
+  }
+  .next-link {
+    position: static !important;
+    display: inline-block !important;
+    margin-top: 15px !important;
+    font-size: 14px !important;
+    padding: 8px 16px !important;
+    width: auto !important;
+  }
+  .main-content {
+    padding: 1rem !important;
+    width: 95% !important;
+    margin: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+<header>
+<h1>مسابقة <span class="highlight">آية وتفسير</span></h1>
+<span class="nav-link">
+<a class="next-link" href="index.html">
+<span class="link-text">الصفحة الرئيسية ⬅</span>
+</a>
+</span>
+</header>
+<div class="main-content">
+<!-- مقدمة المسابقة -->
+<div class="verse-box" style="background-color: #f1f1f1;">
+<h3>
+        ما هي الفقرة ؟<br/>
+        بنجيب آية من الكتاب المقدس محتاجة لتفسير لأنها ممكن تتفهم غلط، وانت حاول تعرف التفسير الصحيح قبل ما يتعرضلك.
+      </h3>
+</div>
+<br/>
+<!-- آية 1 -->
+<div class="verse-box">
+<h3>" لا تظنوا أني جئت لألقي سلامًا على الأرض، ما جئت لألقي سلامًا بل سيفًا " 📖 (متى 10:34)</h3>
+</div>
+<div class="explanation-box hidden" id="ex1">
+<h3>
+        الرسالة العامة:<br/>
+        في هذه الآية، يتحدث يسوع عن طبيعة الرسالة التي جاء بها. هو هنا يُشير إلى أن دعوته قد تؤدي إلى الانقسام والخلاف بدلاً من السلام.<br/><br/>
+        السيف كرمز:<br/>
+        عندما يشير يسوع إلى "السيف"، فهو يستخدمه كرمز للصراع والانقسام الذي قد ينشأ نتيجة للإيمان به. اتباع تعاليمه قد يكون تحديًا، خصوصًا مع اختلاف المعتقدات السائدة.
+      </h3>
+</div>
+<div class="toggle-btns">
+<h2 onclick="toggle('ex1')">إظهار / إخفاء التفسير</h2>
+</div>
+<br/>
+<br/>
+<!-- آية 2 -->
+<div class="verse-box">
+<h3>"الحرف يقتل ولكن الروح يحيي" 📖 (2 كورنثوس 3:6) </h3>
+</div>
+<div class="explanation-box hidden" id="ex2">
+<h3>
+        "الحرف" يقصد به التمسك الحرفي بالناموس دون روح المحبة، مما يؤدي إلى الدينونة والموت الروحي. أما "الروح" فهو الروح القدس الذي يعطي حياة، وفهمًا أعمق لكلام الله، ويقود للتوبة والنعمة.
+      </h3>
+</div>
+<div class="toggle-btns">
+<h2 onclick="toggle('ex2')">إظهار / إخفاء التفسير</h2>
+</div>
+<br/>
+<br/>
+<!-- آية 3 -->
+<div class="verse-box">
+<h3>" عينًا بعين وسنًا بسن ويدًا بيد ورجلًا برجل"
+        📖 (سفر التثنية 19:21)
+        
+        </h3>
+</div>
+<div class="explanation-box hidden" id="ex3">
+<h3>
+        هذه الآية من شريعة العهد القديم لتنظيم العدالة، لا لتشجيع الانتقام. المقصود هو أن تكون العقوبة متناسبة مع الجريمة.<br/><br/>
+        لكن في العهد الجديد، علمنا المسيح أن نغفر ونحب حتى أعداءنا، قائلاً: "لا تقاوموا الشر، بل من لطمك على خدك الأيمن فحوّل له الآخر أيضًا".
+      </h3>
+</div>
+<div class="toggle-btns">
+<h2 onclick="toggle('ex3')">إظهار / إخفاء التفسير</h2>
+</div>
+<br/>
+<br/>
+<!-- آية 4 -->
+<div class="verse-box">
+<h3> "المحبة تستر كثيرًا من الخطايا"
+            📖 (أمثال 10:12 / 1 بطرس 4:8)</h3>
+</div>
+<div class="explanation-box hidden" id="ex4">
+<h3>
+            المقصود مش إن المحبة "تغطي" الخطايا علشان نتجاهلها أو نتستر عليها.
+
+            لكن معناها إن المحبة الحقيقية تمنع الخصام، وتسامح، وتمنع تفاقم الأمور.
+            
+            ✨ لما يكون بينك وبين حد مشكلة، لو فيه محبة، هتقدر "تغفر" وتتجاوز وتبني بدل ما تهد.
+            
+            المحبة بتخلّي الناس تتوب وتصلح، وده يخلي الخطية تنتهي مش تتغطى.
+        </h3>
+</div>
+<div class="toggle-btns">
+<h2 onclick="toggle('ex4')">إظهار / إخفاء التفسير</h2>
+</div>
+<br/>
+<br/>
+<!-- آية 5 -->
+<div class="verse-box">
+<h3> "كل شيء يحل لي"
+        📖 (1 كورنثوس 6:12)</h3>
+</div>
+<div class="explanation-box hidden" id="ex5">
+<h3>
+        بولس الرسول هنا بيرد على الناس اللي فاهمين الحرية في المسيح بشكل غلط.
+
+        هو بيقول: "صح، في حرية... لكن مش كل حاجة مفيدة، ومش كل حاجة تناسب المؤمن".
+        
+        🙅‍♂️ يعني مش معنى إن حاجة مش ممنوعة تبقى صح!
+        
+        وكمان بيقول: ماينفعش تخلي أي عادة أو شهوة تتسلّط عليك وتتحكم فيك، حتى لو كانت "مباحة".
+    </h3>
+</div>
+<div class="toggle-btns">
+<h2 onclick="toggle('ex5')">إظهار / إخفاء التفسير</h2>
+</div>
+</div>
+<br/>
+<br/>
+<footer class="footer">
+<h2>للتواصل 01501124201 📱</h2>
+</footer>
+<script>
+    function toggle(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle("hidden");
+    }
+  </script>
+</body>
+</html>
