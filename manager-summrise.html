@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+
+<meta charset="UTF-8">
+<title>لوحة إدارة التلخيصات</title>
+
+<style>
+
+body{
+font-family:Tajawal, Tahoma;
+direction:rtl;
+background:#f0f2f5;
+padding:30px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+h2{
+margin-top:40px;
+}
+
+input,textarea,button{
+width:100%;
+margin-top:10px;
+padding:12px;
+border-radius:6px;
+border:1px solid #ccc;
+font-size:15px;
+}
+
+textarea{
+height:120px;
+}
+
+button{
+background:#2e7d32;
+border:none;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#1b5e20;
+}
+
+.card{
+background:white;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card-title{
+font-size:18px;
+font-weight:bold;
+}
+
+.card-date{
+color:#777;
+font-size:14px;
+margin-top:5px;
+}
+
+.deleteBtn{
+margin-top:10px;
+background:#d32f2f;
+}
+
+.deleteBtn:hover{
+background:#b71c1c;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>إضافة تلخيص جديد</h2>
+
+<label>العنوان</label>
+<input id="title">
+
+<label>التاريخ</label>
+<input type="date" id="date">
+
+<label>المحتوى</label>
+<textarea id="content"></textarea>
+
+<label>إضافة صور</label>
+<input type="file" id="images" multiple accept="image/*">
+
+<label>إضافة فيديوهات</label>
+<input type="file" id="videos" multiple accept="video/*">
+
+<label>إضافة ملفات</label>
+<input type="file" id="files" multiple>
+
+<button id="publish">نشر التلخيص</button>
+
+<h2>التلخيصات الحالية</h2>
+
+<div id="summariesList"></div>
+
+</div>
+
+<script>
+
+const password="kimo123"
+const entered=prompt("ادخل كلمة المرور")
+
+if(entered!==password){
+document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>كلمة المرور غير صحيحة</h2>"
+throw new Error("access denied")
+}
+
+let summaries=[]
+
+async function loadSummaries(){
+
+try{
+
+const res=await fetch("summaries.json")
+summaries=await res.json()
+
+if(!Array.isArray(summaries)){
+summaries=[]
+}
+
+renderSummaries()
+
+}catch{
+
+document.getElementById("summariesList").innerHTML=
+"<p style='color:#777'>لا يمكن تحميل التلخيصات</p>"
+
+}
+
+}
+
+window.onload=loadSummaries
+
+
+function fileToBase64(file){
+return new Promise((resolve,reject)=>{
+
+const reader=new FileReader()
+
+reader.onload=()=>resolve({
+name:file.name,
+type:file.type,
+data:reader.result
+})
+
+reader.onerror=reject
+
+reader.readAsDataURL(file)
+
+})
+}
+
+async function readFiles(fileList){
+
+let arr=[]
+
+for(let f of fileList){
+arr.push(await fileToBase64(f))
+}
+
+return arr
+
+}
+
+
+document.getElementById("publish").onclick=async()=>{
+
+const title=document.getElementById("title").value
+const date=document.getElementById("date").value
+const content=document.getElementById("content").value
+
+if(!title || !date || !content){
+alert("اكتب كل البيانات")
+return
+}
+
+const images=await readFiles(document.getElementById("images").files)
+const videos=await readFiles(document.getElementById("videos").files)
+const files=await readFiles(document.getElementById("files").files)
+
+const newSummary={
+title,
+date,
+content,
+images,
+videos,
+files
+}
+
+summaries.unshift(newSummary)
+
+await updateJSONFile(summaries)
+
+renderSummaries()
+
+alert("تم نشر التلخيص")
+
+}
+
+
+
+function renderSummaries(){
+
+const container=document.getElementById("summariesList")
+
+container.innerHTML=""
+
+if(!summaries.length){
+
+container.innerHTML="<p style='color:#777'>لا يوجد تلخيصات حالياً</p>"
+
+return
+
+}
+
+summaries.forEach((s,i)=>{
+
+if(!s) return
+
+const card=document.createElement("div")
+
+card.className="card"
+
+card.innerHTML=`
+
+<div class="card-title">${s.title || "بدون عنوان"}</div>
+
+<div class="card-date">📅 ${s.date || "بدون تاريخ"}</div>
+
+<p>${(s.content || "").substring(0,120)}...</p>
+
+<button class="deleteBtn" onclick="deleteSummary(${i})">
+حذف التلخيص
+</button>
+
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+
+
+async function deleteSummary(index){
+
+if(!confirm("هل تريد حذف هذا التلخيص؟")) return
+
+summaries.splice(index,1)
+
+await updateJSONFile(summaries)
+
+renderSummaries()
+
+}
+
+
+
+const GITHUB_TOKEN="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"
+const REPO_OWNER="kareemretetert"
+const REPO_NAME="Church_Web"
+const FILE_PATH="summaries.json"
+
+
+async function updateJSONFile(data){
+
+await fetch("/.netlify/functions/save",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(data)
+})
+
+}
+</script>
+
+</body>
+</html>
