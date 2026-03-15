@@ -7,7 +7,7 @@ try {
 
 const data = JSON.parse(event.body)
 
-const filePath = path.join(process.cwd(), "summrise.json")
+const filePath = path.join(process.cwd(), "summaries.json")
 
 fs.writeFileSync(filePath, JSON.stringify(data,null,2))
 
