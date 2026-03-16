@@ -274,41 +274,19 @@ renderSummaries()
 
 
 
-const GITHUB_TOKEN="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"
 const REPO_OWNER="kareemretetert"
 const REPO_NAME="Church_Web"
 const FILE_PATH="summaries.json"
 
 async function updateJSONFile(data){
 
-const url="https://api.github.com/repos/kareemretetert/Church_Web/contents/summaries.json"
-
-const response = await fetch(url,{
+await fetch("/.netlify/functions/save",{
+method:"POST",
 headers:{
-Authorization:`token ${GITHUB_TOKEN}`
-}
-})
-
-const file = await response.json()
-
-const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))))
-
-const update = await fetch(url,{
-method:"PUT",
-headers:{
-Authorization:`token ${GITHUB_TOKEN}`,
 "Content-Type":"application/json"
 },
-body:JSON.stringify({
-message:"update summaries",
-content:updatedContent,
-sha:file.sha,
-branch:"main"
+body:JSON.stringify(data)
 })
-})
-
-const result = await update.json()
-console.log(result)
 
 }
 
