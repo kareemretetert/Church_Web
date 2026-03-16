@@ -283,23 +283,32 @@ async function updateJSONFile(data){
 
 const url="https://api.github.com/repos/kareemretetert/Church_Web/contents/summaries.json"
 
-const response = await fetch(url)
+const response = await fetch(url,{
+headers:{
+Authorization:`token ${GITHUB_TOKEN}`
+}
+})
+
 const file = await response.json()
 
 const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))))
 
-await fetch(url,{
+const update = await fetch(url,{
 method:"PUT",
 headers:{
-Authorization:"Bearer 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",
+Authorization:`token ${GITHUB_TOKEN}`,
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
 message:"update summaries",
 content:updatedContent,
-sha:file.sha
+sha:file.sha,
+branch:"main"
 })
 })
+
+const result = await update.json()
+console.log(result)
 
 }
 
