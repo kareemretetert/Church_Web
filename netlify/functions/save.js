@@ -1,4 +1,6 @@
-exports.handler = async function(event) {
+exports.handler = async function(event){
+
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN
 
@@ -26,11 +28,12 @@ Authorization:`token ${GITHUB_TOKEN}`,
 body:JSON.stringify({
 message:"update summaries",
 content:updatedContent,
-sha:file.sha
+sha:file.sha,
+branch:"main"
 })
 })
 
-return {
+return{
 statusCode:200,
 body:"updated"
 }
