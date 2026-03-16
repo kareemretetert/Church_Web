@@ -1,41 +1,41 @@
-exports.handler = async function(event){
+exports.handler = async function(event) {
 
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args))
+  try {
+    const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+    const repo = "kareemretetert/Church_Web";
+    const path = "summaries.json";
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+    const data = JSON.parse(event.body);
 
-const repo = "kareemretetert/Church_Web"
-const path = "summaries.json"
+    // احصل على الملف الحالي من GitHub
+    const fileRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      headers: { Authorization: `token ${GITHUB_TOKEN}` }
+    });
 
-const data = JSON.parse(event.body)
+    const file = await fileRes.json();
 
-const fileRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`,{
-headers:{
-Authorization:`token ${GITHUB_TOKEN}`
-}
-})
+    const updatedContent = Buffer.from(JSON.stringify(data, null, 2)).toString("base64");
 
-const file = await fileRes.json()
+    // حدث الملف على GitHub
+    const updateRes = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
+      method: "PUT",
+      headers: { Authorization: `token ${GITHUB_TOKEN}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: "update summaries",
+        content: updatedContent,
+        sha: file.sha,
+        branch: "main"
+      })
+    });
 
-const updatedContent = Buffer.from(JSON.stringify(data,null,2)).toString("base64")
+    const result = await updateRes.json();
+    console.log(result);
 
-await fetch(`https://api.github.com/repos/${repo}/contents/${path}`,{
-method:"PUT",
-headers:{
-Authorization:`token ${GITHUB_TOKEN}`,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-message:"update summaries",
-content:updatedContent,
-sha:file.sha,
-branch:"main"
-})
-})
+    return { statusCode: 200, body: "updated" };
 
-return{
-statusCode:200,
-body:"updated"
-}
+  } catch (err) {
+    console.error(err);
+    return { statusCode: 500, body: "Error updating summaries" };
+  }
 
 }
