@@ -279,15 +279,26 @@ const REPO_OWNER="kareemretetert"
 const REPO_NAME="Church_Web"
 const FILE_PATH="summaries.json"
 
-
 async function updateJSONFile(data){
 
-await fetch("/.netlify/functions/save",{
-method:"POST",
+const url="https://api.github.com/repos/kareemretetert/Church_Web/contents/summaries.json"
+
+const response = await fetch(url)
+const file = await response.json()
+
+const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))))
+
+await fetch(url,{
+method:"PUT",
 headers:{
+Authorization:"token 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",
 "Content-Type":"application/json"
-},
-body:JSON.stringify(data)
+}
+body:JSON.stringify({
+message:"update summaries",
+content:updatedContent,
+sha:file.sha
+})
 })
 
 }
