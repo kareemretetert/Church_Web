@@ -124,10 +124,9 @@ throw new Error("access denied")
 
 let summaries=[]
 
+// تحميل التلخيصات
 async function loadSummaries(){
-
 try{
-
 const res=await fetch("summaries.json")
 summaries=await res.json()
 
@@ -138,17 +137,15 @@ summaries=[]
 renderSummaries()
 
 }catch{
-
 document.getElementById("summariesList").innerHTML=
 "<p style='color:#777'>لا يمكن تحميل التلخيصات</p>"
-
 }
-
 }
 
 window.onload=loadSummaries
 
 
+// رفع ملف واحد
 async function uploadFile(file){
 
 const reader = new FileReader();
@@ -161,7 +158,7 @@ const res = await fetch("/.netlify/functions/upload", {
 method: "POST",
 headers: { "Content-Type": "application/json" },
 body: JSON.stringify({
-fileName: Date.now() + "_" + file.name, // مهم عشان مايحصلش تكرار
+fileName: Date.now() + "_" + file.name,
 content: reader.result
 })
 });
@@ -178,7 +175,17 @@ reader.readAsDataURL(file);
 }
 
 
+// زر النشر
 document.getElementById("publish").onclick=async()=>{
+
+const title=document.getElementById("title").value
+const date=document.getElementById("date").value
+const content=document.getElementById("content").value
+
+if(!title || !date || !content){
+alert("اكتب كل البيانات")
+return
+}
 
 const imageFiles = document.getElementById("images").files;
 const videoFiles = document.getElementById("videos").files;
@@ -188,16 +195,28 @@ let images = [];
 let videos = [];
 let files = [];
 
+// رفع الصور
 for(let f of imageFiles){
 images.push(await uploadFile(f));
 }
 
+// رفع الفيديوهات
 for(let f of videoFiles){
 videos.push(await uploadFile(f));
 }
 
+// رفع الملفات
 for(let f of fileFiles){
 files.push(await uploadFile(f));
+}
+
+const newSummary={
+title,
+date,
+content,
+images,
+videos,
+files
 }
 
 summaries.unshift(newSummary)
@@ -211,19 +230,15 @@ alert("تم نشر التلخيص")
 }
 
 
-
+// عرض التلخيصات
 function renderSummaries(){
 
 const container=document.getElementById("summariesList")
-
 container.innerHTML=""
 
 if(!summaries.length){
-
 container.innerHTML="<p style='color:#777'>لا يوجد تلخيصات حالياً</p>"
-
 return
-
 }
 
 summaries.forEach((s,i)=>{
@@ -231,15 +246,12 @@ summaries.forEach((s,i)=>{
 if(!s) return
 
 const card=document.createElement("div")
-
 card.className="card"
 
 card.innerHTML=`
 
 <div class="card-title">${s.title || "بدون عنوان"}</div>
-
 <div class="card-date">📅 ${s.date || "بدون تاريخ"}</div>
-
 <p>${(s.content || "").substring(0,120)}...</p>
 
 <button class="deleteBtn" onclick="deleteSummary(${i})">
@@ -255,7 +267,7 @@ container.appendChild(card)
 }
 
 
-
+// حذف
 async function deleteSummary(index){
 
 if(!confirm("هل تريد حذف هذا التلخيص؟")) return
@@ -269,11 +281,7 @@ renderSummaries()
 }
 
 
-
-const REPO_OWNER="kareemretetert"
-const REPO_NAME="Church_Web"
-const FILE_PATH="summaries.json"
-
+// تحديث JSON
 async function updateJSONFile(data){
 
 await fetch("/.netlify/functions/save",{
