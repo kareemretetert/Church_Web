@@ -93,40 +93,49 @@
 
 
   
-  <script>
-    fetch("summaries.json")
+ <script>
+fetch("summaries.json")
 .then(res => res.json())
 .then(list => {
 
-const a = list[0]   // آخر تلخيص
+if(!list.length){
+document.getElementById("title").innerText = "لا يوجد تلخيصات"
+return
+}
+
+const a = list[0]
 
 document.getElementById("title").innerText = a.title
 document.getElementById("date").innerText = "📅 التاريخ: " + a.date
-document.getElementById("content").innerText = a.content
 
 const contentDiv = document.querySelector(".content")
 
-// عرض الصور
-// عرض الصور
+contentDiv.innerHTML = `<p id="content"></p>`
+document.getElementById("content").innerText = a.content
+
+// الصور
 if(a.images){
 a.images.forEach(img=>{
 const image=document.createElement("img")
 image.src=img
+image.style.maxHeight="400px"
+image.style.objectFit="cover"
 contentDiv.appendChild(image)
 })
 }
 
-// عرض الفيديوهات
+// الفيديوهات
 if(a.videos){
 a.videos.forEach(v=>{
 const video=document.createElement("video")
 video.controls=true
 video.src=v
+video.style.maxHeight="400px"
 contentDiv.appendChild(video)
 })
 }
 
-// عرض الملفات
+// الملفات
 if(a.files){
 a.files.forEach(f=>{
 const link=document.createElement("a")
@@ -139,6 +148,6 @@ contentDiv.appendChild(link)
 }
 
 })
-  </script>
+</script>
 </body>
 </html>
