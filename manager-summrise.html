@@ -149,59 +149,55 @@ document.getElementById("summariesList").innerHTML=
 window.onload=loadSummaries
 
 
-function fileToBase64(file){
-return new Promise((resolve,reject)=>{
+async function uploadFile(file){
 
-const reader=new FileReader()
+const reader = new FileReader();
 
-reader.onload=()=>resolve({
-name:file.name,
-type:file.type,
-data:reader.result
+return new Promise((resolve) => {
+
+reader.onload = async () => {
+
+const res = await fetch("/.netlify/functions/upload", {
+method: "POST",
+headers: { "Content-Type": "application/json" },
+body: JSON.stringify({
+fileName: Date.now() + "_" + file.name, // مهم عشان مايحصلش تكرار
+content: reader.result
 })
+});
 
-reader.onerror=reject
+const data = await res.json();
 
-reader.readAsDataURL(file)
+resolve(data.url);
 
-})
-}
+};
 
-async function readFiles(fileList){
+reader.readAsDataURL(file);
 
-let arr=[]
-
-for(let f of fileList){
-arr.push(await fileToBase64(f))
-}
-
-return arr
-
+});
 }
 
 
 document.getElementById("publish").onclick=async()=>{
 
-const title=document.getElementById("title").value
-const date=document.getElementById("date").value
-const content=document.getElementById("content").value
+const imageFiles = document.getElementById("images").files;
+const videoFiles = document.getElementById("videos").files;
+const fileFiles = document.getElementById("files").files;
 
-if(!title || !date || !content){
-alert("اكتب كل البيانات")
-return
+let images = [];
+let videos = [];
+let files = [];
+
+for(let f of imageFiles){
+images.push(await uploadFile(f));
 }
 
-const images=await readFiles(document.getElementById("images").files)
-const videos=await readFiles(document.getElementById("videos").files)
-const files=await readFiles(document.getElementById("files").files)
+for(let f of videoFiles){
+videos.push(await uploadFile(f));
+}
 
-const newSummary={
-title,
-date,
-content,
-images,
-videos,
-files
+for(let f of fileFiles){
+files.push(await uploadFile(f));
 }
 
 summaries.unshift(newSummary)
