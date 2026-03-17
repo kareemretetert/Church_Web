@@ -8,6 +8,9 @@ exports.handler = async function(event) {
 
     const path = `media/${fileName}`;
 
+    // ✅ مهم جدًا: نحول Base64 قبل fetch
+    const base64 = content.replace(/^data:.+;base64,/, '');
+
     const res = await fetch(`https://api.github.com/repos/${repo}/contents/${path}`, {
       method: "PUT",
       headers: {
@@ -16,12 +19,20 @@ exports.handler = async function(event) {
       },
       body: JSON.stringify({
         message: "upload file",
-        content: content.split(',')[1], // remove base64 header
+        content: base64,
         branch: "main"
       })
     });
 
     const data = await res.json();
+
+    // 🛑 تحقق من وجود خطأ من GitHub
+    if (!data.content) {
+      return {
+        statusCode: 500,
+        body: JSON.stringify(data)
+      };
+    }
 
     return {
       statusCode: 200,
