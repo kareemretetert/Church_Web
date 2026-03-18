@@ -49,6 +49,13 @@
     .btn:hover {
       background-color: #666;
     }
+    .content p {
+  text-align: right;
+}
+
+.content img, .content video {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
     .content {
       max-width: 800px;
       margin: auto;
@@ -93,7 +100,7 @@
 
 
   
- <script>
+<script>
 fetch("summaries.json")
 .then(res => res.json())
 .then(list => {
@@ -110,42 +117,64 @@ document.getElementById("date").innerText = "📅 التاريخ: " + a.date
 
 const contentDiv = document.querySelector(".content")
 
-contentDiv.innerHTML = `<p id="content"></p>`
-document.getElementById("content").innerText = a.content
+// نفضي المحتوى
+contentDiv.innerHTML = ""
 
-// الصور
-if(a.images){
+// 🖼️ الصور
+if(a.images && a.images.length){
+const imagesBox = document.createElement("div")
+
 a.images.forEach(img=>{
 const image=document.createElement("img")
 image.src=img
 image.style.maxHeight="400px"
 image.style.objectFit="cover"
-contentDiv.appendChild(image)
+imagesBox.appendChild(image)
 })
+
+contentDiv.appendChild(imagesBox)
 }
 
-// الفيديوهات
-if(a.videos){
+// 🎥 الفيديوهات
+if(a.videos && a.videos.length){
+const videoBox = document.createElement("div")
+
 a.videos.forEach(v=>{
 const video=document.createElement("video")
 video.controls=true
 video.src=v
 video.style.maxHeight="400px"
-contentDiv.appendChild(video)
+videoBox.appendChild(video)
 })
+
+contentDiv.appendChild(videoBox)
 }
 
-// الملفات
-if(a.files){
+// 📄 الملفات
+if(a.files && a.files.length){
+const filesBox = document.createElement("div")
+
 a.files.forEach(f=>{
 const link=document.createElement("a")
 link.href=f
 link.innerText="📄 تحميل الملف"
 link.style.display="block"
 link.style.margin="10px 0"
-contentDiv.appendChild(link)
+link.style.fontWeight="bold"
+filesBox.appendChild(link)
 })
+
+contentDiv.appendChild(filesBox)
 }
+
+// 📝 المحتوى (في الآخر 👇)
+const text=document.createElement("p")
+text.innerText = a.content
+text.style.marginTop="20px"
+text.style.lineHeight="1.8"
+text.style.fontSize="16px"
+
+contentDiv.appendChild(text)
 
 })
 </script>
