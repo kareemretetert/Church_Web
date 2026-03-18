@@ -1,178 +1,187 @@
 <!DOCTYPE html>
-
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Kareem Hosny" name="author"/>
-<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
-<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
-<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>المسابقات</title>
+
 <style>
-    body { 
-      font-family: Arial; 
-      text-align: center; 
-      margin-top: 100px; 
-      direction: rtl; 
-      background-color: #f0f8ff;
-    }
-    input { padding: 10px; width: 250px; font-size: 16px; }
-    button { padding: 10px 20px; font-size: 16px; margin-top: 10px; cursor: pointer; }
-    .he{ 
-      border:  5px black double;
-      border-radius: 30px;
-      padding: 20px;
-      background: #87b2e4;
-     height: 300px;
-     width: 80%;
-     text-align: center;
-     position: relative;
-     right: 100px;
-    }
-.but{
-  width: 30%;
-  margin: 40px;
-  border-radius: 15px;
-  background: #8cc3e2;
-}
-.af {
-  position: absolute;
-  top: 20px;
-  left: 35px;
-  background-image:linear-gradient(to left,#98bfd6d2,rgb(70, 160, 196)) ;
-  color: white;
-  padding: 8px 18px;
-  border-radius: 25px;
-  font-size: 14px;
-  font-weight: bold;
-  text-decoration: none;
-  border: 2px solid #38373a;
-  transition: background-color 0.3s initial, transform 0.2s initial;
-  z-index: 1000;
-  transform: scale(1.25);
-  width: 100px;
+body {
+  margin: 0;
+  font-family: 'Cairo', sans-serif;
+  background-color: #f0f8ff;
 }
 
-.af:hover {
-  background-color: #696969;
-  
+/* الهيدر */
+.header {
+  background: #4a148c;
+  color: white;
+  text-align: center;
+  padding: 20px;
 }
-.te{
-  border-radius: 15px;
-  background: #b6dcee;
-  
+
+/* الناف بار */
+.nav-bar {
+  background: #6a1b9a;
+  padding: 10px;
 }
-  
-@media (max-width: 768px) {
-  body {
-    padding: 10px !important;
-    font-size: 1rem !important;
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.nav-list li a {
+  color: white;
+  text-decoration: none;
+  background: #7b1fa2;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.nav-list li a:hover {
+  background: #4a148c;
+}
+
+/* المحتوى */
+.main-content {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+/* الكروت */
+.card {
+  background: white;
+  width: 300px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+
+  opacity: 0;
+  transform: translateY(-40px);
+  animation: fadeDown 0.8s ease forwards;
+}
+
+.card:nth-child(2){animation-delay:0.2s;}
+.card:nth-child(3){animation-delay:0.4s;}
+
+@keyframes fadeDown{
+  to{
+    opacity:1;
+    transform:translateY(0);
   }
-  h1, h2, h3 {
-    font-size: 1.2rem !important;
-  }
-  .but{
-    position: relative;
-    left: 30px;
-    width: 50px;
-  }
-  input, select, button {
-    width: 90% !important;
-    font-size: 1rem !important;
-  }
-  .back-button, .af, .next-link, .back-btn {
-    left: 10px !important;
-    top: 10px !important;
-    transform: scale(1);
-    font-size: 12px;
-    padding: 6px 12px;
-  }
-  .video-container {
-    grid-template-columns: 1fr !important;
-  }
-  .church-image, iframe, video {
-    width: 100% !important;
-    max-width: 100% !important;
-    height: auto !important;
-  }
+}
+
+.card h2 {
+  color: #4a148c;
+}
+
+input {
+  width: 90%;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #4a148c;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #6a1b9a;
+}
+
+/* الفوتر */
+.footer {
+  text-align: center;
+  background: #4a148c;
+  color: white;
+  padding: 15px;
 }
 </style>
 </head>
+
 <body>
-<a class="af" href="index.html">الصفحة الرئيسية ⬅</a>
-<div class="he">
-<h1>مسابقة من انا (من الكتاب المقدس)</h1>
-<h2>اكتب اسمك عشان تشارك في المسابقة</h2>
-<input class="te" id="username" placeholder="اكتب اسمك" type="text"/>
-<br/>
-<button class="but" onclick="startQuiz()">ابدأ المسابقة</button>
+
+<header class="header">
+  <h1>المسابقات</h1>
+  <p>اختار اللعبة وابدأ التحدي 🔥</p>
+</header>
+
+<nav class="nav-bar">
+<ul class="nav-list">
+<li><a href="index.html">الرئيسية</a></li>
+<li><a href="compition.html">المسابقات</a></li>
+<li><a href="Chapters.html">التفسير</a></li>
+</ul>
+</nav>
+
+<main class="main-content">
+
+<div class="card">
+  <h2>من أنا؟</h2>
+  <p>اختبر معلوماتك في الكتاب المقدس</p>
+  <input id="username" placeholder="اكتب اسمك">
+  <button onclick="startQuiz()">ابدأ</button>
 </div>
-<br/>
-<br/>
-<br/>
-<div class="he">
-<h1>لعبة تحدي الذاكرة - ذاكرتك قوية؟</h1>
-<h2>اكتب اسمك عشان تشارك في اللعبة</h2>
-<input class="te" id="username2" placeholder="اكتب اسمك" type="text"/>
-<br/>
-<button class="but" onclick="startQuiz2()">ابدأ التحدي</button>
+
+<div class="card">
+  <h2>تحدي الذاكرة</h2>
+  <p>شوف ذاكرتك قوية قد إيه</p>
+  <input id="username2" placeholder="اكتب اسمك">
+  <button onclick="startQuiz2()">ابدأ</button>
 </div>
-<br/>
-<br/>
-<br/>
-<div class="he">
-  <h1>لعبة المتاهة- حاول توصل للنهاية بسرعة</h1>
-  <h2>اكتب اسمك عشان تشارك في اللعبة</h2>
-  <input class="te" id="username3" placeholder="اكتب اسمك" type="text"/>
-  <br/>
-  <button class="but" onclick="startQuiz3()">ابدأ اللعبة</button>
-  </div>
+
+<div class="card">
+  <h2>المتاهة</h2>
+  <p>وصل للنهاية بأسرع وقت</p>
+  <input id="username3" placeholder="اكتب اسمك">
+  <button onclick="startQuiz3()">ابدأ</button>
+</div>
+
+</main>
+
+<footer class="footer">
+  <p>Made by Kareem Hosny</p>
+</footer>
+
 <script>
-    function startQuiz() {
-      const name = document.getElementById('username').value.trim();
-      if (!name) {
-        alert("من فضلك اكتب اسمك");
-        return;
-      }
+function startQuiz() {
+  const name = document.getElementById('username').value.trim();
+  if (!name) return alert("اكتب اسمك");
+  localStorage.setItem('quiz_username', name);
+  window.location.href = 'quiz.html';
+}
 
-      const results = JSON.parse(localStorage.getItem('quiz_results')) || [];
-      const nameExists = results.some(r => r.name === name);
+function startQuiz2() {
+  const name = document.getElementById('username2').value.trim();
+  if (!name) return alert("اكتب اسمك");
+  localStorage.setItem('quiz_username', name);
+  window.location.href = 'quiz2.html';
+}
 
+function startQuiz3() {
+  const name = document.getElementById('username3').value.trim();
+  if (!name) return alert("اكتب اسمك");
+  localStorage.setItem('quiz_username', name);
+  window.location.href = 'qiaz3.html';
+}
+</script>
 
-      localStorage.setItem('quiz_username', name);
-      window.location.href = 'quiz.html'; // دي صفحة \"من أنا؟\"
-    }
-    function startQuiz2() {
-      const name2 = document.getElementById('username2').value.trim();
-      if (!name2) {
-        alert("من فضلك اكتب اسمك");
-        return;
-      }
-
-      const results2 = JSON.parse(localStorage.getItem('quiz_results')) || [];
-      const nameExists2 = results2.some(r => r.name === name2);
-
-      localStorage.setItem('quiz_username', name2);
-      window.location.href = 'quiz2.html'; // دي صفحة \"من أنا؟\"
-    }
-    function startQuiz3() {
-      const name3 = document.getElementById('username3').value.trim();
-      if (!name3) {
-        alert("من فضلك اكتب اسمك");
-        return;
-      }
-
-      const results3 = JSON.parse(localStorage.getItem('quiz_results')) || [];
-      const nameExists3 = results3.some(r => r.name === name3);
-
-      localStorage.setItem('quiz_username', name3);
-      window.location.href = 'qiaz3.html'; // دي صفحة \"من أنا؟\"
-    }
-
-
-
-  
-  </script>
 </body>
 </html>
