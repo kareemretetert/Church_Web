@@ -20,79 +20,56 @@
     }
 
     :root {
-      --primary: #6a1b9a;
-      --primary-dark: #4a148c;
-      --bg: #eef8ff;
-      --card: #ffffff;
-      --text: #1f2a37;
-      --muted: #5b6472;
-      --blue: #1e88e5;
-      --blue-dark: #1565c0;
+      --bg: #eaf7ff;
+      --primary: #1e88e5;
+      --primary-dark: #1565c0;
       --warning: #fb8c00;
       --danger: #e53935;
-      --shadow: 0 12px 30px rgba(0, 64, 128, 0.15);
+      --text: #1f2a37;
     }
 
     body {
       min-height: 100vh;
       font-family: 'Cairo', sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(106, 27, 154, 0.08), transparent 22%),
-        linear-gradient(180deg, #f8fcff 0%, var(--bg) 100%);
+      background: linear-gradient(180deg, #f7fcff 0%, var(--bg) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      color: var(--text);
     }
 
     .game-shell {
-      width: min(950px, 100%);
-      background: rgba(255,255,255,0.93);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(106, 27, 154, 0.10);
-      border-radius: 26px;
-      box-shadow: 0 18px 40px rgba(40, 50, 90, 0.12);
+      width: min(920px, 100%);
+      background: #ffffff;
+      border-radius: 24px;
       padding: 22px;
+      box-shadow: 0 14px 35px rgba(0, 64, 128, 0.14);
     }
 
     .top-bar {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
+      align-items: center;
+      gap: 20px;
       flex-wrap: wrap;
+      margin-bottom: 20px;
     }
 
     .title-box h1 {
-      font-size: 1.8rem;
-      color: var(--primary-dark);
+      color: #004080;
+      font-size: 1.9rem;
       margin-bottom: 6px;
     }
 
     .title-box p {
-      color: var(--muted);
+      color: #5f6b7a;
       font-size: 0.98rem;
-      line-height: 1.8;
-    }
-
-    .timer-wrap {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: #fff;
-      border: 1px solid rgba(106, 27, 154, 0.12);
-      border-radius: 20px;
-      padding: 10px 14px;
-      box-shadow: 0 10px 25px rgba(74, 20, 140, 0.08);
     }
 
     .timer-box {
       position: relative;
-      width: 96px;
-      height: 96px;
-      flex-shrink: 0;
+      width: 110px;
+      height: 110px;
     }
 
     .timer-box svg {
@@ -103,39 +80,38 @@
 
     .timer-track {
       fill: none;
-      stroke: #e8eef7;
+      stroke: #dbe8f5;
       stroke-width: 10;
     }
 
     .timer-progress {
       fill: none;
-      stroke: var(--blue);
+      stroke: var(--primary);
       stroke-width: 10;
       stroke-linecap: round;
       transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
     }
 
-    .timer-content {
+    .timer-text {
       position: absolute;
       inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      text-align: center;
+      font-weight: 800;
+      color: var(--primary-dark);
     }
 
-    .time-text {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--blue-dark);
+    .timer-text span:first-child {
+      font-size: 1.1rem;
       line-height: 1;
     }
 
-    .time-label {
-      margin-top: 5px;
-      font-size: 0.74rem;
-      color: var(--muted);
+    .timer-text span:last-child {
+      font-size: 0.72rem;
+      margin-top: 6px;
+      color: #667085;
       font-weight: 700;
     }
 
@@ -143,104 +119,71 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 15px;
     }
 
     canvas {
-      border: 4px solid #0f4c81;
-      background-color: white;
-      border-radius: 16px;
-      box-shadow: var(--shadow);
+      border: 4px solid #004080;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
       touch-action: none;
       max-width: 100%;
       height: auto;
       display: block;
     }
 
+    .message {
+      display: none;
+      padding: 14px 22px;
+      border-radius: 14px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    #win-message {
+      background: #28a745;
+    }
+
+    #lose-message {
+      background: #e53935;
+    }
+
     .controls {
       display: flex;
-      justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
+      justify-content: center;
     }
 
     .action-btn {
-      padding: 11px 22px;
-      font-size: 1rem;
+      padding: 10px 22px;
       border: none;
-      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
-      color: white;
       border-radius: 12px;
+      background: linear-gradient(135deg, #1e88e5 0%, #1565c0 100%);
+      color: white;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
       cursor: pointer;
       transition: 0.25s ease;
-      font-family: inherit;
-      font-weight: 700;
-      box-shadow: 0 10px 18px rgba(30, 136, 229, 0.18);
     }
 
     .action-btn:hover {
       transform: translateY(-2px);
     }
 
-    #win-message,
-    #lose-message {
-      display: none;
-      width: fit-content;
-      max-width: 100%;
-      padding: 14px 22px;
-      border-radius: 16px;
-      font-size: 1.15rem;
-      font-weight: 800;
-      text-align: center;
-      animation: pop 0.5s ease forwards;
-    }
-
-    #win-message {
-      background: #28a745;
-      color: #fff;
-    }
-
-    #lose-message {
-      background: #e53935;
-      color: #fff;
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0.88); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
     @media (max-width: 700px) {
-      .game-shell {
-        padding: 16px;
-      }
-
       .top-bar {
         flex-direction: column;
-        align-items: stretch;
-      }
-
-      .timer-wrap {
-        justify-content: center;
-      }
-
-      .title-box {
+        align-items: center;
         text-align: center;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .timer-box {
-        width: 84px;
-        height: 84px;
       }
 
       .title-box h1 {
-        font-size: 1.45rem;
-      }
-
-      .title-box p {
-        font-size: 0.92rem;
+        font-size: 1.6rem;
       }
     }
   </style>
@@ -250,27 +193,26 @@
     <div class="top-bar">
       <div class="title-box">
         <h1>لعبة المتاهة</h1>
-        <p>في طريق واحد فقط للنهاية، لكن فيه تفريعات كتير مضللة من أول اللعبة لآخرها.</p>
+        <p>في طريق واحد فقط يوصل للنهاية، والباقي طرق مضللة.</p>
       </div>
 
-      <div class="timer-wrap">
-        <div class="timer-box">
-          <svg viewBox="0 0 100 100">
-            <circle class="timer-track" cx="50" cy="50" r="42"></circle>
-            <circle class="timer-progress" id="timerProgress" cx="50" cy="50" r="42"></circle>
-          </svg>
-          <div class="timer-content">
-            <div class="time-text" id="timerText">5:00</div>
-            <div class="time-label">الوقت</div>
-          </div>
+      <div class="timer-box">
+        <svg viewBox="0 0 100 100">
+          <circle class="timer-track" cx="50" cy="50" r="42"></circle>
+          <circle class="timer-progress" id="timerProgress" cx="50" cy="50" r="42"></circle>
+        </svg>
+        <div class="timer-text">
+          <span id="timerText">5:00</span>
+          <span>الوقت</span>
         </div>
       </div>
     </div>
 
     <div class="game-area">
-      <div id="win-message">برافو! وصلت للنهاية ✅</div>
-      <div id="lose-message">انتهى الوقت ⏰ جرّب مرة تانية</div>
-      <canvas id="mazeCanvas" width="540" height="540"></canvas>
+      <div id="win-message" class="message">برافو! وصلت للنهاية ✅</div>
+      <div id="lose-message" class="message">انتهى الوقت ⏰</div>
+
+      <canvas id="mazeCanvas" width="500" height="500"></canvas>
 
       <div class="controls">
         <button class="action-btn" onclick="restartGame()">إعادة اللعب</button>
@@ -294,15 +236,16 @@
 
     const TOTAL_TIME = 300;
     let timeLeft = TOTAL_TIME;
-    let timerInterval;
+    let timerInterval = null;
     let gameEnded = false;
 
-    let player = { x: 0, y: 0 };
     let grid = [];
-    let keysPressed = {};
+    let player = { x: 0, y: 0 };
+
     let dragging = false;
-    let lastTouchTime = 0;
     let lastTouch = null;
+    let lastTouchTime = 0;
+    let keysPressed = {};
 
     const finishImage = new Image();
     finishImage.src = 'imgsfile/game/jes.png';
@@ -316,47 +259,38 @@
       constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.walls = [true, true, true, true]; // top right bottom left
-        this.inMainPath = false;
+        this.walls = [true, true, true, true]; // top, right, bottom, left
+        this.visited = false;
       }
 
       draw() {
-        const x = this.x * cellSize;
-        const y = this.y * cellSize;
+        const px = this.x * cellSize;
+        const py = this.y * cellSize;
 
         ctx.strokeStyle = '#2d3748';
         ctx.lineWidth = 2;
 
-        if (this.walls[0]) drawLine(x, y, x + cellSize, y);
-        if (this.walls[1]) drawLine(x + cellSize, y, x + cellSize, y + cellSize);
-        if (this.walls[2]) drawLine(x + cellSize, y + cellSize, x, y + cellSize);
-        if (this.walls[3]) drawLine(x, y + cellSize, x, y);
+        if (this.walls[0]) line(px, py, px + cellSize, py);
+        if (this.walls[1]) line(px + cellSize, py, px + cellSize, py + cellSize);
+        if (this.walls[2]) line(px + cellSize, py + cellSize, px, py + cellSize);
+        if (this.walls[3]) line(px, py + cellSize, px, py);
       }
     }
 
-    function drawLine(x1, y1, x2, y2) {
+    function line(x1, y1, x2, y2) {
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
     }
 
-    function index(x, y) {
+    function getIndex(x, y) {
       return y * cols + x;
     }
 
     function getCell(x, y) {
       if (x < 0 || y < 0 || x >= cols || y >= rows) return null;
-      return grid[index(x, y)];
-    }
-
-    function resetGrid() {
-      grid = [];
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          grid.push(new Cell(x, y));
-        }
-      }
+      return grid[getIndex(x, y)];
     }
 
     function removeWalls(a, b) {
@@ -378,243 +312,137 @@
       }
     }
 
-    function shuffle(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return a;
-    }
-
-    function getNeighbors(cell) {
-      const dirs = [
-        { dx: 0, dy: -1 },
-        { dx: 1, dy: 0 },
-        { dx: 0, dy: 1 },
-        { dx: -1, dy: 0 }
-      ];
-
-      const result = [];
-      for (const d of dirs) {
-        const nx = cell.x + d.dx;
-        const ny = cell.y + d.dy;
-        const neighbor = getCell(nx, ny);
-        if (neighbor) result.push(neighbor);
-      }
-      return result;
-    }
-
-    function manhattan(x1, y1, x2, y2) {
-      return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-    }
-
-    // نبني مسار رئيسي طويل جدًا وبالتراجع
-    function buildMainPath() {
-      const start = getCell(0, 0);
-      const end = getCell(cols - 1, rows - 1);
-
-      let bestPath = null;
-      let bestLength = -1;
-
-      for (let attempt = 0; attempt < 140; attempt++) {
-        const visited = new Set();
-        const path = [];
-
-        function dfs(cell) {
-          visited.add(index(cell.x, cell.y));
-          path.push(cell);
-
-          if (cell === end) {
-            if (path.length > bestLength) {
-              bestLength = path.length;
-              bestPath = [...path];
-            }
-            path.pop();
-            visited.delete(index(cell.x, cell.y));
-            return;
-          }
-
-          let neighbors = getNeighbors(cell).filter(n => !visited.has(index(n.x, n.y)));
-
-          neighbors.sort((a, b) => {
-            const scoreA = manhattan(a.x, a.y, end.x, end.y) + Math.random() * 6;
-            const scoreB = manhattan(b.x, b.y, end.x, end.y) + Math.random() * 6;
-            return scoreB - scoreA;
-          });
-
-          for (const next of neighbors) {
-            dfs(next);
-          }
-
-          path.pop();
-          visited.delete(index(cell.x, cell.y));
-        }
-
-        dfs(start);
-      }
-
-      if (!bestPath) bestPath = [start, end];
-
-      for (let i = 0; i < bestPath.length - 1; i++) {
-        const current = bestPath[i];
-        const next = bestPath[i + 1];
-        current.inMainPath = true;
-        next.inMainPath = true;
-        removeWalls(current, next);
-      }
-
-      return bestPath;
-    }
-
-    function cellHasAnyOpening(cell) {
-      return cell.walls.some(w => w === false);
-    }
-
-    function countOpenWalls(cell) {
-      return cell.walls.filter(w => !w).length;
-    }
-
-    // نعمل تفريعات طويلة مضللة طالعة من المسار الرئيسي
-    function createBranch(startCell, usedSet, maxLength, preferNearGoal = false) {
-      let current = startCell;
-      let previous = null;
-      let length = 0;
-
-      while (length < maxLength) {
-        let neighbors = getNeighbors(current).filter(n => {
-          if (usedSet.has(index(n.x, n.y))) return false;
-          return true;
-        });
-
-        if (neighbors.length === 0) break;
-
-        neighbors.sort((a, b) => {
-          const goalX = cols - 1;
-          const goalY = rows - 1;
-          const da = manhattan(a.x, a.y, goalX, goalY);
-          const db = manhattan(b.x, b.y, goalX, goalY);
-
-          if (preferNearGoal) {
-            return da - db;
-          }
-          return Math.random() - 0.5;
-        });
-
-        const next = neighbors[0];
-
-        removeWalls(current, next);
-        usedSet.add(index(next.x, next.y));
-
-        previous = current;
-        current = next;
-        length++;
-
-        // أحيانًا نطلع منه فرع فرعي صغير يضلل أكتر
-        if (length > 2 && Math.random() < 0.33) {
-          createMiniDeadEnd(current, usedSet, 2 + Math.floor(Math.random() * 3));
-        }
-      }
-    }
-
-    function createMiniDeadEnd(fromCell, usedSet, steps) {
-      let current = fromCell;
-
-      for (let i = 0; i < steps; i++) {
-        let neighbors = shuffle(getNeighbors(current)).filter(n => !usedSet.has(index(n.x, n.y)));
-        if (!neighbors.length) break;
-
-        const next = neighbors[0];
-        removeWalls(current, next);
-        usedSet.add(index(next.x, next.y));
-        current = next;
-      }
+      return arr;
     }
 
     function generateMaze() {
-      resetGrid();
+      grid = [];
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          grid.push(new Cell(x, y));
+        }
+      }
 
-      const mainPath = buildMainPath();
-      const usedSet = new Set(mainPath.map(c => index(c.x, c.y)));
-
-      // نفتح من البداية أكتر من طريق واضح
-      const earlyPathCells = mainPath.slice(1, Math.min(7, mainPath.length - 1));
+      const stack = [];
       const start = getCell(0, 0);
+      start.visited = true;
+      stack.push(start);
 
-      // فرعين كبار قريبين من البداية
-      for (let i = 0; i < earlyPathCells.length; i++) {
-        if (Math.random() < 0.8) {
-          const anchor = earlyPathCells[i];
-          const neighbors = shuffle(getNeighbors(anchor)).filter(n => !usedSet.has(index(n.x, n.y)));
-          if (neighbors.length) {
-            const branchStart = neighbors[0];
-            removeWalls(anchor, branchStart);
-            usedSet.add(index(branchStart.x, branchStart.y));
-            createBranch(branchStart, usedSet, 5 + Math.floor(Math.random() * 6), false);
-          }
-        }
-      }
+      while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+        let neighbors = [];
 
-      // فرع مباشر من البداية نفسها لو أمكن
-      let startNeighbors = shuffle(getNeighbors(start)).filter(n => {
-        if (usedSet.has(index(n.x, n.y))) return false;
-        return true;
-      });
+        const top = getCell(current.x, current.y - 1);
+        const right = getCell(current.x + 1, current.y);
+        const bottom = getCell(current.x, current.y + 1);
+        const left = getCell(current.x - 1, current.y);
 
-      if (startNeighbors.length) {
-        const branchStart = startNeighbors[0];
-        removeWalls(start, branchStart);
-        usedSet.add(index(branchStart.x, branchStart.y));
-        createBranch(branchStart, usedSet, 7 + Math.floor(Math.random() * 5), false);
-      }
+        [top, right, bottom, left].forEach(cell => {
+          if (cell && !cell.visited) neighbors.push(cell);
+        });
 
-      // تفريعات على طول الطريق الصحيح
-      for (let i = 2; i < mainPath.length - 2; i++) {
-        const cell = mainPath[i];
+        if (neighbors.length > 0) {
+          neighbors = shuffle(neighbors);
 
-        let chance = 0.45;
-        if (i < 6) chance = 0.7;
-        if (i > mainPath.length * 0.7) chance = 0.65;
-
-        if (Math.random() < chance) {
-          const neighbors = shuffle(getNeighbors(cell)).filter(n => !usedSet.has(index(n.x, n.y)));
-          if (neighbors.length) {
-            const branchStart = neighbors[0];
-            removeWalls(cell, branchStart);
-            usedSet.add(index(branchStart.x, branchStart.y));
-
-            const nearGoal = i > mainPath.length * 0.65;
-            const branchLength = nearGoal
-              ? 6 + Math.floor(Math.random() * 6)
-              : 3 + Math.floor(Math.random() * 7);
-
-            createBranch(branchStart, usedSet, branchLength, nearGoal);
-          }
-        }
-      }
-
-      // تفريعات خادعة قرب النهاية جدًا لكنها لا تدخل خلية النهاية نفسها
-      const nearEndCells = mainPath.slice(Math.max(0, mainPath.length - 8), mainPath.length - 1);
-
-      for (const cell of nearEndCells) {
-        if (Math.random() < 0.85) {
-          const neighbors = shuffle(getNeighbors(cell)).filter(n => {
-            if (n.x === cols - 1 && n.y === rows - 1) return false;
-            return !usedSet.has(index(n.x, n.y));
+          neighbors.sort((a, b) => {
+            const scoreA = (a.x + a.y) + Math.random() * 3;
+            const scoreB = (b.x + b.y) + Math.random() * 3;
+            return scoreA - scoreB;
           });
 
-          if (neighbors.length) {
-            const branchStart = neighbors[0];
-            removeWalls(cell, branchStart);
-            usedSet.add(index(branchStart.x, branchStart.y));
-            createBranch(branchStart, usedSet, 4 + Math.floor(Math.random() * 5), true);
-          }
+          const next = neighbors[0];
+          next.visited = true;
+          removeWalls(current, next);
+          stack.push(next);
+        } else {
+          stack.pop();
         }
       }
+
+      openFakeBranchesNearStart();
+      openDeadEndsNearFinish();
+    }
+
+    function openFakeBranchesNearStart() {
+      const points = [
+        getCell(0, 0),
+        getCell(1, 0),
+        getCell(0, 1),
+        getCell(1, 1),
+        getCell(2, 1),
+        getCell(1, 2)
+      ];
+
+      points.forEach(cell => {
+        if (!cell) return;
+
+        const neighbors = shuffle([
+          getCell(cell.x, cell.y - 1),
+          getCell(cell.x + 1, cell.y),
+          getCell(cell.x, cell.y + 1),
+          getCell(cell.x - 1, cell.y)
+        ].filter(Boolean));
+
+        for (const neighbor of neighbors) {
+          const closedBetween =
+            (neighbor.x === cell.x + 1 && cell.walls[1]) ||
+            (neighbor.x === cell.x - 1 && cell.walls[3]) ||
+            (neighbor.y === cell.y + 1 && cell.walls[2]) ||
+            (neighbor.y === cell.y - 1 && cell.walls[0]);
+
+          if (closedBetween && Math.random() < 0.35) {
+            removeWalls(cell, neighbor);
+            break;
+          }
+        }
+      });
+    }
+
+    function openDeadEndsNearFinish() {
+      const targets = [
+        getCell(cols - 2, rows - 1),
+        getCell(cols - 1, rows - 2),
+        getCell(cols - 2, rows - 2),
+        getCell(cols - 3, rows - 2),
+        getCell(cols - 2, rows - 3)
+      ];
+
+      targets.forEach(cell => {
+        if (!cell) return;
+
+        const neighbors = shuffle([
+          getCell(cell.x, cell.y - 1),
+          getCell(cell.x + 1, cell.y),
+          getCell(cell.x, cell.y + 1),
+          getCell(cell.x - 1, cell.y)
+        ].filter(Boolean));
+
+        for (const neighbor of neighbors) {
+          if (neighbor.x === cols - 1 && neighbor.y === rows - 1) continue;
+
+          const closedBetween =
+            (neighbor.x === cell.x + 1 && cell.walls[1]) ||
+            (neighbor.x === cell.x - 1 && cell.walls[3]) ||
+            (neighbor.y === cell.y + 1 && cell.walls[2]) ||
+            (neighbor.y === cell.y - 1 && cell.walls[0]);
+
+          if (closedBetween && Math.random() < 0.4) {
+            removeWalls(cell, neighbor);
+            break;
+          }
+        }
+      });
     }
 
     function drawMaze() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       grid.forEach(cell => cell.draw());
 
       ctx.drawImage(
@@ -632,14 +460,10 @@
       const x = player.x * cellSize;
       const y = player.y * cellSize;
 
-      ctx.fillStyle = '#1e88e5';
+      ctx.fillStyle = '#007BFF';
       ctx.beginPath();
-      ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize / 3.3, 0, Math.PI * 2);
+      ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize / 3.2, 0, Math.PI * 2);
       ctx.fill();
-
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.stroke();
     }
 
     function updateTimerUI() {
@@ -647,8 +471,8 @@
       const seconds = timeLeft % 60;
       timerText.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
 
-      const progressRatio = timeLeft / TOTAL_TIME;
-      timerProgress.style.strokeDashoffset = circumference * (1 - progressRatio);
+      const ratio = timeLeft / TOTAL_TIME;
+      timerProgress.style.strokeDashoffset = circumference * (1 - ratio);
 
       if (timeLeft <= 45) {
         timerProgress.style.stroke = '#e53935';
@@ -668,36 +492,25 @@
         if (gameEnded) return;
 
         timeLeft--;
+        if (timeLeft < 0) timeLeft = 0;
+
         updateTimerUI();
 
-        if (timeLeft <= 0) {
-          timeLeft = 0;
-          updateTimerUI();
-          endGame(false);
+        if (timeLeft === 0) {
+          gameEnded = true;
+          clearInterval(timerInterval);
+          loseMessage.style.display = 'block';
         }
       }, 1000);
     }
 
-    function endGame(won) {
-      gameEnded = true;
-      clearInterval(timerInterval);
-
-      if (won) {
-        winMessage.style.display = 'block';
-        loseMessage.style.display = 'none';
-      } else {
-        loseMessage.style.display = 'block';
-        winMessage.style.display = 'none';
-      }
-    }
-
     function setup() {
+      player = { x: 0, y: 0 };
+      timeLeft = TOTAL_TIME;
+      gameEnded = false;
+
       winMessage.style.display = 'none';
       loseMessage.style.display = 'none';
-
-      player = { x: 0, y: 0 };
-      gameEnded = false;
-      timeLeft = TOTAL_TIME;
 
       generateMaze();
       updateTimerUI();
@@ -714,7 +527,6 @@
 
       const newX = player.x + dx;
       const newY = player.y + dy;
-
       if (newX < 0 || newY < 0 || newX >= cols || newY >= rows) return;
 
       const current = getCell(player.x, player.y);
@@ -726,7 +538,9 @@
         drawMaze();
 
         if (player.x === cols - 1 && player.y === rows - 1) {
-          endGame(true);
+          gameEnded = true;
+          clearInterval(timerInterval);
+          winMessage.style.display = 'block';
         }
       }
     }
@@ -740,8 +554,6 @@
     });
 
     setInterval(() => {
-      if (gameEnded) return;
-
       if (keysPressed['ArrowUp']) movePlayer(0, -1);
       else if (keysPressed['ArrowDown']) movePlayer(0, 1);
       else if (keysPressed['ArrowLeft']) movePlayer(-1, 0);
@@ -754,26 +566,25 @@
     }, { passive: true });
 
     canvas.addEventListener('touchmove', e => {
-      const now = Date.now();
-      if (now - lastTouchTime < 110) return;
-      lastTouchTime = now;
-
       if (!dragging || gameEnded) return;
+
+      const now = Date.now();
+      if (now - lastTouchTime < 100) return;
+      lastTouchTime = now;
 
       const newTouch = e.touches[0];
       const dx = newTouch.clientX - lastTouch.clientX;
       const dy = newTouch.clientY - lastTouch.clientY;
+
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
-      const threshold = 6;
+      const threshold = 8;
 
       if (absX > threshold || absY > threshold) {
         if (absX > absY) {
-          if (dx > 0) movePlayer(1, 0);
-          else movePlayer(-1, 0);
+          movePlayer(dx > 0 ? 1 : -1, 0);
         } else {
-          if (dy > 0) movePlayer(0, 1);
-          else movePlayer(0, -1);
+          movePlayer(0, dy > 0 ? 1 : -1);
         }
         lastTouch = newTouch;
       }
