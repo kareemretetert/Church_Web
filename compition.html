@@ -6,11 +6,36 @@
 <title>المسابقات</title>
 
 <style>
+
+
 body {
   margin: 0;
   font-family: 'Cairo', sans-serif;
   background-color: #f0f8ff;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
+
+.main-content {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  flex: 1; /* ده اللي بيخلي الفوتر ينزل تحت */
+}
+
+.footer {
+  text-align: center;
+  background: #4a148c;
+  color: white;
+  padding: 15px;
+}
+
+  
+
 
 /* الهيدر */
 .header {
@@ -48,13 +73,7 @@ body {
 }
 
 /* المحتوى */
-.main-content {
-  padding: 30px;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 25px;
-}
+
 
 /* الكروت */
 .card {
@@ -107,12 +126,7 @@ button:hover {
 }
 
 /* الفوتر */
-.footer {
-  text-align: center;
-  background: #4a148c;
-  color: white;
-  padding: 15px;
-}
+
 </style>
 </head>
 
@@ -157,7 +171,6 @@ button:hover {
 </main>
 
 <footer class="footer">
-  <p>Made by Kareem Hosny</p>
 </footer>
 
 <script>
