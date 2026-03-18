@@ -1,222 +1,376 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>المسابقات</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Kareem Hosny" />
+  <meta name="keywords" content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" />
+  <meta name="description" content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" />
+  <link href="imgsfile/icon.png" rel="icon" type="image/x-icon" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <title>المسابقات</title>
+  <style>
+    :root {
+      --primary: #6a1b9a;
+      --primary-dark: #4a148c;
+      --bg: #f0f8ff;
+      --surface: #ffffff;
+      --surface-alt: #f7f3fb;
+      --text: #2f2f39;
+      --muted: #6b7280;
+      --border: rgba(106, 27, 154, 0.14);
+      --shadow: 0 14px 35px rgba(74, 20, 140, 0.12);
+      --radius: 24px;
+    }
 
-<style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  font-family: 'Cairo', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f8ff;
-  color: #333;
-  line-height: 1.8;
+    ::selection {
+      background-color: rgba(212, 212, 212, 0.85);
+      color: #001cbdcc;
+    }
 
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-}
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(106, 27, 154, 0.08), transparent 24%),
+        linear-gradient(180deg, #f6fbff 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
 
-/* الهيدر */
-.header {
-  background-color: #6a1b9a;
-  color: white;
-  padding: 1rem;
-  text-align: center;
-  border-bottom: 5px solid #4a148c;
-}
+    header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1.2rem 1rem 2rem;
+      text-align: center;
+      border-bottom: 5px solid var(--primary-dark);
+      position: relative;
+      overflow: hidden;
+    }
 
-.header h1 {
-  margin: 0;
-  font-size: 1.8rem;
-}
+    header::after {
+      content: "";
+      position: absolute;
+      inset: auto -10% -60px auto;
+      width: 220px;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+      filter: blur(2px);
+    }
 
-/* الناف */
-.nav-bar {
-  text-align: center;
-  margin-top: 10px;
-}
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+    }
 
-.nav-list {
-  list-style: none;
-  padding: 0;
-}
+    header p {
+      margin: 0.75rem auto 0;
+      max-width: 760px;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.92);
+      position: relative;
+      z-index: 1;
+    }
 
-.nav-list li a {
-  display: inline-block;
-  text-decoration: none;
-  font-size: 16px;
-  color: #6a1b9a;
-  font-weight: bold;
-  padding: 8px 18px;
-  border: 2px solid #6a1b9a;
-  border-radius: 25px;
-  transition: all 0.3s ease;
-}
+    .nav-wrap {
+      margin-top: 1rem;
+      position: relative;
+      z-index: 1;
+    }
 
-.nav-list li a:hover {
-  background-color: #6a1b9a;
-  color: white;
-}
+    .home-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: #f3ecff;
+      border: 2px solid rgba(255,255,255,0.45);
+      padding: 0.75rem 1.2rem;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      transition: 0.25s ease;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+    }
 
-/* المحتوى */
-.main-content {
-  padding: 2rem;
-  max-width: 900px;
-  margin: auto;
-  flex: 1;
-}
+    .home-link:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.16);
+    }
 
-/* الكروت (نفس verse-box) */
-.card {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  margin-bottom: 1.5rem;
-  padding: 1.5rem;
-  text-align: center;
+    .main-content {
+      width: min(1150px, calc(100% - 32px));
+      margin: -28px auto 40px;
+      position: relative;
+      z-index: 2;
+    }
 
-  opacity: 0;
-  transform: translateY(40px) scale(0.98);
-  animation: fadeZoomInUp 0.8s ease forwards;
-}
+    .intro-box {
+      background: rgba(255,255,255,0.9);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 1.2rem 1.4rem;
+      box-shadow: var(--shadow);
+      text-align: center;
+      margin-bottom: 1.4rem;
+    }
 
-.card:nth-child(2){ animation-delay:0.2s; }
-.card:nth-child(3){ animation-delay:0.4s; }
+    .intro-box h2 {
+      margin: 0 0 0.45rem;
+      color: var(--primary-dark);
+      font-size: 1.3rem;
+    }
 
-@keyframes fadeZoomInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
+    .intro-box p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
 
-.card h2 {
-  margin-bottom: 10px;
-  color: #4a148c;
-}
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.2rem;
+    }
 
-.card p {
-  margin-bottom: 15px;
-  font-size: 15px;
-}
+    .quiz-card {
+      background: linear-gradient(180deg, #ffffff 0%, var(--surface-alt) 100%);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      box-shadow: var(--shadow);
+      text-align: right;
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(32px) scale(0.98);
+      animation: fadeUp 0.7s ease forwards;
+    }
 
-/* input */
-input {
-  width: 90%;
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  margin-bottom: 10px;
-}
+    .quiz-card:nth-child(1) { animation-delay: 0.08s; }
+    .quiz-card:nth-child(2) { animation-delay: 0.18s; }
+    .quiz-card:nth-child(3) { animation-delay: 0.28s; }
 
-/* زرار */
-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  background: #6a1b9a;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
+    .quiz-card::before {
+      content: "";
+      position: absolute;
+      top: -45px;
+      left: -45px;
+      width: 120px;
+      height: 120px;
+      background: rgba(106, 27, 154, 0.08);
+      border-radius: 50%;
+    }
 
-button:hover {
-  background: #4a148c;
-}
+    .card-badge {
+      display: inline-block;
+      margin-bottom: 0.85rem;
+      padding: 0.35rem 0.8rem;
+      background: rgba(106, 27, 154, 0.11);
+      color: var(--primary-dark);
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
 
-/* الفوتر */
-.footer {
-  text-align: center;
-  padding: 15px;
-  background-color: #2e3a59;
-  color: white;
-}
+    .quiz-card h3 {
+      margin: 0 0 0.65rem;
+      font-size: 1.35rem;
+      color: #2d1d40;
+      position: relative;
+      z-index: 1;
+    }
 
-/* الموبايل */
-@media (max-width: 600px) {
-  .main-content {
-    padding: 1rem;
-  }
+    .quiz-card p {
+      margin: 0 0 1.1rem;
+      color: var(--muted);
+      line-height: 1.8;
+      min-height: 78px;
+      position: relative;
+      z-index: 1;
+    }
 
-  .card {
-    padding: 1rem;
-  }
+    .input-label {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--primary-dark);
+    }
 
-  input, button {
-    width: 100%;
-  }
-}
+    .name-input {
+      width: 100%;
+      border: 1.8px solid rgba(106, 27, 154, 0.18);
+      border-radius: 16px;
+      padding: 0.9rem 1rem;
+      font-family: inherit;
+      font-size: 1rem;
+      outline: none;
+      background: #fff;
+      transition: 0.2s ease;
+      margin-bottom: 0.9rem;
+    }
 
-</style>
+    .name-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(106, 27, 154, 0.1);
+    }
+
+    .start-btn {
+      width: 100%;
+      border: none;
+      border-radius: 16px;
+      padding: 0.95rem 1rem;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      cursor: pointer;
+      transition: 0.25s ease;
+      box-shadow: 0 10px 18px rgba(74, 20, 140, 0.18);
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 24px rgba(74, 20, 140, 0.24);
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .cards-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .quiz-card p {
+        min-height: auto;
+      }
+
+      .main-content {
+        width: min(100% - 20px, 760px);
+      }
+    }
+
+    @media (max-width: 600px) {
+      header {
+        padding: 1rem 0.8rem 1.7rem;
+      }
+
+      .intro-box,
+      .quiz-card {
+        border-radius: 18px;
+      }
+
+      .quiz-card {
+        padding: 1.1rem;
+      }
+
+      .home-link {
+        font-size: 0.88rem;
+        padding: 0.65rem 1rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header>
+    <h1>صفحة المسابقات</h1>
+    <p>اختار المسابقة اللي تحب تبدأها، واكتب اسمك علشان يتم تسجيل مشاركتك بشكل منظم وواضح.</p>
+    <div class="nav-wrap">
+      <a class="home-link" href="index.html">الصفحة الرئيسية ⬅</a>
+    </div>
+  </header>
 
-<header class="header">
-  <h1>المسابقات</h1>
-  <p>اختار اللعبة وابدأ التحدي 🔥</p>
-</header>
+  <main class="main-content">
+    <section class="intro-box">
+      <h2>مستعد للتحدي؟</h2>
+      <p>جمعنالك المسابقات والألعاب في شكل أبسط وأرتب، علشان الدخول يكون سريع والمظهر يليق بالموقع كله.</p>
+    </section>
 
-<nav class="nav-bar">
-<ul class="nav-list">
-<li><a href="index.html">العودة للصفحة الرئيسية</a></li>
-</ul>
-</nav>
+    <section class="cards-grid">
+      <article class="quiz-card">
+        <span class="card-badge">مسابقة كتابية</span>
+        <h3>مسابقة من أنا؟</h3>
+        <p>اختبر معلوماتك في شخصيات وأحداث من الكتاب المقدس، وحاول تجيب أسرع وأصح إجابة.</p>
+        <label class="input-label" for="username">اكتب اسمك للمشاركة</label>
+        <input class="name-input" id="username" type="text" placeholder="اكتب اسمك هنا" />
+        <button class="start-btn" onclick="startQuiz()">ابدأ المسابقة</button>
+      </article>
 
-<main class="main-content">
+      <article class="quiz-card">
+        <span class="card-badge">لعبة ذهنية</span>
+        <h3>تحدي الذاكرة</h3>
+        <p>هل ذاكرتك قوية؟ جرّب اللعبة وشوف هتقدر تفتكر وتكمل التحدي لحد فين.</p>
+        <label class="input-label" for="username2">اكتب اسمك للمشاركة</label>
+        <input class="name-input" id="username2" type="text" placeholder="اكتب اسمك هنا" />
+        <button class="start-btn" onclick="startQuiz2()">ابدأ التحدي</button>
+      </article>
 
-<div class="card">
-  <h2>من أنا؟</h2>
-  <p>اختبر معلوماتك في الكتاب المقدس</p>
-  <input id="username" placeholder="اكتب اسمك">
-  <button onclick="startQuiz()">ابدأ</button>
-</div>
+      <article class="quiz-card">
+        <span class="card-badge">لعبة حركة</span>
+        <h3>لعبة المتاهة</h3>
+        <p>حاول توصل للنهاية بأسرع وقت، وركز كويس علشان تختار الطريق الصح من أول مرة.</p>
+        <label class="input-label" for="username3">اكتب اسمك للمشاركة</label>
+        <input class="name-input" id="username3" type="text" placeholder="اكتب اسمك هنا" />
+        <button class="start-btn" onclick="startQuiz3()">ابدأ اللعبة</button>
+      </article>
+    </section>
 
-<div class="card">
-  <h2>تحدي الذاكرة</h2>
-  <p>شوف ذاكرتك قوية قد إيه</p>
-  <input id="username2" placeholder="اكتب اسمك">
-  <button onclick="startQuiz2()">ابدأ</button>
-</div>
+    <div class="footer-note">تصميم أحدث بنفس روح الموقع وألوان الصفحة التانية لكن بشكل مميز للصفحة دي.</div>
+  </main>
 
-<div class="card">
-  <h2>المتاهة</h2>
-  <p>وصل للنهاية بأسرع وقت</p>
-  <input id="username3" placeholder="اكتب اسمك">
-  <button onclick="startQuiz3()">ابدأ</button>
-</div>
+  <script>
+    function validateAndSave(inputId) {
+      const name = document.getElementById(inputId).value.trim();
+      if (!name) {
+        alert('من فضلك اكتب اسمك');
+        return null;
+      }
+      localStorage.setItem('quiz_username', name);
+      return name;
+    }
 
-</main>
+    function startQuiz() {
+      const valid = validateAndSave('username');
+      if (!valid) return;
+      window.location.href = 'quiz.html';
+    }
 
-<footer class="footer">
-</footer>
+    function startQuiz2() {
+      const valid = validateAndSave('username2');
+      if (!valid) return;
+      window.location.href = 'quiz2.html';
+    }
 
-<script>
-function startQuiz() {
-  const name = document.getElementById('username').value.trim();
-  if (!name) return alert("اكتب اسمك");
-  localStorage.setItem('quiz_username', name);
-  window.location.href = 'quiz.html';
-}
-
-function startQuiz2() {
-  const name = document.getElementById('username2').value.trim();
-  if (!name) return alert("اكتب اسمك");
-  localStorage.setItem('quiz_username', name);
-  window.location.href = 'quiz2.html';
-}
-
-function startQuiz3() {
-  const name = document.getElementById('username3').value.trim();
-  if (!name) return alert("اكتب اسمك");
-  localStorage.setItem('quiz_username', name);
-  window.location.href = 'qiaz3.html';
-}
-</script>
-
+    function startQuiz3() {
+      const valid = validateAndSave('username3');
+      if (!valid) return;
+      window.location.href = 'qiaz3.html';
+    }
+  </script>
 </body>
 </html>
