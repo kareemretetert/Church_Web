@@ -2,131 +2,331 @@
 <html lang="ar">
 <head>
   <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Kareem Hosny" name="author"/>
-<meta content="كريم حسني, الكنيسة, العزية, اجتماع ثانوي" name="keywords"/>
-<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
-<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta content="Kareem Hosny" name="author"/>
+  <meta content="كريم حسني, الكنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+  <meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+  <link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <title>لعبة المتاهة</title>
+
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    html, body {
+
+    :root {
+      --primary: #6a1b9a;
+      --primary-dark: #4a148c;
+      --bg: #eef8ff;
+      --card: #ffffff;
+      --text: #1f2a37;
+      --muted: #5b6472;
+      --danger: #e53935;
+      --danger-soft: #ffd9d7;
+      --blue: #007BFF;
+      --blue-dark: #004080;
+      --shadow: 0 12px 30px rgba(0, 64, 128, 0.15);
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Cairo', sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(106, 27, 154, 0.08), transparent 22%),
+        linear-gradient(180deg, #f8fcff 0%, var(--bg) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: var(--text);
+    }
+
+    .game-shell {
+      width: min(920px, 100%);
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(106, 27, 154, 0.10);
+      border-radius: 26px;
+      box-shadow: 0 18px 40px rgba(40, 50, 90, 0.12);
+      padding: 22px;
+    }
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .title-box h1 {
+      font-size: 1.8rem;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .title-box p {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.8;
+    }
+
+    .timer-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      border: 1px solid rgba(106, 27, 154, 0.12);
+      border-radius: 20px;
+      padding: 10px 14px;
+      box-shadow: 0 10px 25px rgba(74, 20, 140, 0.08);
+    }
+
+    .timer-box {
+      position: relative;
+      width: 92px;
+      height: 92px;
+      flex-shrink: 0;
+    }
+
+    .timer-box svg {
       width: 100%;
       height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .timer-track {
+      fill: none;
+      stroke: #e9eef5;
+      stroke-width: 10;
+    }
+
+    .timer-progress {
+      fill: none;
+      stroke: var(--danger);
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .timer-content {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .timer-content .time-text {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--blue-dark);
+      line-height: 1;
+    }
+
+    .timer-content .time-label {
+      margin-top: 5px;
+      font-size: 0.74rem;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .game-area {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      background-color: #e0f7ff;
-      font-family: 'Cairo', sans-serif;
-      position: relative;
+      gap: 16px;
     }
+
     canvas {
-      border: 4px solid #004080;
+      border: 4px solid var(--blue-dark);
       background-color: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
       touch-action: none;
       max-width: 100%;
       height: auto;
+      display: block;
     }
-    #timer {
-      margin: 10px;
-      font-size: 1.3rem;
-      font-weight: bold;
-      color: #004080;
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
     }
-    #back-button {
-      margin-top: 15px;
-      padding: 10px 25px;
+
+    .action-btn {
+      padding: 11px 22px;
       font-size: 1rem;
       border: none;
-      background-color: #007BFF;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%);
       color: white;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: 0.25s ease;
+      font-family: inherit;
+      font-weight: 700;
+      box-shadow: 0 10px 18px rgba(0, 123, 255, 0.16);
     }
-    #back-button:hover {
-      background-color: #0056b3;
+
+    .action-btn:hover {
+      transform: translateY(-2px);
     }
-    #win-message {
-      position: absolute;
-      top: 10%;
-      background-color: #28a745;
-      color: white;
-      padding: 15px 30px;
-      border-radius: 15px;
-      font-size: 1.5rem;
+
+    #win-message,
+    #lose-message {
       display: none;
-      z-index: 10;
+      width: fit-content;
+      max-width: 100%;
+      padding: 14px 22px;
+      border-radius: 16px;
+      font-size: 1.15rem;
+      font-weight: 800;
       text-align: center;
-      animation: pop 0.6s ease forwards;
+      animation: pop 0.5s ease forwards;
     }
+
+    #win-message {
+      background: #28a745;
+      color: #fff;
+    }
+
+    #lose-message {
+      background: #e53935;
+      color: #fff;
+    }
+
     @keyframes pop {
-      0% { transform: scale(0.8); opacity: 0; }
-      100% { transform: scale(1.1); opacity: 1; }
+      0% { transform: scale(0.88); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
     }
-    @media (max-width: 450px) {
-      canvas {
-        width: 90vw;
-        height: auto;
+
+    @media (max-width: 700px) {
+      .game-shell {
+        padding: 16px;
+      }
+
+      .top-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .timer-wrap {
+        justify-content: center;
+      }
+
+      .title-box {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .timer-box {
+        width: 84px;
+        height: 84px;
+      }
+
+      .title-box h1 {
+        font-size: 1.45rem;
+      }
+
+      .title-box p {
+        font-size: 0.92rem;
       }
     }
   </style>
 </head>
 <body>
-  <div id="timer">الوقت: 0 ثانية</div>
-  <div id="win-message">برافو! وصلت للنهاية ✅</div>
-  <canvas id="mazeCanvas" width="400" height="400"></canvas>
-  <button id="back-button" onclick="history.back()">العودة</button>
+  <div class="game-shell">
+    <div class="top-bar">
+      <div class="title-box">
+        <h1>لعبة المتاهة</h1>
+        <p>وصل للنهاية قبل ما الوقت يخلص. المتاهة بقت أصعب وفيها تفريعات مضللة أكتر.</p>
+      </div>
+
+      <div class="timer-wrap">
+        <div class="timer-box">
+          <svg viewBox="0 0 100 100">
+            <circle class="timer-track" cx="50" cy="50" r="42"></circle>
+            <circle class="timer-progress" id="timerProgress" cx="50" cy="50" r="42"></circle>
+          </svg>
+          <div class="timer-content">
+            <div class="time-text" id="timerText">5:00</div>
+            <div class="time-label">الوقت</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="game-area">
+      <div id="win-message">برافو! وصلت للنهاية ✅</div>
+      <div id="lose-message">انتهى الوقت ⏰ جرّب مرة تانية</div>
+      <canvas id="mazeCanvas" width="520" height="520"></canvas>
+
+      <div class="controls">
+        <button class="action-btn" onclick="restartGame()">إعادة اللعب</button>
+        <button class="action-btn" onclick="history.back()">العودة</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const canvas = document.getElementById('mazeCanvas');
     const ctx = canvas.getContext('2d');
-    const timerDisplay = document.getElementById('timer');
+
+    const timerText = document.getElementById('timerText');
+    const timerProgress = document.getElementById('timerProgress');
     const winMessage = document.getElementById('win-message');
+    const loseMessage = document.getElementById('lose-message');
 
     const rows = 20;
     const cols = 20;
     const cellSize = canvas.width / cols;
 
     let grid = [];
-    let stack = [];
-    let player = { x: 0, y: 0, px: 0, py: 0 };
-    let timer = 0;
+    let player = { x: 0, y: 0 };
     let timerInterval;
     let gameEnded = false;
     let keysPressed = {};
     let dragging = false;
-let lastTouchTime = 0;
+    let lastTouchTime = 0;
     let lastTouch = null;
-    let finishImage = new Image();
+
+    const TOTAL_TIME = 300; // 5 دقائق
+    let timeLeft = TOTAL_TIME;
+
+    const finishImage = new Image();
     finishImage.src = 'imgsfile/game/jes.png';
+
+    const radius = 42;
+    const circumference = 2 * Math.PI * radius;
+    timerProgress.style.strokeDasharray = circumference;
+    timerProgress.style.strokeDashoffset = 0;
 
     class Cell {
       constructor(x, y) {
         this.x = x;
         this.y = y;
-        this.walls = [true, true, true, true];
+        this.walls = [true, true, true, true]; // top, right, bottom, left
         this.visited = false;
-        this.passed = false;
       }
+
       draw() {
         const x = this.x * cellSize;
         const y = this.y * cellSize;
 
-        if ((this.passed || (this.x === 0 && this.y === 0))) {
-          ctx.fillStyle = '#a6d9ff';
-          ctx.fillRect(x, y, cellSize, cellSize);
-        }
-
-        ctx.strokeStyle = '#333';
+        ctx.strokeStyle = '#2d3748';
         ctx.lineWidth = 2;
+
         if (this.walls[0]) drawLine(x, y, x + cellSize, y);
         if (this.walls[1]) drawLine(x + cellSize, y, x + cellSize, y + cellSize);
         if (this.walls[2]) drawLine(x + cellSize, y + cellSize, x, y + cellSize);
@@ -141,141 +341,298 @@ let lastTouchTime = 0;
       ctx.stroke();
     }
 
-    function setup() {
-      grid = [];
-      stack = [];
-      for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-          grid.push(new Cell(x, y));
-        }
-      }
-      let current = grid[0];
-      current.visited = true;
-      stack.push(current);
-
-      while (stack.length > 0) {
-        const current = stack[stack.length - 1];
-        const next = getUnvisitedNeighbor(current);
-        if (next) {
-          next.visited = true;
-          stack.push(next);
-          removeWalls(current, next);
-        } else {
-          stack.pop();
-        }
-      }
-
-      player = { x: 0, y: 0, px: 0, py: 0 };
-      gameEnded = false;
-      timer = 0;
-      updateTimer();
-      if (timerInterval) clearInterval(timerInterval);
-      timerInterval = setInterval(() => {
-        timer++;
-        updateTimer();
-      }, 1000);
-
-      drawMaze();
+    function index(x, y) {
+      return y * cols + x;
     }
 
-    function getUnvisitedNeighbor(cell) {
-      const neighbors = [];
-      const { x, y } = cell;
-      const directions = [
-        { dx: 0, dy: -1 },
-        { dx: 1, dy: 0 },
-        { dx: 0, dy: 1 },
-        { dx: -1, dy: 0 }
+    function getCell(x, y) {
+      if (x < 0 || y < 0 || x >= cols || y >= rows) return null;
+      return grid[index(x, y)];
+    }
+
+    function getNeighbors(cell) {
+      const dirs = [
+        { dx: 0, dy: -1, dir: 0 },
+        { dx: 1, dy: 0, dir: 1 },
+        { dx: 0, dy: 1, dir: 2 },
+        { dx: -1, dy: 0, dir: 3 }
       ];
 
-      for (let { dx, dy } of directions) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx >= 0 && ny >= 0 && nx < cols && ny < rows) {
-          const neighbor = grid[ny * cols + nx];
-          if (!neighbor.visited) {
-            neighbors.push(neighbor);
-          }
+      const result = [];
+      for (const d of dirs) {
+        const nx = cell.x + d.dx;
+        const ny = cell.y + d.dy;
+        const neighbor = getCell(nx, ny);
+        if (neighbor) {
+          result.push({ ...d, cell: neighbor });
         }
       }
-
-      if (neighbors.length > 0) {
-        return neighbors[Math.floor(Math.random() * neighbors.length)];
-      }
-      return undefined;
+      return result;
     }
 
     function removeWalls(a, b) {
       const dx = b.x - a.x;
       const dy = b.y - a.y;
-      if (dx === 1) { a.walls[1] = false; b.walls[3] = false; }
-      else if (dx === -1) { a.walls[3] = false; b.walls[1] = false; }
-      if (dy === 1) { a.walls[2] = false; b.walls[0] = false; }
-      else if (dy === -1) { a.walls[0] = false; b.walls[2] = false; }
+
+      if (dx === 1) {
+        a.walls[1] = false;
+        b.walls[3] = false;
+      } else if (dx === -1) {
+        a.walls[3] = false;
+        b.walls[1] = false;
+      }
+
+      if (dy === 1) {
+        a.walls[2] = false;
+        b.walls[0] = false;
+      } else if (dy === -1) {
+        a.walls[0] = false;
+        b.walls[2] = false;
+      }
+    }
+
+    function resetGrid() {
+      grid = [];
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          grid.push(new Cell(x, y));
+        }
+      }
+    }
+
+    function manhattanToGoal(cell) {
+      return Math.abs((cols - 1) - cell.x) + Math.abs((rows - 1) - cell.y);
+    }
+
+    // توليد متاهة أصعب:
+    // 1) نعمل DFS لكن باختيار موجه بعيد عن النهاية أحيانًا لزيادة طول الطريق
+    // 2) بعد كده نضيف فروع كاذبة حوالين النهاية
+    function generateMaze() {
+      resetGrid();
+
+      const stack = [];
+      const start = getCell(0, 0);
+      start.visited = true;
+      stack.push(start);
+
+      while (stack.length > 0) {
+        const current = stack[stack.length - 1];
+
+        let unvisited = getNeighbors(current).filter(n => !n.cell.visited);
+
+        if (unvisited.length > 0) {
+          // نخلي الاختيار أصعب: أحيانًا نفضل الخلايا الأبعد عن النهاية
+          unvisited.sort((a, b) => manhattanToGoal(b.cell) - manhattanToGoal(a.cell));
+
+          let nextChoice;
+          if (Math.random() < 0.72) {
+            // غالبًا ناخد من الأبعد
+            const topChoices = unvisited.slice(0, Math.min(3, unvisited.length));
+            nextChoice = topChoices[Math.floor(Math.random() * topChoices.length)];
+          } else {
+            nextChoice = unvisited[Math.floor(Math.random() * unvisited.length)];
+          }
+
+          nextChoice.cell.visited = true;
+          removeWalls(current, nextChoice.cell);
+          stack.push(nextChoice.cell);
+        } else {
+          stack.pop();
+        }
+      }
+
+      // نضيف بعض الفتحات الإضافية بشكل محدود جدًا قرب النهاية
+      // ده بيزود الإحساس إن في طرق كتير تقرب للنهاية لكنها تلف وتضلل
+      addFalseBranchesNearGoal();
+    }
+
+    function isConnected(a, b) {
+      if (!a || !b) return false;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+
+      if (dx === 1) return !a.walls[1] && !b.walls[3];
+      if (dx === -1) return !a.walls[3] && !b.walls[1];
+      if (dy === 1) return !a.walls[2] && !b.walls[0];
+      if (dy === -1) return !a.walls[0] && !b.walls[2];
+
+      return false;
+    }
+
+    function countOpenWalls(cell) {
+      return cell.walls.filter(w => !w).length;
+    }
+
+    function addFalseBranchesNearGoal() {
+      const candidates = [];
+
+      for (let y = rows - 7; y < rows; y++) {
+        for (let x = cols - 7; x < cols; x++) {
+          const cell = getCell(x, y);
+          if (!cell) continue;
+          candidates.push(cell);
+        }
+      }
+
+      for (let i = 0; i < 18; i++) {
+        const cell = candidates[Math.floor(Math.random() * candidates.length)];
+        const neighbors = getNeighbors(cell);
+
+        const blockedNeighbors = neighbors.filter(n => !isConnected(cell, n.cell));
+
+        if (blockedNeighbors.length === 0) continue;
+
+        // نفتح بحذر علشان تفضل المتاهة منطقية ومش تبقى واسعة أوي
+        const choice = blockedNeighbors[Math.floor(Math.random() * blockedNeighbors.length)];
+
+        if (countOpenWalls(cell) <= 2 && countOpenWalls(choice.cell) <= 2) {
+          removeWalls(cell, choice.cell);
+        }
+      }
     }
 
     function drawMaze() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       grid.forEach(cell => cell.draw());
-      ctx.drawImage(finishImage, (cols - 1) * cellSize, (rows - 1) * cellSize, cellSize, cellSize);
+
+      // خانة النهاية
+      ctx.drawImage(
+        finishImage,
+        (cols - 1) * cellSize + 3,
+        (rows - 1) * cellSize + 3,
+        cellSize - 6,
+        cellSize - 6
+      );
+
       drawPlayer();
     }
 
     function drawPlayer() {
       const x = player.x * cellSize;
       const y = player.y * cellSize;
+
       ctx.fillStyle = '#007BFF';
       ctx.beginPath();
-      ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize / 3, 0, Math.PI * 2);
+      ctx.arc(x + cellSize / 2, y + cellSize / 2, cellSize / 3.2, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
     }
 
-    function updateTimer() {
-      timerDisplay.textContent = `الوقت: ${timer} ثانية`;
+    function updateTimerUI() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerText.textContent = `${minutes}:${String(seconds).padStart(2, '0')}`;
+
+      const progressRatio = timeLeft / TOTAL_TIME;
+      timerProgress.style.strokeDashoffset = circumference * (1 - progressRatio);
+
+      if (timeLeft <= 60) {
+        timerProgress.style.stroke = '#d32f2f';
+      } else {
+        timerProgress.style.stroke = '#e53935';
+      }
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        if (gameEnded) return;
+
+        timeLeft--;
+        updateTimerUI();
+
+        if (timeLeft <= 0) {
+          timeLeft = 0;
+          updateTimerUI();
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function endGame(won) {
+      gameEnded = true;
+      clearInterval(timerInterval);
+
+      if (won) {
+        winMessage.style.display = 'block';
+        loseMessage.style.display = 'none';
+      } else {
+        loseMessage.style.display = 'block';
+        winMessage.style.display = 'none';
+      }
+    }
+
+    function setup() {
+      winMessage.style.display = 'none';
+      loseMessage.style.display = 'none';
+
+      timeLeft = TOTAL_TIME;
+      gameEnded = false;
+      player = { x: 0, y: 0 };
+
+      generateMaze();
+      updateTimerUI();
+      drawMaze();
+      startTimer();
+    }
+
+    function restartGame() {
+      setup();
     }
 
     function movePlayer(dx, dy) {
       if (gameEnded) return;
+
       const newX = player.x + dx;
       const newY = player.y + dy;
+
       if (newX < 0 || newY < 0 || newX >= cols || newY >= rows) return;
 
-      const current = grid[player.y * cols + player.x];
-      const target = grid[newY * cols + newX];
+      const current = getCell(player.x, player.y);
+      const target = getCell(newX, newY);
 
       const dir = dx === 1 ? 1 : dx === -1 ? 3 : dy === 1 ? 2 : 0;
+
       if (!current.walls[dir]) {
         player.x = newX;
         player.y = newY;
-        target.passed = true;
         drawMaze();
 
         if (player.x === cols - 1 && player.y === rows - 1) {
-          gameEnded = true;
-          clearInterval(timerInterval);
-          winMessage.style.display = 'block';
+          endGame(true);
         }
       }
     }
 
-    document.addEventListener('keydown', e => keysPressed[e.key] = true);
-    document.addEventListener('keyup', e => delete keysPressed[e.key]);
+    document.addEventListener('keydown', e => {
+      keysPressed[e.key] = true;
+    });
+
+    document.addEventListener('keyup', e => {
+      delete keysPressed[e.key];
+    });
+
     setInterval(() => {
+      if (gameEnded) return;
       if (keysPressed['ArrowUp']) movePlayer(0, -1);
       else if (keysPressed['ArrowDown']) movePlayer(0, 1);
       else if (keysPressed['ArrowLeft']) movePlayer(-1, 0);
       else if (keysPressed['ArrowRight']) movePlayer(1, 0);
-    }, 150);
+    }, 120);
 
     canvas.addEventListener('touchstart', e => {
       dragging = true;
       lastTouch = e.touches[0];
-    });
+    }, { passive: true });
 
     canvas.addEventListener('touchmove', e => {
-  const now = Date.now();
-  if (now - lastTouchTime < 150) return;
-  lastTouchTime = now;
+      const now = Date.now();
+      if (now - lastTouchTime < 110) return;
+      lastTouchTime = now;
+
       if (!dragging || gameEnded) return;
 
       const newTouch = e.touches[0];
@@ -283,7 +640,7 @@ let lastTouchTime = 0;
       const dy = newTouch.clientY - lastTouch.clientY;
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
-      const threshold = 2;
+      const threshold = 6;
 
       if (absX > threshold || absY > threshold) {
         if (absX > absY) {
@@ -295,13 +652,14 @@ let lastTouchTime = 0;
         }
         lastTouch = newTouch;
       }
-    });
+    }, { passive: true });
 
     canvas.addEventListener('touchend', () => {
       dragging = false;
     });
 
-    finishImage.onload = () => setup();
+    finishImage.onload = setup;
+    finishImage.onerror = setup;
   </script>
 </body>
 </html>
