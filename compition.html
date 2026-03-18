@@ -20,11 +20,11 @@ body {
 
 .main-content {
   padding: 30px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
   justify-content: center;
-  flex-wrap: wrap;
   gap: 25px;
-  flex: 1; /* ده اللي بيخلي الفوتر ينزل تحت */
+  flex: 1;
 }
 
 .footer {
@@ -78,15 +78,18 @@ body {
 /* الكروت */
 .card {
   background: white;
-  width: 300px;
+  width: 280px;
   border-radius: 20px;
-  padding: 20px;
+  padding: 15px 15px 20px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   text-align: center;
 
-  opacity: 0;
-  transform: translateY(-40px);
-  animation: fadeDown 0.8s ease forwards;
+  height: auto;            /* مهم */
+  min-height: unset;       /* مهم */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* يخلي المحتوى متظبط */
 }
 
 .card:nth-child(2){animation-delay:0.2s;}
