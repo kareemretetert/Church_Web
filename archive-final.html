@@ -102,18 +102,23 @@ fetch("summaries.json")
 
 const archive = document.getElementById("archive")
 
+// لو مفيش بيانات
+if(!list || !list.length){
+archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد بيانات</p>"
+return
+}
+
 // تجاهل أحدث تلخيص
 const archived = list.slice(1)
 
 // لو مفيش أرشيف
-if(!archived || archived.length === 0){
+if(!archived.length){
 archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد أرشيف حالياً</p>"
 return
 }
 
 archived.forEach((data,index)=>{
 
-// لو البيانات فاضية تجاهلها
 if(!data || !data.title) return
 
 const card = document.createElement("div")
@@ -123,21 +128,24 @@ card.style.animationDelay = `${index * 0.15}s`
 let imagesHTML=""
 if(data.images && data.images.length){
 data.images.forEach(img=>{
-imagesHTML += `<img src="${img.data}">`
+imagesHTML += `<img src="${img}" loading="lazy">`
 })
 }
 
 let videosHTML=""
 if(data.videos && data.videos.length){
 data.videos.forEach(v=>{
-videosHTML += `<video controls src="${v.data}"></video>`
+videosHTML += `<video controls src="${v}"></video>`
 })
 }
 
 let filesHTML=""
 if(data.files && data.files.length){
 data.files.forEach(f=>{
-filesHTML += `<a href="${f.data}" download="${f.name}" style="display:block;margin:10px 0;">📄 تحميل ${f.name}</a>`
+filesHTML += `
+<a href="${f}" target="_blank" style="display:block;margin:10px 0;">
+📄 تحميل الملف
+</a>`
 })
 }
 
