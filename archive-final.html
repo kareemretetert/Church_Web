@@ -108,62 +108,52 @@ img, video {
 
 <div class="container" id="archive"></div>
 
+```html
 <script>
 fetch("summaries.json")
-.then(res => res.json())
-.then(list => {
+.then(res=>res.json())
+.then(list=>{
 
-const archive = document.getElementById("archive")
+const archive=document.getElementById("archive")
 
-const archived = list.slice(1)
+list.slice(1).forEach(data=>{
 
-archived.forEach(data=>{
-
-const card=document.createElement("div")
-card.className="card"
-
-let html = `
+let html=`
+<div class="card">
 <h2>${data.title}</h2>
-<p>📅 ${data.date}</p>
+<p>${data.date}</p>
 <p>${data.content}</p>
 `
 
-// صور
-if(data.images){
-data.images.forEach(img=>{
-html += `<img src="${img}" loading="lazy">`
+data.images?.forEach(img=>{
+html+=`<img src="${img}">`
 })
-}
 
-// فيديو
-if(data.videos){
-data.videos.forEach(v=>{
-
+data.videos?.forEach(v=>{
 if(v.includes("youtube")){
-html += `<iframe src="${v}" width="100%" height="300"></iframe>`
+html+=`<iframe src="${v}" width="100%" height="300"></iframe>`
 }else{
-html += `<video controls preload="metadata" src="${v}"></video>`
+html+=`<video controls src="${v}"></video>`
 }
-
 })
-}
 
-// ملفات
-if(data.files){
-data.files.forEach(f=>{
-html += `
-<iframe src="${f}" width="100%" height="300"></iframe>
-<a href="${f}" target="_blank">📄 تحميل</a>
-`
+data.files?.forEach(f=>{
+html+=`
+<div>
+${f.includes(".pdf")?`<iframe src="${f}" width="100%" height="300"></iframe>`:""}
+<a href="${f}" target="_blank">تحميل الملف</a>
+</div>`
 })
-}
 
-card.innerHTML = html
-archive.appendChild(card)
+html+="</div>"
+
+archive.innerHTML+=html
 
 })
 
 })
 </script>
+```
+
 </body>
 </html>
