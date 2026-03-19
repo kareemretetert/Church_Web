@@ -124,58 +124,44 @@ throw new Error("access denied")
 
 let summaries=[]
 
+// عناصر UI
+const publishBtn = document.getElementById("publish")
+
+// إنشاء progress bar
+const progressBar = document.createElement("div")
+progressBar.style.height="10px"
+progressBar.style.background="#ccc"
+progressBar.style.marginTop="10px"
+progressBar.innerHTML='<div id="progress" style="height:100%;width:0;background:green;"></div>'
+document.querySelector(".container").prepend(progressBar)
+
+const progress = document.getElementById("progress")
+
+// spinner
+const spinner = document.createElement("div")
+spinner.innerHTML="⏳ جاري الرفع..."
+spinner.style.textAlign="center"
+spinner.style.marginTop="10px"
+spinner.style.display="none"
+document.querySelector(".container").prepend(spinner)
+
+
 // تحميل التلخيصات
 async function loadSummaries(){
 try{
 const res=await fetch("summaries.json")
 summaries=await res.json()
-
-if(!Array.isArray(summaries)){
-summaries=[]
-}
-
+if(!Array.isArray(summaries)) summaries=[]
 renderSummaries()
-
 }catch{
 document.getElementById("summariesList").innerHTML=
 "<p style='color:#777'>لا يمكن تحميل التلخيصات</p>"
 }
 }
-
 window.onload=loadSummaries
 
 
-// ✅ رفع الصور (GitHub - زي ما هو)
-async function uploadFile(file){
-
-const reader = new FileReader();
-
-return new Promise((resolve) => {
-
-reader.onload = async () => {
-
-const res = await fetch("/.netlify/functions/upload", {
-method: "POST",
-headers: { "Content-Type": "application/json" },
-body: JSON.stringify({
-fileName: Date.now() + "_" + file.name,
-content: reader.result
-})
-});
-
-const data = await res.json();
-
-resolve(data.url);
-
-};
-
-reader.readAsDataURL(file);
-
-});
-}
-
-
-// ✅ رفع الفيديو و PDF (Cloudinary)
+// رفع Cloudinary
 async function uploadToCloudinary(file){
 
 const url = "https://api.cloudinary.com/v1_1/ddiegmhji/auto/upload"
@@ -184,12 +170,14 @@ const formData = new FormData()
 formData.append("file", file)
 formData.append("upload_preset", "my_upload")
 
-const res = await fetch(url, {
-method: "POST",
-body: formData
+const res = await fetch(url,{
+method:"POST",
+body:formData
 })
 
 const data = await res.json()
+
+if(!data.secure_url) throw "upload failed"
 
 return data.secure_url
 }
@@ -198,12 +186,20 @@ return data.secure_url
 // زر النشر
 document.getElementById("publish").onclick=async()=>{
 
+// ❌ منع الضغط مرتين
+publishBtn.disabled = true
+
+spinner.style.display="block"
+progress.style.width="0%"
+
 const title=document.getElementById("title").value
 const date=document.getElementById("date").value
 const content=document.getElementById("content").value
 
 if(!title || !date || !content){
 alert("اكتب كل البيانات")
+publishBtn.disabled=false
+spinner.style.display="none"
 return
 }
 
@@ -211,40 +207,50 @@ const imageFiles = document.getElementById("images").files;
 const videoFiles = document.getElementById("videos").files;
 const fileFiles = document.getElementById("files").files;
 
-let images = [];
-let videos = [];
-let files = [];
+let images=[]
+let videos=[]
+let files=[]
 
+let total = imageFiles.length + videoFiles.length + fileFiles.length
+let done = 0
 
-// 🖼️ الصور (GitHub)
-images = await Promise.all([...imageFiles].map(f => uploadFile(f)));
+function updateProgress(){
+done++
+progress.style.width = ((done/total)*100) + "%"
+}
 
+// 🖼️ الصور (اختياري تخليها Cloudinary برضو)
+for(let f of imageFiles){
+try{
+const url = await uploadToCloudinary(f)
+images.push(url)
+updateProgress()
+}catch{
+alert("فشل رفع صورة")
+}
+}
 
-// 🎥 الفيديو (Cloudinary)
-videos = [];
-
+// 🎥 فيديو
 for(let f of videoFiles){
 try{
-const url = await uploadToCloudinary(f);
-videos.push(url);
+const url = await uploadToCloudinary(f)
+videos.push(url)
+updateProgress()
 }catch{
-alert("فشل رفع فيديو: " + f.name);
+alert("فشل رفع فيديو: " + f.name)
 }
 }
 
-
-// 📄 الملفات (Cloudinary)
-files = [];
-
+// 📄 ملفات
 for(let f of fileFiles){
 try{
-const url = await uploadToCloudinary(f);
-files.push(url);
+const url = await uploadToCloudinary(f)
+files.push(url)
+updateProgress()
 }catch{
-alert("فشل رفع ملف: " + f.name);
+alert("فشل رفع ملف: " + f.name)
 }
 }
-
 
 // إنشاء التلخيص
 const newSummary={
@@ -262,9 +268,31 @@ await updateJSONFile(summaries)
 
 renderSummaries()
 
-alert("تم نشر التلخيص")
+spinner.style.display="none"
+publishBtn.disabled=false
+
+alert("تم نشر التلخيص 🎉")
 
 }
+
+
+// Drag & Drop
+document.body.addEventListener("dragover", e=>{
+e.preventDefault()
+document.body.style.background="#e3f2fd"
+})
+
+document.body.addEventListener("dragleave", ()=>{
+document.body.style.background=""
+})
+
+document.body.addEventListener("drop", e=>{
+e.preventDefault()
+document.body.style.background=""
+
+const files = e.dataTransfer.files
+document.getElementById("files").files = files
+})
 
 
 // عرض التلخيصات
@@ -280,21 +308,14 @@ return
 
 summaries.forEach((s,i)=>{
 
-if(!s) return
-
 const card=document.createElement("div")
 card.className="card"
 
 card.innerHTML=`
-
-<div class="card-title">${s.title || "بدون عنوان"}</div>
-<div class="card-date">📅 ${s.date || "بدون تاريخ"}</div>
-<p>${(s.content || "").substring(0,120)}...</p>
-
-<button class="deleteBtn" onclick="deleteSummary(${i})">
-حذف التلخيص
-</button>
-
+<div class="card-title">${s.title}</div>
+<div class="card-date">📅 ${s.date}</div>
+<p>${s.content.substring(0,120)}...</p>
+<button class="deleteBtn" onclick="deleteSummary(${i})">حذف</button>
 `
 
 container.appendChild(card)
