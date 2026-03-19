@@ -141,56 +141,84 @@ video {
 
 <div class="content"></div>
 
-```html
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
 <script>
 fetch("summaries.json")
-.then(res=>res.json())
-.then(list=>{
+.then(res => res.json())
+.then(list => {
 
-const a=list[0]
-const contentDiv=document.querySelector(".content")
-
-contentDiv.innerHTML=""
-
-// نص
-contentDiv.innerHTML+=`<p>${a.content}</p>`
-
-// صور
-a.images?.forEach(img=>{
-contentDiv.innerHTML+=`<img src="${img}" onclick="openImg('${img}')">`
-})
-
-// فيديو
-a.videos?.forEach(v=>{
-if(v.includes("youtube")){
-contentDiv.innerHTML+=`<iframe src="${v}" width="100%" height="400"></iframe>`
-}else{
-contentDiv.innerHTML+=`<video controls src="${v}"></video>`
+if(!list.length){
+document.getElementById("title").innerText = "لا يوجد تلخيصات"
+return
 }
-})
 
-// ملفات
-a.files?.forEach(f=>{
-contentDiv.innerHTML+=`
-<div>
-${f.includes(".pdf")?`<iframe src="${f}" width="100%" height="400"></iframe>`:""}
-<a href="${f}" target="_blank">📄 تحميل الملف</a>
-</div>
-`
-})
+const a = list[0]
 
-})
+document.getElementById("title").innerText = a.title
+document.getElementById("date").innerText = "📅 " + a.date
 
-function openImg(src){
-const box=document.createElement("div")
-box.style="position:fixed;top:0;left:0;width:100%;height:100%;background:#000a;display:flex;justify-content:center;align-items:center"
-box.innerHTML=`<img src="${src}" style="max-width:90%">`
-box.onclick=()=>box.remove()
-document.body.appendChild(box)
+const contentDiv = document.querySelector(".content")
+contentDiv.innerHTML = ""
+
+// 🖼️ الصور
+if(a.images && a.images.length){
+a.images.forEach(img=>{
+const image=document.createElement("img")
+image.src=img
+
+image.onclick = ()=>{
+const lightbox = document.createElement("div")
+lightbox.className="lightbox"
+
+const bigImg=document.createElement("img")
+bigImg.src=img
+
+lightbox.appendChild(bigImg)
+lightbox.onclick = ()=> lightbox.remove()
+
+document.body.appendChild(lightbox)
 }
+
+contentDiv.appendChild(image)
+})
+}
+
+// 🎥 الفيديو (تم التعديل هنا فقط)
+if(a.videos && a.videos.length){
+a.videos.forEach(v=>{
+const video=document.createElement("video")
+video.controls=true
+video.className="plyr-video"
+video.src=v
+contentDiv.appendChild(video)
+})
+}
+
+// 📄 الملفات
+if(a.files && a.files.length){
+a.files.forEach(f=>{
+const link=document.createElement("a")
+link.href=f
+link.innerText="📄 تحميل الملف"
+link.className="file-link"
+link.target="_blank"
+contentDiv.appendChild(link)
+})
+}
+
+// 📝 النص
+const text=document.createElement("p")
+text.innerText = a.content
+contentDiv.appendChild(text)
+
+// تفعيل Plyr
+setTimeout(()=>{
+document.querySelectorAll('.plyr-video').forEach(v=> new Plyr(v))
+},300)
+
+})
 </script>
-```
-
 
 </body>
 </html>
