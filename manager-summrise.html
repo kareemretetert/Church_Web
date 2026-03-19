@@ -1,19 +1,27 @@
-```html
 <!DOCTYPE html>
 <html lang="ar">
 <head>
+
 <meta charset="UTF-8">
 <title>لوحة إدارة التلخيصات</title>
 
 <style>
+
 body{
-font-family:Tajawal;
+font-family:Tajawal, Tahoma;
 direction:rtl;
 background:#f0f2f5;
 padding:30px;
 }
 
-.container{max-width:900px;margin:auto;}
+.container{
+max-width:900px;
+margin:auto;
+}
+
+h2{
+margin-top:40px;
+}
 
 input,textarea,button{
 width:100%;
@@ -21,164 +29,329 @@ margin-top:10px;
 padding:12px;
 border-radius:6px;
 border:1px solid #ccc;
+font-size:15px;
+}
+
+textarea{
+height:120px;
 }
 
 button{
 background:#2e7d32;
+border:none;
 color:white;
+font-size:16px;
 cursor:pointer;
 }
 
-.progress-bar{
-width:100%;
-height:10px;
-background:#ddd;
-margin-top:10px;
-border-radius:6px;
-overflow:hidden;
+button:hover{
+background:#1b5e20;
 }
 
-.progress{
-height:100%;
-width:0%;
-background:#2e7d32;
+.card{
+background:white;
+padding:15px;
+margin-top:15px;
+border-radius:8px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
-.spinner{
-text-align:center;
-margin-top:10px;
-display:none;
+.card-title{
+font-size:18px;
+font-weight:bold;
 }
+
+.card-date{
+color:#777;
+font-size:14px;
+margin-top:5px;
+}
+
+.deleteBtn{
+margin-top:10px;
+background:#d32f2f;
+}
+
+.deleteBtn:hover{
+background:#b71c1c;
+}
+
 </style>
+
 </head>
 
 <body>
 
 <div class="container">
 
-<h2>إضافة تلخيص</h2>
+<h2>إضافة تلخيص جديد</h2>
 
-<input id="title" placeholder="العنوان">
+<label>العنوان</label>
+<input id="title">
+
+<label>التاريخ</label>
 <input type="date" id="date">
-<textarea id="content" placeholder="المحتوى"></textarea>
 
-<input id="youtubeLink" placeholder="رابط YouTube (اختياري)">
+<label>المحتوى</label>
+<textarea id="content"></textarea>
 
-<input type="file" id="images" multiple>
-<input type="file" id="videos" multiple>
+<label>إضافة صور</label>
+<input type="file" id="images" multiple accept="image/*">
+
+<label>إضافة فيديوهات</label>
+<input type="file" id="videos" multiple accept="video/*">
+
+<label>إضافة ملفات</label>
 <input type="file" id="files" multiple>
 
-<button id="publish">نشر</button>
+<button id="publish">نشر التلخيص</button>
 
-<div class="progress-bar"><div class="progress" id="progress"></div></div>
-<div class="spinner" id="spinner">⏳ جاري الرفع...</div>
+<h2>التلخيصات الحالية</h2>
+
+<div id="summariesList"></div>
 
 </div>
 
 <script>
 
-const CLOUD_NAME="ddiegmhji"
-const PRESET="my_upload"
+const password="kimo123"
+const entered=prompt("ادخل كلمة المرور")
 
-function getYouTubeEmbed(url){
-let id=""
-if(url.includes("watch?v=")) id=url.split("v=")[1].split("&")[0]
-else if(url.includes("youtu.be/")) id=url.split("youtu.be/")[1]
-else if(url.includes("embed/")) id=url.split("embed/")[1]
-if(!id) return null
-return "https://www.youtube.com/embed/"+id
+if(entered!==password){
+document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>كلمة المرور غير صحيحة</h2>"
+throw new Error("access denied")
 }
 
-async function uploadFile(file){
+let summaries=[]
 
-const url=`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`
+// عناصر UI
+const publishBtn = document.getElementById("publish")
 
-const formData=new FormData()
-formData.append("file",file)
-formData.append("upload_preset",PRESET)
+// إنشاء progress bar
+const progressBar = document.createElement("div")
+progressBar.style.height="10px"
+progressBar.style.background="#ccc"
+progressBar.style.marginTop="10px"
+progressBar.innerHTML='<div id="progress" style="height:100%;width:0;background:green;"></div>'
+document.querySelector(".container").prepend(progressBar)
 
-const res=await fetch(url,{method:"POST",body:formData})
-const data=await res.json()
+const progress = document.getElementById("progress")
+
+// spinner
+const spinner = document.createElement("div")
+spinner.innerHTML="⏳ جاري الرفع..."
+spinner.style.textAlign="center"
+spinner.style.marginTop="10px"
+spinner.style.display="none"
+document.querySelector(".container").prepend(spinner)
+
+
+// تحميل التلخيصات
+async function loadSummaries(){
+try{
+const res=await fetch("summaries.json")
+summaries=await res.json()
+if(!Array.isArray(summaries)) summaries=[]
+renderSummaries()
+}catch{
+document.getElementById("summariesList").innerHTML=
+"<p style='color:#777'>لا يمكن تحميل التلخيصات</p>"
+}
+}
+window.onload=loadSummaries
+
+
+// رفع Cloudinary
+async function uploadToCloudinary(file){
+
+const url = "https://api.cloudinary.com/v1_1/ddiegmhji/auto/upload"
+
+const formData = new FormData()
+formData.append("file", file)
+formData.append("upload_preset", "my_upload")
+
+const res = await fetch(url,{
+method:"POST",
+body:formData
+})
+
+const data = await res.json()
 
 if(!data.secure_url) throw "upload failed"
 
 return data.secure_url
 }
 
+
+// زر النشر
 document.getElementById("publish").onclick=async()=>{
 
-const btn=document.getElementById("publish")
-const spinner=document.getElementById("spinner")
-const progress=document.getElementById("progress")
+// ❌ منع الضغط مرتين
+publishBtn.disabled = true
 
-btn.disabled=true
 spinner.style.display="block"
+progress.style.width="0%"
 
-const title=title.value
+const title=document.getElementById("title").value
 const date=document.getElementById("date").value
 const content=document.getElementById("content").value
-const youtube=document.getElementById("youtubeLink").value
 
-let images=[],videos=[],files=[]
+if(!title || !date || !content){
+alert("اكتب كل البيانات")
+publishBtn.disabled=false
+spinner.style.display="none"
+return
+}
 
-const imgFiles=imagesInput=document.getElementById("images").files
-const vidFiles=document.getElementById("videos").files
-const fileFiles=document.getElementById("files").files
+const imageFiles = document.getElementById("images").files;
+const videoFiles = document.getElementById("videos").files;
+const fileFiles = document.getElementById("files").files;
 
-let total=imgFiles.length+vidFiles.length+fileFiles.length
-let done=0
+let images=[]
+let videos=[]
+let files=[]
 
-function update(){
+let total = imageFiles.length + videoFiles.length + fileFiles.length
+let done = 0
+
+function updateProgress(){
 done++
-progress.style.width=((done/total)*100)+"%"
+progress.style.width = ((done/total)*100) + "%"
 }
 
-// صور
-for(let f of imgFiles){
-images.push(await uploadFile(f))
-update()
+// 🖼️ الصور (اختياري تخليها Cloudinary برضو)
+for(let f of imageFiles){
+try{
+const url = await uploadToCloudinary(f)
+images.push(url)
+updateProgress()
+}catch{
+alert("فشل رفع صورة")
+}
 }
 
-// فيديو
-for(let f of vidFiles){
-if(f.size > 20*1024*1024){
-alert("ارفع الفيديو على YouTube")
-continue
+// 🎥 فيديو
+for(let f of videoFiles){
+try{
+const url = await uploadToCloudinary(f)
+videos.push(url)
+updateProgress()
+}catch{
+alert("فشل رفع فيديو: " + f.name)
 }
-videos.push(await uploadFile(f))
-update()
 }
 
-// ملفات
+// 📄 ملفات
 for(let f of fileFiles){
-files.push(await uploadFile(f))
-update()
+try{
+const url = await uploadToCloudinary(f)
+files.push(url)
+updateProgress()
+}catch{
+alert("فشل رفع ملف: " + f.name)
+}
 }
 
-// يوتيوب
-if(youtube){
-const embed=getYouTubeEmbed(youtube)
-if(embed) videos.push(embed)
+// إنشاء التلخيص
+const newSummary={
+title,
+date,
+content,
+images,
+videos,
+files
 }
 
-// حفظ
-const newSummary={title,date,content,images,videos,files}
+summaries.unshift(newSummary)
+
+await updateJSONFile(summaries)
+
+renderSummaries()
+
+spinner.style.display="none"
+publishBtn.disabled=false
+
+alert("تم نشر التلخيص 🎉")
+
+}
+
+
+// Drag & Drop
+document.body.addEventListener("dragover", e=>{
+e.preventDefault()
+document.body.style.background="#e3f2fd"
+})
+
+document.body.addEventListener("dragleave", ()=>{
+document.body.style.background=""
+})
+
+document.body.addEventListener("drop", e=>{
+e.preventDefault()
+document.body.style.background=""
+
+const files = e.dataTransfer.files
+document.getElementById("files").files = files
+})
+
+
+// عرض التلخيصات
+function renderSummaries(){
+
+const container=document.getElementById("summariesList")
+container.innerHTML=""
+
+if(!summaries.length){
+container.innerHTML="<p style='color:#777'>لا يوجد تلخيصات حالياً</p>"
+return
+}
+
+summaries.forEach((s,i)=>{
+
+const card=document.createElement("div")
+card.className="card"
+
+card.innerHTML=`
+<div class="card-title">${s.title}</div>
+<div class="card-date">📅 ${s.date}</div>
+<p>${s.content.substring(0,120)}...</p>
+<button class="deleteBtn" onclick="deleteSummary(${i})">حذف</button>
+`
+
+container.appendChild(card)
+
+})
+
+}
+
+
+// حذف
+async function deleteSummary(index){
+
+if(!confirm("هل تريد حذف هذا التلخيص؟")) return
+
+summaries.splice(index,1)
+
+await updateJSONFile(summaries)
+
+renderSummaries()
+
+}
+
+
+// تحديث JSON
+async function updateJSONFile(data){
 
 await fetch("/.netlify/functions/save",{
 method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify([newSummary])
+headers:{
+"Content-Type":"application/json"
+},
+body:JSON.stringify(data)
 })
-
-alert("تم النشر 🎉")
-
-spinner.style.display="none"
-btn.disabled=false
 
 }
 
 </script>
-
 </body>
 </html>
-```
