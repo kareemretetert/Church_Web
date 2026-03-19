@@ -199,7 +199,7 @@ contentDiv.appendChild(video)
 if(a.files && a.files.length){
 a.files.forEach(f=>{
 const link=document.createElement("a")
-link.href=f
+link.href = f.replace("/upload/", "/upload/fl_attachment/")
 link.innerText="📄 تحميل الملف"
 link.className="file-link"
 link.target="_blank"
