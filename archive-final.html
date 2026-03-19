@@ -108,52 +108,86 @@ img, video {
 
 <div class="container" id="archive"></div>
 
-```html
+<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
 <script>
 fetch("summaries.json")
-.then(res=>res.json())
-.then(list=>{
+.then(res => res.json())
+.then(list => {
 
-const archive=document.getElementById("archive")
+const archive = document.getElementById("archive")
 
-list.slice(1).forEach(data=>{
+// لو مفيش بيانات
+if(!list || !list.length){
+archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد بيانات</p>"
+return
+}
 
-let html=`
-<div class="card">
+// تجاهل أحدث تلخيص
+const archived = list.slice(1)
+
+// لو مفيش أرشيف
+if(!archived.length){
+archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد أرشيف حالياً</p>"
+return
+}
+
+archived.forEach((data,index)=>{
+
+if(!data || !data.title) return
+
+const card = document.createElement("div")
+card.className = "card"
+card.style.animationDelay = `${index * 0.15}s`
+
+let imagesHTML=""
+if(data.images && data.images.length){
+data.images.forEach(img=>{
+imagesHTML += `<img src="${img}" loading="lazy">`
+})
+}
+
+let videosHTML=""
+if(data.videos && data.videos.length){
+data.videos.forEach(v=>{
+videosHTML += `<video class="plyr-video" controls src="${v}"></video>`
+})
+}
+
+let filesHTML=""
+if(data.files && data.files.length){
+data.files.forEach(f=>{
+filesHTML += `
+<a href="${f}" target="_blank" style="display:block;margin:10px 0;">
+📄 تحميل الملف
+</a>`
+})
+}
+
+card.innerHTML = `
 <h2>${data.title}</h2>
-<p>${data.date}</p>
-<p>${data.content}</p>
+<p>📅 التاريخ: ${data.date || ""}</p>
+${imagesHTML}
+<p>${data.content || ""}</p>
+${videosHTML}
+${filesHTML}
 `
 
-data.images?.forEach(img=>{
-html+=`<img src="${img}">`
-})
-
-data.videos?.forEach(v=>{
-if(v.includes("youtube")){
-html+=`<iframe src="${v}" width="100%" height="300"></iframe>`
-}else{
-html+=`<video controls src="${v}"></video>`
-}
-})
-
-data.files?.forEach(f=>{
-html+=`
-<div>
-${f.includes(".pdf")?`<iframe src="${f}" width="100%" height="300"></iframe>`:""}
-<a href="${f}" target="_blank">تحميل الملف</a>
-</div>`
-})
-
-html+="</div>"
-
-archive.innerHTML+=html
+archive.appendChild(card)
 
 })
 
+// تفعيل Plyr (التعديل الوحيد)
+setTimeout(()=>{
+document.querySelectorAll('.plyr-video').forEach(v=> new Plyr(v))
+},300)
+
+})
+.catch(()=>{
+document.getElementById("archive").innerHTML =
+"<p style='text-align:center;color:#777;'>لا يمكن تحميل الأرشيف</p>"
 })
 </script>
-```
 
 </body>
 </html>
