@@ -164,7 +164,14 @@ window.onload=loadSummaries
 // رفع Cloudinary
 async function uploadToCloudinary(file){
 
-const url = "https://api.cloudinary.com/v1_1/ddiegmhji/auto/upload"
+let resourceType = "auto"
+
+// 👇 لو الملف PDF
+if(file.type === "application/pdf"){
+resourceType = "raw"
+}
+
+const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`
 
 const formData = new FormData()
 formData.append("file", file)
