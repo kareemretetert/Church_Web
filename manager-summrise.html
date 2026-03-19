@@ -166,6 +166,7 @@ async function uploadToCloudinary(file){
 
 let resourceType = "auto"
 
+// 👇 أهم سطر
 if(file.type.includes("pdf")){
 resourceType = "raw"
 }
@@ -175,9 +176,6 @@ const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`
 const formData = new FormData()
 formData.append("file", file)
 formData.append("upload_preset", "my_upload")
-
-// 👇 أهم إضافة
-formData.append("access_mode", "public")
 
 const res = await fetch(url,{
 method:"POST",
