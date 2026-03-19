@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -38,6 +40,16 @@ body {
   border: 2px solid #38373a;
 }
 
+/* العنوان */
+.header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+h1 {
+  font-size: 1.8rem;
+}
+
 /* الكارت */
 .content {
   max-width: 850px;
@@ -61,43 +73,46 @@ body {
   margin: 15px auto;
   border-radius: 8px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-/* فيديو */
+.content img:hover {
+  transform: scale(1.03);
+}
+
+/* الفيديو */
 video {
-  width: 100%;
-  margin-top: 20px;
+  max-width: 100%;
+  display: block;
+  margin: 20px auto;
   border-radius: 10px;
 }
 
-/* ملفات */
-.file-card {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  background:#f7f7f7;
-  padding:12px 15px;
-  border-radius:10px;
-  margin-top:10px;
+/* الملفات */
+.file-link {
+  display: block;
+  padding: 10px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-top: 10px;
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  text-align: center;
 }
 
-.file-actions a {
-  margin-left:10px;
-  text-decoration:none;
-  background:#5c2c8a;
-  color:white;
-  padding:6px 12px;
-  border-radius:6px;
+.file-link:hover {
+  background: #e0e0e0;
 }
 
-/* Lightbox */
+/* fullscreen */
 .lightbox {
   position: fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  background: rgba(0,0,0,0.9);
+  background: rgba(0,0,0,0.85);
   display:flex;
   justify-content:center;
   align-items:center;
@@ -106,16 +121,8 @@ video {
 
 .lightbox img {
   max-width:90%;
-  max-height:85%;
-}
-
-.close-btn {
-  position:absolute;
-  top:20px;
-  right:30px;
-  font-size:25px;
-  color:white;
-  cursor:pointer;
+  max-height:90%;
+  border-radius:10px;
 }
 </style>
 </head>
@@ -127,8 +134,10 @@ video {
   <a class="btn" href="archive-final.html">الأرشيف</a>
 </div>
 
-<h1 id="title">تحميل...</h1>
-<p id="date"></p>
+<div class="header">
+  <h1 id="title">تحميل...</h1>
+  <p id="date"></p>
+</div>
 
 <div class="content"></div>
 
@@ -140,7 +149,7 @@ fetch("summaries.json")
 .then(list => {
 
 if(!list.length){
-document.getElementById("title").innerText = "لا يوجد"
+document.getElementById("title").innerText = "لا يوجد تلخيصات"
 return
 }
 
@@ -150,59 +159,57 @@ document.getElementById("title").innerText = a.title
 document.getElementById("date").innerText = "📅 " + a.date
 
 const contentDiv = document.querySelector(".content")
+contentDiv.innerHTML = ""
 
-// 🖼️ صور
-if(a.images){
+// 🖼️ الصور
+if(a.images && a.images.length){
 a.images.forEach(img=>{
 const image=document.createElement("img")
 image.src=img
 
 image.onclick = ()=>{
-const box=document.createElement("div")
-box.className="lightbox"
-box.innerHTML=`<span class="close-btn">✖</span><img src="${img}">`
-box.onclick=()=>box.remove()
-document.body.appendChild(box)
+const lightbox = document.createElement("div")
+lightbox.className="lightbox"
+
+const bigImg=document.createElement("img")
+bigImg.src=img
+
+lightbox.appendChild(bigImg)
+lightbox.onclick = ()=> lightbox.remove()
+
+document.body.appendChild(lightbox)
 }
 
 contentDiv.appendChild(image)
 })
 }
 
-// 🎥 فيديو
-if(a.videos){
+// 🎥 الفيديو (تم التعديل هنا فقط)
+if(a.videos && a.videos.length){
 a.videos.forEach(v=>{
 const video=document.createElement("video")
-video.className="plyr-video"
 video.controls=true
+video.className="plyr-video"
 video.src=v
 contentDiv.appendChild(video)
 })
 }
 
-// 📄 ملفات
-if(a.files){
+// 📄 الملفات
+if(a.files && a.files.length){
 a.files.forEach(f=>{
-const ext = f.split('.').pop().toUpperCase()
-
-const card=document.createElement("div")
-card.className="file-card"
-
-card.innerHTML=`
-<span>📄 ${ext} File</span>
-<div class="file-actions">
-<a href="${f}" target="_blank">عرض</a>
-<a href="${f}" download>تحميل</a>
-</div>
-`
-
-contentDiv.appendChild(card)
+const link=document.createElement("a")
+link.href=f
+link.innerText="📄 تحميل الملف"
+link.className="file-link"
+link.target="_blank"
+contentDiv.appendChild(link)
 })
 }
 
-// 📝 نص
+// 📝 النص
 const text=document.createElement("p")
-text.innerText=a.content
+text.innerText = a.content
 contentDiv.appendChild(text)
 
 // تفعيل Plyr
