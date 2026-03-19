@@ -221,11 +221,29 @@ images = await Promise.all([...imageFiles].map(f => uploadFile(f)));
 
 
 // 🎥 الفيديو (Cloudinary)
-videos = await Promise.all([...videoFiles].map(f => uploadToCloudinary(f)));
+videos = [];
+
+for(let f of videoFiles){
+try{
+const url = await uploadToCloudinary(f);
+videos.push(url);
+}catch{
+alert("فشل رفع فيديو: " + f.name);
+}
+}
 
 
 // 📄 الملفات (Cloudinary)
-files = await Promise.all([...fileFiles].map(f => uploadToCloudinary(f)));
+files = [];
+
+for(let f of fileFiles){
+try{
+const url = await uploadToCloudinary(f);
+files.push(url);
+}catch{
+alert("فشل رفع ملف: " + f.name);
+}
+}
 
 
 // إنشاء التلخيص
