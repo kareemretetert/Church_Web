@@ -141,8 +141,6 @@ video {
 
 <div class="content"></div>
 
-<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
 <script>
 fetch("summaries.json")
 .then(res => res.json())
@@ -161,21 +159,26 @@ document.getElementById("date").innerText = "📅 " + a.date
 const contentDiv = document.querySelector(".content")
 contentDiv.innerHTML = ""
 
+// 📝 النص
+const text=document.createElement("p")
+text.innerText = a.content
+contentDiv.appendChild(text)
+
 // 🖼️ الصور
-if(a.images && a.images.length){
+if(a.images){
 a.images.forEach(img=>{
 const image=document.createElement("img")
 image.src=img
 
-image.onclick = ()=>{
-const lightbox = document.createElement("div")
+image.onclick=()=>{
+const lightbox=document.createElement("div")
 lightbox.className="lightbox"
 
-const bigImg=document.createElement("img")
-bigImg.src=img
+const big=document.createElement("img")
+big.src=img
 
-lightbox.appendChild(bigImg)
-lightbox.onclick = ()=> lightbox.remove()
+lightbox.appendChild(big)
+lightbox.onclick=()=>lightbox.remove()
 
 document.body.appendChild(lightbox)
 }
@@ -184,38 +187,56 @@ contentDiv.appendChild(image)
 })
 }
 
-// 🎥 الفيديو (تم التعديل هنا فقط)
-if(a.videos && a.videos.length){
+// 🎥 الفيديو
+if(a.videos){
 a.videos.forEach(v=>{
+
+// YouTube
+if(v.includes("youtube")){
+const iframe=document.createElement("iframe")
+iframe.src=v
+iframe.width="100%"
+iframe.height="400"
+iframe.allowFullscreen=true
+contentDiv.appendChild(iframe)
+}
+
+// عادي
+else{
 const video=document.createElement("video")
 video.controls=true
-video.className="plyr-video"
+video.preload="metadata"
 video.src=v
 contentDiv.appendChild(video)
+}
+
 })
 }
 
 // 📄 الملفات
-if(a.files && a.files.length){
+if(a.files){
 a.files.forEach(f=>{
+
+const wrapper=document.createElement("div")
+
+const iframe=document.createElement("iframe")
+iframe.src=f
+iframe.width="100%"
+iframe.height="400"
+
 const link=document.createElement("a")
 link.href=f
 link.innerText="📄 تحميل الملف"
-link.className="file-link"
 link.target="_blank"
-contentDiv.appendChild(link)
+link.className="file-link"
+
+wrapper.appendChild(iframe)
+wrapper.appendChild(link)
+
+contentDiv.appendChild(wrapper)
+
 })
 }
-
-// 📝 النص
-const text=document.createElement("p")
-text.innerText = a.content
-contentDiv.appendChild(text)
-
-// تفعيل Plyr
-setTimeout(()=>{
-document.querySelectorAll('.plyr-video').forEach(v=> new Plyr(v))
-},300)
 
 })
 </script>
