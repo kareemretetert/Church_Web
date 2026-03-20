@@ -127,7 +127,7 @@ let summaries=[]
 // عناصر UI
 const publishBtn = document.getElementById("publish")
 
-// إنشاء progress bar
+// progress bar
 const progressBar = document.createElement("div")
 progressBar.style.height="10px"
 progressBar.style.background="#ccc"
@@ -161,21 +161,21 @@ document.getElementById("summariesList").innerHTML=
 window.onload=loadSummaries
 
 
-// رفع Cloudinary
+// 🔥 رفع Cloudinary (معدل على حسابك الجديد)
 async function uploadToCloudinary(file){
 
 let resourceType = "auto"
 
-// 👇 أهم سطر
+// PDF
 if(file.type.includes("pdf")){
 resourceType = "raw"
 }
 
-const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`
+const url = `https://api.cloudinary.com/v1_1/dvicie9uq/${resourceType}/upload`
 
 const formData = new FormData()
 formData.append("file", file)
-formData.append("upload_preset", "my_upload")
+formData.append("upload_preset", "my_upload_new")
 
 const res = await fetch(url,{
 method:"POST",
@@ -193,7 +193,6 @@ return data.secure_url
 // زر النشر
 document.getElementById("publish").onclick=async()=>{
 
-// ❌ منع الضغط مرتين
 publishBtn.disabled = true
 
 spinner.style.display="block"
@@ -223,10 +222,10 @@ let done = 0
 
 function updateProgress(){
 done++
-progress.style.width = ((done/total)*100) + "%"
+progress.style.width = total ? ((done/total)*100) + "%" : "100%"
 }
 
-// 🖼️ الصور (اختياري تخليها Cloudinary برضو)
+// صور
 for(let f of imageFiles){
 try{
 const url = await uploadToCloudinary(f)
@@ -237,7 +236,7 @@ alert("فشل رفع صورة")
 }
 }
 
-// 🎥 فيديو
+// فيديو
 for(let f of videoFiles){
 try{
 const url = await uploadToCloudinary(f)
@@ -248,7 +247,7 @@ alert("فشل رفع فيديو: " + f.name)
 }
 }
 
-// 📄 ملفات
+// ملفات
 for(let f of fileFiles){
 try{
 const url = await uploadToCloudinary(f)
