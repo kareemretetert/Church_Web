@@ -346,7 +346,7 @@
         <p>هل ذاكرتك قوية؟ جرّب اللعبة وشوف هتقدر تفتكر وتكمل التحدي لحد فين.</p>
         <label class="input-label" for="username2">اكتب اسمك للمشاركة</label>
         <input class="name-input" id="username2" type="text" placeholder="اكتب اسمك هنا" />
-        <button class="start-btn" onclick="startQuiz2()">ابدأ التحدي</button>
+        <button class="start-btn" onclick="startQuiz0()">ابدأ التحدي</button>
       </article>
       
       <article class="quiz-card">
@@ -397,6 +397,11 @@
       const valid = validateAndSave('username');
       if (!valid) return;
       window.location.href = 'quiz.html';
+    }
+    function startQuiz0() {
+      const valid = validateAndSave('username');
+      if (!valid) return;
+      window.location.href = 'quiz_list.html';
     }
 
     function startQuiz2() {
