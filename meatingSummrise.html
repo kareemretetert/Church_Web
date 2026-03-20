@@ -199,10 +199,14 @@ contentDiv.appendChild(video)
 if(a.files && a.files.length){
 a.files.forEach(f=>{
 const link=document.createElement("a")
-link.href = f.replace("/upload/", "/upload/fl_attachment/")
+link.href = f
 link.innerText="📄 تحميل الملف"
 link.className="file-link"
 link.target="_blank"
+
+// 👇 يخليه تحميل
+link.download = ""
+
 contentDiv.appendChild(link)
 })
 }
