@@ -120,24 +120,35 @@ const card = document.createElement("div")
 card.className = "card"
 card.style.animationDelay = `${index * 0.15}s`
 
+// 🖼 الصور
 let imagesHTML=""
 if(data.images && data.images.length){
 data.images.forEach(img=>{
-imagesHTML += `<img src="${img.data}">`
+imagesHTML += `<img src="${img}">`
 })
 }
 
+// 🎥 الفيديو
 let videosHTML=""
 if(data.videos && data.videos.length){
 data.videos.forEach(v=>{
-videosHTML += `<video controls src="${v.data}"></video>`
+videosHTML += `<video controls src="${v}"></video>`
 })
 }
 
+// 📄 الملفات
 let filesHTML=""
 if(data.files && data.files.length){
 data.files.forEach(f=>{
-filesHTML += `<a href="${f.data}" download="${f.name}" style="display:block;margin:10px 0;">📄 تحميل ${f.name}</a>`
+
+const fileName = decodeURIComponent(f.split('/').pop())
+
+filesHTML += `
+<a href="${f}" target="_blank" style="display:block;margin:10px 0;">
+📄 تحميل ${fileName}
+</a>
+`
+
 })
 }
 
