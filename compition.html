@@ -344,19 +344,11 @@
         <span class="card-badge">امتحانات</span>
         <h3>تحدي الذاكرة</h3>
         <p>هل ذاكرتك قوية؟ جرّب اللعبة وشوف هتقدر تفتكر وتكمل التحدي لحد فين.</p>
-        <label class="input-label" for="username0">اكتب اسمك للمشاركة</label>
-        <input class="name-input" id="username0" type="text" placeholder="اكتب اسمك هنا" />
-        <button class="start-btn" onclick="startQuiz0()">ابدأ التحدي</button>
-      </article>
-      
-      <article class="quiz-card">
-        <span class="card-badge">مسابقة كتابية</span>
-        <h3>مسابقة من أنا؟</h3>
-        <p>اختبر معلوماتك في شخصيات وأحداث من الكتاب المقدس، وحاول تجيب أسرع وأصح إجابة.</p>
         <label class="input-label" for="username">اكتب اسمك للمشاركة</label>
         <input class="name-input" id="username" type="text" placeholder="اكتب اسمك هنا" />
-        <button class="start-btn" onclick="startQuiz()">ابدأ المسابقة</button>
+        <button class="start-btn" onclick="startQuiz()">ابدأ التحدي</button>
       </article>
+    
 
       <article class="quiz-card">
         <span class="card-badge">لعبة ذهنية</span>
@@ -394,11 +386,6 @@
     }
 
     function startQuiz() {
-      const valid = validateAndSave('username');
-      if (!valid) return;
-      window.location.href = 'quiz.html';
-    }
-    function startQuiz0() {
       const valid = validateAndSave('username');
       if (!valid) return;
       window.location.href = 'quiz_list.html';
