@@ -9,9 +9,7 @@
 <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -46,9 +44,7 @@ body {
   margin-bottom: 25px;
 }
 
-h1 {
-  font-size: 1.8rem;
-}
+h1 { font-size: 1.8rem; }
 
 /* الكارت */
 .content {
@@ -88,30 +84,39 @@ video {
   border-radius: 10px;
 }
 
-/* الملفات */
-.file-link {
-  display: block;
-  padding: 10px;
-  background: #f5f5f5;
-  border-radius: 8px;
-  margin-top: 10px;
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-  text-align: center;
+/* ملفات */
+.file-box{
+  background:#fafafa;
+  border-radius:10px;
+  padding:15px;
+  margin-top:15px;
+  text-align:center;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
-.file-link:hover {
-  background: #e0e0e0;
+.file-name{
+  font-weight:bold;
+  margin-bottom:10px;
 }
+
+.view-btn, .download-btn{
+  display:inline-block;
+  margin:8px;
+  padding:8px 15px;
+  border-radius:20px;
+  text-decoration:none;
+  color:white;
+  font-weight:bold;
+}
+
+.view-btn{ background:#1976d2; }
+.download-btn{ background:#2e7d32; }
 
 /* fullscreen */
 .lightbox {
   position: fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
+  top:0; left:0;
+  width:100%; height:100%;
   background: rgba(0,0,0,0.85);
   display:flex;
   justify-content:center;
@@ -184,7 +189,7 @@ contentDiv.appendChild(image)
 })
 }
 
-// 🎥 الفيديو (تم التعديل هنا فقط)
+// 🎥 الفيديو
 if(a.videos && a.videos.length){
 a.videos.forEach(v=>{
 const video=document.createElement("video")
@@ -195,19 +200,59 @@ contentDiv.appendChild(video)
 })
 }
 
-// 📄 الملفات
+// 📄 الملفات (نسخة مطورة 🔥)
 if(a.files && a.files.length){
 a.files.forEach(f=>{
-const link=document.createElement("a")
-link.href = f
-link.innerText="📄 تحميل الملف"
-link.className="file-link"
-link.target="_blank"
 
-// 👇 يخليه تحميل
-link.download = ""
+const ext = f.split('.').pop().toLowerCase()
 
-contentDiv.appendChild(link)
+let fileType = "📄 ملف"
+if(ext === "pdf") fileType = "📕 PDF"
+else if(ext === "doc" || ext === "docx") fileType = "📝 Word"
+else if(ext === "ppt" || ext === "pptx") fileType = "📊 PowerPoint"
+
+const fileName = f.split('/').pop()
+
+const box = document.createElement("div")
+box.className = "file-box"
+
+const name = document.createElement("div")
+name.className = "file-name"
+name.innerText = fileType + " - " + fileName
+
+// زر عرض
+const viewBtn = document.createElement("a")
+viewBtn.href = f
+viewBtn.innerText = "👁 عرض"
+viewBtn.target = "_blank"
+viewBtn.className = "view-btn"
+
+// زر تحميل
+const downloadBtn = document.createElement("a")
+downloadBtn.href = f
+downloadBtn.innerText = "⬇ تحميل"
+downloadBtn.className = "download-btn"
+downloadBtn.download = ""
+
+// إضافة العناصر
+box.appendChild(name)
+box.appendChild(viewBtn)
+box.appendChild(downloadBtn)
+
+// 📄 preview للـ PDF
+if(ext === "pdf"){
+const iframe = document.createElement("iframe")
+iframe.src = f
+iframe.style.width = "100%"
+iframe.style.height = "400px"
+iframe.style.marginTop = "10px"
+iframe.style.borderRadius = "10px"
+
+box.appendChild(iframe)
+}
+
+contentDiv.appendChild(box)
+
 })
 }
 
