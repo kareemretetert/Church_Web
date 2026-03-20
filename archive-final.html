@@ -1,139 +1,119 @@
+
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الأرشيف</title>
+  <meta name="author" content="Kareem Hosny" />
+  <meta name="description" content="مكتبة أرشيف التلاخيص السابقة للاجتماعات" />
+  <link rel="icon" href="imgsfile/icon.png" type="image/x-icon" />
 
-<title>الأرشيف</title>
 
-<link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
-<style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  direction: rtl;
-  background-color: #f0f8ff;
-  padding: 20px;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-h1 {
-  color: #333;
-  font-size: 2rem;
-}
-
-.back-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-}
-
-.btn {
-  background-image: linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196));
-  color: white;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  border: 2px solid #38373a;
-  transition: 0.3s;
-}
-
-.btn:hover { background-color: #555; }
-
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  max-width: 900px;
-  margin: auto;
-}
-
-.card {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  opacity: 0;
-  transform: translateY(30px);
-  animation: fadeInUp 0.7s ease forwards;
-}
-
-.card h2 {
-  color: #5c2c8a;
-  font-size: 1.3rem;
-  margin-bottom: 10px;
-  text-align: center;
-}
-
-.card p { margin: 10px 0; }
-
-img, video {
-  max-width: 100%;
-  display: block;
-  margin: 10px auto;
-  border-radius: 8px;
-}
-
-@keyframes fadeInUp {
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@media (max-width: 600px) {
-  h1 { font-size: 1.5rem; }
-  .card h2 { font-size: 1.1rem; }
-}
-</style>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      direction: rtl;
+      background-color: #f0f8ff;
+      padding: 20px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    h1 {
+      color: #333;
+      font-size: 2rem;
+    }
+    .back-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background-image: linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196));
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+      border: 2px solid #38373a;
+      transition: 0.3s;
+    }
+    .btn:hover { background-color: #555; }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      max-width: 900px;
+      margin: auto;
+    }
+    .card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.7s ease forwards;
+    }
+    .card h2 {
+      color: #5c2c8a;
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    .card p { margin: 10px 0; }
+    img, video {
+      max-width: 100%;
+      display: block;
+      margin: 10px auto;
+      border-radius: 8px;
+    }
+    @keyframes fadeInUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.5rem; }
+      .card h2 { font-size: 1.1rem; }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="back-buttons">
+    <a class="btn" href="index.html">الصفحة الرئيسية ⬅</a>
+    <a class="btn" href="meatingSummrise.html">العودة</a>
+  </div>
+  <div class="header">
+    <h1>📚 أرشيف الاجتماعات</h1>
+  </div>
+  <div class="container" id="archive"></div>
 
-<div class="back-buttons">
-  <a class="btn" href="index.html">الصفحة الرئيسية ⬅</a>
-  <a class="btn" href="meatingSummrise.html">العودة</a>
-</div>
+  <script>
 
-<div class="header">
-  <h1>📚 أرشيف الاجتماعات</h1>
-</div>
-
-<div class="container" id="archive"></div>
-
-<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
-<script>
 fetch("summaries.json")
 .then(res => res.json())
 .then(list => {
 
 const archive = document.getElementById("archive")
 
-// لو مفيش بيانات
-if(!list || !list.length){
-archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد بيانات</p>"
-return
-}
-
 // تجاهل أحدث تلخيص
 const archived = list.slice(1)
 
 // لو مفيش أرشيف
-if(!archived.length){
+if(!archived || archived.length === 0){
 archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد أرشيف حالياً</p>"
 return
 }
 
 archived.forEach((data,index)=>{
 
+// لو البيانات فاضية تجاهلها
 if(!data || !data.title) return
 
 const card = document.createElement("div")
@@ -143,51 +123,50 @@ card.style.animationDelay = `${index * 0.15}s`
 let imagesHTML=""
 if(data.images && data.images.length){
 data.images.forEach(img=>{
-imagesHTML += `<img src="${img}" loading="lazy">`
+imagesHTML += `<img src="${img.data}">`
 })
 }
 
 let videosHTML=""
 if(data.videos && data.videos.length){
 data.videos.forEach(v=>{
-videosHTML += `<video class="plyr-video" controls src="${v}"></video>`
+videosHTML += `<video controls src="${v.data}"></video>`
 })
 }
 
 let filesHTML=""
 if(data.files && data.files.length){
 data.files.forEach(f=>{
-filesHTML += `
-<a href="${f}" target="_blank" style="display:block;margin:10px 0;">
-📄 تحميل الملف
-</a>`
+filesHTML += `<a href="${f.data}" download="${f.name}" style="display:block;margin:10px 0;">📄 تحميل ${f.name}</a>`
 })
 }
 
 card.innerHTML = `
+
 <h2>${data.title}</h2>
+
 <p>📅 التاريخ: ${data.date || ""}</p>
+
 ${imagesHTML}
+
 <p>${data.content || ""}</p>
+
 ${videosHTML}
+
 ${filesHTML}
+
 `
 
 archive.appendChild(card)
 
 })
 
-// تفعيل Plyr (التعديل الوحيد)
-setTimeout(()=>{
-document.querySelectorAll('.plyr-video').forEach(v=> new Plyr(v))
-},300)
-
 })
 .catch(()=>{
 document.getElementById("archive").innerHTML =
 "<p style='text-align:center;color:#777;'>لا يمكن تحميل الأرشيف</p>"
 })
-</script>
 
+</script>
 </body>
 </html>
