@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>الامتحانات</title>
+<link rel="icon" href="Image Mar 15, 2026, 07_55_27 PM.png">
+<style>
+
+body{
+font-family:Tahoma;
+direction:rtl;
+background:#f0f8ff;
+text-align:center;
+padding:30px;
+}
+
+.quizCard{
+
+background:white;
+padding:20px;
+margin:15px auto;
+width:300px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+
+}
+
+button{
+
+background:#6a3ab2;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:10px;
+cursor:pointer;
+
+}
+.backBtn{
+
+display:inline-block;
+margin-bottom:20px;
+background:#6a3ab2;
+color:white;
+padding:10px 20px;
+border-radius:10px;
+text-decoration:none;
+
+}
+</style>
+</head>
+
+<body>
+<a href="index.html" class="backBtn">
+الصفحة الرئيسية
+</a>
+<h2>اختر الامتحان</h2>
+
+<div id="quizList"></div>
+
+<script>
+
+fetch("quiz.json")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+const container=document.getElementById("quizList")
+
+data.forEach((quiz,i)=>{
+
+container.innerHTML+=`
+
+<div class="quizCard">
+
+<h3>${quiz.title}</h3>
+
+<p>عدد الأسئلة: ${quiz.questions.length}</p>
+
+<button onclick="startQuiz(${i})">
+ابدأ الامتحان
+</button>
+
+</div>
+
+`
+
+})
+
+})
+
+function startQuiz(i){
+
+localStorage.setItem("quizIndex",i)
+
+const name=prompt("اكتب اسمك")
+
+localStorage.setItem("quiz_username",name)
+
+window.location="quiz.html"
+
+}
+
+</script>
+
+</body>
+</html>

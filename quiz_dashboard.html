@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>لوحة إدارة الامتحانات</title>
+
+<style>
+body{
+font-family:Tahoma;
+direction:rtl;
+background:#f4f4f4;
+padding:20px;
+}
+
+h2{margin-top:30px;}
+
+input,button{
+width:100%;
+padding:10px;
+margin-top:10px;
+}
+
+button{
+background:#6a3ab2;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+button:hover{
+background:#4d2c82;
+}
+
+.card{
+background:white;
+padding:15px;
+margin-top:15px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.deleteBtn{
+background:#d9534f;
+}
+</style>
+</head>
+
+<body>
+
+<h2>إنشاء امتحان جديد</h2>
+
+<label>اسم الامتحان</label>
+<input id="quizTitle">
+
+<label>وقت الامتحان (بالدقائق)</label>
+<input id="quizTime" type="number" value="30">
+
+<hr>
+
+<h2>إضافة سؤال</h2>
+
+<input id="question" placeholder="اكتب السؤال">
+
+<label>اختيار 1</label>
+<input id="opt1">
+
+<label>اختيار 2</label>
+<input id="opt2">
+
+<label>اختيار 3 (اختياري)</label>
+<input id="opt3">
+
+<label>اختيار 4 (اختياري)</label>
+<input id="opt4">
+
+<label>رقم الإجابة الصحيحة</label>
+<input id="answerNumber" type="number">
+
+<button onclick="addQuestion()">إضافة السؤال</button>
+
+<p id="qCount">عدد الأسئلة: 0</p>
+
+<button onclick="publishQuiz()">نشر الامتحان</button>
+
+<hr>
+
+<h2>الامتحانات الحالية</h2>
+
+<div id="quizList"></div>
+
+<script>
+
+let quizzes=[]
+let questions=[]
+
+async function loadQuizzes(){
+try{
+const res=await fetch("quiz.json")
+quizzes=await res.json()
+renderQuiz()
+}catch{
+document.getElementById("quizList").innerHTML="لا يوجد امتحانات"
+}
+}
+window.onload=loadQuizzes
+
+function addQuestion(){
+
+const q=document.getElementById("question").value
+
+let options=[]
+const o1=document.getElementById("opt1").value
+const o2=document.getElementById("opt2").value
+const o3=document.getElementById("opt3").value
+const o4=document.getElementById("opt4").value
+
+if(o1) options.push(o1)
+if(o2) options.push(o2)
+if(o3) options.push(o3)
+if(o4) options.push(o4)
+
+const answer=parseInt(document.getElementById("answerNumber").value)
+
+if(!q || options.length < 2){
+alert("يجب إدخال سؤال واختيارين على الأقل")
+return
+}
+
+if(answer < 1 || answer > options.length){
+alert("رقم الإجابة غير صحيح")
+return
+}
+
+questions.push({
+question:q,
+options:options,
+answer:answer
+})
+
+document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
+
+clearFields()
+alert("تم إضافة السؤال")
+}
+
+// ✅ حفظ على GitHub
+async function updateJSONFile(data){
+await fetch("/.netlify/functions/saveQuiz",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify(data)
+})
+}
+
+async function publishQuiz(){
+
+const title=document.getElementById("quizTitle").value
+const time=document.getElementById("quizTime").value
+
+if(!title || questions.length==0){
+alert("اكتب اسم الامتحان وأضف أسئلة")
+return
+}
+
+const newQuiz={
+title:title,
+time:time,
+questions:questions
+}
+
+quizzes.unshift(newQuiz)
+
+// 🔥 حفظ مباشر
+await updateJSONFile(quizzes)
+
+renderQuiz()
+
+questions=[]
+document.getElementById("qCount").innerText="عدد الأسئلة: 0"
+
+alert("تم نشر الامتحان 🎉")
+}
+
+function renderQuiz(){
+
+const container=document.getElementById("quizList")
+container.innerHTML=""
+
+quizzes.forEach((q,i)=>{
+
+container.innerHTML+=`
+<div class="card">
+<b>${q.title}</b>
+<p>عدد الأسئلة: ${q.questions.length}</p>
+<p>الوقت: ${q.time} دقيقة</p>
+
+<button class="deleteBtn" onclick="deleteQuiz(${i})">
+حذف الامتحان
+</button>
+
+</div>
+`
+})
+}
+
+async function deleteQuiz(i){
+
+if(!confirm("هل تريد حذف الامتحان؟")) return
+
+quizzes.splice(i,1)
+
+// 🔥 تحديث بعد الحذف
+await updateJSONFile(quizzes)
+
+renderQuiz()
+}
+
+function clearFields(){
+document.getElementById("question").value=""
+document.getElementById("opt1").value=""
+document.getElementById("opt2").value=""
+document.getElementById("opt3").value=""
+document.getElementById("opt4").value=""
+document.getElementById("answerNumber").value=""
+}
+
+</script>
+</body>
+</html>
