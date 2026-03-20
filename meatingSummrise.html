@@ -230,25 +230,12 @@ viewBtn.className = "view-btn"
 downloadBtn.onclick = async (e)=>{
 e.preventDefault()
 
-try{
-const res = await fetch(f)
-const blob = await res.blob()
-
-const url = window.URL.createObjectURL(blob)
-
-const a = document.createElement("a")
-a.href = url
-a.download = fileName
-document.body.appendChild(a)
-a.click()
-
-a.remove()
-window.URL.revokeObjectURL(url)
-
-}catch{
-alert("فشل تحميل الملف")
-}
-}
+// زر تحميل
+const downloadBtn = document.createElement("a")
+downloadBtn.href = f
+downloadBtn.innerText = "⬇ تحميل"
+downloadBtn.className = "download-btn"
+downloadBtn.download = ""
 
 // إضافة العناصر
 box.appendChild(name)
