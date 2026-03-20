@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+
+<meta charset="UTF-8">
+<title>النتيجة</title>
+
+<style>
+
+body{
+font-family:Tahoma;
+direction:rtl;
+text-align:center;
+background:#f0f8ff;
+padding:30px;
+}
+
+.card{
+
+background:white;
+padding:20px;
+margin:15px auto;
+max-width:600px;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
+
+}
+
+.correct{
+color:green;
+}
+
+.wrong{
+color:red;
+}
+
+button{
+
+margin-top:20px;
+padding:10px 20px;
+border:none;
+background:#6a3ab2;
+color:white;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>نتيجة الامتحان</h2>
+
+<p id="name"></p>
+<p id="score"></p>
+
+<div id="answers"></div>
+
+<button onclick="goBack()">
+العودة للامتحانات
+</button>
+
+<script>
+
+const name=localStorage.getItem("quiz_username")
+const score=localStorage.getItem("quiz_score")
+const total=localStorage.getItem("quiz_total")
+
+document.getElementById("name").innerText="الاسم: "+name
+document.getElementById("score").innerText="الدرجة: "+score+" / "+total
+let percent = Math.round((score / total) * 100)
+
+let message=""
+
+if(percent >= 90){
+
+message="ممتاز 👏"
+
+}else if(percent >= 75){
+
+message="عاش 🔥"
+
+}else if(percent >= 50){
+
+message="مقبول 👍"
+
+}else{
+
+message="اعمل أفضل المرة القادمة 💪"
+
+}
+
+const percentBox=document.createElement("p")
+
+percentBox.innerText="النسبة: "+percent+"% - "+message
+
+document.body.appendChild(percentBox)
+const answers=JSON.parse(localStorage.getItem("quiz_answers"))
+
+const container=document.getElementById("answers")
+
+answers.forEach((a,i)=>{
+
+let chosenText = a.chosen ? a.options[a.chosen-1] : "لم يتم اختيار"
+
+let correctText = a.options[a.correct-1]
+
+let resultText = a.chosen == a.correct ? "✔ إجابة صحيحة" : "❌ إجابة خاطئة"
+
+container.innerHTML+=`
+
+<div class="card">
+
+<b>س${i+1}:</b> ${a.question}
+
+<p>
+اختيارك: ${a.chosen} (${chosenText})
+</p>
+
+<p>
+الإجابة الصحيحة: ${a.correct} (${correctText})
+</p>
+
+<p>
+${resultText}
+</p>
+
+</div>
+
+`
+
+})
+
+function goBack(){
+
+window.location="quiz_list.html"
+
+}
+
+</script>
+
+</body>
+</html>
