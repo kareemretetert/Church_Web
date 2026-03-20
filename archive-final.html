@@ -94,7 +94,9 @@
   </div>
   <div class="container" id="archive"></div>
 
-  <script>
+  <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
+<script>
 
 fetch("summaries.json")
 .then(res => res.json())
@@ -102,75 +104,98 @@ fetch("summaries.json")
 
 const archive = document.getElementById("archive")
 
-// تجاهل أحدث تلخيص
 const archived = list.slice(1)
 
-// لو مفيش أرشيف
-if(!archived || archived.length === 0){
+if(!archived.length){
 archive.innerHTML = "<p style='text-align:center;color:#777;'>لا يوجد أرشيف حالياً</p>"
 return
 }
 
 archived.forEach((data,index)=>{
 
-// لو البيانات فاضية تجاهلها
 if(!data || !data.title) return
 
 const card = document.createElement("div")
 card.className = "card"
 card.style.animationDelay = `${index * 0.15}s`
 
+let contentHTML = `
+
+<h2>${data.title}</h2>
+<p>📅 التاريخ: ${data.date || ""}</p>
+
+`
+
 // 🖼 الصور
-let imagesHTML=""
-if(data.images && data.images.length){
+if(data.images){
 data.images.forEach(img=>{
-imagesHTML += `<img src="${img}">`
+contentHTML += `<img src="${img}">`
 })
 }
 
-// 🎥 الفيديو
-let videosHTML=""
-if(data.videos && data.videos.length){
+// 🎥 الفيديو (مهم جدًا class)
+if(data.videos){
 data.videos.forEach(v=>{
-videosHTML += `<video controls src="${v}"></video>`
+contentHTML += `
+<video controls class="plyr-video">
+<source src="${v}" type="video/mp4">
+</video>
+`
 })
 }
 
-// 📄 الملفات
-let filesHTML=""
-if(data.files && data.files.length){
+// 📝 النص
+contentHTML += `<p>${data.content || ""}</p>`
+
+// 📄 الملفات (نفس نظام صفحة العرض 🔥)
+if(data.files){
 data.files.forEach(f=>{
 
+const ext = f.split('.').pop().toLowerCase()
 const fileName = decodeURIComponent(f.split('/').pop())
 
-filesHTML += `
-<a href="${f}" target="_blank" style="display:block;margin:10px 0;">
-📄 تحميل ${fileName}
+let fileType = "📄 ملف"
+if(ext === "pdf") fileType = "📕 PDF"
+else if(ext === "doc" || ext === "docx") fileType = "📝 Word"
+else if(ext === "ppt" || ext === "pptx") fileType = "📊 PowerPoint"
+
+contentHTML += `
+<div class="file-box">
+
+<div class="file-name">
+${fileType} - ${fileName}
+</div>
+
+<a href="${f}" target="_blank" class="view-btn">
+👁 عرض
+</a>
+
+<a href="${f}?fl_attachment=true" class="download-btn">
+⬇ تحميل
 </a>
 `
 
+// 📄 preview PDF
+if(ext === "pdf"){
+contentHTML += `
+<iframe src="${f}"></iframe>
+`
+}
+
+contentHTML += `</div>`
+
 })
 }
 
-card.innerHTML = `
-
-<h2>${data.title}</h2>
-
-<p>📅 التاريخ: ${data.date || ""}</p>
-
-${imagesHTML}
-
-<p>${data.content || ""}</p>
-
-${videosHTML}
-
-${filesHTML}
-
-`
-
+card.innerHTML = contentHTML
 archive.appendChild(card)
 
 })
+
+// 🔥 تشغيل Plyr بعد ما العناصر تتحط
+setTimeout(()=>{
+document.querySelectorAll('.plyr-video').forEach(v=> new Plyr(v))
+},300)
 
 })
 .catch(()=>{
