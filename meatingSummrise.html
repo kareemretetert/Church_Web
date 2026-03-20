@@ -19,7 +19,6 @@ body {
   padding: 20px;
 }
 
-/* أزرار */
 .back-buttons {
   display: flex;
   justify-content: center;
@@ -38,15 +37,11 @@ body {
   border: 2px solid #38373a;
 }
 
-/* العنوان */
 .header {
   text-align: center;
   margin-bottom: 25px;
 }
 
-h1 { font-size: 1.8rem; }
-
-/* الكارت */
 .content {
   max-width: 850px;
   margin: auto;
@@ -56,42 +51,25 @@ h1 { font-size: 1.8rem; }
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-/* النص */
-.content p {
-  line-height: 1.8;
-  margin-top: 20px;
-}
-
-/* الصور */
 .content img {
   max-width: 100%;
-  display: block;
   margin: 15px auto;
   border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.content img:hover {
-  transform: scale(1.03);
-}
-
-/* الفيديو */
 video {
   max-width: 100%;
-  display: block;
   margin: 20px auto;
   border-radius: 10px;
 }
 
-/* ملفات */
 .file-box{
   background:#fafafa;
   border-radius:10px;
   padding:15px;
   margin-top:15px;
   text-align:center;
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
 .file-name{
@@ -112,7 +90,13 @@ video {
 .view-btn{ background:#1976d2; }
 .download-btn{ background:#2e7d32; }
 
-/* fullscreen */
+iframe{
+  width:100%;
+  height:400px;
+  margin-top:10px;
+  border-radius:10px;
+}
+
 .lightbox {
   position: fixed;
   top:0; left:0;
@@ -122,12 +106,6 @@ video {
   justify-content:center;
   align-items:center;
   z-index:999;
-}
-
-.lightbox img {
-  max-width:90%;
-  max-height:90%;
-  border-radius:10px;
 }
 </style>
 </head>
@@ -164,10 +142,9 @@ document.getElementById("title").innerText = a.title
 document.getElementById("date").innerText = "📅 " + a.date
 
 const contentDiv = document.querySelector(".content")
-contentDiv.innerHTML = ""
 
-// 🖼️ الصور
-if(a.images && a.images.length){
+// صور
+if(a.images){
 a.images.forEach(img=>{
 const image=document.createElement("img")
 image.src=img
@@ -189,8 +166,8 @@ contentDiv.appendChild(image)
 })
 }
 
-// 🎥 الفيديو
-if(a.videos && a.videos.length){
+// فيديو
+if(a.videos){
 a.videos.forEach(v=>{
 const video=document.createElement("video")
 video.controls=true
@@ -200,8 +177,8 @@ contentDiv.appendChild(video)
 })
 }
 
-// 📄 الملفات (نسخة مطورة 🔥)
-if(a.files && a.files.length){
+// 📄 ملفات (نسخة مظبوطة)
+if(a.files){
 a.files.forEach(f=>{
 
 const ext = f.split('.').pop().toLowerCase()
@@ -211,7 +188,7 @@ if(ext === "pdf") fileType = "📕 PDF"
 else if(ext === "doc" || ext === "docx") fileType = "📝 Word"
 else if(ext === "ppt" || ext === "pptx") fileType = "📊 PowerPoint"
 
-const fileName = f.split('/').pop()
+const fileName = decodeURIComponent(f.split('/').pop())
 
 const box = document.createElement("div")
 box.className = "file-box"
@@ -220,29 +197,28 @@ const name = document.createElement("div")
 name.className = "file-name"
 name.innerText = fileType + " - " + fileName
 
-// زر عرض
+// 👁 عرض
 const viewBtn = document.createElement("a")
 viewBtn.href = f
 viewBtn.innerText = "👁 عرض"
 viewBtn.target = "_blank"
 viewBtn.className = "view-btn"
 
+// ⬇ تحميل (مهم جدًا)
+const downloadBtn = document.createElement("a")
+downloadBtn.href = f + "?fl_attachment=true"
+downloadBtn.innerText = "⬇ تحميل"
+downloadBtn.className = "download-btn"
 
-
-// إضافة العناصر
+// إضافة
 box.appendChild(name)
 box.appendChild(viewBtn)
 box.appendChild(downloadBtn)
 
-// 📄 preview للـ PDF
+// preview PDF
 if(ext === "pdf"){
 const iframe = document.createElement("iframe")
 iframe.src = f
-iframe.style.width = "100%"
-iframe.style.height = "400px"
-iframe.style.marginTop = "10px"
-iframe.style.borderRadius = "10px"
-
 box.appendChild(iframe)
 }
 
@@ -251,7 +227,7 @@ contentDiv.appendChild(box)
 })
 }
 
-// 📝 النص
+// نص
 const text=document.createElement("p")
 text.innerText = a.content
 contentDiv.appendChild(text)
