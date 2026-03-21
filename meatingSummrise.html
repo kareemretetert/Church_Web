@@ -197,23 +197,16 @@ const name = document.createElement("div")
 name.className = "file-name"
 name.innerText = fileType + " - " + fileName
 
-// 👁 عرض
+// 👁 عرض فقط
 const viewBtn = document.createElement("a")
 viewBtn.href = f
-viewBtn.innerText = "👁 عرض"
+viewBtn.innerText = "فتح"
 viewBtn.target = "_blank"
 viewBtn.className = "view-btn"
-
-// ⬇ تحميل (مهم جدًا)
-const downloadBtn = document.createElement("a")
-downloadBtn.href = f + "?fl_attachment=true"
-downloadBtn.innerText = "⬇ تحميل"
-downloadBtn.className = "download-btn"
 
 // إضافة
 box.appendChild(name)
 box.appendChild(viewBtn)
-box.appendChild(downloadBtn)
 
 // preview PDF
 if(ext === "pdf"){
