@@ -107,6 +107,12 @@ iframe{
   align-items:center;
   z-index:999;
 }
+
+  .plyr {
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+}
 </style>
 </head>
 
@@ -225,9 +231,26 @@ const text=document.createElement("p")
 text.innerText = a.content
 contentDiv.appendChild(text)
 
-// تفعيل Plyr
 setTimeout(()=>{
-document.querySelectorAll('.plyr-video').forEach(v=> new Plyr(v))
+
+  Plyr.setup('.plyr-video', {
+    controls: [
+      'play-large',
+      'rewind',        // ⏪ ترجيع 10 ثواني
+      'play',
+      'fast-forward',  // ⏩ تقديم 10 ثواني
+      'progress',
+      'current-time',
+      'duration',
+      'mute',
+      'volume',
+      'settings',
+      'download',      // ⬇️ زر التحميل
+      'fullscreen'
+    ],
+    seekTime: 10 // مدة التقديم/الترجيع
+  });
+
 },300)
 
 })
