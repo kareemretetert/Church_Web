@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة إدارة التلخيصات</title>
 
 <style>
@@ -11,16 +12,19 @@ body{
 font-family:Tajawal, Tahoma;
 direction:rtl;
 background:#f0f2f5;
-padding:30px;
+padding:20px;
+margin:0;
 }
 
 .container{
 max-width:900px;
 margin:auto;
+width:100%;
 }
 
 h2{
-margin-top:40px;
+margin-top:30px;
+font-size:20px;
 }
 
 input,textarea,button{
@@ -34,6 +38,7 @@ font-size:15px;
 
 textarea{
 height:120px;
+resize:vertical;
 }
 
 button{
@@ -76,7 +81,7 @@ background:#d32f2f;
 background:#b71c1c;
 }
 
-  #loader{
+#loader{
 position:fixed;
 top:0;
 left:0;
@@ -108,6 +113,41 @@ to{transform:rotate(360deg);}
 color:white;
 font-size:18px;
 }
+
+/* ✅ تحسينات الموبايل */
+@media (max-width:768px){
+
+body{
+padding:10px;
+}
+
+h2{
+font-size:18px;
+}
+
+input,textarea,button{
+font-size:14px;
+padding:10px;
+}
+
+.card-title{
+font-size:16px;
+}
+
+}
+
+@media (max-width:480px){
+
+.container{
+padding:5px;
+}
+
+textarea{
+height:100px;
+}
+
+}
+
 </style>
 
 </head>
@@ -156,10 +196,8 @@ throw new Error("access denied")
 
 let summaries=[]
 
-// عناصر UI
 const publishBtn = document.getElementById("publish")
 
-// إنشاء progress bar
 const progressBar = document.createElement("div")
 progressBar.style.height="10px"
 progressBar.style.background="#ccc"
@@ -169,7 +207,6 @@ document.querySelector(".container").prepend(progressBar)
 
 const progress = document.getElementById("progress")
 
-// spinner
 const spinner = document.createElement("div")
 spinner.innerHTML="⏳ جاري الرفع..."
 spinner.style.textAlign="center"
@@ -177,8 +214,6 @@ spinner.style.marginTop="10px"
 spinner.style.display="none"
 document.querySelector(".container").prepend(spinner)
 
-
-// تحميل التلخيصات
 async function loadSummaries(){
 try{
 const res=await fetch("summaries.json")
@@ -192,53 +227,33 @@ document.getElementById("summariesList").innerHTML=
 }
 window.onload=loadSummaries
 
-
-// رفع Cloudinary
 async function uploadToCloudinary(file){
-
 let resourceType = "auto"
-
-// 👇 أهم سطر
 if(file.type.includes("pdf")){
 resourceType = "raw"
 }
-
 const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`
-
 const formData = new FormData()
 formData.append("file", file)
 formData.append("upload_preset", "my_upload")
-
 const res = await fetch(url,{
 method:"POST",
 body:formData
 })
-
 const data = await res.json()
-
 if(!data.secure_url) throw "upload failed"
-
 return data.secure_url
 }
 
-
-// زر النشر
 document.getElementById("publish").onclick=async()=>{
-
 showLoader()
-
-// ❌ منع الضغط مرتين
 publishBtn.disabled = true
-
 spinner.style.display="block"
 progress.style.width="0%"
-
 try{
-
 const title=document.getElementById("title").value
 const date=document.getElementById("date").value
 const content=document.getElementById("content").value
-
 if(!title || !date || !content){
 hideLoader()
 alert("اكتب كل البيانات")
@@ -246,26 +261,20 @@ publishBtn.disabled=false
 spinner.style.display="none"
 return
 }
-
 const imageFiles = document.getElementById("images").files;
 const videoFiles = document.getElementById("videos").files;
 const fileFiles = document.getElementById("files").files;
-
 let images=[]
 let videos=[]
 let files=[]
-
 let total = imageFiles.length + videoFiles.length + fileFiles.length
 let done = 0
-
 function updateProgress(){
 done++
 if(total > 0){
 progress.style.width = ((done/total)*100) + "%"
 }
 }
-
-// 🖼️ الصور
 for(let f of imageFiles){
 try{
 const url = await uploadToCloudinary(f)
@@ -275,8 +284,6 @@ updateProgress()
 alert("فشل رفع صورة")
 }
 }
-
-// 🎥 فيديو
 for(let f of videoFiles){
 try{
 const url = await uploadToCloudinary(f)
@@ -286,8 +293,6 @@ updateProgress()
 alert("فشل رفع فيديو: " + f.name)
 }
 }
-
-// 📄 ملفات
 for(let f of fileFiles){
 try{
 const url = await uploadToCloudinary(f)
@@ -297,44 +302,23 @@ updateProgress()
 alert("فشل رفع ملف: " + f.name)
 }
 }
-
-// إنشاء التلخيص
-const newSummary={
-title,
-date,
-content,
-images,
-videos,
-files
-}
-
+const newSummary={title,date,content,images,videos,files}
 summaries.unshift(newSummary)
-
 await updateJSONFile(summaries)
-
 renderSummaries()
-
 hideLoader()
 spinner.style.display="none"
 publishBtn.disabled=false
-
 alert("تم نشر التلخيص 🎉")
-
 }catch(e){
-
 hideLoader()
 spinner.style.display="none"
 publishBtn.disabled=false
-
 alert("حصل خطأ")
 console.log(e)
-
+}
 }
 
-}
-
-
-// Drag & Drop
 document.body.addEventListener("dragover", e=>{
 e.preventDefault()
 document.body.style.background="#e3f2fd"
@@ -347,42 +331,31 @@ document.body.style.background=""
 document.body.addEventListener("drop", e=>{
 e.preventDefault()
 document.body.style.background=""
-
 const files = e.dataTransfer.files
 document.getElementById("files").files = files
 })
 
-
-// عرض التلخيصات
 function renderSummaries(){
-
 const container=document.getElementById("summariesList")
 container.innerHTML=""
-
 if(!summaries.length){
 container.innerHTML="<p style='color:#777'>لا يوجد تلخيصات حالياً</p>"
 return
 }
-
 summaries.forEach((s,i)=>{
-
 const card=document.createElement("div")
 card.className="card"
-
 card.innerHTML=`
 <div class="card-title">${s.title}</div>
 <div class="card-date">📅 ${s.date}</div>
 <p>${s.content.substring(0,120)}...</p>
 <button class="deleteBtn" onclick="deleteSummary(${i})">حذف</button>
 `
-
 container.appendChild(card)
-
 })
-
 }
 
-  function showLoader(){
+function showLoader(){
 document.getElementById("loader").style.display="flex"
 }
 
@@ -390,39 +363,27 @@ function hideLoader(){
 document.getElementById("loader").style.display="none"
 }
 
-// حذف
 async function deleteSummary(index){
-
 if(!confirm("هل تريد حذف هذا التلخيص؟")) return
-
 summaries.splice(index,1)
-
 await updateJSONFile(summaries)
-
 renderSummaries()
-
 }
 
-
-// تحديث JSON
 async function updateJSONFile(data){
-
 await fetch("/.netlify/functions/save",{
 method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
+headers:{"Content-Type":"application/json"},
 body:JSON.stringify(data)
 })
-
 }
 
 </script>
 
-  <div id="loader">
-  <div class="spinner"></div>
-  <p>جاري رفع التلخيص...</p>
+<div id="loader">
+<div class="spinner"></div>
+<p>جاري رفع التلخيص...</p>
 </div>
-  
+
 </body>
 </html>
