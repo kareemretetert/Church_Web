@@ -186,6 +186,13 @@ grid-template-columns:repeat(2,1fr);
 
 <script>
 
+// 🔥 إنشاء userId تلقائي
+let userId = localStorage.getItem("user_id")
+if(!userId){
+userId = "user_" + Date.now() + "_" + Math.floor(Math.random()*10000)
+localStorage.setItem("user_id", userId)
+}
+
 let quizResults=[]
 
 // تحميل النتائج
@@ -208,7 +215,7 @@ const data=await res.json()
 
 const container=document.getElementById("quizList")
 
-container.innerHTML="" // مهم
+container.innerHTML=""
 
 data.forEach((quiz,i)=>{
 
@@ -249,13 +256,14 @@ return
 const quizzes = await fetch("quiz.json").then(r=>r.json())
 const quizTitle = quizzes[i].title
 
+// 🔥 المنع الجديد (بالـ userId)
 const exists = quizResults.some(r =>
-r.name.trim().toLowerCase() === name.toLowerCase() &&
+r.userId === userId &&
 r.quiz === quizTitle
 )
 
 if(exists){
-alert("⚠ هذا الاسم دخل الامتحان بالفعل")
+alert("⚠ لقد قمت بحل هذا الامتحان بالفعل")
 return
 }
 
