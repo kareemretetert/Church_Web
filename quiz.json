@@ -132,52 +132,6 @@
     ]
   },
   {
-    "title": "امتحان شامل",
-    "time": "5",
-    "questions": [
-      {
-        "question": "ما نوع الصورة البيانية في قول الشاعر: \"العلم نور يضيء الطريق\"",
-        "options": [
-          "تشبيه",
-          " استعارة مكنية",
-          " مجاز مرسل",
-          "مجاز مرسل"
-        ],
-        "answer": 2
-      },
-      {
-        "question": "Choose the correct answer:  If he ________ harder, he would have passed the exam.",
-        "options": [
-          "A) studies",
-          "B) studied",
-          "C) had studied",
-          "D) studying"
-        ],
-        "answer": 3
-      },
-      {
-        "question": "العنصر الذي عدده الذري 17 هو:",
-        "options": [
-          "A) الصوديوم",
-          "B) الكلور",
-          "C) الكالسيوم",
-          "D) الأكسجين"
-        ],
-        "answer": 2
-      },
-      {
-        "question": "ما مشتقة الدالة س<2 + س - 5",
-        "options": [
-          "2س +5",
-          "2س+1",
-          "س+1",
-          "س<2+1"
-        ],
-        "answer": 2
-      }
-    ]
-  },
-  {
     "title": "77777777777777777777",
     "time": "30",
     "questions": [
