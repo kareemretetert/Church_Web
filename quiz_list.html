@@ -51,14 +51,15 @@ text-decoration:none;
 font-size:14px;
 }
 
-/* container */
+/* 🔥 container (أهم تعديل هنا) */
 .container{
 max-width:1100px;
 margin:20px auto;
 padding:10px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:15px;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:18px;
+align-items:stretch;
 }
 
 /* card */
@@ -71,6 +72,7 @@ text-align:right;
 transition:0.3s;
 display:flex;
 flex-direction:column;
+height:100%;
 }
 
 .card:hover{
@@ -99,6 +101,7 @@ font-size:18px;
 color:var(--muted);
 font-size:14px;
 margin-bottom:10px;
+flex-grow:1;
 }
 
 /* input */
@@ -129,7 +132,7 @@ font-size:14px;
 opacity:0.9;
 }
 
-/* 📱 موبايل صغير */
+/* 📱 موبايل */
 @media(max-width:600px){
 
 header{
@@ -165,7 +168,7 @@ padding:10px;
 @media(min-width:601px) and (max-width:900px){
 
 .container{
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 }
 
 }
