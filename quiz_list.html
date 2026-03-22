@@ -1,115 +1,215 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <title>الامتحانات</title>
-<link rel="icon" href="Image Mar 15, 2026, 07_55_27 PM.png">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 
+:root{
+--primary:#6a1b9a;
+--primary-dark:#4a148c;
+--bg:#f0f8ff;
+--card:#ffffff;
+--text:#2f2f39;
+--muted:#6b7280;
+}
+
 body{
-font-family:Tahoma;
-direction:rtl;
-background:#f0f8ff;
+margin:0;
+font-family:'Cairo',sans-serif;
+background:linear-gradient(180deg,#f6fbff 0%,var(--bg) 100%);
+}
+
+/* header */
+header{
+background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+color:white;
 text-align:center;
-padding:30px;
+padding:30px 15px;
 }
 
-.quizCard{
-
-background:white;
-padding:20px;
-margin:15px auto;
-width:300px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
-
+header h1{
+margin:0;
+font-size:28px;
 }
 
-button{
-
-background:#6a3ab2;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:10px;
-cursor:pointer;
-
-}
-.backBtn{
-
+.home-btn{
 display:inline-block;
-margin-bottom:20px;
-background:#6a3ab2;
+margin-top:10px;
+padding:8px 15px;
+border:2px solid white;
+border-radius:20px;
 color:white;
-padding:10px 20px;
-border-radius:10px;
 text-decoration:none;
-
 }
+
+/* container */
+.container{
+max-width:1000px;
+margin:30px auto;
+padding:10px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+/* card */
+.card{
+background:var(--card);
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+text-align:right;
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+/* badge */
+.badge{
+background:#eee;
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+display:inline-block;
+margin-bottom:10px;
+}
+
+/* title */
+.card h3{
+margin:10px 0;
+}
+
+/* text */
+.card p{
+color:var(--muted);
+}
+
+/* input */
+.name-input{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ccc;
+}
+
+/* button */
+.start-btn{
+width:100%;
+margin-top:10px;
+padding:12px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+.start-btn:hover{
+opacity:0.9;
+}
+
 </style>
 </head>
 
 <body>
-<a href="index.html" class="backBtn">
-الصفحة الرئيسية
-</a>
-<h2>اختر الامتحان</h2>
 
-<div id="quizList"></div>
+<header>
+<h1>📚 الامتحانات</h1>
+<a href="index.html" class="home-btn">⬅ الصفحة الرئيسية</a>
+</header>
+
+<div class="container" id="quizList"></div>
 
 <script>
-let quizResults = []
 
-// أولًا: تحميل النتائج الحالية
-async function loadResults() {
-  try {
-    const res = await fetch("results.json")
-    quizResults = await res.json()
-    if(!Array.isArray(quizResults)) quizResults = []
-  } catch {
-    quizResults = []
-  }
+let quizResults=[]
+
+// تحميل النتائج
+async function loadResults(){
+try{
+const res=await fetch("results.json")
+quizResults=await res.json()
+if(!Array.isArray(quizResults)) quizResults=[]
+}catch{
+quizResults=[]
 }
-loadResults()
+}
 
-fetch("quiz.json")
-.then(res=>res.json())
-.then(data=>{
-  const container=document.getElementById("quizList")
-  data.forEach((quiz,i)=>{
-    container.innerHTML+=`
-      <div class="quizCard">
-        <h3>${quiz.title}</h3>
-        <p>عدد الأسئلة: ${quiz.questions.length}</p>
-        <button onclick="startQuiz(${i})">ابدأ الامتحان</button>
-      </div>
-    `
-  })
+async function loadQuizzes(){
+
+await loadResults()
+
+const res=await fetch("quiz.json")
+const data=await res.json()
+
+const container=document.getElementById("quizList")
+
+data.forEach((quiz,i)=>{
+
+container.innerHTML+=`
+<div class="card">
+
+<span class="badge">امتحان</span>
+
+<h3>${quiz.title}</h3>
+
+<p>عدد الأسئلة: ${quiz.questions.length}</p>
+
+<input type="text" placeholder="اكتب اسمك" class="name-input" id="name${i}">
+
+<button class="start-btn" onclick="startQuiz(${i})">
+ابدأ الامتحان
+</button>
+
+</div>
+`
+
 })
 
-async function startQuiz(i){
-  const name = prompt("اكتب اسمك")
-  if(!name){
-    alert("من فضلك اكتب اسمك")
-    return
-  }
-
-  // 🔹 التحقق من أن الاسم لم يدخل الامتحان مسبقًا
-  const quizTitle = await fetch("quiz.json").then(r=>r.json()).then(data=>data[i].title)
-  const exists = quizResults.some(r => r.name.trim().toLowerCase() === name.trim().toLowerCase() && r.quiz === quizTitle)
-  if(exists){
-    alert("⚠ هذا الاسم قد دخل هذا الامتحان بالفعل، الرجاء اختيار اسم آخر")
-    return
-  }
-
-  // حفظ البيانات
-  localStorage.setItem("quizIndex", i)
-  localStorage.setItem("quiz_username", name)
-  localStorage.setItem("quiz_title", quizTitle)
-
-  // انتقال
-  window.location = "quiz.html"
 }
+
+loadQuizzes()
+
+// بدء الامتحان
+async function startQuiz(i){
+
+const name=document.getElementById("name"+i).value.trim()
+
+if(!name){
+alert("اكتب اسمك")
+return
+}
+
+const quizzes = await fetch("quiz.json").then(r=>r.json())
+const quizTitle = quizzes[i].title
+
+// منع التكرار
+const exists = quizResults.some(r =>
+r.name.trim().toLowerCase() === name.toLowerCase() &&
+r.quiz === quizTitle
+)
+
+if(exists){
+alert("⚠ هذا الاسم دخل الامتحان بالفعل")
+return
+}
+
+localStorage.setItem("quizIndex", i)
+localStorage.setItem("quiz_username", name)
+localStorage.setItem("quiz_title", quizTitle)
+
+window.location="quiz.html"
+
+}
+
 </script>
 
 </body>
