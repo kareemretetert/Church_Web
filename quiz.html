@@ -321,7 +321,46 @@ else if(percent<70) bar.style.background="orange"
 else bar.style.background="green"
 
 }
+async function saveResult(score,total){
 
+try{
+
+const name = localStorage.getItem("quiz_username") || "بدون اسم"
+const index = localStorage.getItem("quizIndex")
+
+const res = await fetch("quiz.json")
+const quizzes = await res.json()
+const quizTitle = quizzes[index]?.title || "امتحان"
+
+const result = {
+name,
+score,
+total,
+quiz: quizTitle,
+date: new Date().toISOString(),
+finished: true
+}
+
+let old=[]
+try{
+const r = await fetch("results.json")
+old = await r.json()
+if(!Array.isArray(old)) old=[]
+}catch{}
+
+old.push(result)
+
+await fetch("/.netlify/functions/saveResults",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify(old)
+})
+
+}catch(e){
+console.log("خطأ في الحفظ", e)
+}
+
+}
 async function finishQuiz(){
 
 let unanswered=0
@@ -355,6 +394,12 @@ if(chosen==q.answer) score++
 localStorage.setItem("quiz_score",score)
 localStorage.setItem("quiz_total",questions.length)
 localStorage.setItem("quiz_answers",JSON.stringify(answers))
+
+try{
+await saveResult(score,questions.length)
+}catch(e){
+console.log("فشل الحفظ", e)
+}
 
 setTimeout(()=>{
 window.location="results.html"
