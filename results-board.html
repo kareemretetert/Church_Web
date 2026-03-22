@@ -98,6 +98,17 @@ select{
 <div id="resultsContainer"></div>
 
 <script>
+
+const password="kimo123"
+const entered=prompt("ادخل كلمة المرور")
+
+if(entered!==password){
+document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>كلمة المرور غير صحيحة</h2>"
+throw new Error("access denied")
+}
+
+
+  
 let results = []
 let exams = new Set()
 
