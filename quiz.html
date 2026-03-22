@@ -17,32 +17,37 @@
 --muted:#6b7280;
 }
 
+*{
+box-sizing:border-box;
+}
+
 body{
 margin:0;
 font-family:'Cairo',sans-serif;
 background:linear-gradient(180deg,#f6fbff 0%,var(--bg) 100%);
-padding:20px;
+padding:15px;
 text-align:center;
 }
 
 /* header */
 h2{
 color:var(--primary-dark);
+font-size:clamp(18px,4vw,26px);
 }
 
-/* 📦 box عام */
+/* 📦 box */
 .box{
 background:white;
 padding:15px;
 margin:15px auto;
-max-width:700px;
+width:min(100%,700px);
 border-radius:15px;
 box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
 
 /* ⏱ التايمر */
 #timerText{
-font-size:26px;
+font-size:clamp(20px,5vw,26px);
 font-weight:bold;
 margin-bottom:10px;
 }
@@ -66,10 +71,10 @@ transition:0.3s;
 /* السؤال */
 .question{
 background:var(--card);
-padding:20px;
-margin:20px auto;
-max-width:700px;
-border-radius:20px;
+padding:18px;
+margin:18px auto;
+width:min(100%,700px);
+border-radius:18px;
 box-shadow:0 10px 25px rgba(0,0,0,0.1);
 text-align:right;
 animation:fadeUp 0.5s ease;
@@ -88,30 +93,34 @@ align-items:center;
 flex-wrap:wrap;
 }
 
+/* النص */
 .question-text{
 flex:2;
-font-size:18px;
+font-size:clamp(15px,3.5vw,18px);
+line-height:1.6;
 }
 
-/* صورة */
+/* الصورة */
 .img-container{
 flex:1;
 max-width:220px;
-position:relative;
+width:100%;
 }
 
 .question-img{
 width:100%;
+height:auto;
 border-radius:12px;
 cursor:pointer;
 transition:0.3s;
+object-fit:contain;
 }
 
 .question-img:hover{
 transform:scale(1.05);
 }
 
-/* اختيارات */
+/* الاختيارات */
 .option{
 display:block;
 background:#f5f5f5;
@@ -120,24 +129,23 @@ margin:8px 0;
 border-radius:10px;
 cursor:pointer;
 transition:0.2s;
+font-size:clamp(14px,3.5vw,16px);
 }
 
 .option:hover{
 background:#e8def8;
 }
 
-/* إخفاء الراديو */
 .option input{
 display:none;
 }
 
-/* عند الاختيار */
 .option input:checked + span{
 font-weight:bold;
 color:var(--primary-dark);
 }
 
-/* زر إنهاء */
+/* زر */
 .finish-btn{
 margin-top:20px;
 padding:12px 25px;
@@ -145,8 +153,9 @@ border:none;
 border-radius:15px;
 background:linear-gradient(135deg,var(--primary),var(--primary-dark));
 color:white;
-font-size:16px;
+font-size:15px;
 cursor:pointer;
+width:min(100%,300px);
 }
 
 /* modal */
@@ -169,11 +178,35 @@ max-height:90%;
 border-radius:10px;
 }
 
-/* موبايل */
+/* 📱 موبايل */
 @media(max-width:600px){
+
+body{
+padding:10px;
+}
+
 .question-box{
 flex-direction:column;
+align-items:flex-start;
 }
+
+.img-container{
+max-width:100%;
+}
+
+.finish-btn{
+width:100%;
+}
+
+}
+
+/* 📱 تابلت */
+@media(min-width:601px) and (max-width:992px){
+
+.question{
+width:min(100%,600px);
+}
+
 }
 
 </style>
