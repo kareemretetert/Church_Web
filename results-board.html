@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>نتائج الطلاب</title>
+
+<style>
+body{
+  font-family: Tahoma;
+  direction: rtl;
+  background: #f0f8ff;
+  padding: 30px;
+  text-align: center;
+}
+
+h2{
+  margin-bottom: 20px;
+}
+
+.controls{
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+select{
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.card{
+  background:white;
+  padding:15px;
+  margin:10px auto;
+  max-width:600px;
+  border-radius:10px;
+  box-shadow:0 0 10px rgba(0,0,0,0.1);
+  text-align:right;
+  transition: transform 0.2s;
+}
+.card:hover{
+  transform: translateY(-5px);
+}
+
+.top1{
+  border:3px solid gold;
+  background:#fff8dc;
+}
+
+.medal{
+  font-size:22px;
+  margin-left:5px;
+}
+
+.rank{
+  font-weight:bold;
+  font-size:18px;
+}
+
+.highlight{
+  color:#e91e63;
+  font-weight:bold;
+}
+
+.no-results{
+  font-size:18px;
+  color:#555;
+  margin-top:30px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>🏆 نتائج الطلاب</h2>
+
+<div class="controls">
+  <label>ترتيب حسب:</label>
+  <select id="sortType" onchange="renderResults()">
+    <option value="score">الأعلى درجة</option>
+    <option value="time">الأسبق</option>
+  </select>
+
+  <label>فلتر حسب الامتحان:</label>
+  <select id="filterExam" onchange="renderResults()">
+    <option value="all">كل الامتحانات</option>
+  </select>
+
+   <!-- زر مسح النتائج -->
+  <button onclick="clearResults()" style="background:red; color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer;">
+    🗑 مسح كل النتائج
+  </button>
+</div>
+
+<div id="resultsContainer"></div>
+
+<script>
+let results = []
+let exams = new Set()
+
+async function loadResults(){
+  try{
+    const res = await fetch("results.json")
+    results = await res.json()
+    if(!Array.isArray(results)) results = []
+
+    results.forEach(r => exams.add(r.quiz))
+    const examSelect = document.getElementById("filterExam")
+    examSelect.innerHTML = '<option value="all">كل الامتحانات</option>'
+    exams.forEach(ex => {
+      const opt = document.createElement("option")
+      opt.value = ex
+      opt.innerText = ex
+      examSelect.appendChild(opt)
+    })
+
+    renderResults()
+  }catch{
+    document.getElementById("resultsContainer").innerHTML =
+    "<p class='no-results'>لا توجد نتائج</p>"
+  }
+}
+async function clearResults(){
+  if(!confirm("هل أنت متأكد أنك تريد مسح كل النتائج؟ لن يمكن استرجاعها!")) return;
+
+  try {
+    // تحديث ملف النتائج بمصفوفة فارغة
+    const res = await fetch("/.netlify/functions/saveResults", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([])
+    });
+
+    if(res.ok){
+      results = [];
+      exams = new Set();
+      document.getElementById("filterExam").innerHTML = '<option value="all">كل الامتحانات</option>';
+      renderResults();
+      alert("تم مسح جميع النتائج بنجاح ✅");
+    } else {
+      alert("حدث خطأ أثناء مسح النتائج ❌");
+    }
+  } catch(e){
+    console.error(e);
+    alert("حدث خطأ أثناء مسح النتائج ❌");
+  }
+}
+function renderResults(){
+  const container = document.getElementById("resultsContainer")
+  container.innerHTML = ""
+
+  const type = document.getElementById("sortType").value
+  const selectedExam = document.getElementById("filterExam").value
+
+  // فلترة حسب الامتحان
+  let filtered = selectedExam === "all" ? [...results] : results.filter(r => r.quiz === selectedExam)
+  if(filtered.length === 0){
+    container.innerHTML = "<p class='no-results'>لا توجد نتائج لهذا الامتحان</p>"
+    return
+  }
+
+  // ترتيب النتائج
+  if(type === "score"){
+    filtered.sort((a,b)=>{
+      if(b.score !== a.score) return b.score - a.score
+      return new Date(a.date) - new Date(b.date)
+    })
+  } else {
+    filtered.sort((a,b)=> new Date(a.date) - new Date(b.date))
+  }
+
+  // تحديد الأوائل فقط للتنسيق
+  const top3 = filtered.slice(0,3)
+
+  // عرض النتائج
+  filtered.forEach((r,index)=>{
+    let medal = ""
+    let extraClass = ""
+    
+    // التمييز للأوائل فقط
+    if(top3.includes(r)){
+      if(index === 0) { medal="🥇"; extraClass="top1"; }
+      else if(index === 1) { medal="🥈"; }
+      else if(index === 2) { medal="🥉"; }
+    }
+
+    const percent = Math.round((r.score / r.total) * 100)
+
+    container.innerHTML += `
+      <div class="card ${extraClass}">
+        <div class="rank">${medal} المركز ${index+1}</div>
+        <p><b>👤 الاسم:</b> ${r.name} ${index===0 ? "⭐" : ""}</p>
+        <p><b>📝 الامتحان:</b> ${r.quiz}</p>
+        <p><b>📊 الدرجة:</b> ${r.score} / ${r.total}</p>
+        <p><b>📈 النسبة:</b> ${percent}%</p>
+        <p><b>⏱ الوقت:</b> ${new Date(r.date).toLocaleString()}</p>
+      </div>
+    `
+  })
+}
+
+window.onload = loadResults
+</script>
+
+</body>
+</html>
