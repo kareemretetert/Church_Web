@@ -153,11 +153,13 @@ window.onload=loadQuizzes
 // 📸 رفع صورة
 async function uploadImage(file){
 
-const url = `https://api.cloudinary.com/v1_1/dvicie9uq/image/upload`
+
+const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`
 
 const formData = new FormData()
 formData.append("file", file)
-formData.append("upload_preset", "my_upload_new")
+formData.append("upload_preset", "my_upload")
+
 
 const res = await fetch(url,{
 method:"POST",
