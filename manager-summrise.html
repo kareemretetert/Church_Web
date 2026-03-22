@@ -76,6 +76,38 @@ background:#d32f2f;
 background:#b71c1c;
 }
 
+  #loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+}
+
+.spinner{
+width:50px;
+height:50px;
+border:5px solid #eee;
+border-top:5px solid #2e7d32;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-bottom:15px;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+#loader p{
+color:white;
+font-size:18px;
+}
 </style>
 
 </head>
@@ -193,17 +225,22 @@ return data.secure_url
 // زر النشر
 document.getElementById("publish").onclick=async()=>{
 
+showLoader()
+
 // ❌ منع الضغط مرتين
 publishBtn.disabled = true
 
 spinner.style.display="block"
 progress.style.width="0%"
 
+try{
+
 const title=document.getElementById("title").value
 const date=document.getElementById("date").value
 const content=document.getElementById("content").value
 
 if(!title || !date || !content){
+hideLoader()
 alert("اكتب كل البيانات")
 publishBtn.disabled=false
 spinner.style.display="none"
@@ -223,10 +260,12 @@ let done = 0
 
 function updateProgress(){
 done++
+if(total > 0){
 progress.style.width = ((done/total)*100) + "%"
 }
+}
 
-// 🖼️ الصور (اختياري تخليها Cloudinary برضو)
+// 🖼️ الصور
 for(let f of imageFiles){
 try{
 const url = await uploadToCloudinary(f)
@@ -275,10 +314,22 @@ await updateJSONFile(summaries)
 
 renderSummaries()
 
+hideLoader()
 spinner.style.display="none"
 publishBtn.disabled=false
 
 alert("تم نشر التلخيص 🎉")
+
+}catch(e){
+
+hideLoader()
+spinner.style.display="none"
+publishBtn.disabled=false
+
+alert("حصل خطأ")
+console.log(e)
+
+}
 
 }
 
@@ -331,6 +382,13 @@ container.appendChild(card)
 
 }
 
+  function showLoader(){
+document.getElementById("loader").style.display="flex"
+}
+
+function hideLoader(){
+document.getElementById("loader").style.display="none"
+}
 
 // حذف
 async function deleteSummary(index){
@@ -360,5 +418,11 @@ body:JSON.stringify(data)
 }
 
 </script>
+
+  <div id="loader">
+  <div class="spinner"></div>
+  <p>جاري رفع التلخيص...</p>
+</div>
+  
 </body>
 </html>
