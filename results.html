@@ -1,104 +1,96 @@
 <!DOCTYPE html>
-
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>النتيجة</title>
 
 <style>
+:root{
+--primary:#6a3ab2;
+--bg:#f4f6fb;
+--card:#ffffff;
+--text:#222;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
 
 body{
-font-family:Tahoma;
-direction:rtl;
+font-family:Tahoma, sans-serif;
+background:var(--bg);
+padding:10px;
 text-align:center;
-background:#f0f8ff;
-padding:30px;
 }
 
+h2{margin:10px 0;color:var(--primary);}
+
+p{margin:6px 0;}
+
 .card{
-background:white;
-padding:20px;
-margin:15px auto;
-max-width:700px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+background:#fff;
+padding:15px;
+margin:12px auto;
+border-radius:12px;
+max-width:900px;
 }
-.question-img:hover{
-transform:scale(1.05);
-}
-/* 🔥 نفس Layout الامتحان */
+
 .question-box{
 display:flex;
-gap:20px;
-align-items:center;
-flex-wrap:wrap;
+gap:12px;
+align-items:flex-start;
 }
 
 .question-text{
 flex:2;
 text-align:right;
+font-size:15px;
 }
 
-/* 📸 حاوية الصورة */
 .img-container{
-position:relative;
 flex:1;
-max-width:250px;
-width:100%;
+position:relative;
 }
 
 .question-img{
 width:100%;
-height:180px;
 border-radius:10px;
-object-fit:contain;
 cursor:pointer;
 }
 
-/* ⛶ أيقونة */
 .fullscreen-icon{
 position:absolute;
-bottom:12px;
+bottom:10px;
 left:50%;
-  top:70%;
 transform:translateX(-50%);
 background:rgba(0,0,0,0.6);
-color:white;
-border-radius:12px;
-width:34px;
-height:34px;
+color:#fff;
+border-radius:10px;
+width:32px;
+height:32px;
 display:flex;
 align-items:center;
 justify-content:center;
 cursor:pointer;
-transition:0.3s;
 }
 
-.fullscreen-icon::before{
-content:"⛶";
-font-size:18px;
-}
+.fullscreen-icon::before{content:"⛶";}
 
-.correct{
-color:green;
-}
-
-.wrong{
-color:red;
-}
+.correct{color:green;}
+.wrong{color:red;}
 
 button{
 margin-top:20px;
-padding:10px 20px;
+padding:12px;
 border:none;
-background:#6a3ab2;
-color:white;
 border-radius:10px;
+background:var(--primary);
+color:#fff;
+font-size:15px;
 cursor:pointer;
+width:100%;
+max-width:300px;
 }
 
-/* 🔍 Modal */
 #imageModal{
 display:none;
 position:fixed;
@@ -109,32 +101,35 @@ height:100%;
 background:rgba(0,0,0,0.85);
 justify-content:center;
 align-items:center;
-z-index:999;
 }
 
 #imageModal img{
 max-width:90%;
 max-height:90%;
-border-radius:10px;
 }
 
-/* 📱 موبايل */
-@media(max-width:600px){
+/* ✅ Responsive */
+@media (max-width:768px){
+
 .question-box{
 flex-direction:column;
 }
 
-.img-container{
-max-width:100%;
+.question-text{
+font-size:14px;
 }
 
-.question-img{
-height:auto;
 }
+
+@media (max-width:480px){
+
+body{padding:5px;}
+
+.card{padding:10px;}
+
 }
 
 </style>
-
 </head>
 
 <body>
@@ -147,18 +142,13 @@ height:auto;
 
 <div id="answers"></div>
 
-<button onclick="goBack()">
-العودة للامتحانات
-</button>
-
-<!-- 🔍 Modal -->
+<button onclick="goBack()">العودة للامتحانات</button>
 
 <div id="imageModal" onclick="closeImage()">
 <img id="modalImg">
 </div>
 
 <script>
-
 // 🟢 البيانات
 const name=localStorage.getItem("quiz_username")
 const score=localStorage.getItem("quiz_score")
@@ -260,9 +250,8 @@ document.getElementById("imageModal").style.display="none"
 
 function goBack(){
 window.location="quiz_list.html"
-}
-
-</script>
+}</script>
 
 </body>
 </html>
+
