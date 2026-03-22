@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ar">
 <head>
 
@@ -16,14 +17,67 @@ padding:30px;
 }
 
 .card{
-
 background:white;
 padding:20px;
 margin:15px auto;
-max-width:600px;
+max-width:700px;
 border-radius:10px;
 box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+.question-img:hover{
+transform:scale(1.05);
+}
+/* 🔥 نفس Layout الامتحان */
+.question-box{
+display:flex;
+gap:20px;
+align-items:center;
+flex-wrap:wrap;
+}
 
+.question-text{
+flex:2;
+text-align:right;
+}
+
+/* 📸 حاوية الصورة */
+.img-container{
+position:relative;
+flex:1;
+max-width:250px;
+width:100%;
+}
+
+.question-img{
+width:100%;
+height:180px;
+border-radius:10px;
+object-fit:contain;
+cursor:pointer;
+}
+
+/* ⛶ أيقونة */
+.fullscreen-icon{
+position:absolute;
+bottom:12px;
+left:50%;
+  top:70%;
+transform:translateX(-50%);
+background:rgba(0,0,0,0.6);
+color:white;
+border-radius:12px;
+width:34px;
+height:34px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:0.3s;
+}
+
+.fullscreen-icon::before{
+content:"⛶";
+font-size:18px;
 }
 
 .correct{
@@ -35,7 +89,6 @@ color:red;
 }
 
 button{
-
 margin-top:20px;
 padding:10px 20px;
 border:none;
@@ -43,7 +96,41 @@ background:#6a3ab2;
 color:white;
 border-radius:10px;
 cursor:pointer;
+}
 
+/* 🔍 Modal */
+#imageModal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+#imageModal img{
+max-width:90%;
+max-height:90%;
+border-radius:10px;
+}
+
+/* 📱 موبايل */
+@media(max-width:600px){
+.question-box{
+flex-direction:column;
+}
+
+.img-container{
+max-width:100%;
+}
+
+.question-img{
+height:auto;
+}
 }
 
 </style>
@@ -55,6 +142,7 @@ cursor:pointer;
 <h2>نتيجة الامتحان</h2>
 
 <p id="name"></p>
+<p id="quizName"></p>
 <p id="score"></p>
 
 <div id="answers"></div>
@@ -63,41 +151,48 @@ cursor:pointer;
 العودة للامتحانات
 </button>
 
+<!-- 🔍 Modal -->
+
+<div id="imageModal" onclick="closeImage()">
+<img id="modalImg">
+</div>
+
 <script>
 
+// 🟢 البيانات
 const name=localStorage.getItem("quiz_username")
 const score=localStorage.getItem("quiz_score")
 const total=localStorage.getItem("quiz_total")
+const quizTitle=localStorage.getItem("quiz_title")
 
-document.getElementById("name").innerText="الاسم: "+name
-document.getElementById("score").innerText="الدرجة: "+score+" / "+total
+document.getElementById("name").innerText="👤 الاسم: "+name
+document.getElementById("quizName").innerText="📝 الامتحان: "+quizTitle
+document.getElementById("score").innerText="📊 الدرجة: "+score+" / "+total
+
 let percent = Math.round((score / total) * 100)
 
 let message=""
 
 if(percent >= 90){
-
 message="ممتاز 👏"
-
 }else if(percent >= 75){
-
 message="عاش 🔥"
-
 }else if(percent >= 50){
-
 message="مقبول 👍"
-
 }else{
-
 message="اعمل أفضل المرة القادمة 💪"
-
 }
 
 const percentBox=document.createElement("p")
-
-percentBox.innerText="النسبة: "+percent+"% - "+message
-
+percentBox.innerText="📈 النسبة: "+percent+"% - "+message
 document.body.appendChild(percentBox)
+
+const doneBox = document.createElement("p")
+doneBox.innerText = "✅ تم إنهاء الامتحان"
+doneBox.style.color = "green"
+document.body.appendChild(doneBox)
+
+// الإجابات
 const answers=JSON.parse(localStorage.getItem("quiz_answers"))
 
 const container=document.getElementById("answers")
@@ -105,39 +200,66 @@ const container=document.getElementById("answers")
 answers.forEach((a,i)=>{
 
 let chosenText = a.chosen ? a.options[a.chosen-1] : "لم يتم اختيار"
-
 let correctText = a.options[a.correct-1]
+let isCorrect = a.chosen == a.correct
 
-let resultText = a.chosen == a.correct ? "✔ إجابة صحيحة" : "❌ إجابة خاطئة"
-
-container.innerHTML+=`
-
+let html=`
 <div class="card">
 
-<b>س${i+1}:</b> ${a.question}
+<div class="question-box">
 
-<p>
-اختيارك: ${a.chosen} (${chosenText})
+<div class="question-text">
+<b>س${i+1}:</b> ${a.question}
+</div>
+`
+
+// 📸 صورة (لو موجودة)
+if(a.image){
+html+=`
+<div class="img-container">
+<img src="${a.image}" class="question-img" onclick="openImage('${a.image}')">
+<div class="fullscreen-icon" onclick="openImage('${a.image}')"></div>
+</div>
+`
+}
+
+html+=`</div>
+
+<p class="${isCorrect ? 'correct' : 'wrong'}">
+اختيارك: ${a.chosen ? a.chosen : "—"} (${chosenText})
 </p>
 
-<p>
+<p class="correct">
 الإجابة الصحيحة: ${a.correct} (${correctText})
 </p>
 
 <p>
-${resultText}
+${isCorrect ? "✔ إجابة صحيحة" : "❌ إجابة خاطئة"}
 </p>
 
 </div>
-
 `
+
+container.innerHTML+=html
 
 })
 
+// 🔍 فتح الصورة
+function openImage(src){
+const modal=document.getElementById("imageModal")
+const img=document.getElementById("modalImg")
+
+img.src=src
+modal.style.display="flex"
+}
+
+// ❌ غلق
+function closeImage(){
+document.getElementById("imageModal").style.display="none"
+}
+
 function goBack(){
-
 window.location="quiz_list.html"
-
 }
 
 </script>
