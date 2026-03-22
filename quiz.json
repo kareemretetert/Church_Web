@@ -114,19 +114,5 @@
         "image": "https://res.cloudinary.com/ddiegmhji/image/upload/v1774182137/k0tibwgpxi6lsgjdolfr.png"
       }
     ]
-  },
-  {
-    "title": "تالته ثانوي",
-    "time": "30",
-    "questions": [
-      {
-        "question": "اوجد حاصل قسمة 264 / 4",
-        "options": [
-          "45",
-          "62"
-        ],
-        "answer": 2
-      }
-    ]
   }
 ]
