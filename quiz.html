@@ -366,7 +366,21 @@ document.getElementById("progressText").innerText =
 answered + " / " + total
 
 let percent = (answered / total) * 100
-document.getElementById("progressBar").style.width = percent + "%"
+
+const bar = document.getElementById("progressBar")
+
+bar.style.width = percent + "%"
+
+// 🎨 تغيير اللون حسب التقدم
+if(percent < 30){
+bar.style.background = "red"
+}
+else if(percent < 70){
+bar.style.background = "orange"
+}
+else{
+bar.style.background = "green"
+}
 
 }
 
