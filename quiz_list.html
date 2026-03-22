@@ -2,6 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>الامتحانات</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -27,7 +28,7 @@ font-family:'Cairo',sans-serif;
 background:linear-gradient(180deg,#f6fbff 0%,var(--bg) 100%);
 }
 
-/* header */
+/* 🔥 HEADER */
 header{
 background:linear-gradient(135deg,var(--primary),var(--primary-dark));
 color:white;
@@ -37,13 +38,13 @@ padding:25px 10px;
 
 header h1{
 margin:0;
-font-size:clamp(20px,5vw,28px);
+font-size:clamp(20px,5vw,30px);
 }
 
 .home-btn{
 display:inline-block;
 margin-top:10px;
-padding:8px 15px;
+padding:8px 16px;
 border:2px solid white;
 border-radius:20px;
 color:white;
@@ -51,27 +52,25 @@ text-decoration:none;
 font-size:14px;
 }
 
-/* 🔥 container (أهم تعديل هنا) */
+/* 🔥 CONTAINER */
 .container{
-max-width:1100px;
-margin:20px auto;
+max-width:1200px;
+margin:25px auto;
 padding:10px;
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
 gap:18px;
-align-items:stretch;
 }
 
-/* card */
+/* 🔥 CARD */
 .card{
 background:var(--card);
 padding:18px;
 border-radius:18px;
 box-shadow:0 10px 25px rgba(0,0,0,0.1);
-text-align:right;
-transition:0.3s;
 display:flex;
 flex-direction:column;
+transition:0.3s;
 height:100%;
 }
 
@@ -100,7 +99,7 @@ font-size:18px;
 .card p{
 color:var(--muted);
 font-size:14px;
-margin-bottom:10px;
+margin-bottom:12px;
 flex-grow:1;
 }
 
@@ -108,16 +107,15 @@ flex-grow:1;
 .name-input{
 width:100%;
 padding:10px;
-margin-top:5px;
 border-radius:10px;
 border:1px solid #ccc;
 font-size:14px;
+margin-bottom:10px;
 }
 
 /* button */
 .start-btn{
 width:100%;
-margin-top:auto;
 padding:12px;
 border:none;
 border-radius:12px;
@@ -126,6 +124,7 @@ color:white;
 font-weight:bold;
 cursor:pointer;
 font-size:14px;
+margin-top:auto;
 }
 
 .start-btn:hover{
@@ -165,10 +164,10 @@ padding:10px;
 }
 
 /* 📱 تابلت */
-@media(min-width:601px) and (max-width:900px){
+@media(min-width:601px) and (max-width:992px){
 
 .container{
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+grid-template-columns:repeat(2,1fr);
 }
 
 }
@@ -209,6 +208,8 @@ const data=await res.json()
 
 const container=document.getElementById("quizList")
 
+container.innerHTML="" // مهم
+
 data.forEach((quiz,i)=>{
 
 container.innerHTML+=`
@@ -248,7 +249,6 @@ return
 const quizzes = await fetch("quiz.json").then(r=>r.json())
 const quizTitle = quizzes[i].title
 
-// منع التكرار
 const exists = quizResults.some(r =>
 r.name.trim().toLowerCase() === name.toLowerCase() &&
 r.quiz === quizTitle
