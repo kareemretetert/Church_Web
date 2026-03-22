@@ -42,6 +42,41 @@ box-shadow:0 0 10px rgba(0,0,0,0.1);
 .deleteBtn{
 background:#d9534f;
 }
+
+  #loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:flex;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+z-index:9999;
+display:none;
+}
+
+.spinner{
+width:50px;
+height:50px;
+border:5px solid #eee;
+border-top:5px solid #6a3ab2;
+border-radius:50%;
+animation:spin 1s linear infinite;
+margin-bottom:15px;
+}
+
+@keyframes spin{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
+
+#loader p{
+color:white;
+font-size:18px;
+}
 </style>
 </head>
 
@@ -60,6 +95,9 @@ background:#d9534f;
 <h2>إضافة سؤال</h2>
 
 <input id="question" placeholder="اكتب السؤال">
+
+<label>صورة للسؤال (اختياري)</label>
+<input type="file" id="questionImage" accept="image/*">
 
 <label>اختيار 1</label>
 <input id="opt1">
@@ -89,10 +127,18 @@ background:#d9534f;
 <div id="quizList"></div>
 
 <script>
+const password="youssef123"
+const entered=prompt("ادخل كلمة المرور")
+
+if(entered!==password){
+document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>كلمة المرور غير صحيحة</h2>"
+throw new Error("access denied")
+}
 
 let quizzes=[]
 let questions=[]
 
+// تحميل الامتحانات
 async function loadQuizzes(){
 try{
 const res=await fetch("quiz.json")
@@ -104,7 +150,33 @@ document.getElementById("quizList").innerHTML="لا يوجد امتحانات"
 }
 window.onload=loadQuizzes
 
-function addQuestion(){
+// 📸 رفع صورة
+async function uploadImage(file){
+
+const url = `https://api.cloudinary.com/v1_1/dvicie9uq/image/upload`
+
+const formData = new FormData()
+formData.append("file", file)
+formData.append("upload_preset", "my_upload_new")
+
+const res = await fetch(url,{
+method:"POST",
+body:formData
+})
+
+const data = await res.json()
+
+if(!data.secure_url) throw "upload failed"
+
+return data.secure_url
+}
+
+// ➕ إضافة سؤال
+async function addQuestion(){
+
+showLoader()
+
+try{
 
 const q=document.getElementById("question").value
 
@@ -119,31 +191,71 @@ if(o2) options.push(o2)
 if(o3) options.push(o3)
 if(o4) options.push(o4)
 
-const answer=parseInt(document.getElementById("answerNumber").value)
+const answerInput = document.getElementById("answerNumber").value
+const answer = parseInt(answerInput)
 
-if(!q || options.length < 2){
-alert("يجب إدخال سؤال واختيارين على الأقل")
+// ❌ تحقق أقوى
+if(!answerInput){
+hideLoader()
+alert("لازم تختار رقم الإجابة الصحيحة")
+return
+}
+
+if(isNaN(answer)){
+hideLoader()
+alert("الإجابة لازم تكون رقم")
 return
 }
 
 if(answer < 1 || answer > options.length){
+hideLoader()
 alert("رقم الإجابة غير صحيح")
 return
+}
+
+if(!q || options.length < 2){
+hideLoader()
+alert("يجب إدخال سؤال واختيارين على الأقل")
+return
+}
+
+// 📸 صورة
+let imageUrl = ""
+const imageFile = document.getElementById("questionImage").files[0]
+
+if(imageFile){
+try{
+imageUrl = await uploadImage(imageFile)
+}catch{
+hideLoader()
+alert("فشل رفع الصورة")
+return
+}
 }
 
 questions.push({
 question:q,
 options:options,
-answer:answer
+answer:answer,
+image:imageUrl
 })
 
 document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
 
 clearFields()
+
+hideLoader()
 alert("تم إضافة السؤال")
+
+}catch(e){
+hideLoader()
+alert("حصل خطأ")
+console.log(e)
 }
 
-// ✅ حفظ على GitHub
+}
+
+// حفظ على GitHub
 async function updateJSONFile(data){
 await fetch("/.netlify/functions/saveQuiz",{
 method:"POST",
@@ -152,12 +264,18 @@ body:JSON.stringify(data)
 })
 }
 
+// نشر الامتحان
 async function publishQuiz(){
+
+showLoader()
+
+try{
 
 const title=document.getElementById("quizTitle").value
 const time=document.getElementById("quizTime").value
 
 if(!title || questions.length==0){
+hideLoader()
 alert("اكتب اسم الامتحان وأضف أسئلة")
 return
 }
@@ -170,7 +288,6 @@ questions:questions
 
 quizzes.unshift(newQuiz)
 
-// 🔥 حفظ مباشر
 await updateJSONFile(quizzes)
 
 renderQuiz()
@@ -178,9 +295,18 @@ renderQuiz()
 questions=[]
 document.getElementById("qCount").innerText="عدد الأسئلة: 0"
 
+hideLoader()
 alert("تم نشر الامتحان 🎉")
+
+}catch(e){
+hideLoader()
+alert("فشل النشر")
+console.log(e)
 }
 
+}
+
+// عرض الامتحانات
 function renderQuiz(){
 
 const container=document.getElementById("quizList")
@@ -203,18 +329,19 @@ container.innerHTML+=`
 })
 }
 
+// حذف
 async function deleteQuiz(i){
 
 if(!confirm("هل تريد حذف الامتحان؟")) return
 
 quizzes.splice(i,1)
 
-// 🔥 تحديث بعد الحذف
 await updateJSONFile(quizzes)
 
 renderQuiz()
 }
 
+// تنظيف
 function clearFields(){
 document.getElementById("question").value=""
 document.getElementById("opt1").value=""
@@ -222,8 +349,22 @@ document.getElementById("opt2").value=""
 document.getElementById("opt3").value=""
 document.getElementById("opt4").value=""
 document.getElementById("answerNumber").value=""
+document.getElementById("questionImage").value=""
 }
 
+
+  function showLoader(){
+document.getElementById("loader").style.display="flex"
+}
+
+function hideLoader(){
+document.getElementById("loader").style.display="none"
+}
 </script>
+  
+<div id="loader">
+  <div class="spinner"></div>
+  <p>جاري التنفيذ...</p>
+</div>
 </body>
 </html>
