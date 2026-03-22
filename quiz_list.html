@@ -50,57 +50,66 @@ text-decoration:none;
 </head>
 
 <body>
-<a href="compition.html" class="backBtn">
-العودة
+<a href="index.html" class="backBtn">
+الصفحة الرئيسية
 </a>
 <h2>اختر الامتحان</h2>
 
 <div id="quizList"></div>
 
 <script>
+let quizResults = []
+
+// أولًا: تحميل النتائج الحالية
+async function loadResults() {
+  try {
+    const res = await fetch("results.json")
+    quizResults = await res.json()
+    if(!Array.isArray(quizResults)) quizResults = []
+  } catch {
+    quizResults = []
+  }
+}
+loadResults()
 
 fetch("quiz.json")
-
 .then(res=>res.json())
-
 .then(data=>{
-
-const container=document.getElementById("quizList")
-
-data.forEach((quiz,i)=>{
-
-container.innerHTML+=`
-
-<div class="quizCard">
-
-<h3>${quiz.title}</h3>
-
-<p>عدد الأسئلة: ${quiz.questions.length}</p>
-
-<button onclick="startQuiz(${i})">
-ابدأ الامتحان
-</button>
-
-</div>
-
-`
-
+  const container=document.getElementById("quizList")
+  data.forEach((quiz,i)=>{
+    container.innerHTML+=`
+      <div class="quizCard">
+        <h3>${quiz.title}</h3>
+        <p>عدد الأسئلة: ${quiz.questions.length}</p>
+        <button onclick="startQuiz(${i})">ابدأ الامتحان</button>
+      </div>
+    `
+  })
 })
 
-})
+async function startQuiz(i){
+  const name = prompt("اكتب اسمك")
+  if(!name){
+    alert("من فضلك اكتب اسمك")
+    return
+  }
 
-function startQuiz(i){
+  // 🔹 التحقق من أن الاسم لم يدخل الامتحان مسبقًا
+  const quizTitle = await fetch("quiz.json").then(r=>r.json()).then(data=>data[i].title)
+  const exists = quizResults.some(r => r.name.trim().toLowerCase() === name.trim().toLowerCase() && r.quiz === quizTitle)
+  if(exists){
+    alert("⚠ هذا الاسم قد دخل هذا الامتحان بالفعل، الرجاء اختيار اسم آخر")
+    return
+  }
 
-localStorage.setItem("quizIndex",i)
+  // حفظ البيانات
+  localStorage.setItem("quizIndex", i)
+  localStorage.setItem("quiz_username", name)
+  localStorage.setItem("quiz_title", quizTitle)
 
-const name=prompt("اكتب اسمك")
-
-localStorage.setItem("quiz_username",name)
-
-window.location="quiz.html"
-
+  // انتقال
+  window.location = "quiz.html"
 }
-
 </script>
 
 </body>
