@@ -154,6 +154,33 @@ max-height:90%;
 border-radius:10px;
 }
 
+#progressBox{
+width:300px;
+margin:10px auto 30px;
+text-align:center;
+}
+
+#progressText{
+font-size:20px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+#progressBarContainer{
+width:100%;
+height:10px;
+background:#ddd;
+border-radius:10px;
+overflow:hidden;
+}
+
+#progressBar{
+height:10px;
+width:0%;
+background:#2196F3;
+transition:width 0.3s;
+}
+  
 /* 📱 موبايل */
 @media(max-width:600px){
 .question-box{
@@ -184,7 +211,17 @@ height:auto;
 <div id="timerBar"></div>
 </div>
 </div>
+  
+<div id="progressBox">
 
+<div id="progressText">0 / 0</div>
+
+<div id="progressBarContainer">
+<div id="progressBar"></div>
+</div>
+
+</div>
+  
 <div id="quizContainer"></div>
 
 <button onclick="finishQuiz()">إنهاء</button>
@@ -250,7 +287,7 @@ q.options.forEach((opt,index)=>{
 
 html+=`
 <label class="option">
-<input type="radio" name="q${i}" value="${index+1}">
+<input type="radio" name="q${i}" value="${index+1}" onchange="updateProgress()">
 ${index+1} - ${opt}
 </label>
 `
@@ -314,6 +351,26 @@ finishQuiz()
 
 }
 
+function updateProgress(){
+
+let answered = 0
+
+questions.forEach((q,i)=>{
+const selected=document.querySelector(`input[name=q${i}]:checked`)
+if(selected) answered++
+})
+
+const total = questions.length
+
+document.getElementById("progressText").innerText =
+answered + " / " + total
+
+let percent = (answered / total) * 100
+document.getElementById("progressBar").style.width = percent + "%"
+
+}
+
+  
 // 💾 حفظ النتيجة
 async function saveResult(score,total){
 
@@ -359,6 +416,18 @@ console.log("خطأ في الحفظ", e)
 // ✅ إنهاء الامتحان
 async function finishQuiz(){
 
+let unanswered = 0
+
+questions.forEach((q,i)=>{
+const selected=document.querySelector(`input[name=q${i}]:checked`)
+if(!selected) unanswered++
+})
+
+if(unanswered > 0){
+alert("⚠️ لم تقم بحل " + unanswered + " سؤال، أكمل قبل الإنهاء")
+return
+}
+  
 let score=0
 let answers=[]
 
