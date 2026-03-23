@@ -1,22 +1,5 @@
 [
   {
-    "title": "امتحان اسبوعي",
-    "time": "30",
-    "questions": [
-      {
-        "question": "1",
-        "options": [
-          "2",
-          "3",
-          "4",
-          "5"
-        ],
-        "answer": 2,
-        "image": ""
-      }
-    ]
-  },
-  {
     "title": "امتحان شامل ",
     "time": "30",
     "questions": [
