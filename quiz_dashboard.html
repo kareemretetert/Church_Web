@@ -152,7 +152,14 @@ border-radius:50%;
 animation:spin 1s linear infinite;
 margin-bottom:20px;
 }
+.card{
+animation:fade 0.4s;
+}
 
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
 @keyframes spin{
 to{transform:rotate(360deg);}
 }
@@ -169,6 +176,25 @@ text-align:center;
 max-width:95%;
 padding:15px;
 }
+}
+  .options{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+@media(max-width:600px){
+.options{
+grid-template-columns:1fr;
+}
+}
+  .error{
+background:#ff4b2b;
+color:#fff;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+display:none;
 }
 </style>
 </head>
@@ -207,18 +233,34 @@ padding:15px;
 
 <input type="file" id="questionImage" accept="image/*" hidden>
 
-<label>اختيار 1</label> <input id="opt1">
+<div class="options">
 
-<label>اختيار 2</label> <input id="opt2">
+<label>اختيار 1</label>
+<input id="opt1">
 
-<label>اختيار 3 (اختياري)</label> <input id="opt3">
+<label>اختيار 2</label>
+<input id="opt2">
 
-<label>اختيار 4 (اختياري)</label> <input id="opt4">
+<label>اختيار 3 (اختياري)</label>
+<input id="opt3">
 
-<label>رقم الإجابة الصحيحة</label> <input id="answerNumber" type="number">
+<label>اختيار 4 (اختياري)</label>
+<input id="opt4">
+
+</div>
+
+<label>الإجابة الصحيحة</label>
+<select id="answerNumber">
+<option value="">اختر الإجابة</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
 
 <button onclick="addQuestion()">إضافة السؤال</button>
-
+<div id="errorBox" class="error"></div>
+  
 <p id="qCount">عدد الأسئلة: 0</p>
 
 <button onclick="publishQuiz()">نشر الامتحان</button>
@@ -281,8 +323,18 @@ if(!data.secure_url) throw "upload failed"
 return data.secure_url
 }
 
-// ➕ إضافة سؤال
-async function addQuestion(){
+
+  function showError(msg){
+let box=document.getElementById("errorBox")
+box.style.display="block"
+box.innerText=msg
+}
+
+function hideError(){
+document.getElementById("errorBox").style.display="none"
+}
+  // ➕ إضافة سؤال
+  async function addQuestion(){
 
 showLoader()
 
@@ -307,25 +359,25 @@ const answer = parseInt(answerInput)
 // ❌ تحقق أقوى
 if(!answerInput){
 hideLoader()
-alert("لازم تختار رقم الإجابة الصحيحة")
+  showError("لازم تختار رقم الإجابة الصحيحة")
 return
 }
 
 if(isNaN(answer)){
 hideLoader()
-alert("الإجابة لازم تكون رقم")
+  showError("الإجابة لازم تكون رقم")
 return
 }
 
 if(answer < 1 || answer > options.length){
 hideLoader()
-alert("رقم الإجابة غير صحيح")
+showError("رقم الإجابة غير صحيح")
 return
 }
 
 if(!q || options.length < 2){
 hideLoader()
-alert("يجب إدخال سؤال واختيارين على الأقل")
+  showError("رقم الإجابة غير صحيح")
 return
 }
 
@@ -338,7 +390,7 @@ try{
 imageUrl = await uploadImage(imageFile)
 }catch{
 hideLoader()
-alert("فشل رفع الصورة")
+  showError("فشل رفع الصورة")
 return
 }
 }
@@ -355,11 +407,10 @@ document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.
 clearFields()
 
 hideLoader()
-alert("تم إضافة السؤال")
-
+showError("تم إضافة السؤال")
 }catch(e){
 hideLoader()
-alert("حصل خطأ")
+showError("حصل خطأ")
 console.log(e)
 }
 
