@@ -157,7 +157,15 @@ flex-direction:column;
 z-index:9999;
 }
 
-
+.error{
+background:#ff4b2b;
+color:#fff;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+display:none;
+}
+  
 select{
 width:100%;
 margin-top:6px;
@@ -267,7 +275,7 @@ padding:15px;
 </select>
 
 <button onclick="addQuestion()">إضافة السؤال</button>
-
+<div id="errorBox" class="error"></div>
 <p id="qCount">عدد الأسئلة: 0</p>
 
 <button onclick="publishQuiz()">نشر الامتحان</button>
@@ -330,6 +338,17 @@ if(!data.secure_url) throw "upload failed"
 return data.secure_url
 }
 
+
+
+  function showError(msg){
+let box=document.getElementById("errorBox")
+box.style.display="block"
+box.innerText=msg
+}
+
+function hideError(){
+document.getElementById("errorBox").style.display="none"
+}
 // ➕ إضافة سؤال
 async function addQuestion(){
 
@@ -356,25 +375,25 @@ const answer = parseInt(answerInput)
 // ❌ تحقق أقوى
 if(!answerInput){
 hideLoader()
-alert("لازم تختار رقم الإجابة الصحيحة")
+showError("لازم تختار رقم الإجابة الصحيحة")
 return
 }
 
 if(isNaN(answer)){
 hideLoader()
-alert("الإجابة لازم تكون رقم")
+showError("الإجابة لازم تكون رقم")
 return
 }
 
 if(answer < 1 || answer > options.length){
 hideLoader()
-alert("رقم الإجابة غير صحيح")
+showError("رقم الإجابة غير صحيح")
 return
 }
 
 if(!q || options.length < 2){
 hideLoader()
-alert("يجب إدخال سؤال واختيارين على الأقل")
+showError("يجب إدخال سؤال واختيارين على الأقل")
 return
 }
 
@@ -387,7 +406,7 @@ try{
 imageUrl = await uploadImage(imageFile)
 }catch{
 hideLoader()
-alert("فشل رفع الصورة")
+showError("فشل رفع الصورة")
 return
 }
 }
@@ -404,11 +423,10 @@ document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.
 clearFields()
 
 hideLoader()
-alert("تم إضافة السؤال")
-
+showError("تم إضافة السؤال")
 }catch(e){
 hideLoader()
-alert("حصل خطأ")
+showError("حصل خطأ")
 console.log(e)
 }
 
