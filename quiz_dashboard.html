@@ -553,7 +553,8 @@ container.innerHTML+=`
 
 </div>
 
-div.draggable = true;
+`
+  div.draggable = true;
 
 div.ondragstart = (e)=>{
 e.dataTransfer.setData("index", i)
@@ -570,8 +571,6 @@ quizzes.splice(i,0,item)
 
 renderQuiz()
 }
-`
-  
 })
 }
 function editQuestion(i){
