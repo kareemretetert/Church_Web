@@ -11,54 +11,93 @@
 body{
 font-family:Tajawal, Tahoma;
 direction:rtl;
-background:#f0f2f5;
+background:linear-gradient(135deg,#ff6a00,#f9d423);
 padding:20px;
 margin:0;
 }
 
 .container{
-max-width:900px;
+max-width:500px;
 margin:auto;
-width:100%;
+background:#fff;
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.2);
 }
 
 h2{
-margin-top:30px;
+margin-top:20px;
 font-size:20px;
+text-align:center;
 }
 
-input,textarea,button{
+label{
+display:block;
+margin-top:15px;
+color:#555;
+font-weight:bold;
+}
+
+input,textarea{
 width:100%;
-margin-top:10px;
-padding:12px;
-border-radius:6px;
-border:1px solid #ccc;
+margin-top:8px;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
 font-size:15px;
+background:#f9f9f9;
 }
 
 textarea{
 height:120px;
-resize:vertical;
+resize:none;
 }
 
+/* أزرار */
 button{
-background:#2e7d32;
+width:100%;
+margin-top:15px;
+padding:14px;
 border:none;
-color:white;
+border-radius:15px;
 font-size:16px;
 cursor:pointer;
+background:linear-gradient(135deg,#ff3d00,#ff9100);
+color:white;
+font-weight:bold;
+transition:0.3s;
 }
 
 button:hover{
-background:#1b5e20;
+opacity:0.9;
+transform:scale(1.02);
 }
 
+/* زرار رفع */
+.upload-btn{
+background:#ff3d00;
+color:#fff;
+text-align:center;
+padding:14px;
+border-radius:15px;
+margin-top:10px;
+cursor:pointer;
+}
+
+.upload-text{
+font-size:14px;
+color:#777;
+margin-top:5px;
+text-align:center;
+}
+
+/* الكارد */
 .card{
 background:white;
 padding:15px;
 margin-top:15px;
-border-radius:8px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
 }
 
 .card-title{
@@ -73,14 +112,10 @@ margin-top:5px;
 }
 
 .deleteBtn{
-margin-top:10px;
-background:#d32f2f;
+background:#e53935;
 }
 
-.deleteBtn:hover{
-background:#b71c1c;
-}
-
+/* loader */
 #loader{
 position:fixed;
 top:0;
@@ -99,7 +134,7 @@ z-index:9999;
 width:50px;
 height:50px;
 border:5px solid #eee;
-border-top:5px solid #2e7d32;
+border-top:5px solid #ff9100;
 border-radius:50%;
 animation:spin 1s linear infinite;
 margin-bottom:15px;
@@ -109,45 +144,12 @@ margin-bottom:15px;
 to{transform:rotate(360deg);}
 }
 
-#loader p{
-color:white;
-font-size:18px;
-}
-
-/* ✅ تحسينات الموبايل */
-@media (max-width:768px){
-
-body{
-padding:10px;
-}
-
-h2{
-font-size:18px;
-}
-
-input,textarea,button{
-font-size:14px;
-padding:10px;
-}
-
-.card-title{
-font-size:16px;
-}
-
-}
-
-@media (max-width:480px){
-
+/* موبايل */
+@media (max-width:600px){
 .container{
-padding:5px;
+padding:15px;
 }
-
-textarea{
-height:100px;
 }
-
-}
-
 </style>
 
 </head>
@@ -168,13 +170,19 @@ height:100px;
 <textarea id="content"></textarea>
 
 <label>إضافة صور</label>
-<input type="file" id="images" multiple accept="image/*">
+<div class="upload-btn" onclick="document.getElementById('images').click()">اختر صورة</div>
+<div class="upload-text" id="imgText">لم يتم اختيار أي صورة</div>
+<input type="file" id="images" multiple accept="image/*" hidden>
 
 <label>إضافة فيديوهات</label>
-<input type="file" id="videos" multiple accept="video/*">
+<div class="upload-btn" onclick="document.getElementById('videos').click()">اختر فيديو</div>
+<div class="upload-text" id="vidText">لم يتم اختيار أي فيديو</div>
+<input type="file" id="videos" multiple accept="video/*" hidden>
 
 <label>إضافة ملفات</label>
-<input type="file" id="files" multiple>
+<div class="upload-btn" onclick="document.getElementById('files').click()">اختر ملف PDF</div>
+<div class="upload-text" id="fileText">لم يتم اختيار أي ملف</div>
+<input type="file" id="files" multiple hidden>
 
 <button id="publish">نشر التلخيص</button>
 
@@ -355,6 +363,32 @@ container.appendChild(card)
 })
 }
 
+
+
+
+
+
+
+
+images.onchange = () => {
+imgText.innerText = images.files.length ? "تم اختيار صور" : "لم يتم اختيار أي صورة";
+}
+
+videos.onchange = () => {
+vidText.innerText = videos.files.length ? "تم اختيار فيديو" : "لم يتم اختيار أي فيديو";
+}
+
+files.onchange = () => {
+fileText.innerText = files.files.length ? "تم اختيار ملفات" : "لم يتم اختيار أي ملف";
+}
+
+
+
+
+
+
+
+  
 function showLoader(){
 document.getElementById("loader").style.display="flex"
 }
@@ -377,7 +411,8 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify(data)
 })
 }
-
+document.getElementById("date").value =
+new Date().toISOString().split("T")[0];
 </script>
 
 <div id="loader">
