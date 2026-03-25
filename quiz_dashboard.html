@@ -92,6 +92,20 @@ transform:scale(1.05);
 box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
 
+
+.options{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+@media(max-width:600px){
+.options{
+grid-template-columns:1fr;
+}
+}
+
+  
 /* زرار رفع */
 .upload-btn{
 background: linear-gradient(135deg,#43cea2,#185a9d);
@@ -207,13 +221,21 @@ padding:15px;
 
 <input type="file" id="questionImage" accept="image/*" hidden>
 
-<label>اختيار 1</label> <input id="opt1">
+<div class="options">
 
-<label>اختيار 2</label> <input id="opt2">
+<label>اختيار 1</label>
+<input id="opt1">
 
-<label>اختيار 3 (اختياري)</label> <input id="opt3">
+<label>اختيار 2</label>
+<input id="opt2">
 
-<label>اختيار 4 (اختياري)</label> <input id="opt4">
+<label>اختيار 3 (اختياري)</label>
+<input id="opt3">
+
+<label>اختيار 4 (اختياري)</label>
+<input id="opt4">
+
+</div>
 
 <label>رقم الإجابة الصحيحة</label> <input id="answerNumber" type="number">
 
