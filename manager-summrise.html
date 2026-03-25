@@ -11,50 +11,79 @@
 body{
 font-family:Tajawal, Tahoma;
 direction:rtl;
-background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-padding:20px;
 margin:0;
+padding:20px;
+
+/* خلفية متحركة */
+background: linear-gradient(-45deg, #667eea, #764ba2, #43cea2, #185a9d);
+background-size: 400% 400%;
+animation: gradientBG 10s ease infinite;
 }
 
+@keyframes gradientBG{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* الكارد الأساسي */
 .container{
-max-width:700px; /* كبرناه */
+max-width:720px;
 margin:auto;
-background:#fff;
 padding:25px;
 border-radius:20px;
-box-shadow:0 10px 30px rgba(0,0,0,0.25);
+
+/* Glass effect 🔥 */
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(15px);
+-webkit-backdrop-filter: blur(15px);
+
+box-shadow:0 10px 40px rgba(0,0,0,0.3);
+border:1px solid rgba(255,255,255,0.2);
 }
 
+/* العناوين */
 h2{
-margin-top:20px;
-font-size:22px;
 text-align:center;
+color:#fff;
+font-size:22px;
+margin-bottom:10px;
 }
 
+/* labels */
 label{
 display:block;
 margin-top:15px;
-color:#444;
+color:#eee;
 font-weight:bold;
 }
 
+/* inputs */
 input,textarea{
 width:100%;
 margin-top:8px;
 padding:14px;
 border-radius:12px;
-border:1px solid #ddd;
+border:none;
 font-size:15px;
-background:#f7f9fc;
-box-sizing:border-box; /* دي اللي بتحل المشكلة */
+background:rgba(255,255,255,0.9);
+box-sizing:border-box;
+outline:none;
+transition:0.3s;
 }
 
+input:focus,textarea:focus{
+transform:scale(1.02);
+box-shadow:0 0 10px rgba(255,255,255,0.4);
+}
+
+/* textarea */
 textarea{
 height:130px;
 resize:none;
 }
 
-/* أزرار */
+/* زرار رئيسي */
 button{
 width:100%;
 margin-top:15px;
@@ -63,20 +92,23 @@ border:none;
 border-radius:15px;
 font-size:16px;
 cursor:pointer;
-background:linear-gradient(135deg,#1565c0,#42a5f5);
+
+/* Gradient احترافي */
+background: linear-gradient(135deg,#00c6ff,#0072ff);
 color:white;
 font-weight:bold;
+
 transition:0.3s;
 }
 
 button:hover{
-opacity:0.9;
-transform:scale(1.02);
+transform:scale(1.05);
+box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
 
-/* زرار رفع */
+/* زرار الرفع */
 .upload-btn{
-background:#1565c0;
+background: linear-gradient(135deg,#43cea2,#185a9d);
 color:#fff;
 text-align:center;
 padding:14px;
@@ -87,23 +119,24 @@ transition:0.3s;
 }
 
 .upload-btn:hover{
-background:#0d47a1;
+transform:scale(1.05);
 }
 
+/* النص الصغير */
 .upload-text{
-font-size:14px;
-color:#777;
+font-size:13px;
+color:#ddd;
 margin-top:5px;
 text-align:center;
 }
 
-/* الكارد */
+/* الكروت */
 .card{
-background:white;
+background:rgba(255,255,255,0.9);
 padding:18px;
 margin-top:15px;
 border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,0.1);
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
 }
 
 .card-title{
@@ -112,13 +145,13 @@ font-weight:bold;
 }
 
 .card-date{
-color:#777;
+color:#555;
 font-size:14px;
 margin-top:5px;
 }
 
 .deleteBtn{
-background:#e53935;
+background:linear-gradient(135deg,#ff416c,#ff4b2b);
 }
 
 /* loader */
@@ -128,7 +161,7 @@ top:0;
 left:0;
 width:100%;
 height:100%;
-background:rgba(0,0,0,0.75);
+background:rgba(0,0,0,0.8);
 display:none;
 justify-content:center;
 align-items:center;
@@ -140,7 +173,7 @@ z-index:9999;
 width:60px;
 height:60px;
 border:6px solid #eee;
-border-top:6px solid #42a5f5;
+border-top:6px solid #00c6ff;
 border-radius:50%;
 animation:spin 1s linear infinite;
 margin-bottom:20px;
