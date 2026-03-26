@@ -863,8 +863,11 @@ document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
 // 👇 رجّع وضع عرض الأسئلة
 hidden = false
 
+  
 document.getElementById("questionsList").style.display = "block"
 document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
+  renderQuestions()
+forceShowQuestions()
 hideLoader()
 alert("تم نشر الامتحان 🎉")
 
@@ -874,6 +877,7 @@ alert("فشل النشر")
 console.log(e)
 }
 
+  
 }
 
 // عرض الامتحانات
@@ -959,7 +963,8 @@ hidden = false
 
 document.getElementById("questionsList").style.display = "block"
 document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
-
+renderQuestions()
+forceShowQuestions()
 }
 
 
@@ -1216,6 +1221,20 @@ return
 }
   
 }
+
+
+function forceShowQuestions(){
+    hidden = false
+
+    let list = document.getElementById("questionsList")
+    let btn = document.getElementById("toggleBtn")
+
+    list.style.display = "block"
+    btn.innerText = "إخفاء الأسئلة"
+}
+  
+
+  
 function closeEdit(){
   document.getElementById("editModal").style.display="none";
   currentEditIndex = null;
