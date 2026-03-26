@@ -105,6 +105,11 @@ grid-template-columns:1fr;
 }
 }
 
+button.reset-btn{
+background: linear-gradient(135deg,#ff416c,#ff4b2b);
+}
+  
+
   
 /* زرار رفع */
 .upload-btn{
@@ -301,7 +306,16 @@ margin:10px 0;
 }
 
 
-
+.q-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-weight:bold;
+background:#f1f1f1;
+padding:10px;
+border-radius:10px;
+cursor:pointer;
+}
 
   
 .error{
@@ -452,6 +466,8 @@ max-width:1100px;
 <button onclick="resetQuiz()" style="background:linear-gradient(135deg,#ff416c,#ff4b2b)">
 🗑️ حذف الامتحان الحالي
 </button>
+
+  
 <label>اسم الامتحان</label> <input id="quizTitle" oninput="saveQuizInfo()">
 
 <label>وقت الامتحان (بالدقائق)</label> <input id="quizTime" type="number" value="30" oninput="saveQuizInfo()">
@@ -883,7 +899,7 @@ document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
 // 🧹 إخفاء أي رسالة خطأ
 hideError()
 
-alert("تم بدء امتحان جديد ✨")
+
 
 }
 
@@ -943,11 +959,15 @@ div.draggable = true
 
   
 div.innerHTML = `
-<div class="q-header">
+<div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
 <span>سؤال ${i+1}</span>
+<span id="arrow-${i}">▼</span>
 </div>
 
-<div class="q-body">
+<div class="q-body" id="body-${i}" style="display:block;">
+
+
+
 <p class="q-text">${q.question}</p>
 
 ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
@@ -999,6 +1019,23 @@ document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.
 }
 
 
+function toggleQuestion(i){
+
+let body = document.getElementById("body-"+i)
+let arrow = document.getElementById("arrow-"+i)
+
+if(body.style.display === "none"){
+body.style.display = "block"
+arrow.innerText = "▼"
+}else{
+body.style.display = "none"
+arrow.innerText = "▶"
+}
+
+}
+
+
+  
 function saveQuizInfo(){
 localStorage.setItem("quizTitle", document.getElementById("quizTitle").value)
 localStorage.setItem("quizTime", document.getElementById("quizTime").value)
@@ -1047,7 +1084,14 @@ document.getElementById("editAnswer").value = q.answer
 ? "📸 يوجد صورة حالية" 
 : "لم يتم اختيار صورة";
 }
+let preview = document.getElementById("editPreview")
 
+if(q.image){
+preview.src = q.image
+preview.style.display = "block"
+}else{
+preview.style.display = "none"
+}
 function closeEdit(){
 document.getElementById("editModal").style.display="none"
 }
@@ -1129,6 +1173,7 @@ modal.style.display = "none"
 <label>صورة (اختياري)</label>
 <div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
 <div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
+  <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
 <input type="file" id="editImage" hidden>
 
 <div class="options">
