@@ -109,7 +109,35 @@ button.reset-btn{
 background: linear-gradient(135deg,#ff416c,#ff4b2b);
 }
   
+/* أيقونة السحب */
+.drag-icon{
+  width: 20px;
+  height: 40px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:center;
+  position:absolute;
+  top:10px;
+  left:10px;
+  cursor:grab;
+}
 
+/* الأسهم */
+.arrow{
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+}
+
+.arrow.up{
+  border-bottom: 8px solid #0072ff;
+}
+
+.arrow.down{
+  border-top: 8px solid #0072ff;
+}
   
 /* زرار رفع */
 .upload-btn{
@@ -1001,87 +1029,79 @@ document.getElementById("loader").style.display="none"
 
 
   
-function renderQuestions(){
+function renderQuestions() {
+  const container = document.getElementById("questionsList");
+  container.innerHTML = "";
 
-const container = document.getElementById("questionsList")
-container.innerHTML = ""
+  questions.forEach((q, i) => {
+    let div = document.createElement("div");
+    div.className = "q-card";
+    div.draggable = true;
 
-questions.forEach((q,i)=>{
+    div.innerHTML = `
+      <div class="drag-icon" style="display:flex; flex-direction:column; align-items:center; position:absolute; left:10px; top:10px;">
+        <div class="arrow up" style="width:10px; height:10px; border-left:2px solid #555; border-bottom:2px solid #555; transform:rotate(45deg); margin-bottom:2px;"></div>
+        <div class="arrow down" style="width:10px; height:10px; border-left:2px solid #555; border-top:2px solid #555; transform:rotate(-45deg); margin-top:2px;"></div>
+      </div>
 
-let div = document.createElement("div")
-div.className = "q-card"
-div.draggable = true
+      <div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
+        <span>سؤال ${i + 1}</span>
+        <span id="arrow-${i}">▼</span>
+      </div>
 
-  
-div.innerHTML = `
-<div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
-<span>سؤال ${i+1}</span>
-<span id="arrow-${i}">▼</span>
-</div>
+      <div class="q-body" id="body-${i}" style="display:block;">
+        <p class="q-text">${q.question}</p>
+        ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
+        <ul class="q-options">
+          ${q.options
+            .map(
+              (opt, idx) =>
+                `<li class="${q.answer == idx + 1 ? "correct" : ""}">${idx + 1}) ${opt}</li>`
+            )
+            .join("")}
+        </ul>
+      </div>
 
-<div class="q-body" id="body-${i}" style="display:block;">
+      <div class="q-actions">
+        <button class="editBtn" onclick="openEdit(${i})">تعديل</button>
+        <button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
+      </div>
+    `;
 
+    // drag events
+    div.ondragstart = (e) => {
+      div.classList.add("dragging");
+      e.dataTransfer.setData("index", i);
+      e.dataTransfer.effectAllowed = "move";
+    };
 
+    div.ondragend = () => {
+      div.classList.remove("dragging");
+    };
 
-<p class="q-text">${q.question}</p>
+    div.ondragover = (e) => e.preventDefault();
 
-${q.image ? `<img src="${q.image}" class="q-img">` : ""}
+    div.ondrop = (e) => {
+      let from = e.dataTransfer.getData("index");
+      let item = questions[from];
+      questions.splice(from, 1);
+      questions.splice(i, 0, item);
+      renderQuestions();
+    };
 
-<ul class="q-options">
-${q.options.map((opt,idx)=>`
-<li class="${q.answer == idx+1 ? 'correct' : ''}">
-${idx+1}) ${opt}
-</li>
-`).join("")}
-</ul>
-</div>
+    container.appendChild(div);
+  });
 
-<div class="q-actions">
-<button class="editBtn" onclick="openEdit(${i})">تعديل</button>
-<button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
-</div>
-`
+  document.getElementById("qCount").innerText =
+    "عدد الأسئلة: " + questions.length;
+  localStorage.setItem("questionsDraft", JSON.stringify(questions));
 
-// drag
-div.ondragstart = (e)=>{
-div.classList.add("dragging")
-e.dataTransfer.setData("index", i)
-e.dataTransfer.effectAllowed = "move"
-}
-
-div.ondragend = ()=>{
-div.classList.remove("dragging")
-}
-
-div.ondragover = (e)=> e.preventDefault()
-
-div.ondrop = (e)=>{
-let from = e.dataTransfer.getData("index")
-
-let item = questions[from]
-questions.splice(from,1)
-questions.splice(i,0,item)
-
-renderQuestions()
-}
-
-container.appendChild(div)
-
-})
-
-document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
-  localStorage.setItem("questionsDraft", JSON.stringify(questions))
-
-
-  let btn = document.getElementById("toggleBtn")
-
-if(questions.length === 0){
-    btn.style.display = "none"
-}else{
-    btn.style.display = "block"
-}
-
-  
+  let btn = document.getElementById("toggleBtn");
+  if (questions.length === 0) {
+    btn.style.display = "none";
+  } else {
+    btn.style.display = "block";
+  }
 }
 
 
