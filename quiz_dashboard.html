@@ -264,7 +264,33 @@ transition:transform 0.2s, box-shadow 0.2s;
 }
 
 
+.answer-options{
+display:grid;
+grid-template-columns: repeat(4,1fr);
+gap:10px;
+margin-top:10px;
+}
 
+.answer-options div{
+background:#fff;
+padding:12px;
+text-align:center;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+border:2px solid transparent;
+}
+
+.answer-options div:hover{
+transform:scale(1.05);
+}
+
+.answer-options div.active{
+background:linear-gradient(135deg,#00c6ff,#0072ff);
+color:#fff;
+border-color:#0072ff;
+}
   
 
 .q-header{
@@ -511,13 +537,12 @@ max-width:1100px;
 </div>
 
 <label>الإجابة الصحيحة</label>
-<select id="answerNumber">
-<option value="">اختر الإجابة</option>
-<option value="1">1</option>
-<option value="2">2</option>
-<option value="3">3</option>
-<option value="4">4</option>
-</select>
+<div class="answer-options" id="answerNumber">
+  <div onclick="selectAnswer(1)" data-value="1">1</div>
+  <div onclick="selectAnswer(2)" data-value="2">2</div>
+  <div onclick="selectAnswer(3)" data-value="3">3</div>
+  <div onclick="selectAnswer(4)" data-value="4">4</div>
+</div>
 
 <button onclick="addQuestion()">إضافة السؤال</button>
 <div id="errorBox" class="error"></div>
@@ -556,6 +581,18 @@ let quizzes=[]
 let questions=[]
 let editIndex = null;
 // تحميل الامتحانات
+// المتغير اللي هيخزن الاختيار
+let selectedAnswer = null;
+
+// الفنكشن لتحديد الإجابة
+function selectAnswer(num){
+    selectedAnswer = num;
+
+    let all = document.querySelectorAll(".answer-options div");
+    all.forEach(el => el.classList.remove("active"));
+
+    document.querySelector(`.answer-options div[data-value="${num}"]`).classList.add("active");
+}
 async function loadQuizzes(){
 try{
 const res=await fetch("quiz.json")
@@ -674,14 +711,13 @@ if(o2) options.push(o2)
 if(o3) options.push(o3)
 if(o4) options.push(o4)
 
-const answerInput = document.getElementById("answerNumber").value
-const answer = parseInt(answerInput)
+const answer = selectedAnswer;
 
 // ❌ تحقق أقوى
-if(!answerInput){
-hideLoader()
-showError("لازم تختار رقم الإجابة الصحيحة")
-return
+if(!answer){
+    hideLoader()
+    showError("لازم تختار رقم الإجابة الصحيحة")
+    return
 }
 
 if(isNaN(answer)){
@@ -871,6 +907,9 @@ document.getElementById("answerNumber").value=""
 document.getElementById("questionImage").value=""
 
 document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
+
+  selectedAnswer = null
+document.querySelectorAll(".answer-options div").forEach(el => el.classList.remove("active"))
 }
 
 
@@ -919,21 +958,7 @@ text.innerText = "لم يتم اختيار صورة"
 }
 
 // 👇 تضيف ده تحته
-setTimeout(() => {
-let editImg = document.getElementById("editImage")
-if(editImg){
-editImg.onchange = function () {
-let file = this.files[0]
-let text = document.getElementById("editImgText")
 
-if(file){
-text.innerText = "📸 " + file.name
-}else{
-text.innerText = "لم يتم اختيار صورة"
-}
-}
-}
-}, 500)
 
   function showLoader(){
 document.getElementById("loader").style.display="flex"
@@ -1068,33 +1093,46 @@ renderQuestions()
   let currentEditIndex = null;
 
 function openEdit(i){
+    currentEditIndex = i
+    let q = questions[i]
 
-currentEditIndex = i
-let q = questions[i]
+    document.getElementById("editModal").style.display="flex"
 
-document.getElementById("editModal").style.display="flex"
+    document.getElementById("editQuestionText").value = q.question
+    document.getElementById("editOpt1").value = q.options[0] || ""
+    document.getElementById("editOpt2").value = q.options[1] || ""
+    document.getElementById("editOpt3").value = q.options[2] || ""
+    document.getElementById("editOpt4").value = q.options[3] || ""
+    document.getElementById("editAnswer").value = q.answer
 
-document.getElementById("editQuestionText").value = q.question
-document.getElementById("editOpt1").value = q.options[0] || ""
-document.getElementById("editOpt2").value = q.options[1] || ""
-document.getElementById("editOpt3").value = q.options[2] || ""
-document.getElementById("editOpt4").value = q.options[3] || ""
-document.getElementById("editAnswer").value = q.answer
-  document.getElementById("editImgText").innerText = q.image 
-? "📸 يوجد صورة حالية" 
-: "لم يتم اختيار صورة";
+    // النص
+    document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
+
+    // المعاينة
+    let preview = document.getElementById("editPreview")
+    if(q.image){
+        preview.src = q.image
+        preview.style.display = "block"
+    }else{
+        preview.style.display = "none"
+    }
+
+    // ربط تغيير الصورة مباشرة
+    let input = document.getElementById("editImage")
+    input.value = "" // مهم جداً
+    input.onchange = function (){
+        let file = this.files[0]
+        if(file){
+            preview.src = URL.createObjectURL(file)
+            preview.style.display = "block"
+            document.getElementById("editImgText").innerText = "📸 " + file.name
+        }else{
+            preview.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+        }
+    }
 }
-let preview = document.getElementById("editPreview")
 
-if(q.image){
-preview.src = q.image
-preview.style.display = "block"
-}else{
-preview.style.display = "none"
-}
-function closeEdit(){
-document.getElementById("editModal").style.display="none"
-}
 
 async function saveEdit(){
 
@@ -1147,7 +1185,10 @@ return
 }
   
 }
-
+function closeEdit(){
+  document.getElementById("editModal").style.display="none";
+  currentEditIndex = null;
+}
 
   window.onclick = function(e){
 let modal = document.getElementById("editModal")
