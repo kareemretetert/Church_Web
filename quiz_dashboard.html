@@ -450,9 +450,9 @@ max-width:1100px;
 
 <h2>إنشاء امتحان جديد</h2>
 
-<label>اسم الامتحان</label> <input id="quizTitle">
+<label>اسم الامتحان</label> <input id="quizTitle" oninput="saveQuizInfo()">
 
-<label>وقت الامتحان (بالدقائق)</label> <input id="quizTime" type="number" value="30">
+<label>وقت الامتحان (بالدقائق)</label> <input id="quizTime" type="number" value="30" oninput="saveQuizInfo()">
 
 </div>
 
@@ -547,7 +547,22 @@ renderQuiz()
 document.getElementById("quizList").innerHTML="لا يوجد امتحانات"
 }
 }
-window.onload=loadQuizzes
+window.onload = function(){
+
+loadQuizzes()
+
+// 📥 استرجاع الأسئلة
+let saved = localStorage.getItem("questionsDraft")
+if(saved){
+questions = JSON.parse(saved)
+renderQuestions()
+}
+
+// 📥 استرجاع العنوان والوقت
+document.getElementById("quizTitle").value = localStorage.getItem("quizTitle") || ""
+document.getElementById("quizTime").value = localStorage.getItem("quizTime") || 30
+
+}
 
 // 📸 رفع صورة
 async function compressImage(file){
@@ -776,6 +791,9 @@ await updateJSONFile(quizzes)
 renderQuiz()
 
 questions=[]
+  localStorage.removeItem("questionsDraft")
+  localStorage.removeItem("quizTitle")
+localStorage.removeItem("quizTime")
 document.getElementById("qCount").innerText="عدد الأسئلة: 0"
 
 hideLoader()
@@ -948,8 +966,16 @@ container.appendChild(div)
 })
 
 document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
+  localStorage.setItem("questionsDraft", JSON.stringify(questions))
 }
- 
+
+
+function saveQuizInfo(){
+localStorage.setItem("quizTitle", document.getElementById("quizTitle").value)
+localStorage.setItem("quizTime", document.getElementById("quizTime").value)
+}
+
+  
   function editQuestion(i){
 
 let q = questions[i]
