@@ -508,6 +508,47 @@ transition:transform 0.2s, box-shadow 0.2s;
 }
 
 
+
+
+
+.q-card .drag-icon {
+  display: flex;
+  flex-direction: row; /* جنب بعض */
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px; 
+  cursor: pointer;
+  z-index: 10;
+  opacity: 1; /* تظهر دايمًا */
+  gap: 6px; /* مسافة بين السهمين */
+}
+
+.q-card .drag-icon .arrow {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+}
+
+/* السهم للأعلى */
+.q-card .drag-icon .arrow.up {
+  border-bottom: 12px solid #0072ff;
+}
+
+/* السهم للأسفل */
+.q-card .drag-icon .arrow.down {
+  border-top: 12px solid #0072ff;
+}
+
+
+
+
+
+
+
+  
   
 @keyframes fade{
 from{opacity:0; transform:translateY(10px);}
