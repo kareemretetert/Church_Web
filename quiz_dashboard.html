@@ -179,6 +179,26 @@ gap:10px;
 margin-top:10px;
 }
 
+
+select{
+background: linear-gradient(135deg,#ffffff,#f1f1f1);
+font-weight:bold;
+}
+
+select:hover{
+transform:scale(1.02);
+}
+
+
+  .modal-content{
+background: rgba(255,255,255,0.95);
+backdrop-filter: blur(10px);
+}
+
+.modal-content input{
+background:#fff;
+}
+  
 .q-actions button{
 flex:1;
 padding:8px;
@@ -228,6 +248,19 @@ z-index:9999;
 }
 
 
+
+.q-card.dragging{
+opacity:0.5;
+transform:scale(0.95);
+}
+
+.q-card{
+transition:transform 0.2s, box-shadow 0.2s;
+}
+
+
+
+  
 
 .q-header{
 display:flex;
@@ -299,10 +332,42 @@ outline:none;
 }
 
 
+
+
+.modal-content.big{
+width:95%;
+max-width:500px;
+max-height:90vh;
+overflow:auto;
+border-radius:20px;
+animation:fade 0.3s;
+}
+
+.modal-actions{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+.modal-actions button{
+flex:1;
+}
+
+  
+
 .card{
 animation:fade 1s;
 }
 
+
+  .q-card.dragging{
+opacity:0.5;
+transform:scale(0.95);
+}
+
+.q-card{
+transition:transform 0.2s, box-shadow 0.2s;
+}
 @keyframes fade{
 from{opacity:0; transform:translateY(10px);}
 to{opacity:1; transform:translateY(0);}
@@ -439,7 +504,10 @@ max-width:1100px;
 <button onclick="addQuestion()">إضافة السؤال</button>
 <div id="errorBox" class="error"></div>
 <p id="qCount">عدد الأسئلة: 0</p>
-  
+
+ <button onclick="toggleQuestions()" id="toggleBtn">
+إخفاء الأسئلة
+</button> 
 <div id="questionsList"></div>
   
 <button onclick="publishQuiz()">نشر الامتحان</button>
@@ -608,6 +676,7 @@ console.log(e)
 
 }
 
+  
 // حفظ على GitHub
 async function updateJSONFile(data){
 await fetch("/.netlify/functions/saveQuiz",{
@@ -617,6 +686,27 @@ body:JSON.stringify(data)
 })
 }
 
+
+let hidden = false
+
+function toggleQuestions(){
+
+const list = document.getElementById("questionsList")
+const btn = document.getElementById("toggleBtn")
+
+hidden = !hidden
+
+if(hidden){
+list.style.display = "none"
+btn.innerText = "إظهار الأسئلة"
+}else{
+list.style.display = "block"
+btn.innerText = "إخفاء الأسئلة"
+}
+
+}
+
+  
 // نشر الامتحان
 async function publishQuiz(){
 
@@ -703,6 +793,8 @@ document.getElementById("opt3").value=""
 document.getElementById("opt4").value=""
 document.getElementById("answerNumber").value=""
 document.getElementById("questionImage").value=""
+
+document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
 }
 
 
@@ -716,7 +808,19 @@ imgText.innerText = questionImage.files.length
 : "لم يتم اختيار صورة";
 }
 
-  
+// 👇 تضيف ده تحته
+document.getElementById("editImage").onchange = function () {
+
+let file = this.files[0]
+let text = document.getElementById("editImgText")
+
+if(file){
+text.innerText = "📸 " + file.name
+}else{
+text.innerText = "لم يتم اختيار صورة"
+}
+
+}
 
   function showLoader(){
 document.getElementById("loader").style.display="flex"
@@ -768,7 +872,13 @@ ${idx+1}) ${opt}
 
 // drag
 div.ondragstart = (e)=>{
+div.classList.add("dragging")
 e.dataTransfer.setData("index", i)
+e.dataTransfer.effectAllowed = "move"
+}
+
+div.ondragend = ()=>{
+div.classList.remove("dragging")
 }
 
 div.ondragover = (e)=> e.preventDefault()
@@ -789,7 +899,7 @@ container.appendChild(div)
 
 document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
 }
-  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})
+ 
   function editQuestion(i){
 
 let q = questions[i]
@@ -828,6 +938,9 @@ document.getElementById("editOpt2").value = q.options[1] || ""
 document.getElementById("editOpt3").value = q.options[2] || ""
 document.getElementById("editOpt4").value = q.options[3] || ""
 document.getElementById("editAnswer").value = q.answer
+  document.getElementById("editImgText").innerText = q.image 
+? "📸 يوجد صورة حالية" 
+: "لم يتم اختيار صورة";
 }
 
 function closeEdit(){
@@ -835,6 +948,10 @@ document.getElementById("editModal").style.display="none"
 }
 
 async function saveEdit(){
+
+showLoader()
+
+try{
 
 let q = questions[currentEditIndex]
 
@@ -845,19 +962,35 @@ q.image = await uploadImage(newImage)
 }
 
 q.question = document.getElementById("editQuestionText").value
+
 q.options = [
-document.getElementById("editOpt1").value,
-document.getElementById("editOpt2").value,
-document.getElementById("editOpt3").value,
-document.getElementById("editOpt4").value
+editOpt1.value,
+editOpt2.value,
+editOpt3.value,
+editOpt4.value
 ].filter(Boolean)
 
-q.answer = parseInt(document.getElementById("editAnswer").value)
+q.answer = parseInt(editAnswer.value)
 
 closeEdit()
 renderQuestions()
+
+hideLoader()
+
+}catch(e){
+hideLoader()
+alert("فشل التعديل")
+console.log(e)
 }
-  
+}
+
+
+  window.onclick = function(e){
+let modal = document.getElementById("editModal")
+if(e.target == modal){
+modal.style.display = "none"
+}
+}
 </script>
 
 
@@ -867,25 +1000,33 @@ renderQuestions()
   
 <div id="editModal" class="modal">
 
-<div class="modal-content">
+<div class="modal-content big">
 
-<h3>تعديل السؤال</h3>
+<h3>✏️ تعديل السؤال</h3>
 
-<input id="editQuestionText">
+<input id="editQuestionText" placeholder="اكتب السؤال">
 
-<input id="editOpt1">
-<input id="editOpt2">
-<input id="editOpt3">
-<input id="editOpt4">
+<label>صورة (اختياري)</label>
+<div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
+<div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
+<input type="file" id="editImage" hidden>
+
+<div class="options">
+
+<input id="editOpt1" placeholder="اختيار 1">
+<input id="editOpt2" placeholder="اختيار 2">
+<input id="editOpt3" placeholder="اختيار 3">
+<input id="editOpt4" placeholder="اختيار 4">
+
+</div>
 
 <select id="editAnswer">
+<option value="">اختر الإجابة</option>
 <option value="1">1</option>
 <option value="2">2</option>
 <option value="3">3</option>
 <option value="4">4</option>
 </select>
-
-<input type="file" id="editImage">
 
 <div class="modal-actions">
 <button onclick="saveEdit()">💾 حفظ</button>
