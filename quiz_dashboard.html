@@ -816,8 +816,10 @@ text.innerText = "لم يتم اختيار صورة"
 }
 
 // 👇 تضيف ده تحته
-document.getElementById("editImage").onchange = function () {
-
+setTimeout(() => {
+let editImg = document.getElementById("editImage")
+if(editImg){
+editImg.onchange = function () {
 let file = this.files[0]
 let text = document.getElementById("editImgText")
 
@@ -826,8 +828,9 @@ text.innerText = "📸 " + file.name
 }else{
 text.innerText = "لم يتم اختيار صورة"
 }
-
 }
+}
+}, 500)
 
   function showLoader(){
 document.getElementById("loader").style.display="flex"
@@ -989,6 +992,21 @@ hideLoader()
 alert("فشل التعديل")
 console.log(e)
 }
+
+
+
+if(!q.question || q.options.length < 2){
+hideLoader()
+alert("لازم سؤال واختيارين على الأقل")
+return
+}
+
+if(!q.answer || q.answer > q.options.length){
+hideLoader()
+alert("الإجابة غير صحيحة")
+return
+}
+  
 }
 
 
