@@ -860,7 +860,11 @@ clearFields()
 // 🧹 تحديث الواجهة
 renderQuestions()
 document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
+// 👇 رجّع وضع عرض الأسئلة
+hidden = false
 
+document.getElementById("questionsList").style.display = "block"
+document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
 hideLoader()
 alert("تم نشر الامتحان 🎉")
 
@@ -950,6 +954,11 @@ document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
 hideError()
 
 document.getElementById("toggleBtn").style.display = "none"
+  // 👇 رجّع وضع عرض الأسئلة
+hidden = false
+
+document.getElementById("questionsList").style.display = "block"
+document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
 
 }
 
