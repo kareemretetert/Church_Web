@@ -266,7 +266,7 @@ transition:transform 0.2s, box-shadow 0.2s;
 .answer-options{
 display:grid;
 grid-template-columns: repeat(4,1fr);
-gap:10px;
+gap:6px;
 margin-top:10px;
 }
 
@@ -280,7 +280,16 @@ font-weight:bold;
 transition:0.3s;
 border:2px solid transparent;
 }
-
+.answer-options div{
+padding:10px;
+font-size:14px;
+}
+  @media (max-width:600px){
+.answer-options{
+grid-template-columns: repeat(2,1fr);
+gap:6px;
+}
+}
 .answer-options div:hover{
 transform:scale(1.05);
 }
@@ -522,12 +531,26 @@ padding:10px;
 .q-header button{
 background:#fff;
 border:none;
-border-radius:6px;
-padding:5px 8px;
-cursor:pointer;
+border-radius:8px;
+padding:6px 10px;
+font-size:18px; /* مهم جدًا */
 font-weight:bold;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+min-width:36px;
+min-height:36px;
 }
-
+@media (max-width:600px){
+.q-header button{
+font-size:20px;
+padding:8px;
+}
+  .q-header button{
+color:#000;
+}
+}
 .q-header button:hover{
 transform:scale(1.1);
 }
