@@ -412,6 +412,21 @@ transition:transform 0.2s, box-shadow 0.2s;
 from{opacity:0; transform:translateY(10px);}
 to{opacity:1; transform:translateY(0);}
 }
+
+
+
+
+.q-header span:first-child{
+cursor:grab;
+opacity:0.7;
+transition:0.3s;
+}
+
+.q-header span:first-child:hover{
+opacity:1;
+transform:scale(1.2);
+}
+
   
 .spinner{
 width:60px;
@@ -1014,9 +1029,15 @@ div.draggable = true
 
   
 div.innerHTML = `
-<div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
-<span>سؤال ${i+1}</span>
-<span id="arrow-${i}">▼</span>
+<div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
+    
+    <div style="display:flex; gap:10px; align-items:center;">
+        <span style="cursor:grab; font-size:18px;">☰</span>
+        <span onclick="toggleQuestion(${i})" style="cursor:pointer;">سؤال ${i+1}</span>
+    </div>
+
+    <span id="arrow-${i}" onclick="toggleQuestion(${i})" style="cursor:pointer;">▼</span>
+
 </div>
 
 <div class="q-body" id="body-${i}" style="display:block;">
