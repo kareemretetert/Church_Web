@@ -271,6 +271,33 @@ gap:10px;
 margin-top:10px;
 }
 
+
+
+
+
+
+
+
+
+
+.drag-icon .arrow:hover::after{
+content:"تحريك";
+position:absolute;
+top:-25px;
+background:#000;
+color:#fff;
+padding:3px 6px;
+border-radius:5px;
+font-size:12px;
+}
+
+
+
+
+
+
+  
+
 .answer-options div{
 background:#fff;
 padding:12px;
@@ -487,7 +514,29 @@ transition:transform 0.2s, box-shadow 0.2s;
 
 
 
+.drag-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px; /* بدل right عشان ميتعارضش مع السهم */
+  display: flex;
+  gap: 5px;
+  cursor: pointer;
+}
 
+.drag-icon .arrow {
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+}
+
+.drag-icon .arrow.up {
+  border-bottom: 10px solid #0072ff;
+}
+
+.drag-icon .arrow.down {
+  border-top: 10px solid #0072ff;
+}
 
 
   
@@ -1118,6 +1167,10 @@ div.draggable = true
 
   
 div.innerHTML = `
+<div class="drag-icon">
+  <div class="arrow up" onclick="moveQuestionUp(${i})"></div>
+  <div class="arrow down" onclick="moveQuestionDown(${i})"></div>
+</div>
 <div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
 <span>سؤال ${i+1}</span>
 <span id="arrow-${i}">▼</span>
