@@ -400,7 +400,7 @@ throw new Error("access denied")
 
 let quizzes=[]
 let questions=[]
-
+let editIndex = null;
 // تحميل الامتحانات
 async function loadQuizzes(){
 try{
@@ -537,7 +537,7 @@ hideLoader()
 showError("حصل خطأ")
 console.log(e)
 }
-
+window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})
 }
 
 // حفظ على GitHub
@@ -637,7 +637,7 @@ document.getElementById("answerNumber").value=""
 document.getElementById("questionImage").value=""
 }
 
-window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"})
+
 
 
 
