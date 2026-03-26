@@ -96,9 +96,20 @@ box-shadow:0 5px 20px rgba(0,0,0,0.3);
 .options{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:6px;
 }
 
+.options input{
+padding:10px;
+font-size:14px;
+margin:0;
+}
+  @media (max-width:600px){
+.options{
+grid-template-columns:1fr;
+gap:8px;
+}
+}
 @media(max-width:600px){
 .options{
 grid-template-columns:1fr;
@@ -160,7 +171,11 @@ max-width:400px;
 .modal-content select{
 margin-top:10px;
 }
-  
+
+  .q-header button{
+margin:0;
+border-radius:6px;
+}
   .questions-container{
 margin-top:15px;
 }
@@ -837,7 +852,13 @@ reader.readAsDataURL(file)
 
 async function uploadImage(file){
 
-// ✨ ضغط الصورة قبل الرفع
+try{
+
+// ⛔ منع الملفات الكبيرة جدًا
+if(file.size > 5 * 1024 * 1024){
+throw "الصورة كبيرة جدًا (أكبر من 5MB)"
+}
+
 const compressed = await compressImage(file)
 
 const url = "https://api.cloudinary.com/v1_1/ddiegmhji/image/upload"
@@ -846,16 +867,31 @@ const formData = new FormData()
 formData.append("file", compressed)
 formData.append("upload_preset", "my_upload")
 
+// ⛔ timeout يدوي
+const controller = new AbortController()
+const timeout = setTimeout(()=>controller.abort(), 20000)
+
 const res = await fetch(url,{
 method:"POST",
-body:formData
+body:formData,
+signal:controller.signal
 })
+
+clearTimeout(timeout)
 
 const data = await res.json()
 
-if(!data.secure_url) throw "upload failed"
+if(!data.secure_url){
+console.log(data)
+throw "رفع الصورة فشل - تحقق من Cloudinary preset"
+}
 
 return data.secure_url
+
+}catch(err){
+console.log("UPLOAD ERROR:", err)
+throw err
+}
 }
 
 
