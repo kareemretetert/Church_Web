@@ -1019,7 +1019,8 @@ document.getElementById("loader").style.display="none"
 
 
 
-  
+let startIndex = null; // مهم جدًا يكون خارج الدالة
+
 function renderQuestions(){
 
 const container = document.getElementById("questionsList")
@@ -1031,127 +1032,127 @@ let div = document.createElement("div")
 div.className = "q-card"
 div.draggable = true
 
-  
 div.innerHTML = `
-<div class="q-header" style="display:flex; justify-content:space-between; align-items:center; title="اسحب لتغيير ترتيب السؤال"">
+<div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
     
-    <div style="display:flex; gap:10px; align-items:center; title="اسحب لتغيير ترتيب السؤال"">
-        <span class="drag-handle" title="اسحب لتغيير ترتيب السؤال"> ⋮⋮ ⬆⬇</span>
+    <div style="display:flex; gap:10px; align-items:center;">
+        <span class="drag-handle"> ⋮⋮ ⬆⬇</span>
         <span onclick="toggleQuestion(${i})" style="cursor:pointer;">سؤال ${i+1}</span>
     </div>
 
-    <span id="arrow-${i}" onclick="toggleQuestion(${i})" style="cursor:pointer;">▼</span>
+    <span onclick="toggleQuestion(${i})" style="cursor:pointer;">▼</span>
 
 </div>
 
-<div class="q-body" id="body-${i}" style="display:block;" title="اسحب لتغيير ترتيب السؤال">
+<div class="q-body" id="body-${i}" style="display:block;">
+    <p class="q-text">${q.question}</p>
 
+    ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
 
-
-<p class="q-text">${q.question}</p>
-
-${q.image ? `<img src="${q.image}" class="q-img">` : ""}
-
-<ul class="q-options">
-${q.options.map((opt,idx)=>`
-<li class="${q.answer == idx+1 ? 'correct' : ''}">
-${idx+1}) ${opt}
-</li>
-`).join("")}
-</ul>
+    <ul class="q-options">
+        ${q.options.map((opt,idx)=>`
+            <li class="${q.answer == idx+1 ? 'correct' : ''}">
+                ${idx+1}) ${opt}
+            </li>
+        `).join("")}
+    </ul>
 </div>
 
 <div class="q-actions">
-<button class="editBtn" onclick="openEdit(${i})">تعديل</button>
-<button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
+    <button class="editBtn" onclick="openEdit(${i})">تعديل</button>
+    <button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
 </div>
 `
 
-// drag
+// =====================
+// 🖱️ Drag (كمبيوتر)
+// =====================
+
 div.ondragstart = (e)=>{
-div.classList.add("dragging")
-e.dataTransfer.setData("index", i)
-e.dataTransfer.effectAllowed = "move"
+    div.classList.add("dragging")
+    e.dataTransfer.setData("index", i)
+    e.dataTransfer.effectAllowed = "move"
 }
 
 div.ondragend = ()=>{
-div.classList.remove("dragging")
+    div.classList.remove("dragging")
 }
 
 div.ondragover = (e)=> e.preventDefault()
 
 div.ondrop = (e)=>{
-let from = e.dataTransfer.getData("index")
+    let from = e.dataTransfer.getData("index")
 
-let item = questions[from]
-questions.splice(from,1)
-questions.splice(i,0,item)
+    let item = questions[from]
+    questions.splice(from,1)
+    questions.splice(i,0,item)
 
-renderQuestions()
+    renderQuestions()
 }
 
 
-let startIndex = null;
+// =====================
+// 📱 Touch Drag (موبايل)
+// =====================
 
-// 📱 بداية اللمس
+// بداية السحب
 div.addEventListener("touchstart", ()=>{
-    startIndex = i;
-    div.classList.add("dragging");
-});
+    startIndex = i
+    div.classList.add("dragging")
+})
 
-// 📱 أثناء السحب
+// أثناء السحب (بدون render نهائيًا)
 div.addEventListener("touchmove", (e)=>{
-    e.preventDefault();
+    e.preventDefault()
 
-    let touch = e.touches[0];
-    let element = document.elementFromPoint(touch.clientX, touch.clientY);
+    let touch = e.touches[0]
+    let element = document.elementFromPoint(touch.clientX, touch.clientY)
 
-    if(!element) return;
+    if(!element) return
 
-    let target = element.closest(".q-card");
-    if(!target || target === div) return;
+    let target = element.closest(".q-card")
+    if(!target) return
 
-    let children = [...container.children];
-    let targetIndex = children.indexOf(target);
+    let children = [...container.children]
+    let targetIndex = children.indexOf(target)
 
-    if(targetIndex === -1) return;
+    if(targetIndex === -1 || targetIndex === startIndex) return
 
-    let item = questions[startIndex];
-    questions.splice(startIndex,1);
-    questions.splice(targetIndex,0,item);
+    // 🔥 تحديث البيانات فقط
+    let item = questions[startIndex]
+    questions.splice(startIndex, 1)
+    questions.splice(targetIndex, 0, item)
 
-    startIndex = targetIndex;
+    startIndex = targetIndex
+})
 
-    renderQuestions();
-});
-
-// 📱 نهاية السحب
+// نهاية السحب
 div.addEventListener("touchend", ()=>{
-    div.classList.remove("dragging");
-});
+    div.classList.remove("dragging")
 
+    // ✔️ إعادة رسم مرة واحدة فقط
+    renderQuestions()
+})
 
-  
 
 container.appendChild(div)
 
 })
 
-document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
-  localStorage.setItem("questionsDraft", JSON.stringify(questions))
+// =====================
+// 📊 تحديث العدادات والحفظ
+// =====================
 
+document.getElementById("qCount").innerText =
+"عدد الأسئلة: " + questions.length
 
-  let btn = document.getElementById("toggleBtn")
+localStorage.setItem("questionsDraft", JSON.stringify(questions))
 
-if(questions.length === 0){
-    btn.style.display = "none"
-}else{
-    btn.style.display = "block"
+let btn = document.getElementById("toggleBtn")
+
+btn.style.display = questions.length === 0 ? "none" : "block"
+
 }
-
-  
-}
-
 
 function toggleQuestion(i){
 
