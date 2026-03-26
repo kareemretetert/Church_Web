@@ -569,7 +569,11 @@ max-width:1100px;
 
 
 <script>
-  history.scrollRestoration = "manual";
+  // منع المتصفح يحفظ مكان السكروول
+history.scrollRestoration = "manual";
+
+// تفعيل السلوك الناعم للسكروول
+document.documentElement.style.scrollBehavior = "smooth";
 const password="kimo123"
 const entered=prompt("ادخل كلمة المرور")
 
@@ -604,7 +608,7 @@ document.getElementById("quizList").innerHTML="لا يوجد امتحانات"
 }
 }
 window.onload = function(){
-window.scrollTo(0,0);
+window.scrollTo({ top: 0, left: 0 });
 loadQuizzes()
 
 // 📥 استرجاع الأسئلة
