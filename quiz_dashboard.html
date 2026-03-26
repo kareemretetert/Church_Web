@@ -109,35 +109,7 @@ button.reset-btn{
 background: linear-gradient(135deg,#ff416c,#ff4b2b);
 }
   
-/* أيقونة السحب */
-.drag-icon{
-  width: 20px;
-  height: 40px;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  align-items:center;
-  position:absolute;
-  top:10px;
-  left:10px;
-  cursor:grab;
-}
 
-/* الأسهم */
-.arrow{
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-}
-
-.arrow.up{
-  border-bottom: 8px solid #0072ff;
-}
-
-.arrow.down{
-  border-top: 8px solid #0072ff;
-}
   
 /* زرار رفع */
 .upload-btn{
@@ -400,42 +372,50 @@ outline:none;
 }
 
 
-.drag-icon {
+
+
+/* أيقونات السحب داخل كارد السؤال */
+.q-card .drag-icon {
   display: flex;
-  flex-direction: column;
+  flex-direction: row; /* جنب بعض */
   justify-content: center;
   align-items: center;
   position: absolute;
   top: 10px;
-  left: 10px;
-  cursor: grab;
+  right: 10px; /* بعيد عن نص السؤال */
+  cursor: pointer;
   z-index: 10;
+  gap: 6px; /* المسافة بين الأسهم */
+  opacity: 1; /* تظهر دائمًا */
 }
 
-.drag-icon .arrow {
+.q-card .drag-icon .arrow {
   width: 0;
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  margin: 4px 0;
+  margin: 0;
   transition: transform 0.2s;
 }
 
 /* السهم للأعلى */
-.drag-icon .arrow.up {
+.q-card .drag-icon .arrow.up {
   border-bottom: 12px solid #0072ff;
 }
 
 /* السهم للأسفل */
-.drag-icon .arrow.down {
+.q-card .drag-icon .arrow.down {
   border-top: 12px solid #0072ff;
 }
 
-/* تكبير عند الهور */
-.drag-icon:hover .arrow {
+/* تكبير عند hover */
+.q-card .drag-icon:hover .arrow {
   transform: scale(1.3);
 }
 
+
+
+  
 .modal-content.big{
 width:95%;
 max-width:500px;
