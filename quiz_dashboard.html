@@ -1154,7 +1154,14 @@ function openEdit(i){
     document.getElementById("editOpt2").value = q.options[1] || ""
     document.getElementById("editOpt3").value = q.options[2] || ""
     document.getElementById("editOpt4").value = q.options[3] || ""
-    document.getElementById("editAnswer").value = q.answer
+
+    // ضبط الإجابة المحددة
+    selectedEditAnswer = q.answer
+    let all = document.querySelectorAll("#editAnswerNumber div");
+    all.forEach(el => el.classList.remove("active"));
+    if(selectedEditAnswer){
+        document.querySelector(`#editAnswerNumber div[data-value="${selectedEditAnswer}"]`).classList.add("active")
+    }
 
     // النص
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
@@ -1178,8 +1185,8 @@ function openEdit(i){
             preview.style.display = "block"
             document.getElementById("editImgText").innerText = "📸 " + file.name
         }else{
-            preview.style.display = "none"
-            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+            preview.style.display = q.image ? "block" : "none"
+            document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
         }
     }
 }
