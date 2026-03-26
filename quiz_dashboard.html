@@ -292,17 +292,7 @@ color:#fff;
 border-color:#0072ff;
 }
   
-.q-header span:first-child{
-font-weight:bold;
-}
 
-.q-header span{
-transition:0.3s;
-}
-
-.q-header span:hover{
-transform:scale(1.2);
-}
 .q-header{
 display:flex;
 justify-content:space-between;
@@ -1019,15 +1009,9 @@ div.draggable = true
 
   
 div.innerHTML = `
-<div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between; align-items:center;">
-    
-    <span>سؤال ${i+1}</span>
-
-    <div style="display:flex; align-items:center; gap:10px;">
-        <span style="font-size:18px; cursor:grab;">↕️</span>
-        <span id="arrow-${i}">▼</span>
-    </div>
-
+<div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
+<span>سؤال ${i+1}</span>
+<span id="arrow-${i}">▼</span>
 </div>
 
 <div class="q-body" id="body-${i}" style="display:block;">
@@ -1155,16 +1139,7 @@ function openEdit(i){
     document.getElementById("editOpt2").value = q.options[1] || ""
     document.getElementById("editOpt3").value = q.options[2] || ""
     document.getElementById("editOpt4").value = q.options[3] || ""
-    // 👇 ضبط الإجابة المختارة
-selectedEditAnswer = q.answer
-
-let all = document.querySelectorAll("#editAnswerOptions div")
-all.forEach(el => el.classList.remove("active"))
-
-let selected = document.querySelector(`#editAnswerOptions div[data-value="${q.answer}"]`)
-if(selected){
-    selected.classList.add("active")
-}
+    document.getElementById("editAnswer").value = q.answer
 
     // النص
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
@@ -1209,8 +1184,7 @@ if(newImage){
 q.image = await uploadImage(newImage)
 }
 
-q.answer = selectedEditAnswer
- 
+q.question = document.getElementById("editQuestionText").value
 
 q.options = [
 document.getElementById("editOpt1").value,
@@ -1245,8 +1219,7 @@ hideLoader()
 alert("الإجابة غير صحيحة")
 return
 }
-  selectedEditAnswer = null
-document.querySelectorAll("#editAnswerOptions div").forEach(el => el.classList.remove("active"))
+  
 }
 
 
@@ -1303,13 +1276,13 @@ modal.style.display = "none"
 
 </div>
 
-<label>الإجابة الصحيحة</label>
-<div class="answer-options" id="editAnswerOptions">
-  <div onclick="selectEditAnswer(1)" data-value="1">1</div>
-  <div onclick="selectEditAnswer(2)" data-value="2">2</div>
-  <div onclick="selectEditAnswer(3)" data-value="3">3</div>
-  <div onclick="selectEditAnswer(4)" data-value="4">4</div>
-</div>
+<select id="editAnswer">
+<option value="">اختر الإجابة</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
 
 <div class="modal-actions">
 <button onclick="saveEdit()">💾 حفظ</button>
@@ -1330,4 +1303,3 @@ modal.style.display = "none"
 </div>
 </body>
 </html>
-
