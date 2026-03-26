@@ -1189,19 +1189,7 @@ if(questions.length === 0){
 }
 
 
-// الحركة السلسة للأعلى
-function moveQuestionUp(index) {
-  if (index === 0) return;
-  [questions[index - 1], questions[index]] = [questions[index], questions[index - 1]];
-  renderQuestions();
-}
 
-// الحركة السلسة للأسفل
-function moveQuestionDown(index) {
-  if (index === questions.length - 1) return;
-  [questions[index], questions[index + 1]] = [questions[index + 1], questions[index]];
-  renderQuestions();
-}
 
 
 function toggleQuestion(i){
