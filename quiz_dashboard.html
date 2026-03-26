@@ -130,7 +130,31 @@ text-align:center;
 }
 
 
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
 
+.modal-content{
+background:#fff;
+padding:20px;
+border-radius:15px;
+width:90%;
+max-width:400px;
+}
+
+.modal-content input,
+.modal-content select{
+margin-top:10px;
+}
   
   .questions-container{
 margin-top:15px;
@@ -203,6 +227,50 @@ flex-direction:column;
 z-index:9999;
 }
 
+
+
+.q-header{
+display:flex;
+justify-content:space-between;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.q-text{
+font-size:16px;
+margin-bottom:10px;
+}
+
+.q-options{
+list-style:none;
+padding:0;
+}
+
+.q-options li{
+background:#f1f1f1;
+margin:5px 0;
+padding:8px;
+border-radius:8px;
+}
+
+.q-options li.correct{
+background:#d4edda;
+color:#155724;
+font-weight:bold;
+}
+
+.q-img{
+width:100%;
+max-height:200px;
+object-fit:cover;
+border-radius:10px;
+margin:10px 0;
+}
+
+
+
+
+  
 .error{
 background: linear-gradient(135deg,#43cea2,#185a9d);
 color:#fff;
@@ -672,12 +740,28 @@ let div = document.createElement("div")
 div.className = "q-card"
 div.draggable = true
 
+  
 div.innerHTML = `
-<b>سؤال ${i+1}:</b> ${q.question}
-<p>${q.options.join(" - ")}</p>
+<div class="q-header">
+<span>سؤال ${i+1}</span>
+</div>
+
+<div class="q-body">
+<p class="q-text">${q.question}</p>
+
+${q.image ? `<img src="${q.image}" class="q-img">` : ""}
+
+<ul class="q-options">
+${q.options.map((opt,idx)=>`
+<li class="${q.answer == idx+1 ? 'correct' : ''}">
+${idx+1}) ${opt}
+</li>
+`).join("")}
+</ul>
+</div>
 
 <div class="q-actions">
-<button class="editBtn" onclick="editQuestion(${i})">تعديل</button>
+<button class="editBtn" onclick="openEdit(${i})">تعديل</button>
 <button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
 </div>
 `
@@ -723,7 +807,95 @@ editIndex = i
 questions.splice(i,1)
 renderQuestions()
 }
+
+
+
+
+
+
+  let currentEditIndex = null;
+
+function openEdit(i){
+
+currentEditIndex = i
+let q = questions[i]
+
+document.getElementById("editModal").style.display="flex"
+
+document.getElementById("editQuestionText").value = q.question
+document.getElementById("editOpt1").value = q.options[0] || ""
+document.getElementById("editOpt2").value = q.options[1] || ""
+document.getElementById("editOpt3").value = q.options[2] || ""
+document.getElementById("editOpt4").value = q.options[3] || ""
+document.getElementById("editAnswer").value = q.answer
+}
+
+function closeEdit(){
+document.getElementById("editModal").style.display="none"
+}
+
+async function saveEdit(){
+
+let q = questions[currentEditIndex]
+
+let newImage = document.getElementById("editImage").files[0]
+
+if(newImage){
+q.image = await uploadImage(newImage)
+}
+
+q.question = document.getElementById("editQuestionText").value
+q.options = [
+document.getElementById("editOpt1").value,
+document.getElementById("editOpt2").value,
+document.getElementById("editOpt3").value,
+document.getElementById("editOpt4").value
+].filter(Boolean)
+
+q.answer = parseInt(document.getElementById("editAnswer").value)
+
+closeEdit()
+renderQuestions()
+}
+  
 </script>
+
+
+
+
+
+  
+<div id="editModal" class="modal">
+
+<div class="modal-content">
+
+<h3>تعديل السؤال</h3>
+
+<input id="editQuestionText">
+
+<input id="editOpt1">
+<input id="editOpt2">
+<input id="editOpt3">
+<input id="editOpt4">
+
+<select id="editAnswer">
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
+
+<input type="file" id="editImage">
+
+<div class="modal-actions">
+<button onclick="saveEdit()">💾 حفظ</button>
+<button onclick="closeEdit()">❌ إلغاء</button>
+</div>
+
+</div>
+</div>
+
+
   
 <div id="loader">
   <div class="spinner"></div>
