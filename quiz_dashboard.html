@@ -171,7 +171,6 @@ padding:15px;
 margin-top:10px;
 border-radius:15px;
 box-shadow:0 5px 15px rgba(0,0,0,0.2);
-cursor:grab;
 transition:0.3s;
 }
 .q-card:hover{
@@ -416,11 +415,7 @@ to{opacity:1; transform:translateY(0);}
 
 
 
-.q-header span:first-child{
-cursor:grab;
-opacity:0.7;
-transition:0.3s;
-}
+
 
 .q-header span:first-child:hover{
 opacity:1;
@@ -486,6 +481,19 @@ font-size:14px;
 padding:10px;
 }
 
+.q-header button{
+background:#fff;
+border:none;
+border-radius:6px;
+padding:5px 8px;
+cursor:pointer;
+font-weight:bold;
+}
+
+.q-header button:hover{
+transform:scale(1.1);
+}
+  
 h2{
 font-size:18px;
 }
@@ -1038,8 +1046,12 @@ div.innerHTML = `
 <div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
     
     <div style="display:flex; gap:10px; align-items:center;">
-        <span class="drag-handle"> ⋮⋮ ⬆⬇</span>
-        <span onclick="toggleQuestion(${i})" style="cursor:pointer;">سؤال ${i+1}</span>
+        <button onclick="moveUp(${i})" ${i === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬆</button>
+        <button onclick="moveDown(${i})" ${i === questions.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬇</button>
+
+        <span onclick="toggleQuestion(${i})" style="cursor:pointer;">
+            سؤال ${i+1}
+        </span>
     </div>
 
     <span onclick="toggleQuestion(${i})" style="cursor:pointer;">▼</span>
@@ -1085,6 +1097,32 @@ btn.style.display = questions.length === 0 ? "none" : "block"
 
 }
 
+
+
+
+function moveUp(index){
+    if(index <= 0) return;
+
+    let temp = questions[index];
+    questions[index] = questions[index - 1];
+    questions[index - 1] = temp;
+
+    renderQuestions();
+}
+
+function moveDown(index){
+    if(index >= questions.length - 1) return;
+
+    let temp = questions[index];
+    questions[index] = questions[index + 1];
+    questions[index + 1] = temp;
+
+    renderQuestions();
+}
+
+
+
+  
 function toggleQuestion(i){
 
 let body = document.getElementById("body-"+i)
