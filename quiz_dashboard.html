@@ -964,13 +964,13 @@ q.image = await uploadImage(newImage)
 q.question = document.getElementById("editQuestionText").value
 
 q.options = [
-editOpt1.value,
-editOpt2.value,
-editOpt3.value,
-editOpt4.value
+document.getElementById("editOpt1").value,
+document.getElementById("editOpt2").value,
+document.getElementById("editOpt3").value,
+document.getElementById("editOpt4").value
 ].filter(Boolean)
 
-q.answer = parseInt(editAnswer.value)
+q.answer = parseInt(document.getElementById("editAnswer").value)
 
 closeEdit()
 renderQuestions()
