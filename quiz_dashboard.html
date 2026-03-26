@@ -263,18 +263,7 @@ transform:scale(0.95);
 transition:transform 0.2s, box-shadow 0.2s;
 }
 
-.drag-handle {
-  cursor: grab;
-  margin-right: 10px;
-  font-size: 18px;
-  user-select: none;
-}
-.q-card.dragging .drag-handle {
-  cursor: grabbing;
-}
-  .q-card {
-  transition: transform 0.3s ease, box-shadow 0.2s ease, margin 0.3s ease;
-}
+
 .answer-options{
 display:grid;
 grid-template-columns: repeat(4,1fr);
@@ -532,8 +521,7 @@ max-width:1100px;
 <input type="file" id="questionImage" accept="image/*" hidden>
 
 <div class="options">
-<button type="button" onclick="addNewOption()">➕ إضافة اختيار</button>
-<button type="button" onclick="removeNewOption()">➖ إزالة اختيار</button>
+
 <label>اختيار 1</label>
 <input id="opt1">
 
@@ -668,46 +656,7 @@ reader.readAsDataURL(file)
 })
 }
 
-let selectedNewAnswer = null;
 
-function selectNewAnswer(num){
-  selectedNewAnswer = num;
-  let all = document.querySelectorAll("#answerNumber div");
-  all.forEach(el => el.classList.remove("active"));
-  document.querySelector(`#answerNumber div[data-value="${num}"]`).classList.add("active");
-}
-
-function addNewOption(){
-  const container = document.querySelector(".section .options");
-  const count = container.querySelectorAll("input").length;
-  if(count < 6){
-    const input = document.createElement("input");
-    input.placeholder = `اختيار ${count+1}`;
-    container.appendChild(input);
-
-    const answerDiv = document.createElement("div");
-    answerDiv.setAttribute("data-value", count+1);
-    answerDiv.innerText = count+1;
-    answerDiv.onclick = ()=> selectNewAnswer(count+1);
-    document.getElementById("answerNumber").appendChild(answerDiv);
-  }
-}
-
-function removeNewOption(){
-  const container = document.querySelector(".section .options");
-  const inputs = container.querySelectorAll("input");
-  if(inputs.length > 2){
-    container.removeChild(inputs[inputs.length-1]);
-
-    const answerDivs = document.querySelectorAll("#answerNumber div");
-    const last = answerDivs[answerDivs.length-1];
-    last.parentNode.removeChild(last);
-
-    if(selectedNewAnswer === answerDivs.length+1){
-      selectedNewAnswer = null;
-    }
-  }
-}
 
 async function uploadImage(file){
 
@@ -954,6 +903,7 @@ document.getElementById("opt1").value=""
 document.getElementById("opt2").value=""
 document.getElementById("opt3").value=""
 document.getElementById("opt4").value=""
+document.getElementById("answerNumber").value=""
 document.getElementById("questionImage").value=""
 
 document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
@@ -1034,10 +984,9 @@ div.draggable = true
 
   
 div.innerHTML = `
-<div class="q-header" onclick="toggleQuestion(${i})" style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;">
-  <div class="drag-handle">☰</div> <!-- أيقونة السحب -->
-  <span>سؤال ${i+1}</span>
-  <span id="arrow-${i}">▼</span>
+<div class="q-header" onclick="toggleQuestion(${i})" style="cursor:pointer; display:flex; justify-content:space-between;">
+<span>سؤال ${i+1}</span>
+<span id="arrow-${i}">▼</span>
 </div>
 
 <div class="q-body" id="body-${i}" style="display:block;">
@@ -1071,9 +1020,9 @@ e.dataTransfer.effectAllowed = "move"
 }
 
 div.ondragend = ()=>{
-    div.classList.remove("dragging");
-    renderQuestions(); // إعادة رسم العناصر لإظهار حركة السحب سلسة
+div.classList.remove("dragging")
 }
+
 div.ondragover = (e)=> e.preventDefault()
 
 div.ondrop = (e)=>{
@@ -1154,14 +1103,7 @@ function openEdit(i){
     document.getElementById("editOpt2").value = q.options[1] || ""
     document.getElementById("editOpt3").value = q.options[2] || ""
     document.getElementById("editOpt4").value = q.options[3] || ""
-
-    // ضبط الإجابة المحددة
-    selectedEditAnswer = q.answer
-    let all = document.querySelectorAll("#editAnswerNumber div");
-    all.forEach(el => el.classList.remove("active"));
-    if(selectedEditAnswer){
-        document.querySelector(`#editAnswerNumber div[data-value="${selectedEditAnswer}"]`).classList.add("active")
-    }
+    document.getElementById("editAnswer").value = q.answer
 
     // النص
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
@@ -1185,14 +1127,12 @@ function openEdit(i){
             preview.style.display = "block"
             document.getElementById("editImgText").innerText = "📸 " + file.name
         }else{
-            preview.style.display = q.image ? "block" : "none"
-            document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
+            preview.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
         }
     }
 }
 
-
-  
 
 async function saveEdit(){
 
@@ -1215,14 +1155,9 @@ document.getElementById("editOpt1").value,
 document.getElementById("editOpt2").value,
 document.getElementById("editOpt3").value,
 document.getElementById("editOpt4").value
-].filter(Boolean);
+].filter(Boolean)
 
-const extraInputs = document.querySelectorAll("#editModal .options input");
-for(let i=4;i<extraInputs.length;i++){
-    if(extraInputs[i].value) q.options.push(extraInputs[i].value)
-}
-
-q.answer = selectedEditAnswer
+q.answer = parseInt(document.getElementById("editAnswer").value)
 
 closeEdit()
 renderQuestions()
@@ -1250,64 +1185,6 @@ return
 }
   
 }
-
-
-
-
-
-
-
-
-function addOption(){
-  const container = document.querySelector("#editModal .options");
-  const count = container.querySelectorAll("input").length;
-  if(count < 6){ // أقصى عدد اختيارات
-    const input = document.createElement("input");
-    input.placeholder = `اختيار ${count+1}`;
-    input.style.marginTop = "6px"; // يضع الخيار الجديد تحت السابق مباشرة
-    container.appendChild(input);
-    
-    const answerDiv = document.createElement("div");
-    answerDiv.setAttribute("data-value", count+1);
-    answerDiv.innerText = count+1;
-    answerDiv.onclick = ()=> selectEditAnswer(count+1);
-    document.getElementById("editAnswerNumber").appendChild(answerDiv);
-  }
-}
-
-
-
-
-  
-function removeOption(){
-  const container = document.querySelector("#editModal .options");
-  const inputs = container.querySelectorAll("input");
-  if(inputs.length > 2){ // أقل عدد اختيارات
-    container.removeChild(inputs[inputs.length-1]);
-    
-    const answerDivs = document.querySelectorAll("#editAnswerNumber div");
-    const last = answerDivs[answerDivs.length-1];
-    last.parentNode.removeChild(last);
-
-    if(selectedEditAnswer === answerDivs.length+1){
-      selectedEditAnswer = null;
-    }
-  }
-}
-  
-
-let selectedEditAnswer = null;
-
-function selectEditAnswer(num){
-  selectedEditAnswer = num;
-  let all = document.querySelectorAll("#editAnswerNumber div");
-  all.forEach(el => el.classList.remove("active"));
-  document.querySelector(`#editAnswerNumber div[data-value="${num}"]`).classList.add("active");
-}
-
-
-
-  
 function closeEdit(){
   document.getElementById("editModal").style.display="none";
   currentEditIndex = null;
@@ -1341,8 +1218,7 @@ modal.style.display = "none"
 <input type="file" id="editImage" hidden>
 
 <div class="options">
-<button type="button" onclick="addOption()">➕ إضافة اختيار</button>
-<button type="button" onclick="removeOption()">➖ إزالة اختيار</button>
+
 <input id="editOpt1" placeholder="اختيار 1">
 <input id="editOpt2" placeholder="اختيار 2">
 <input id="editOpt3" placeholder="اختيار 3">
@@ -1350,12 +1226,13 @@ modal.style.display = "none"
 
 </div>
 
-<div class="answer-options" id="editAnswerNumber">
-  <div onclick="selectEditAnswer(1)" data-value="1">1</div>
-  <div onclick="selectEditAnswer(2)" data-value="2">2</div>
-  <div onclick="selectEditAnswer(3)" data-value="3">3</div>
-  <div onclick="selectEditAnswer(4)" data-value="4">4</div>
-</div>
+<select id="editAnswer">
+<option value="">اختر الإجابة</option>
+<option value="1">1</option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+</select>
 
 <div class="modal-actions">
 <button onclick="saveEdit()">💾 حفظ</button>
@@ -1376,3 +1253,4 @@ modal.style.display = "none"
 </div>
 </body>
 </html>
+
