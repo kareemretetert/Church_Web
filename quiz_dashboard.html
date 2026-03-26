@@ -1139,12 +1139,20 @@ function openEdit(i){
 
     document.getElementById("editModal").style.display="flex"
 
+    // نص السؤال والاختيارات
     document.getElementById("editQuestionText").value = q.question
     document.getElementById("editOpt1").value = q.options[0] || ""
     document.getElementById("editOpt2").value = q.options[1] || ""
     document.getElementById("editOpt3").value = q.options[2] || ""
     document.getElementById("editOpt4").value = q.options[3] || ""
-    document.getElementById("editAnswer").value = q.answer
+
+    // ✅ اختيار الإجابة الصحيحة تلقائيًا
+    editSelectedAnswer = q.answer
+    document.querySelectorAll("#editAnswerOptions div").forEach(el => el.classList.remove("active"))
+    if(q.answer){
+        const activeDiv = document.querySelector(`#editAnswerOptions div[data-value="${q.answer}"]`)
+        if(activeDiv) activeDiv.classList.add("active")
+    }
 
     // النص
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
@@ -1175,6 +1183,20 @@ function openEdit(i){
 }
 
 
+
+let editSelectedAnswer = null;
+
+function selectEditAnswer(num){
+    editSelectedAnswer = num;
+
+    let all = document.querySelectorAll("#editAnswerOptions div");
+    all.forEach(el => el.classList.remove("active"));
+
+    document.querySelector(`#editAnswerOptions div[data-value="${num}"]`).classList.add("active");
+}
+
+
+  
 async function saveEdit(){
 
 showLoader()
@@ -1189,7 +1211,13 @@ if(newImage){
 q.image = await uploadImage(newImage)
 }
 
-q.question = document.getElementById("editQuestionText").value
+if(!editSelectedAnswer){
+    hideLoader();
+    alert("اختر الإجابة الصحيحة");
+    return;
+}
+
+q.answer = editSelectedAnswer;
 
 q.options = [
 document.getElementById("editOpt1").value,
@@ -1281,13 +1309,13 @@ modal.style.display = "none"
 
 </div>
 
-<select id="editAnswer">
-<option value="">اختر الإجابة</option>
-<option value="1">1</option>
-<option value="2">2</option>
-<option value="3">3</option>
-<option value="4">4</option>
-</select>
+<label>الإجابة الصحيحة</label>
+<div class="answer-options" id="editAnswerOptions">
+  <div data-value="1" onclick="selectEditAnswer(1)">1</div>
+  <div data-value="2" onclick="selectEditAnswer(2)">2</div>
+  <div data-value="3" onclick="selectEditAnswer(3)">3</div>
+  <div data-value="4" onclick="selectEditAnswer(4)">4</div>
+</div>
 
 <div class="modal-actions">
 <button onclick="saveEdit()">💾 حفظ</button>
