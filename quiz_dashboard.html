@@ -1215,7 +1215,12 @@ document.getElementById("editOpt1").value,
 document.getElementById("editOpt2").value,
 document.getElementById("editOpt3").value,
 document.getElementById("editOpt4").value
-].filter(Boolean)
+].filter(Boolean);
+
+const extraInputs = document.querySelectorAll("#editModal .options input");
+for(let i=4;i<extraInputs.length;i++){
+    if(extraInputs[i].value) q.options.push(extraInputs[i].value)
+}
 
 q.answer = selectedEditAnswer
 
@@ -1248,12 +1253,18 @@ return
 
 
 
+
+
+
+
+
 function addOption(){
   const container = document.querySelector("#editModal .options");
   const count = container.querySelectorAll("input").length;
   if(count < 6){ // أقصى عدد اختيارات
     const input = document.createElement("input");
     input.placeholder = `اختيار ${count+1}`;
+    input.style.marginTop = "6px"; // يضع الخيار الجديد تحت السابق مباشرة
     container.appendChild(input);
     
     const answerDiv = document.createElement("div");
@@ -1264,6 +1275,10 @@ function addOption(){
   }
 }
 
+
+
+
+  
 function removeOption(){
   const container = document.querySelector("#editModal .options");
   const inputs = container.querySelectorAll("input");
