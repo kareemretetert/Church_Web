@@ -291,7 +291,45 @@ color:#fff;
 border-color:#0072ff;
 }
   
+.q-card{
+transition:0.2s ease;
+cursor:default;
+}
 
+/* Hover عام للكارت */
+.q-card:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* النصوص والاختيارات */
+.q-text, .q-options li{
+cursor:text;
+}
+
+/* الصور */
+.q-img{
+cursor:zoom-in;
+transition:0.2s;
+}
+
+.q-img:hover{
+transform:scale(1.02);
+}
+
+/* الأزرار */
+.q-actions button,
+.q-header button{
+cursor:pointer;
+}
+
+/* drag handle لو موجود */
+.drag-handle{
+cursor:grab;
+}
+  .q-card{
+-webkit-tap-highlight-color: transparent;
+}
 .q-header{
 display:flex;
 justify-content:space-between;
@@ -1046,8 +1084,8 @@ div.innerHTML = `
 <div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
     
     <div style="display:flex; gap:10px; align-items:center;">
-        <button onclick="moveUp(${i})" ${i === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬆</button>
-        <button onclick="moveDown(${i})" ${i === questions.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬇</button>
+        <button onclick="moveUp(${i})"title="اضغط لنقل السؤال لأعلى" ${i === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬆</button>
+        <button onclick="moveDown(${i})"title="اضغط لنقل السؤال لأسفل" ${i === questions.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬇</button>
 
         <span onclick="toggleQuestion(${i})" style="cursor:pointer;">
             سؤال ${i+1}
