@@ -96,7 +96,16 @@ box-shadow:0 5px 20px rgba(0,0,0,0.3);
 .options{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:6px;
+gap:3px;
+}
+
+.options label{
+margin-top:5px;
+}
+
+.options input{
+margin-top:2px;
+padding:10px;
 }
 
   @media (max-width:600px){
@@ -394,9 +403,17 @@ justify-content:space-between;
 align-items:center;
 font-weight:bold;
 background:#f1f1f1;
-padding:10px;
+padding:8px;
 border-radius:10px;
 cursor:pointer;
+gap:5px;
+}
+
+.q-header button{
+margin:0;
+padding:4px 6px;
+min-width:30px;
+min-height:30px;
 }
 
   
@@ -701,7 +718,9 @@ touch-action: manipulation;
 </div>
 
 <input type="file" id="questionImage" accept="image/*" hidden>
-
+<button id="removeImageBtn" style="display:none;background:#ff4b2b;color:#fff;border:none;padding:10px;border-radius:10px;margin-top:8px;cursor:pointer;">
+🗑 حذف الصورة
+</button>
 <div class="options">
 
 <label>اختيار 1</label>
@@ -1074,7 +1093,7 @@ hidden = false
   
 document.getElementById("questionsList").style.display = "block"
 document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
-  renderQuestions()
+renderQuestions()
 forceShowQuestions()
 hideLoader()
 alert("تم نشر الامتحان 🎉")
@@ -1135,7 +1154,7 @@ document.getElementById("questionImage").value=""
 
 document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
 
-  selectedAnswer = null
+selectedAnswer = null
 document.querySelectorAll(".answer-options div").forEach(el => el.classList.remove("active"))
 }
 
@@ -1181,12 +1200,22 @@ document.getElementById("questionImage").onchange = function () {
 
 let file = this.files[0]
 let text = document.getElementById("imgText")
+let removeBtn = document.getElementById("removeImageBtn")
 
 if(file){
 text.innerText = "📸 " + file.name
+removeBtn.style.display = "block"
 }else{
 text.innerText = "لم يتم اختيار صورة"
+removeBtn.style.display = "none"
 }
+
+}
+  document.getElementById("removeImageBtn").onclick = function(){
+
+document.getElementById("questionImage").value = ""
+document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
+this.style.display = "none"
 
 }
 
@@ -1219,7 +1248,7 @@ div.draggable = true
 div.innerHTML = `
 <div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
     
-    <div style="display:flex; gap:10px; align-items:center;">
+    <div style="display:flex; gap:4px; align-items:center;">
         <button onclick="moveUp(${i})"title="اضغط لنقل السؤال لأعلى" ${i === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬆</button>
         <button onclick="moveDown(${i})"title="اضغط لنقل السؤال لأسفل" ${i === questions.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬇</button>
 
@@ -1371,30 +1400,45 @@ function openEdit(i){
 
     // المعاينة
     let preview = document.getElementById("editPreview")
+  let removeBtn = document.getElementById("removeEditImageBtn")
     if(q.image){
         preview.src = q.image
         preview.style.display = "block"
+      removeBtn.style.display = "block"
     }else{
-        preview.style.display = "none"
-    }
+preview.style.display = "none"
+removeBtn.style.display = "none"
+}
 
     // ربط تغيير الصورة مباشرة
     let input = document.getElementById("editImage")
     input.value = "" // مهم جداً
     input.onchange = function (){
-        let file = this.files[0]
-        if(file){
-            preview.src = URL.createObjectURL(file)
-            preview.style.display = "block"
-            document.getElementById("editImgText").innerText = "📸 " + file.name
-        }else{
-            preview.style.display = "none"
-            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-        }
-    }
+
+let file = this.files[0]
+
+if(file){
+preview.src = URL.createObjectURL(file)
+preview.style.display = "block"
+document.getElementById("editImgText").innerText = "📸 " + file.name
+removeBtn.style.display = "block"
+}else{
+preview.style.display = "none"
+document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+removeBtn.style.display = "none"
 }
 
+}
+}
 
+document.getElementById("removeEditImageBtn").onclick = function(){
+
+document.getElementById("editImage").value = ""
+document.getElementById("editPreview").style.display = "none"
+document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+this.style.display = "none"
+
+}
 
 let editSelectedAnswer = null;
 
@@ -1481,7 +1525,7 @@ function closeEdit(){
   currentEditIndex = null;
 }
 
-  window.onclick = function(e){
+window.onclick = function(e){
 let modal = document.getElementById("editModal")
 if(e.target == modal){
 modal.style.display = "none"
@@ -1506,8 +1550,10 @@ modal.style.display = "none"
 <div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
 <div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
   <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
-<input type="file" id="editImage" hidden>
-
+<input type="file" id="editImage" hidden> 
+<button id="removeEditImageBtn" style="display:none;background:#ff4b2b;color:#fff;border:none;padding:10px;border-radius:10px;margin-top:8px;cursor:pointer;">
+🗑 حذف الصورة
+</button>
 <div class="options">
 
 <input id="editOpt1" placeholder="اختيار 1">
