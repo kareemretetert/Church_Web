@@ -1198,61 +1198,57 @@ function selectEditAnswer(num){
 
   
 async function saveEdit(){
+    showLoader()
 
-showLoader()
+    try{
+        let q = questions[currentEditIndex]
 
-try{
+        // إذا تم اختيار صورة جديدة
+        let newImage = document.getElementById("editImage").files[0]
+        if(newImage){
+            q.image = await uploadImage(newImage)
+        }
 
-let q = questions[currentEditIndex]
+        // تحقق من اختيار الإجابة
+        if(!editSelectedAnswer){
+            hideLoader();
+            alert("اختر الإجابة الصحيحة");
+            return;
+        }
 
-let newImage = document.getElementById("editImage").files[0]
+        // حفظ الإجابة الصحيحة
+        q.answer = editSelectedAnswer
 
-if(newImage){
-q.image = await uploadImage(newImage)
-}
+        // حفظ الاختيارات
+        q.options = [
+            document.getElementById("editOpt1").value,
+            document.getElementById("editOpt2").value,
+            document.getElementById("editOpt3").value,
+            document.getElementById("editOpt4").value
+        ].filter(Boolean)
 
-if(!editSelectedAnswer){
-    hideLoader();
-    alert("اختر الإجابة الصحيحة");
-    return;
-}
+        // تحقق من صحة السؤال والخيارات
+        if(!q.question || q.options.length < 2){
+            hideLoader()
+            alert("لازم سؤال واختيارين على الأقل")
+            return
+        }
 
-q.answer = editSelectedAnswer;
+        if(q.answer < 1 || q.answer > q.options.length){
+            hideLoader()
+            alert("الإجابة غير صحيحة")
+            return
+        }
 
-q.options = [
-document.getElementById("editOpt1").value,
-document.getElementById("editOpt2").value,
-document.getElementById("editOpt3").value,
-document.getElementById("editOpt4").value
-].filter(Boolean)
+        closeEdit()
+        renderQuestions()
+        hideLoader()
 
-q.answer = parseInt(document.getElementById("editAnswer").value)
-
-closeEdit()
-renderQuestions()
-
-hideLoader()
-
-}catch(e){
-hideLoader()
-alert("فشل التعديل")
-console.log(e)
-}
-
-
-
-if(!q.question || q.options.length < 2){
-hideLoader()
-alert("لازم سؤال واختيارين على الأقل")
-return
-}
-
-if(!q.answer || q.answer > q.options.length){
-hideLoader()
-alert("الإجابة غير صحيحة")
-return
-}
-  
+    }catch(e){
+        hideLoader()
+        alert("فشل التعديل")
+        console.log(e)
+    }
 }
 
 
