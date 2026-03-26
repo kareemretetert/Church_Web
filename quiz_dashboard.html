@@ -374,44 +374,6 @@ outline:none;
 
 
 
-/* أيقونات السحب داخل كارد السؤال */
-.q-card .drag-icon {
-  display: flex;
-  flex-direction: row; /* جنب بعض */
-  justify-content: center;
-  align-items: center;
-  position: absolute;
-  top: 10px;
-  right: 10px; /* بعيد عن نص السؤال */
-  cursor: pointer;
-  z-index: 10;
-  gap: 6px; /* المسافة بين الأسهم */
-  opacity: 1; /* تظهر دائمًا */
-}
-
-.q-card .drag-icon .arrow {
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  margin: 0;
-  transition: transform 0.2s;
-}
-
-/* السهم للأعلى */
-.q-card .drag-icon .arrow.up {
-  border-bottom: 12px solid #0072ff;
-}
-
-/* السهم للأسفل */
-.q-card .drag-icon .arrow.down {
-  border-top: 12px solid #0072ff;
-}
-
-/* تكبير عند hover */
-.q-card .drag-icon:hover .arrow {
-  transform: scale(1.3);
-}
 
 
 
