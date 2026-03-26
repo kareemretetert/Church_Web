@@ -548,9 +548,9 @@ max-width:1100px;
 <div id="errorBox" class="error"></div>
 <p id="qCount">عدد الأسئلة: 0</p>
 
- <button onclick="toggleQuestions()" id="toggleBtn">
+ <button onclick="toggleQuestions()" id="toggleBtn" style="display:none;">
 إخفاء الأسئلة
-</button> 
+</button>
 <div id="questionsList"></div>
   
 <button onclick="publishQuiz()">نشر الامتحان</button>
@@ -844,11 +844,22 @@ await updateJSONFile(quizzes)
 
 renderQuiz()
 
-questions=[]
-  localStorage.removeItem("questionsDraft")
-  localStorage.removeItem("quizTitle")
+// 🧹 مسح كل البيانات
+questions = []
+
+localStorage.removeItem("questionsDraft")
+localStorage.removeItem("quizTitle")
 localStorage.removeItem("quizTime")
-document.getElementById("qCount").innerText="عدد الأسئلة: 0"
+
+// 🧹 تصفير الحقول
+document.getElementById("quizTitle").value = ""
+document.getElementById("quizTime").value = 30
+
+clearFields()
+
+// 🧹 تحديث الواجهة
+renderQuestions()
+document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
 
 hideLoader()
 alert("تم نشر الامتحان 🎉")
@@ -938,7 +949,7 @@ document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
 // 🧹 إخفاء أي رسالة خطأ
 hideError()
 
-
+document.getElementById("toggleBtn").style.display = "none"
 
 }
 
@@ -1041,6 +1052,17 @@ container.appendChild(div)
 
 document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
   localStorage.setItem("questionsDraft", JSON.stringify(questions))
+
+
+  let btn = document.getElementById("toggleBtn")
+
+if(questions.length === 0){
+    btn.style.display = "none"
+}else{
+    btn.style.display = "block"
+}
+
+  
 }
 
 
