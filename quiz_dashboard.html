@@ -126,7 +126,10 @@ button.reset-btn{
 background: linear-gradient(135deg,#ff416c,#ff4b2b);
 }
   
-
+.options label{
+margin-top:6px;
+font-size:13px;
+}
   
 /* زرار رفع */
 .upload-btn{
@@ -435,7 +438,23 @@ outline:none;
 }
 
 
+@media(max-width:600px){
 
+.options{
+gap:4px;
+}
+
+.options label{
+margin-top:5px;
+font-size:12px;
+}
+
+.options input{
+margin-top:2px;
+padding:8px;
+}
+
+}
 
 .modal-content.big{
 width:95%;
@@ -657,7 +676,10 @@ grid-template-columns:repeat(2,1fr);
 }
 
 }
-
+.options input{
+margin-top:2px;
+padding:10px;
+}
 @media (min-width:1200px){
 .section{
 max-width:900px;
