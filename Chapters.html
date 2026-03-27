@@ -50,7 +50,7 @@ font-size:15px;
 background:rgba(255,255,255,0.9);
 }
 .activeBtn{
-background: linear-gradient(145deg,#43cea2,#185a9d);
+background: linear-gradient(135deg,#43cea2,#185a9d);
 box-shadow:0 0 10px rgba(255,255,255,0.6);
 transform:scale(1.05);
 }
@@ -168,9 +168,20 @@ const videoFrame = document.getElementById("videoFrame");
 
 function setType(type){
   currentType = type;
+
+  // إزالة التفعيل من الكل
+  document.getElementById("newBtn").classList.remove("activeBtn");
+  document.getElementById("oldBtn").classList.remove("activeBtn");
+
+  // تفعيل الزر المختار
+  if(type === "new"){
+    document.getElementById("newBtn").classList.add("activeBtn");
+  }else{
+    document.getElementById("oldBtn").classList.add("activeBtn");
+  }
+
   loadBooks();
 }
-
 function loadBooks(){
   booksSelect.innerHTML = "";
 
