@@ -1370,7 +1370,6 @@ renderQuestions()
   let currentEditIndex = null;
 
 function openEdit(i){
-  imageRemoved = false
     currentEditIndex = i
     let q = questions[i]
 
@@ -1393,13 +1392,7 @@ function openEdit(i){
 
     // النص
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
-let removeBtn = document.getElementById("removeEditImgBtn")
 
-if(q.image){
-removeBtn.style.display = "block"
-}else{
-removeBtn.style.display = "none"
-}
     // المعاينة
     let preview = document.getElementById("editPreview")
     if(q.image){
@@ -1412,44 +1405,20 @@ removeBtn.style.display = "none"
     // ربط تغيير الصورة مباشرة
     let input = document.getElementById("editImage")
     input.value = "" // مهم جداً
-   input.onchange = function (){
-let file = this.files[0]
-let preview = document.getElementById("editPreview")
-let btn = document.getElementById("removeEditImgBtn")
-
-if(file){
-preview.src = URL.createObjectURL(file)
-preview.style.display = "block"
-document.getElementById("editImgText").innerText = "📸 " + file.name
-btn.style.display = "block"
-}else{
-preview.style.display = "none"
-document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-btn.style.display = "none"
+    input.onchange = function (){
+        let file = this.files[0]
+        if(file){
+            preview.src = URL.createObjectURL(file)
+            preview.style.display = "block"
+            document.getElementById("editImgText").innerText = "📸 " + file.name
+        }else{
+            preview.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+        }
+    }
 }
-}
-}
-let currentEditIndex = null;
-let imageRemoved = false;
-document.getElementById("removeEditImgBtn").onclick = function(){
 
-// تفريغ اختيار الملف
-document.getElementById("editImage").value = ""
 
-// تحديث النص
-document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-
-// إخفاء المعاينة
-let preview = document.getElementById("editPreview")
-preview.src = ""
-preview.style.display = "none"
-
-// نخزن إن المستخدم حذف الصورة
-imageRemoved = true
-
-// إخفاء الزرار
-this.style.display = "none"
-}
 
 let editSelectedAnswer = null;
 
@@ -1471,13 +1440,10 @@ async function saveEdit(){
         let q = questions[currentEditIndex]
 
         // إذا تم اختيار صورة جديدة
-       let newImage = document.getElementById("editImage").files[0]
-
-if(newImage){
-    q.image = await uploadImage(newImage)
-}else if(imageRemoved){
-    q.image = ""
-}
+        let newImage = document.getElementById("editImage").files[0]
+        if(newImage){
+            q.image = await uploadImage(newImage)
+        }
 
         // تحقق من اختيار الإجابة
         if(!editSelectedAnswer){
@@ -1565,9 +1531,7 @@ modal.style.display = "none"
 <div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
   <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
 <input type="file" id="editImage" accept="image/*" hidden>
-<button id="removeEditImgBtn" style="display:none; background:#ff416c;">
-حذف الصورة
-</button>
+
 <div class="options">
 
 <input id="editOpt1" placeholder="اختيار 1">
@@ -1604,7 +1568,6 @@ modal.style.display = "none"
 </div>
 </body>
 </html>
-
 
 
 
