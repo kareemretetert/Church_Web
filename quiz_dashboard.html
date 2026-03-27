@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar">
 <head>
@@ -145,28 +146,6 @@ cursor:pointer;
 transition:0.3s;
 }
 
-
-  
-/* زرار حذف الصورة */
-#removeEditImgBtn {
-    display: none;           /* يختفي افتراضياً */
-    background-color: #ff416c;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    font-size: 14px;
-}
-
-/* تغيير لون الزر عند المرور عليه */
-#removeEditImgBtn:hover {
-    background-color: #ff1f4b;
-}
-
-
-  
 .upload-btn:hover{
 transform:scale(1.05);
 }
@@ -714,68 +693,7 @@ margin:auto;
 button, .upload-btn, .answer-options div{
 touch-action: manipulation;
 }  
-
-
-
-  /* تعديل كرت تعديل السؤال */
-#editModal .modal-content {
-    background: rgba(255, 255, 255, 0.95); /* خلفية شبه شفافة */
-    backdrop-filter: blur(15px);           /* ضبابية خلفية لطيفة */
-    border-radius: 20px;                    /* حواف مستديرة */
-    padding: 20px;                          /* مسافة داخلية */
-    max-width: 500px;                        /* أقصى عرض للكرت */
-    width: 90%;                              /* عرض نسبي للشاشة */
-    max-height: 90vh;                        /* ارتفاع نسبي للشاشة */
-    overflow-y: auto;                        /* تمرير إذا المحتوى طويل */
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* ظل للكرت */
-    animation: fade 0.3s ease-in-out;        /* حركة ظهور ناعمة */
-}
-
-/* الزرار داخل كرت التعديل */
-#editModal .modal-content button {
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 15px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-#editModal .modal-content button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-}
-
-/* النصوص داخل كرت التعديل */
-#editModal .modal-content input,
-#editModal .modal-content select,
-#editModal .modal-content textarea {
-    width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    background: rgba(255,255,255,0.9);
-    font-size: 14px;
-    box-sizing: border-box;
-    transition: 0.3s;
-}
-
-#editModal .modal-content input:focus,
-#editModal .modal-content select:focus,
-#editModal .modal-content textarea:focus {
-    transform: scale(1.02);
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    outline: none;
-}
-
-/* معاينة الصورة */
-#editModal #editPreview {
-    width: 100%;
-    margin-top: 10px;
-    border-radius: 10px;
-    display: block;
-}
+  
 </style>
 </head>
 
@@ -1348,7 +1266,7 @@ div.innerHTML = `
 </div>
 
 <div class="q-actions">
-    <button class="editBtn" onclick="/* زرار حذف الصورة */ #removeEditImgBtn { (${i})">تعديل</button>
+    <button class="editBtn" onclick="openEdit(${i})">تعديل</button>
     <button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
 </div>
 `
@@ -1452,71 +1370,51 @@ renderQuestions()
 
   let currentEditIndex = null;
 
-function /* زرار حذف الصورة */ #removeEditImgBtn { (i){
+function openEdit(i){
     currentEditIndex = i
     let q = questions[i]
 
     document.getElementById("editModal").style.display="flex"
 
-    // نص السؤال
+    // نص السؤال والاختيارات
     document.getElementById("editQuestionText").value = q.question
     document.getElementById("editOpt1").value = q.options[0] || ""
     document.getElementById("editOpt2").value = q.options[1] || ""
     document.getElementById("editOpt3").value = q.options[2] || ""
     document.getElementById("editOpt4").value = q.options[3] || ""
 
-    // الإجابة
+    // ✅ اختيار الإجابة الصحيحة تلقائيًا
     editSelectedAnswer = q.answer
-
-    document.querySelectorAll("#editAnswerOptions div")
-        .forEach(el => el.classList.remove("active"))
-
+    document.querySelectorAll("#editAnswerOptions div").forEach(el => el.classList.remove("active"))
     if(q.answer){
-        let activeDiv = document.querySelector(
-            `#editAnswerOptions div[data-value="${q.answer}"]`
-        )
+        const activeDiv = document.querySelector(`#editAnswerOptions div[data-value="${q.answer}"]`)
         if(activeDiv) activeDiv.classList.add("active")
     }
 
     // النص
-    document.getElementById("editImgText").innerText =
-        q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
+    document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
 
+    // المعاينة
     let preview = document.getElementById("editPreview")
-    let removeBtn = document.getElementById("removeEditImgBtn")
-
-    // عرض الصورة
     if(q.image){
         preview.src = q.image
         preview.style.display = "block"
-        removeBtn.style.display = "block"
     }else{
         preview.style.display = "none"
-        removeBtn.style.display = "none"
     }
 
-    // رفع صورة
+    // ربط تغيير الصورة مباشرة
     let input = document.getElementById("editImage")
-    input.value = ""
-
-    input.onchange = function(){
-
+    input.value = "" // مهم جداً
+    input.onchange = function (){
         let file = this.files[0]
-
         if(file){
             preview.src = URL.createObjectURL(file)
             preview.style.display = "block"
-
-            document.getElementById("editImgText").innerText =
-                "📸 " + file.name
-
-            removeBtn.style.display = "block"
+            document.getElementById("editImgText").innerText = "📸 " + file.name
         }else{
             preview.style.display = "none"
-            document.getElementById("editImgText").innerText =
-                "لم يتم اختيار صورة"
-
-            removeBtn.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
         }
     }
 }
@@ -1634,10 +1532,7 @@ modal.style.display = "none"
 <div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
   <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
 <input type="file" id="editImage" accept="image/*" hidden>
-<button id="removeEditImgBtn"
-style="display:none; background:#ff416c; margin-top:10px;">
-🗑️ حذف الصورة
-</button>
+
 <div class="options">
 
 <input id="editOpt1" placeholder="اختيار 1">
