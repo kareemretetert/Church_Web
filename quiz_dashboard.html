@@ -1466,14 +1466,17 @@ function openEdit(i){
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
 
     // المعاينة
-    let preview = document.getElementById("editPreview")
-    if(q.image){
-        preview.src = q.image
-        preview.style.display = "block"
-    }else{
-        preview.style.display = "none"
-    }
+   let preview = document.getElementById("editPreview")
+let deleteBtn = document.getElementById("deleteEditImg")
 
+if(q.image){
+    preview.src = q.image
+    preview.style.display = "block"
+    deleteBtn.style.display = "block" // 👈 يظهر
+}else{
+    preview.style.display = "none"
+    deleteBtn.style.display = "none"
+}
     // ربط تغيير الصورة مباشرة
     let input = document.getElementById("editImage")
     input.value = "" // مهم جداً
@@ -1583,6 +1586,23 @@ if(e.target == modal){
 modal.style.display = "none"
 }
 }
+
+  document.getElementById("deleteEditImg").onclick = function(){
+    let preview = document.getElementById("editPreview")
+
+    preview.src = ""
+    preview.style.display = "none"
+
+    document.getElementById("editImage").value = ""
+    document.getElementById("editImgText").innerText = "تم حذف الصورة"
+
+    // 👇 مهم: نحذف من الداتا
+    if(currentEditIndex !== null){
+        questions[currentEditIndex].image = ""
+    }
+
+    this.style.display = "none"
+}
 </script>
 
 
@@ -1602,6 +1622,9 @@ modal.style.display = "none"
 <div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
 <div class="upload-text" id="editImgText"style="color:black;">لم يتم اختيار صورة</div>
   <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
+  <button id="deleteEditImg" style="background:#ff416c; margin-top:10px; display:none;">
+🗑️ حذف الصورة
+</button>
 <input type="file" id="editImage" accept="image/*" hidden>
 
 <div class="options">
