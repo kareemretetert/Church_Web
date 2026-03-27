@@ -96,7 +96,24 @@ box-shadow:0 5px 20px rgba(0,0,0,0.3);
 .options{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:5px;
+}
+
+.options input{
+margin-top:3px; /* بدل 6px */
+padding:10px;   /* بدل 14px */
+font-size:14px;
+}
+  @media(max-width:600px){
+.options{
+grid-template-columns:1fr 1fr;
+gap:4px;
+}
+
+.options input{
+padding:8px;
+font-size:13px;
+}
 }
 
 @media(max-width:600px){
