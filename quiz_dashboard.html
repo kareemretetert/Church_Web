@@ -70,26 +70,7 @@ transform:scale(1.02);
 box-shadow:0 0 10px rgba(255,255,255,0.5);
 outline:none;
 }
-#lightbox {
-    display: none;
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background: rgba(0,0,0,0.8);
-    justify-content:center;
-    align-items:center;
-    z-index:10000;
-}
 
-#lightbox img {
-    max-width: 90%;
-    max-height: 90%;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    cursor: zoom-out;
-}
 /* أزرار */
 button{
 width:100%;
@@ -769,26 +750,6 @@ touch-action: manipulation;
     margin-top: 10px;
     border-radius: 10px;
     display: block;
-}
-    #lightbox{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background: rgba(0,0,0,0.8);
-  justify-content:center;
-  align-items:center;
-  z-index:10000;
-  cursor: zoom-out;
-}
-
-#lightbox img{
-  max-width:90%;
-  max-height:90%;
-  border-radius:10px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.5);
 }
 </style>
 </head>
@@ -1608,30 +1569,6 @@ if(e.target == modal){
 modal.style.display = "none"
 }
 }
-
- // كل الصور اللي نقدر نكبرها
-function initLightbox(){
-  document.querySelectorAll('.q-img, #editPreview').forEach(img=>{
-    img.style.cursor = 'zoom-in';
-    img.onclick = ()=>{
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-
-      lightboxImg.src = img.src;
-      lightbox.style.display = 'flex';
-    }
-  });
-
-  // إغلاق الـ Lightbox لما تضغط على أي مكان
-  const lightbox = document.getElementById('lightbox');
-  lightbox.onclick = ()=>{
-    lightbox.style.display = 'none';
-  }
-}
-
-// نفّذها بعد أي عملية عرض أو تحديث للأسئلة
-initLightbox();
-    
 </script>
 
 
@@ -1687,13 +1624,5 @@ initLightbox();
 قد يستغرق الأمر بعض الوقت
 </p>
 </div>
-
-
-<!-- Lightbox -->
-<div id="lightbox">
-  <img id="lightbox-img">
-</div>
 </body>
 </html>
-
-
