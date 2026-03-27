@@ -1373,72 +1373,114 @@ renderQuestions()
 
 
   let currentEditIndex = null;
-
+  
+let editSelectedAnswer = null;
 function openEdit(i){
-    currentEditIndex = i
-    let q = questions[i]
 
-    document.getElementById("editModal").style.display="flex"
+currentEditIndex = i
+let q = questions[i]
 
-    // نص السؤال والاختيارات
-    document.getElementById("editQuestionText").value = q.question
-    document.getElementById("editOpt1").value = q.options[0] || ""
-    document.getElementById("editOpt2").value = q.options[1] || ""
-    document.getElementById("editOpt3").value = q.options[2] || ""
-    document.getElementById("editOpt4").value = q.options[3] || ""
+document.getElementById("editModal").style.display="flex"
 
-    // ✅ اختيار الإجابة الصحيحة تلقائيًا
-    editSelectedAnswer = q.answer
-    document.querySelectorAll("#editAnswerOptions div").forEach(el => el.classList.remove("active"))
-    if(q.answer){
-        const activeDiv = document.querySelector(`#editAnswerOptions div[data-value="${q.answer}"]`)
-        if(activeDiv) activeDiv.classList.add("active")
-    }
+// السؤال
+document.getElementById("editQuestionText").value = q.question
 
-    // النص
-    document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
+// الاختيارات
+document.getElementById("editOpt1").value = q.options[0] || ""
+document.getElementById("editOpt2").value = q.options[1] || ""
+document.getElementById("editOpt3").value = q.options[2] || ""
+document.getElementById("editOpt4").value = q.options[3] || ""
 
-    // المعاينة
-    let preview = document.getElementById("editPreview")
-  let removeBtn = document.getElementById("removeEditImageBtn")
-    if(q.image){
-        preview.src = q.image
-        preview.style.display = "block"
-      removeBtn.style.display = "block"
-    }else{
-preview.style.display = "none"
-removeBtn.style.display = "none"
+// ===================
+// الإجابة الصحيحة
+// ===================
+
+editSelectedAnswer = q.answer
+
+document.querySelectorAll("#editAnswerOptions div")
+.forEach(el => el.classList.remove("active"))
+
+let active = document.querySelector(
+`#editAnswerOptions div[data-value="${q.answer}"]`
+)
+
+if(active){
+active.classList.add("active")
 }
 
-    // ربط تغيير الصورة مباشرة
-    let input = document.getElementById("editImage")
-    input.value = "" // مهم جداً
-    input.onchange = function (){
+// ===================
+// الصورة
+// ===================
+
+let preview = document.getElementById("editPreview")
+let removeBtn = document.getElementById("removeEditImageBtn")
+let text = document.getElementById("editImgText")
+
+if(q.image){
+
+preview.src = q.image
+preview.style.display = "block"
+
+text.innerText = "📸 يوجد صورة حالية"
+removeBtn.style.display = "block"
+
+}else{
+
+preview.style.display = "none"
+text.innerText = "لم يتم اختيار صورة"
+removeBtn.style.display = "none"
+
+}
+
+// ===================
+// تغيير الصورة
+// ===================
+
+let input = document.getElementById("editImage")
+
+input.value = ""
+
+input.onchange = function(){
 
 let file = this.files[0]
 
 if(file){
+
 preview.src = URL.createObjectURL(file)
 preview.style.display = "block"
-document.getElementById("editImgText").innerText = "📸 " + file.name
+
+text.innerText = "📸 " + file.name
 removeBtn.style.display = "block"
+
 }else{
+
 preview.style.display = "none"
-document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+text.innerText = "لم يتم اختيار صورة"
 removeBtn.style.display = "none"
+
 }
 
 }
+
+// ===================
+// حذف الصورة
+// ===================
+
+removeBtn.onclick = function(){
+
+input.value = ""
+
+preview.style.display = "none"
+text.innerText = "لم يتم اختيار صورة"
+
+removeBtn.style.display = "none"
+
+q.image = ""
+
 }
 
-document.getElementById("removeEditImageBtn").onclick = function(){
-
-document.getElementById("editImage").value = ""
-document.getElementById("editPreview").style.display = "none"
-document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-this.style.display = "none"
-
 }
+
 
 let editSelectedAnswer = null;
 
