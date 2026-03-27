@@ -6,72 +6,90 @@
 <title>تفسير الكتاب المقدس</title>
 
 <style>
-body {
-    font-family: 'Segoe UI', Tahoma;
-    background: linear-gradient(#0b1a4a,#0e2a7a);
-    color: white;
-    margin: 0;
-    direction: rtl;
+body{
+font-family:Tajawal, Tahoma;
+direction:rtl;
+margin:0;
+padding:20px;
+
+background: linear-gradient(-45deg, #667eea, #764ba2, #43cea2, #185a9d);
+background-size: 400% 400%;
+animation: gradientBG 10s ease infinite;
 }
 
-header {
-    background: #3f51b5;
-    padding: 15px;
-    text-align: center;
-    font-size: 22px;
+@keyframes gradientBG{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
 }
 
-.container {
-    padding: 15px;
+.container{
+max-width:720px;
+margin:auto;
+padding:25px;
+border-radius:20px;
+background: rgba(255,255,255,0.15);
+backdrop-filter: blur(15px);
+-webkit-backdrop-filter: blur(15px);
+box-shadow:0 10px 40px rgba(0,0,0,0.3);
+border:1px solid rgba(255,255,255,0.2);
 }
 
-.show {
-    cursor: pointer;
-    background: #ccc;
-    border-radius: 12px;
-    padding: 10px 20px;
-    margin: 5px;
-    border: none;
-    font-size: 16px;
+h2{
+text-align:center;
+color:#fff;
 }
 
-.cli {
-    background: white;
+select{
+width:100%;
+padding:14px;
+margin-top:10px;
+border-radius:12px;
+border:none;
+font-size:15px;
+background:rgba(255,255,255,0.9);
 }
 
-select {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 10px;
-    font-size: 16px;
+button{
+width:100%;
+margin-top:10px;
+padding:14px;
+border:none;
+border-radius:15px;
+font-size:16px;
+cursor:pointer;
+background: linear-gradient(135deg,#00c6ff,#0072ff);
+color:white;
 }
 
-#videoContainer {
-    margin-top: 20px;
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%;
+button:hover{
+transform:scale(1.05);
 }
 
-#videoContainer iframe {
-    position: absolute;
-    width: 100%;
-    height: 100%;
+#videoContainer{
+margin-top:20px;
+position:relative;
+width:100%;
+padding-bottom:56.25%;
+border-radius:15px;
+overflow:hidden;
+}
+
+#videoContainer iframe{
+position:absolute;
+width:100%;
+height:100%;
 }
 
 </style>
 </head>
 <body>
 
-<header>تفسير الكتاب المقدس</header>
-
 <div class="container">
+<h2>تفسير الكتاب المقدس</h2>
 
-<div style="text-align:center;">
-<button class="show cli" id="newBtn">العهد الجديد</button>
-<button class="show" id="oldBtn">العهد القديم</button>
-</div>
+<button onclick="setType('new')">📗 العهد الجديد</button>
+<button onclick="setType('old')">📘 العهد القديم</button>
 
 <select id="booksSelect"></select>
 <select id="chapterSelect"></select>
@@ -85,13 +103,13 @@ select {
 <script>
 
 const data = {
-  "new": {
+  new: {
     "إنجيل متى": {
       playlist: "PLxMXV9f8dTBXwNeuQZ_R61TqLXKU84BWq",
       chapters: 28
     }
   },
-  "old": {
+  old: {
     "سفر التكوين": {
       playlist: "PLxMXV9f8dTBXwNeuQZ_R61TqLXKU84BWq",
       chapters: 50
@@ -105,28 +123,33 @@ const booksSelect = document.getElementById("booksSelect");
 const chapterSelect = document.getElementById("chapterSelect");
 const videoFrame = document.getElementById("videoFrame");
 
-function loadBooks() {
+function setType(type){
+  currentType = type;
+  loadBooks();
+}
+
+function loadBooks(){
   booksSelect.innerHTML = "";
 
-  Object.keys(data[currentType]).forEach(book => {
+  Object.keys(data[currentType]).forEach(book=>{
     const option = document.createElement("option");
-    option.textContent = book;
     option.value = book;
+    option.textContent = book;
     booksSelect.appendChild(option);
   });
 
   loadChapters();
 }
 
-function loadChapters() {
+function loadChapters(){
   chapterSelect.innerHTML = "";
 
   const book = booksSelect.value;
   const chapters = data[currentType][book].chapters;
 
-  for (let i = 1; i <= chapters; i++) {
+  for(let i=1;i<=chapters;i++){
     const option = document.createElement("option");
-    option.value = i - 1;
+    option.value = i-1;
     option.textContent = "الإصحاح " + i;
     chapterSelect.appendChild(option);
   }
@@ -134,7 +157,7 @@ function loadChapters() {
   playVideo();
 }
 
-function playVideo() {
+function playVideo(){
   const book = booksSelect.value;
   const index = chapterSelect.value;
   const list = data[currentType][book].playlist;
@@ -144,18 +167,6 @@ function playVideo() {
 
 booksSelect.addEventListener("change", loadChapters);
 chapterSelect.addEventListener("change", playVideo);
-
-// buttons
-
-document.getElementById("newBtn").onclick = () => {
-  currentType = "new";
-  loadBooks();
-};
-
-document.getElementById("oldBtn").onclick = () => {
-  currentType = "old";
-  loadBooks();
-};
 
 loadBooks();
 
