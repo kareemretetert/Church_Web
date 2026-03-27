@@ -750,7 +750,17 @@ cursor:zoom-out;
     outline: none;
 }
 
+.fade-out{
+animation: fadeOut 0.4s forwards;
+}
 
+@keyframes fadeOut{
+to{
+opacity:0;
+transform:scale(0.7) rotate(3deg);
+filter:blur(2px);
+}
+}
 </style>
 </head>
 
@@ -1413,8 +1423,19 @@ document.getElementById("answerNumber").value = q.answer
 editIndex = i
 }
   function deleteQuestion(i){
-questions.splice(i,1)
-renderQuestions()
+
+let cards = document.querySelectorAll(".q-card")
+let card = cards[i]
+
+// شغل الانيميشن
+card.classList.add("fade-out")
+
+// استنى الانيميشن يخلص
+setTimeout(()=>{
+    questions.splice(i,1)
+    renderQuestions()
+},400)
+
 }
 
 
@@ -1467,28 +1488,20 @@ deleteBtn.onclick = function(){
 
     preview.classList.add("fade-out")
 
-setTimeout(()=>{
-    preview.src = ""
-    preview.style.display = "none"
-    preview.classList.remove("fade-out")
+    setTimeout(()=>{
+        preview.src = ""
+        preview.style.display = "none"
+        preview.classList.remove("fade-out")
 
-    document.getElementById("editImage").value = ""
-    document.getElementById("editImgText").innerText = "تم حذف الصورة"
+        document.getElementById("editImage").value = ""
+        document.getElementById("editImgText").innerText = "تم حذف الصورة"
 
-    if(currentEditIndex !== null){
-        questions[currentEditIndex].image = ""
-    }
+        if(currentEditIndex !== null){
+            questions[currentEditIndex].image = ""
+        }
 
-    deleteBtn.style.display = "none"
-},400)
-    document.getElementById("editImage").value = ""
-    document.getElementById("editImgText").innerText = "تم حذف الصورة"
-
-    if(currentEditIndex !== null){
-        questions[currentEditIndex].image = ""
-    }
-
-    deleteBtn.style.display = "none"
+        deleteBtn.style.display = "none"
+    },400)
 }
 
 // 👇 رفع صورة جديدة
