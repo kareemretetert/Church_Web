@@ -91,7 +91,7 @@ height:100%;
 </style>
 </head>
 <body>
-
+<h3 id="title" style="color:white;text-align:center;"></h3>
 <div class="container">
 <h2>تفسير الكتاب المقدس</h2>
 
@@ -170,13 +170,22 @@ function playVideo(){
   const index = chapterSelect.value;
   const list = data[currentType][book].playlist;
 
+  document.getElementById("title").innerText =
+    book + " - الإصحاح " + (parseInt(index)+1);
+
   videoFrame.src = `https://www.youtube.com/embed/videoseries?list=${list}&index=${index}`;
+    localStorage.setItem("lastVideo", videoFrame.src);
 }
 
 booksSelect.addEventListener("change", loadChapters);
 chapterSelect.addEventListener("change", playVideo);
 
 loadBooks();
+
+const saved = localStorage.getItem("lastVideo");
+if(saved){
+  videoFrame.src = saved;
+}
 
 </script>
 
