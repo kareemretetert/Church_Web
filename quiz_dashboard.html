@@ -1418,24 +1418,21 @@ function openEdit(i){
 
     input.onchange = function (){
 
-        let file = this.files[0]
+let file = this.files[0]
+let preview = document.getElementById("editPreview")
+let removeBtn = document.getElementById("removeEditImgBtn")
 
-        if(file){
-            preview.src = URL.createObjectURL(file)
-            preview.style.display = "block"
-            document.getElementById("editImgText").innerText =
-                "📸 " + file.name
-
-            removeBtn.style.display = "block"
-
-        }else{
-            preview.style.display = "none"
-            document.getElementById("editImgText").innerText =
-                "لم يتم اختيار صورة"
-
-            removeBtn.style.display = "none"
-        }
-    }
+if(file){
+    preview.src = URL.createObjectURL(file)
+    preview.style.display = "block"
+    document.getElementById("editImgText").innerText = "📸 " + file.name
+    removeBtn.style.display = "block"
+}else{
+    preview.style.display = "none"
+    document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+    removeBtn.style.display = "none"
+}
+}
 }
 
 document.getElementById("removeEditImgBtn").onclick = function(){
