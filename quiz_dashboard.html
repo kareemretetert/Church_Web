@@ -1469,28 +1469,53 @@ function openEdit(i){
    let preview = document.getElementById("editPreview")
 let deleteBtn = document.getElementById("deleteEditImg")
 
+// عرض الصورة
 if(q.image){
     preview.src = q.image
     preview.style.display = "block"
-    deleteBtn.style.display = "block" // 👈 يظهر
+    deleteBtn.style.display = "block"
 }else{
     preview.style.display = "none"
     deleteBtn.style.display = "none"
 }
-    // ربط تغيير الصورة مباشرة
-    let input = document.getElementById("editImage")
-    input.value = "" // مهم جداً
-    input.onchange = function (){
-        let file = this.files[0]
-        if(file){
-            preview.src = URL.createObjectURL(file)
-            preview.style.display = "block"
-            document.getElementById("editImgText").innerText = "📸 " + file.name
-        }else{
-            preview.style.display = "none"
-            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-        }
+
+// 👇 ربط زر الحذف هنا
+deleteBtn.onclick = function(){
+
+    preview.src = ""
+    preview.style.display = "none"
+
+    document.getElementById("editImage").value = ""
+    document.getElementById("editImgText").innerText = "تم حذف الصورة"
+
+    if(currentEditIndex !== null){
+        questions[currentEditIndex].image = ""
     }
+
+    deleteBtn.style.display = "none"
+}
+
+// 👇 رفع صورة جديدة
+let input = document.getElementById("editImage")
+input.value = ""
+
+input.onchange = function (){
+    let file = this.files[0]
+
+    if(file){
+        preview.src = URL.createObjectURL(file)
+        preview.style.display = "block"
+
+        document.getElementById("editImgText").innerText = "📸 " + file.name
+
+        deleteBtn.style.display = "block" // 👈 دي أهم سطر كان ناقص
+    }else{
+        preview.style.display = "none"
+        document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+
+        deleteBtn.style.display = "none"
+    }
+}
 }
 
 
@@ -1587,22 +1612,7 @@ modal.style.display = "none"
 }
 }
 
-  document.getElementById("deleteEditImg").onclick = function(){
-    let preview = document.getElementById("editPreview")
-
-    preview.src = ""
-    preview.style.display = "none"
-
-    document.getElementById("editImage").value = ""
-    document.getElementById("editImgText").innerText = "تم حذف الصورة"
-
-    // 👇 مهم: نحذف من الداتا
-    if(currentEditIndex !== null){
-        questions[currentEditIndex].image = ""
-    }
-
-    this.style.display = "none"
-}
+  
 </script>
 
 
