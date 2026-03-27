@@ -1370,6 +1370,7 @@ renderQuestions()
   let currentEditIndex = null;
 
 function openEdit(i){
+  imageRemoved = false
     currentEditIndex = i
     let q = questions[i]
 
@@ -1428,18 +1429,25 @@ btn.style.display = "none"
 }
 }
 }
-
+let currentEditIndex = null;
+let imageRemoved = false;
 document.getElementById("removeEditImgBtn").onclick = function(){
 
+// تفريغ اختيار الملف
 document.getElementById("editImage").value = ""
+
+// تحديث النص
 document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
 
+// إخفاء المعاينة
 let preview = document.getElementById("editPreview")
+preview.src = ""
 preview.style.display = "none"
 
-// 👇 مهم جدًا
-questions[currentEditIndex].image = ""
+// نخزن إن المستخدم حذف الصورة
+imageRemoved = true
 
+// إخفاء الزرار
 this.style.display = "none"
 }
 
@@ -1463,10 +1471,13 @@ async function saveEdit(){
         let q = questions[currentEditIndex]
 
         // إذا تم اختيار صورة جديدة
-        let newImage = document.getElementById("editImage").files[0]
-        if(newImage){
-            q.image = await uploadImage(newImage)
-        }
+       let newImage = document.getElementById("editImage").files[0]
+
+if(newImage){
+    q.image = await uploadImage(newImage)
+}else if(imageRemoved){
+    q.image = ""
+}
 
         // تحقق من اختيار الإجابة
         if(!editSelectedAnswer){
