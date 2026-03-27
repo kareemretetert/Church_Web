@@ -49,7 +49,11 @@ border:none;
 font-size:15px;
 background:rgba(255,255,255,0.9);
 }
-
+.activeBtn{
+background: linear-gradient(135deg,#43cea2,#185a9d);
+box-shadow:0 0 10px rgba(255,255,255,0.6);
+transform:scale(1.05);
+}
 button{
 width:100%;
 margin-top:10px;
@@ -126,8 +130,8 @@ button{
 <div class="container">
 <h2>تفسير الكتاب المقدس</h2>
 
-<button onclick="setType('new')">📗 العهد الجديد</button>
-<button onclick="setType('old')">📘 العهد القديم</button>
+<button id="newBtn" onclick="setType('new')">📗 العهد الجديد</button>
+<button id="oldBtn" onclick="setType('old')">📘 العهد القديم</button>
 
 <select id="booksSelect"></select>
 <select id="chapterSelect"></select>
