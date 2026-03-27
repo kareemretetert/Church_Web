@@ -1,33 +1,5 @@
 [
   {
-    "title": "kareemفغفغعف",
-    "time": "30",
-    "questions": [
-      {
-        "question": "fgh",
-        "options": [
-          "fghgfh",
-          "gfh",
-          "gfhgfhgf",
-          "hgfhgfhgfh"
-        ],
-        "answer": 1,
-        "image": "https://res.cloudinary.com/ddiegmhji/image/upload/v1774542157/pyuljip8rp37vl5ozhb6.jpg"
-      },
-      {
-        "question": "dfgdfgdfg",
-        "options": [
-          "dfgdfg",
-          "dfgfdg",
-          "dfgdfgd",
-          "fgdfgdfg"
-        ],
-        "answer": 2,
-        "image": ""
-      }
-    ]
-  },
-  {
     "title": "امتحان شامل ",
     "time": "30",
     "questions": [
