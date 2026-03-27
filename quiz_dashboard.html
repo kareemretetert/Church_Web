@@ -1418,20 +1418,6 @@ function openEdit(i){
     }
 }
 
-  document.getElementById("removeEditImgBtn").onclick = function(){
-
-let q = questions[currentEditIndex]
-
-q.image = ""
-
-document.getElementById("editPreview").style.display = "none"
-document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-
-this.style.display = "none"
-
-document.getElementById("editImage").value = ""
-
-}
 
 
 let editSelectedAnswer = null;
