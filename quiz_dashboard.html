@@ -751,6 +751,18 @@ touch-action: manipulation;
     border-radius: 10px;
     display: block;
 }
+  .q-img.zoomed{
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%) scale(1.5);
+max-width: 90%;
+max-height: 90%;
+z-index: 9999;
+cursor: zoom-out;
+box-shadow:0 10px 40px rgba(0,0,0,0.5);
+background:#fff;
+}
 </style>
 </head>
 
@@ -1311,7 +1323,7 @@ div.innerHTML = `
 <div class="q-body" id="body-${i}" style="display:block;">
     <p class="q-text">${q.question}</p>
 
-    ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
+    ${q.image ? `<img src="${q.image}" class="q-img" onclick="toggleZoom(this)">` : ""}
 
     <ul class="q-options">
         ${q.options.map((opt,idx)=>`
@@ -1348,7 +1360,9 @@ btn.style.display = questions.length === 0 ? "none" : "block"
 }
 
 
-
+function toggleZoom(img){
+img.classList.toggle("zoomed")
+}
 
 function moveUp(index){
     if(index <= 0) return;
