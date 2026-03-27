@@ -96,24 +96,9 @@ box-shadow:0 5px 20px rgba(0,0,0,0.3);
 .options{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:7px;
+gap:10px;
 }
 
-.options label{
-margin-top:12px;
-}
-
-.options input{
-margin-top:7px;
-padding:8px;
-}
-
-  @media (max-width:600px){
-.options{
-grid-template-columns:1fr;
-gap:8px;
-}
-}
 @media(max-width:600px){
 .options{
 grid-template-columns:1fr;
@@ -175,11 +160,7 @@ max-width:400px;
 .modal-content select{
 margin-top:10px;
 }
-
-  .q-header button{
-margin:0;
-border-radius:6px;
-}
+  
   .questions-container{
 margin-top:15px;
 }
@@ -403,17 +384,9 @@ justify-content:space-between;
 align-items:center;
 font-weight:bold;
 background:#f1f1f1;
-padding:8px;
+padding:10px;
 border-radius:10px;
 cursor:pointer;
-gap:5px;
-}
-
-.q-header button{
-margin:0;
-padding:4px 6px;
-min-width:30px;
-min-height:30px;
 }
 
   
@@ -718,9 +691,7 @@ touch-action: manipulation;
 </div>
 
 <input type="file" id="questionImage" accept="image/*" hidden>
-<button id="removeImageBtn" style="display:none;background:#ff4b2b;color:#fff;border:none;padding:10px;border-radius:10px;margin-top:8px;cursor:pointer;">
-🗑 حذف الصورة
-</button>
+
 <div class="options">
 
 <label>اختيار 1</label>
@@ -866,13 +837,7 @@ reader.readAsDataURL(file)
 
 async function uploadImage(file){
 
-try{
-
-// ⛔ منع الملفات الكبيرة جدًا
-if(file.size > 5 * 1024 * 1024){
-throw "الصورة كبيرة جدًا (أكبر من 5MB)"
-}
-
+// ✨ ضغط الصورة قبل الرفع
 const compressed = await compressImage(file)
 
 const url = "https://api.cloudinary.com/v1_1/ddiegmhji/image/upload"
@@ -881,31 +846,16 @@ const formData = new FormData()
 formData.append("file", compressed)
 formData.append("upload_preset", "my_upload")
 
-// ⛔ timeout يدوي
-const controller = new AbortController()
-const timeout = setTimeout(()=>controller.abort(), 20000)
-
 const res = await fetch(url,{
 method:"POST",
-body:formData,
-signal:controller.signal
+body:formData
 })
-
-clearTimeout(timeout)
 
 const data = await res.json()
 
-if(!data.secure_url){
-console.log(data)
-throw "رفع الصورة فشل - تحقق من Cloudinary preset"
-}
+if(!data.secure_url) throw "upload failed"
 
 return data.secure_url
-
-}catch(err){
-console.log("UPLOAD ERROR:", err)
-throw err
-}
 }
 
 
@@ -1093,7 +1043,7 @@ hidden = false
   
 document.getElementById("questionsList").style.display = "block"
 document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
-renderQuestions()
+  renderQuestions()
 forceShowQuestions()
 hideLoader()
 alert("تم نشر الامتحان 🎉")
@@ -1154,7 +1104,7 @@ document.getElementById("questionImage").value=""
 
 document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
 
-selectedAnswer = null
+  selectedAnswer = null
 document.querySelectorAll(".answer-options div").forEach(el => el.classList.remove("active"))
 }
 
@@ -1200,22 +1150,12 @@ document.getElementById("questionImage").onchange = function () {
 
 let file = this.files[0]
 let text = document.getElementById("imgText")
-let removeBtn = document.getElementById("removeImageBtn")
 
 if(file){
 text.innerText = "📸 " + file.name
-removeBtn.style.display = "block"
 }else{
 text.innerText = "لم يتم اختيار صورة"
-removeBtn.style.display = "none"
 }
-
-}
-  document.getElementById("removeImageBtn").onclick = function(){
-
-document.getElementById("questionImage").value = ""
-document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
-this.style.display = "none"
 
 }
 
@@ -1248,7 +1188,7 @@ div.draggable = true
 div.innerHTML = `
 <div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
     
-    <div style="display:flex; gap:4px; align-items:center;">
+    <div style="display:flex; gap:10px; align-items:center;">
         <button onclick="moveUp(${i})"title="اضغط لنقل السؤال لأعلى" ${i === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬆</button>
         <button onclick="moveDown(${i})"title="اضغط لنقل السؤال لأسفل" ${i === questions.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬇</button>
 
@@ -1373,113 +1313,56 @@ renderQuestions()
 
 
   let currentEditIndex = null;
-  
-let editSelectedAnswer = null;
+
 function openEdit(i){
+    currentEditIndex = i
+    let q = questions[i]
 
-currentEditIndex = i
-let q = questions[i]
+    document.getElementById("editModal").style.display="flex"
 
-document.getElementById("editModal").style.display="flex"
+    // نص السؤال والاختيارات
+    document.getElementById("editQuestionText").value = q.question
+    document.getElementById("editOpt1").value = q.options[0] || ""
+    document.getElementById("editOpt2").value = q.options[1] || ""
+    document.getElementById("editOpt3").value = q.options[2] || ""
+    document.getElementById("editOpt4").value = q.options[3] || ""
 
-// السؤال
-document.getElementById("editQuestionText").value = q.question
+    // ✅ اختيار الإجابة الصحيحة تلقائيًا
+    editSelectedAnswer = q.answer
+    document.querySelectorAll("#editAnswerOptions div").forEach(el => el.classList.remove("active"))
+    if(q.answer){
+        const activeDiv = document.querySelector(`#editAnswerOptions div[data-value="${q.answer}"]`)
+        if(activeDiv) activeDiv.classList.add("active")
+    }
 
-// الاختيارات
-document.getElementById("editOpt1").value = q.options[0] || ""
-document.getElementById("editOpt2").value = q.options[1] || ""
-document.getElementById("editOpt3").value = q.options[2] || ""
-document.getElementById("editOpt4").value = q.options[3] || ""
+    // النص
+    document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
 
-// ===================
-// الإجابة الصحيحة
-// ===================
+    // المعاينة
+    let preview = document.getElementById("editPreview")
+    if(q.image){
+        preview.src = q.image
+        preview.style.display = "block"
+    }else{
+        preview.style.display = "none"
+    }
 
-editSelectedAnswer = q.answer
-
-document.querySelectorAll("#editAnswerOptions div")
-.forEach(el => el.classList.remove("active"))
-
-let active = document.querySelector(
-`#editAnswerOptions div[data-value="${q.answer}"]`
-)
-
-if(active){
-active.classList.add("active")
+    // ربط تغيير الصورة مباشرة
+    let input = document.getElementById("editImage")
+    input.value = "" // مهم جداً
+    input.onchange = function (){
+        let file = this.files[0]
+        if(file){
+            preview.src = URL.createObjectURL(file)
+            preview.style.display = "block"
+            document.getElementById("editImgText").innerText = "📸 " + file.name
+        }else{
+            preview.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+        }
+    }
 }
 
-// ===================
-// الصورة
-// ===================
-
-let preview = document.getElementById("editPreview")
-let removeBtn = document.getElementById("removeEditImageBtn")
-let text = document.getElementById("editImgText")
-
-if(q.image){
-
-preview.src = q.image
-preview.style.display = "block"
-
-text.innerText = "📸 يوجد صورة حالية"
-removeBtn.style.display = "block"
-
-}else{
-
-preview.style.display = "none"
-text.innerText = "لم يتم اختيار صورة"
-removeBtn.style.display = "none"
-
-}
-
-// ===================
-// تغيير الصورة
-// ===================
-
-let input = document.getElementById("editImage")
-
-input.value = ""
-
-input.onchange = function(){
-
-let file = this.files[0]
-
-if(file){
-
-preview.src = URL.createObjectURL(file)
-preview.style.display = "block"
-
-text.innerText = "📸 " + file.name
-removeBtn.style.display = "block"
-
-}else{
-
-preview.style.display = "none"
-text.innerText = "لم يتم اختيار صورة"
-removeBtn.style.display = "none"
-
-}
-
-}
-
-// ===================
-// حذف الصورة
-// ===================
-
-removeBtn.onclick = function(){
-
-input.value = ""
-
-preview.style.display = "none"
-text.innerText = "لم يتم اختيار صورة"
-
-removeBtn.style.display = "none"
-
-q.image = ""
-
-}
-
-}
 
 
 let editSelectedAnswer = null;
@@ -1567,7 +1450,7 @@ function closeEdit(){
   currentEditIndex = null;
 }
 
-window.onclick = function(e){
+  window.onclick = function(e){
 let modal = document.getElementById("editModal")
 if(e.target == modal){
 modal.style.display = "none"
@@ -1592,10 +1475,8 @@ modal.style.display = "none"
 <div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
 <div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
   <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
-<input type="file" id="editImage" hidden> 
-<button id="removeEditImageBtn" style="display:none;background:#ff4b2b;color:#fff;border:none;padding:10px;border-radius:10px;margin-top:8px;cursor:pointer;">
-🗑 حذف الصورة
-</button>
+<input type="file" id="editImage" hidden>
+
 <div class="options">
 
 <input id="editOpt1" placeholder="اختيار 1">
