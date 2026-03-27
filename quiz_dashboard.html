@@ -731,7 +731,11 @@ touch-action: manipulation;
 <div class="upload-text" id="imgText">
 لم يتم اختيار صورة
 </div>
+<button id="removeImgBtn" style="display:none; background:#ff416c;">
+حذف الصورة
+</button>
 
+  
 <input type="file" id="questionImage" accept="image/*" hidden>
 
 <div class="options">
@@ -1192,11 +1196,14 @@ document.getElementById("questionImage").onchange = function () {
 
 let file = this.files[0]
 let text = document.getElementById("imgText")
+let btn = document.getElementById("removeImgBtn")
 
 if(file){
 text.innerText = "📸 " + file.name
+btn.style.display = "block" // 👈 يظهر الزرار
 }else{
 text.innerText = "لم يتم اختيار صورة"
+btn.style.display = "none"
 }
 
 }
@@ -1305,7 +1312,13 @@ function moveDown(index){
     renderQuestions();
 }
 
+document.getElementById("removeImgBtn").onclick = function(){
 
+document.getElementById("questionImage").value = ""
+document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
+
+this.style.display = "none"
+}
 
   
 function toggleQuestion(i){
