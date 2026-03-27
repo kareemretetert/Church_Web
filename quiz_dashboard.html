@@ -1392,7 +1392,13 @@ function openEdit(i){
 
     // النص
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
+let removeBtn = document.getElementById("removeEditImgBtn")
 
+if(q.image){
+removeBtn.style.display = "block"
+}else{
+removeBtn.style.display = "none"
+}
     // المعاينة
     let preview = document.getElementById("editPreview")
     if(q.image){
@@ -1405,20 +1411,37 @@ function openEdit(i){
     // ربط تغيير الصورة مباشرة
     let input = document.getElementById("editImage")
     input.value = "" // مهم جداً
-    input.onchange = function (){
-        let file = this.files[0]
-        if(file){
-            preview.src = URL.createObjectURL(file)
-            preview.style.display = "block"
-            document.getElementById("editImgText").innerText = "📸 " + file.name
-        }else{
-            preview.style.display = "none"
-            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-        }
-    }
+   input.onchange = function (){
+let file = this.files[0]
+let preview = document.getElementById("editPreview")
+let btn = document.getElementById("removeEditImgBtn")
+
+if(file){
+preview.src = URL.createObjectURL(file)
+preview.style.display = "block"
+document.getElementById("editImgText").innerText = "📸 " + file.name
+btn.style.display = "block"
+}else{
+preview.style.display = "none"
+document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+btn.style.display = "none"
+}
+}
 }
 
+document.getElementById("removeEditImgBtn").onclick = function(){
 
+document.getElementById("editImage").value = ""
+document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+
+let preview = document.getElementById("editPreview")
+preview.style.display = "none"
+
+// 👇 مهم جدًا
+questions[currentEditIndex].image = ""
+
+this.style.display = "none"
+}
 
 let editSelectedAnswer = null;
 
@@ -1531,7 +1554,9 @@ modal.style.display = "none"
 <div class="upload-text" id="editImgText">لم يتم اختيار صورة</div>
   <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
 <input type="file" id="editImage" accept="image/*" hidden>
-
+<button id="removeEditImgBtn" style="display:none; background:#ff416c;">
+حذف الصورة
+</button>
 <div class="options">
 
 <input id="editOpt1" placeholder="اختيار 1">
