@@ -1,154 +1,223 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>الكورسات الدينية</title>
+<title>الكورسات</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
+
+:root{
+--primary:#6a1b9a;
+--primary-dark:#4a148c;
+--bg:#0f172a;
+--card:rgba(255,255,255,0.05);
+--text:#fff;
+--muted:#cbd5e1;
+}
+
+*{box-sizing:border-box;}
+
 body{
-    font-family: Tahoma;
-    direction: rtl;
-    margin:0;
-    background: linear-gradient(135deg,#0f172a,#1e293b);
-    color:#fff;
+margin:0;
+font-family:'Cairo',sans-serif;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:var(--text);
 }
 
-/* هيدر */
-.header{
-    padding:20px;
-    text-align:center;
-    font-size:24px;
-    font-weight:bold;
-    background:rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
+/* 🔥 HEADER */
+header{
+text-align:center;
+padding:30px 10px;
+background:rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
 }
 
-/* جريد */
-.courses{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-    gap:25px;
-    padding:25px;
+header h1{
+margin:0;
+font-size:clamp(22px,5vw,32px);
 }
 
-/* كارت */
+/* 🔥 CONTAINER */
+.container{
+max-width:1200px;
+margin:25px auto;
+padding:15px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:20px;
+}
+
+/* 🔥 CARD */
 .card{
-    background:rgba(255,255,255,0.05);
-    border-radius:20px;
-    overflow:hidden;
-    backdrop-filter: blur(12px);
-    box-shadow:0 10px 25px rgba(0,0,0,0.3);
-    transition:0.4s;
-    transform:translateY(20px);
-    opacity:0;
+background:var(--card);
+padding:18px;
+border-radius:20px;
+backdrop-filter: blur(12px);
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+display:flex;
+flex-direction:column;
+transition:0.4s;
+transform:translateY(20px);
+opacity:0;
 }
 
-/* عند الظهور */
 .card.show{
-    transform:translateY(0);
-    opacity:1;
+transform:translateY(0);
+opacity:1;
 }
 
 .card:hover{
-    transform:scale(1.03);
+transform:scale(1.03);
 }
 
 /* صورة */
-.card img{
-    width:100%;
-    height:170px;
-    object-fit:cover;
+.course-img{
+width:100%;
+height:160px;
+object-fit:cover;
+border-radius:12px;
+margin-bottom:10px;
 }
 
-/* المحتوى */
-.card-content{
-    padding:15px;
+/* badge */
+.badge{
+background:rgba(255,255,255,0.1);
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+display:inline-block;
+margin-bottom:10px;
+width:fit-content;
 }
 
-.title{
-    font-size:18px;
-    font-weight:bold;
+/* title */
+.card h3{
+margin:5px 0;
+font-size:18px;
 }
 
-.desc{
-    font-size:14px;
-    color:#ccc;
-    margin:8px 0;
+/* description */
+.card p{
+color:var(--muted);
+font-size:14px;
+margin-bottom:12px;
+flex-grow:1;
 }
 
+/* instructor */
 .instructor{
-    font-size:13px;
-    color:#aaa;
+font-size:13px;
+color:#aaa;
+margin-bottom:10px;
 }
 
-/* زر */
-.btn{
-    display:block;
-    text-align:center;
-    background:linear-gradient(45deg,#8b5cf6,#6366f1);
-    color:white;
-    padding:10px;
-    margin:15px;
-    border-radius:12px;
-    text-decoration:none;
-    transition:0.3s;
+/* button */
+.start-btn{
+width:100%;
+padding:12px;
+border:none;
+border-radius:12px;
+background:linear-gradient(135deg,#8b5cf6,#6366f1);
+color:white;
+font-weight:bold;
+cursor:pointer;
+font-size:14px;
+margin-top:auto;
+transition:0.3s;
 }
 
-.btn:hover{
-    opacity:0.8;
+.start-btn:hover{
+opacity:0.85;
 }
+
+/* 📱 موبايل */
+@media(max-width:600px){
+
+header{
+padding:20px 10px;
+}
+
+.container{
+grid-template-columns:1fr;
+gap:12px;
+}
+
+.card{
+padding:15px;
+border-radius:15px;
+}
+
+.card h3{
+font-size:16px;
+}
+
+.start-btn{
+font-size:13px;
+padding:10px;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
-<div class="header">📚 الكورسات الدينية</div>
+<header>
+<h1>📚 الكورسات الدينية</h1>
+</header>
 
-<div class="courses" id="coursesContainer">
-</div>
+<div class="container" id="coursesContainer"></div>
 
 <script>
 
-const courses = [
-{
-    id:1,
-    title:"تفسير الكتاب المقدس",
-    description:"شرح مبسط وعميق لآيات الكتاب المقدس",
-    image:"https://via.placeholder.com/300x200",
-    instructor:"أبونا يوسف"
-},
-{
-    id:2,
-    title:"العقيدة المسيحية",
-    description:"فهم أساسيات الإيمان المسيحي",
-    image:"https://via.placeholder.com/300x200",
-    instructor:"أبونا داود"
-}
-];
+// 📥 تحميل الكورسات (نفس فكرة quiz.json)
+fetch("courses.json")
+.then(res=>res.json())
+.then(data=>{
 
-const container = document.getElementById("coursesContainer");
+const container=document.getElementById("coursesContainer")
 
-courses.forEach((course,index)=>{
-    container.innerHTML += `
-    <div class="card" style="transition-delay:${index * 0.1}s">
-        <img src="${course.image}">
-        <div class="card-content">
-            <div class="title">${course.title}</div>
-            <div class="desc">${course.description}</div>
-            <div class="instructor">👤 ${course.instructor}</div>
-        </div>
-        <a href="course.html?id=${course.id}" class="btn">عرض الكورس</a>
-    </div>
-    `;
-});
+data.forEach((course,index)=>{
 
-// animation on load
+container.innerHTML+=`
+<div class="card" style="transition-delay:${index*0.1}s">
+
+<img src="${course.image || 'https://via.placeholder.com/300x200'}" class="course-img">
+
+<span class="badge">كورس</span>
+
+<h3>${course.title}</h3>
+
+<p>${course.description || 'لا يوجد وصف'}</p>
+
+<div class="instructor">👤 ${course.instructor || 'غير محدد'}</div>
+
+<button class="start-btn" onclick="openCourse(${index})">
+عرض الكورس
+</button>
+
+</div>
+`
+})
+
+// ✨ animation
 setTimeout(()=>{
-    document.querySelectorAll(".card").forEach(card=>{
-        card.classList.add("show");
-    });
-},200);
+document.querySelectorAll(".card").forEach(card=>{
+card.classList.add("show")
+})
+},200)
+
+})
+
+// 🔗 فتح الكورس
+function openCourse(index){
+localStorage.setItem("courseIndex", index)
+window.location.href="course.html"
+}
 
 </script>
 
