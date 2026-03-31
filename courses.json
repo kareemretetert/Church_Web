@@ -1,0 +1,16 @@
+[
+  {
+    "title": "تفسير الكتاب المقدس",
+    "description": "شرح مبسط وعميق للكتاب المقدس",
+    "image": "https://via.placeholder.com/300x200",
+    "instructor": "أبونا يوسف",
+    "lessons": []
+  },
+  {
+    "title": "العقيدة المسيحية",
+    "description": "فهم أساسيات الإيمان",
+    "image": "https://via.placeholder.com/300x200",
+    "instructor": "أبونا داود",
+    "lessons": []
+  }
+]
