@@ -19,5 +19,26 @@
         "content": "شرح تاني"
       }
     ]
+  },
+  {
+    "title": "كورس شرح الثالوث",
+    "description": "شرح مبسط للثالوث",
+    "image": "imgsfile/Pope Shenouda III and the verse.png",
+    "instructor": "أبونا يوسف",
+
+    "lessons": [
+      {
+        "title": "المحاضرة الأولى",
+        "subtitle": "مقدمة",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "content": "شرح بسيط"
+      },
+      {
+        "title": "المحاضرة الثانية",
+        "subtitle": "تكملة",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "content": "شرح تاني"
+      }
+    ]
   }
 ]
