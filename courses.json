@@ -1,13 +1,23 @@
-"lessons": [
+[
   {
-    "title": "المحاضرة الخامسة",
-    "subtitle": "بلاغة: الأسلوب الخبري - نصوص",
+    "title": "كورس تفسير الكتاب المقدس",
+    "description": "شرح مبسط للكتاب المقدس",
+    "image": "https://via.placeholder.com/300x200",
+    "instructor": "أبونا يوسف",
 
-    "video": "https://www.youtube.com/embed/xxx",
-
-    "content": "شرح الدرس",
-
-    "examId": 0,
-    "homework": ""
+    "lessons": [
+      {
+        "title": "المحاضرة الأولى",
+        "subtitle": "مقدمة",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "content": "شرح بسيط"
+      },
+      {
+        "title": "المحاضرة الثانية",
+        "subtitle": "تكملة",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "content": "شرح تاني"
+      }
+    ]
   }
 ]
