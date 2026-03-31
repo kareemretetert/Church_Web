@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>تفاصيل الكورس</title>
+
+<style>
+body{
+    font-family:Tahoma;
+    direction:rtl;
+    margin:0;
+    background:#0f172a;
+    color:#fff;
+    padding:20px;
+}
+
+.title{
+    font-size:24px;
+    margin-bottom:10px;
+}
+
+.lesson{
+    background:#1e293b;
+    padding:15px;
+    margin-top:10px;
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div id="courseDetails"></div>
+<div id="lessons"></div>
+
+<script>
+
+// نجيب ID من الرابط
+const params = new URLSearchParams(window.location.search);
+const courseId = params.get("id");
+
+// بيانات مؤقتة
+const courses = [
+{ id:1, title:"تفسير الكتاب المقدس", description:"شرح كامل" },
+{ id:2, title:"العقيدة المسيحية", description:"شرح الإيمان" }
+];
+
+const lessons = [
+{ courseId:1, title:"الدرس الأول" },
+{ courseId:1, title:"الدرس الثاني" },
+{ courseId:2, title:"مدخل العقيدة" }
+];
+
+// عرض الكورس
+const course = courses.find(c=>c.id == courseId);
+
+document.getElementById("courseDetails").innerHTML = `
+<div class="title">${course.title}</div>
+<p>${course.description}</p>
+<h3>الدروس:</h3>
+`;
+
+// عرض الدروس
+lessons
+.filter(l=>l.courseId == courseId)
+.forEach(l=>{
+    document.getElementById("lessons").innerHTML += `
+    <div class="lesson">${l.title}</div>
+    `;
+});
+
+</script>
+
+</body>
+</html>
