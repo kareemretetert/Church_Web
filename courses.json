@@ -1,12 +1,9 @@
 "lessons": [
-  {
-    "title": "الدرس الأول",
-    "video": "https://www.youtube.com/embed/VIDEO_ID",
-    "content": "شرح الدرس الأول"
-  },
-  {
-    "title": "الدرس الثاني",
-    "video": "https://www.youtube.com/embed/VIDEO_ID",
-    "content": "شرح الدرس الثاني"
-  }
+ {
+  "title": "المحاضرة الخامسة",
+  "subtitle": "بلاغة: الأسلوب الخبري - نصوص",
+  "video": "https://www.youtube.com/embed/xxx",
+  "content": "شرح الدرس"
+},
+  
 ]
