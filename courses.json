@@ -1,59 +1,37 @@
-[
-  {
-    "title": "كورس تفسير الكتاب المقدس",
-    "description": "شرح مبسط",
-    "image": "",
-    "instructor": "أبونا يوسف",
+{
+  "title": "كورس العقيدة",
+  "description": "شرح أساسيات العقيدة",
+  "image": "imgsfile/Pope Shenouda III and the verse.png",
+  "instructor": "الشيخ أحمد",
 
-    "lectures": [
-      {
-        "title": "المحاضرة الأولى",
-        "subtitle": "مقدمة",
+  "lectures": [
+    {
+      "title": "المحاضرة الأولى",
+      "subtitle": "مقدمة",
 
-        "lessons": [
-          {
-            "title": "الدرس 1",
-            "type": "video",
-            "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-          },
-          {
-            "title": "ملف PDF",
-            "type": "file",
-            "src": "files/lesson1.pdf"
-          },
-          {
-            "title": "صورة توضيحية",
-            "type": "image",
-            "src": "images/lesson1.jpg"
-          }
-        ],
+      "lessons": [
+        {
+          "title": "شرح الدرس",
+          "type": "video",
+          "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+        }
+      ],
 
-        "examId": 0
-      },
-      {
-        "title": "المحاضرة الثانية",
-        "subtitle": "مقدمة",
+      "examId": 0
+    },
+    {
+      "title": "المحاضرة الثانية",
+      "subtitle": "شرح",
 
-        "lessons": [
-          {
-            "title": "الدرس 1",
-            "type": "video",
-            "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-          },
-          {
-            "title": "ملف PDF",
-            "type": "file",
-            "src": "files/lesson1.pdf"
-          },
-          {
-            "title": "صورة توضيحية",
-            "type": "image",
-            "src": "images/lesson1.jpg"
-          }
-        ],
+      "lessons": [
+        {
+          "title": "شرح الدرس",
+          "type": "video",
+          "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+        }
+      ],
 
-        "examId": 0
-      }
-    ]
-  }
-]
+      "examId": 1
+    }
+  ]
+}
