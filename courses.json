@@ -1,37 +1,39 @@
-{
-  "title": "كورس العقيدة",
-  "description": "شرح أساسيات العقيدة",
-  "image": "imgsfile/Pope Shenouda III and the verse.png",
-  "instructor": "الشيخ أحمد",
+[
+  {
+    "title": "كورس العقيدة",
+    "description": "شرح أساسيات العقيدة",
+    "image": "imgsfile/Pope Shenouda III and the verse.png",
+    "instructor": "الشيخ أحمد",
 
-  "lectures": [
-    {
-      "title": "المحاضرة الأولى",
-      "subtitle": "مقدمة",
+    "lectures": [
+      {
+        "title": "المحاضرة الأولى",
+        "subtitle": "مقدمة",
 
-      "lessons": [
-        {
-          "title": "شرح الدرس",
-          "type": "video",
-          "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-        }
-      ],
+        "lessons": [
+          {
+            "title": "شرح الدرس",
+            "type": "video",
+            "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+          }
+        ],
 
-      "examId": 0
-    },
-    {
-      "title": "المحاضرة الثانية",
-      "subtitle": "شرح",
+        "examId": 0
+      },
+      {
+        "title": "المحاضرة الثانية",
+        "subtitle": "شرح",
 
-      "lessons": [
-        {
-          "title": "شرح الدرس",
-          "type": "video",
-          "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
-        }
-      ],
+        "lessons": [
+          {
+            "title": "شرح الدرس",
+            "type": "video",
+            "src": "https://www.youtube.com/embed/dQw4w9WgXcQ"
+          }
+        ],
 
-      "examId": 0
-    }
-  ]
-}
+        "examId": 0
+      }
+    ]
+  }
+]
