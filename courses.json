@@ -20,6 +20,7 @@
       }
     ]
   },
+  
   {
     "title": "كورس شرح الثالوث",
     "description": "شرح مبسط للثالوث",
@@ -35,6 +36,12 @@
       },
       {
         "title": "المحاضرة الثانية",
+        "subtitle": "تكملة",
+        "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        "content": "شرح تاني"
+      }
+      {
+        "title": "المحاضرة الثالثة",
         "subtitle": "تكملة",
         "video": "https://www.youtube.com/embed/dQw4w9WgXcQ",
         "content": "شرح تاني"
