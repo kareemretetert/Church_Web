@@ -7,7 +7,13 @@
       {
         "title": "م1",
         "topics": "كريم التوب\nكريم التوب 2",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "jjjjjjjjjjjjjjjjjjj",
+            "type": "video-upload",
+            "mediaUrl": "https://res.cloudinary.com/ddiegmhji/video/upload/v1775037954/hcypqedcrtpiogvlukvp.mp4"
+          }
+        ],
         "quiz": null
       }
     ]
