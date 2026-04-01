@@ -7,7 +7,16 @@
       {
         "title": "yyyyyyyyyyyyyyy",
         "topics": "fghfghf\nhfghfhfghgfh\nddddddddddddddd",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "jjjjjjjjjjjjjjjjjjj",
+            "type": "image",
+            "videoUrl": "",
+            "imageUrl": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775031034/ur04sdixinoictkbuoe6.jpg",
+            "fileUrl": "",
+            "text": ""
+          }
+        ],
         "quiz": null
       }
     ]
