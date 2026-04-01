@@ -33,7 +33,16 @@
       {
         "title": "bbbbbbbbbbbbbb",
         "topics": "bvbn\nnnn\nccccc",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "fffffffffffff",
+            "type": "video",
+            "videoUrl": "https://www.youtube.com/watch?v=bMIsxyXV35c",
+            "imageUrl": "",
+            "fileUrl": "",
+            "text": ""
+          }
+        ],
         "quiz": null
       }
     ]
