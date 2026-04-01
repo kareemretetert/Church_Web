@@ -12,6 +12,11 @@
             "title": "jjjjjjjjjjjjjjjjjjj",
             "type": "video-upload",
             "mediaUrl": "https://res.cloudinary.com/ddiegmhji/video/upload/v1775037954/hcypqedcrtpiogvlukvp.mp4"
+          },
+          {
+            "title": "kkkkkkkkkkkkkkkkkkkk",
+            "type": "file-upload",
+            "mediaUrl": "https://res.cloudinary.com/ddiegmhji/raw/upload/v1775038335/yb18glhtrvdmbbaim1hx.pdf"
           }
         ],
         "quiz": null
