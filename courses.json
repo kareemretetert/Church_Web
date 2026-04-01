@@ -3,6 +3,13 @@
     "title": "1111111111111",
     "desc": "22222222222",
     "cover": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775030916/xjqx9qsm9tupopgvrzhs.jpg",
-    "lectures": []
+    "lectures": [
+      {
+        "title": "yyyyyyyyyyyyyyy",
+        "topics": "fghfghf\nhfghfhfghgfh\nddddddddddddddd",
+        "lessons": [],
+        "quiz": null
+      }
+    ]
   }
 ]
