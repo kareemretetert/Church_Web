@@ -23,6 +23,11 @@
             "imageUrl": "",
             "fileUrl": "",
             "text": "hfghgfhgfhgfhgdfhrty"
+          },
+          {
+            "title": "yyyyyyyy",
+            "type": "file-upload",
+            "mediaUrl": "https://res.cloudinary.com/ddiegmhji/raw/upload/v1775033848/pqisutmvbcdbt0sewyrb.pdf"
           }
         ],
         "quiz": {
