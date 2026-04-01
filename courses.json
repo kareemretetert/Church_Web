@@ -25,7 +25,10 @@
             "text": "hfghgfhgfhgfhgdfhrty"
           }
         ],
-        "quiz": null
+        "quiz": {
+          "url": "https://church-of-the-virgin-mary.netlify.app/quiz.html",
+          "name": "hhhhhhhhhhhhhhhhhh"
+        }
       }
     ]
   }
