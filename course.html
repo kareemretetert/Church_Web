@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>الكورس</title>
+<title>تفاصيل الكورس</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -13,38 +13,28 @@
 :root{
 --bg:#0f172a;
 --card:#1e293b;
---primary:#22c55e;
+--primary:#8b5cf6;
 --text:#fff;
 --muted:#cbd5e1;
 }
-
-*{box-sizing:border-box;}
 
 body{
 margin:0;
 font-family:'Cairo',sans-serif;
 background:linear-gradient(135deg,#0f172a,#020617);
 color:var(--text);
+padding:15px;
 }
 
-/* 🔥 HEADER */
+/* عنوان الكورس */
 .course-header{
 text-align:center;
-padding:20px;
-}
-
-.course-cover{
-width:100%;
-max-height:220px;
-object-fit:cover;
-border-radius:20px;
-margin-bottom:15px;
-box-shadow:0 10px 30px rgba(0,0,0,0.5);
+margin-bottom:25px;
 }
 
 .course-header h1{
-margin:10px 0 5px;
-font-size:clamp(22px,5vw,32px);
+margin:0;
+font-size:22px;
 }
 
 .course-header p{
@@ -52,101 +42,88 @@ color:var(--muted);
 font-size:14px;
 }
 
-/* 🔥 CONTAINER */
-.container{
-max-width:1000px;
-margin:auto;
-padding:15px;
-}
-
-/* 🔥 CARD */
+/* كارت المحاضرة */
 .lecture-card{
 background:var(--card);
 border-radius:20px;
-padding:15px;
 margin-bottom:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.4);
-animation:fadeUp 0.5s ease;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
 }
 
-/* HEADER */
+/* الهيدر */
 .lecture-header{
-background:linear-gradient(135deg,#166534,#22c55e);
 padding:15px;
-border-radius:15px;
-margin-bottom:12px;
+background:linear-gradient(135deg,#6366f1,#8b5cf6);
+cursor:pointer;
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
 .lecture-header h3{
 margin:0;
-font-size:18px;
+font-size:16px;
 }
 
 .lecture-header p{
 margin:5px 0 0;
-font-size:13px;
-color:#e2e8f0;
+font-size:12px;
+color:#eee;
 }
 
-/* BUTTONS */
+/* السهم */
+.arrow{
+transition:0.3s;
+}
+
+/* المحتوى */
+.lecture-body{
+padding:15px;
+display:none;
+}
+
+/* زر */
 .btn{
 background:#334155;
 padding:12px;
 border-radius:10px;
 margin-bottom:10px;
 cursor:pointer;
+transition:0.3s;
 display:flex;
 justify-content:space-between;
-transition:0.3s;
+align-items:center;
 }
 
 .btn:hover{
 background:#475569;
 }
 
-/* LESSONS */
+/* الدروس */
 .lessons{
-display:none;
 margin-top:10px;
+display:none;
 }
 
 .lesson-item{
 background:#020617;
 padding:10px;
 margin-bottom:8px;
-border-radius:10px;
+border-radius:8px;
 cursor:pointer;
 transition:0.3s;
-display:flex;
-justify-content:space-between;
 }
 
 .lesson-item:hover{
 background:#1e293b;
-transform:scale(1.02);
 }
 
-/* TAG */
-.type{
-font-size:12px;
-color:#94a3b8;
-}
-
-/* ANIMATION */
-@keyframes fadeUp{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1; transform:translateY(0);}
-}
-
-/* 📱 موبايل */
+/* موبايل */
 @media(max-width:600px){
 
-.course-header{
-padding:15px;
-}
-
-.lecture-header h3{
-font-size:16px;
+.course-header h1{
+font-size:18px;
 }
 
 }
@@ -156,10 +133,13 @@ font-size:16px;
 
 <body>
 
-<div class="container" id="courseContainer"></div>
+<div class="course-header" id="courseHeader"></div>
+
+<div id="courseContainer"></div>
 
 <script>
 
+// 📥 تحميل الكورس
 const index = localStorage.getItem("courseIndex")
 
 fetch("courses.json")
@@ -167,98 +147,100 @@ fetch("courses.json")
 .then(data=>{
 
 const course = data[index]
-const container = document.getElementById("courseContainer")
 
-// 🔥 HEADER
-container.innerHTML += `
-<div class="course-header">
-
-<img src="${course.image || 'https://via.placeholder.com/600x250'}" class="course-cover">
-
-<h1>📖 ${course.title}</h1>
-
-<p>${course.description || ''}</p>
-
-</div>
+// 🟣 عنوان الكورس
+document.getElementById("courseHeader").innerHTML = `
+<h1>📚 ${course.title}</h1>
+<p>${course.description || ""}</p>
 `
 
-// 🔥 LECTURES
+const container = document.getElementById("courseContainer")
+
 course.lectures.forEach((lec, i)=>{
 
 container.innerHTML += `
+
 <div class="lecture-card">
 
-<div class="lecture-header">
-<h3>📚 ${lec.title}</h3>
+<div class="lecture-header" onclick="toggleLecture(${i})">
+<div>
+<h3>📖 ${lec.title}</h3>
 <p>${lec.subtitle || ""}</p>
 </div>
+<span class="arrow" id="arrow-${i}">▼</span>
+</div>
 
+<div class="lecture-body" id="lecture-body-${i}">
+
+${lec.lessons && lec.lessons.length ? `
 <div class="btn" onclick="toggleLessons(${i})">
-<span>عرض الدروس (${lec.lessons.length})</span>
-<span>▼</span>
+<span>📚 عرض الدروس (${lec.lessons.length})</span>
+<span id="lessons-arrow-${i}">▼</span>
 </div>
 
 <div class="lessons" id="lessons-${i}">
-
 ${lec.lessons.map((l,j)=>`
 <div class="lesson-item" onclick="openLesson(${i},${j})">
-
-<span>${getIcon(l.type)} ${l.title}</span>
-
-<span class="type">${getTypeName(l.type)}</span>
-
+📌 ${l.title}
 </div>
 `).join("")}
-
 </div>
+` : ""}
 
+${lec.examId !== null && lec.examId !== undefined ? `
 <div class="btn" onclick="openExam(${lec.examId})">
 <span>🧠 اختبار المحاضرة</span>
 <span>▶</span>
 </div>
+` : ""}
+
+</div>
 
 </div>
 `
-
 })
 
 })
 
-// 🔽 فتح/إغلاق الدروس
-function toggleLessons(i){
-const el = document.getElementById("lessons-"+i)
-el.style.display = el.style.display === "block" ? "none" : "block"
+// 🔽 طي المحاضرة
+function toggleLecture(i){
+const body = document.getElementById("lecture-body-"+i)
+const arrow = document.getElementById("arrow-"+i)
+
+if(body.style.display === "block"){
+body.style.display = "none"
+arrow.style.transform = "rotate(0deg)"
+}else{
+body.style.display = "block"
+arrow.style.transform = "rotate(180deg)"
+}
 }
 
-// 🎯 فتح درس
-function openLesson(lecIndex, lessonIndex){
+// 🔽 عرض الدروس
+function toggleLessons(i){
+const el = document.getElementById("lessons-"+i)
+const arrow = document.getElementById("lessons-arrow-"+i)
 
+if(el.style.display === "block"){
+el.style.display = "none"
+arrow.innerHTML = "▼"
+}else{
+el.style.display = "block"
+arrow.innerHTML = "▲"
+}
+}
+
+// 📖 فتح درس
+function openLesson(lecIndex, lessonIndex){
 localStorage.setItem("lectureIndex", lecIndex)
 localStorage.setItem("lessonIndex", lessonIndex)
-
 window.location.href = "lesson-view.html"
 }
 
-// 🧠 امتحان
+// 🧠 فتح امتحان
 function openExam(id){
 localStorage.setItem("quizIndex", id)
-window.location.href="quiz.html"
-}
-
-// 🎨 أيقونات
-function getIcon(type){
-if(type=="video") return "🎥"
-if(type=="file") return "📄"
-if(type=="image") return "🖼️"
-return "📌"
-}
-
-// 🏷️ نوع الدرس
-function getTypeName(type){
-if(type=="video") return "فيديو"
-if(type=="file") return "ملف"
-if(type=="image") return "صورة"
-return ""
+window.location.href = "quiz.html"
 }
 
 </script>
