@@ -9,7 +9,7 @@ exports.handler = async (event) => {
 
   try {
     const data = JSON.parse(event.body);
-    const filePath = path.join(__dirname, "../../courses.json");
+    const filePath = path.join(__dirname, "courses.json");
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
     return {
