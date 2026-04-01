@@ -19,7 +19,24 @@
             "mediaUrl": "https://res.cloudinary.com/ddiegmhji/raw/upload/v1775038335/yb18glhtrvdmbbaim1hx.pdf"
           }
         ],
-        "quiz": null
+        "quiz": {
+          "name": "كيمو",
+          "time": 5,
+          "courseTitle": "كريم حسني",
+          "questions": [
+            {
+              "question": "1",
+              "options": [
+                "12",
+                "2",
+                "1",
+                "4"
+              ],
+              "answer": 3,
+              "image": ""
+            }
+          ]
+        }
       }
     ]
   }
