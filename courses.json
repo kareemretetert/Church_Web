@@ -53,7 +53,32 @@
             "mediaUrl": "https://res.cloudinary.com/ddiegmhji/video/upload/v1775033378/ohpmbz47qa1u7wrkm88g.mp4"
           }
         ],
-        "quiz": null
+        "quiz": {
+          "name": "امتحان المحاضرة الاولي",
+          "time": 30,
+          "courseTitle": "1111111111111",
+          "questions": [
+            {
+              "question": "ما اسمي",
+              "options": [
+                "213",
+                "12313123",
+                "1232313123"
+              ],
+              "answer": 2,
+              "image": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775033907/jf1itbeem1ykz9mzkuoo.jpg"
+            },
+            {
+              "question": "اتااااااا",
+              "options": [
+                "ناتناتن",
+                "اتناتناتنانتن"
+              ],
+              "answer": 1,
+              "image": ""
+            }
+          ]
+        }
       }
     ]
   }
