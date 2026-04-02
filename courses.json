@@ -27,11 +27,6 @@
             "title": "بيلبيلبي",
             "type": "image",
             "imageUrl": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775038505/xtozofusc8z4maswekzq.jpg"
-          },
-          {
-            "title": "Hi",
-            "type": "video-upload",
-            "mediaUrl": "https://res.cloudinary.com/ddiegmhji/video/upload/v1775164839/zghzmyckaeqrsc9fubrk.mp4"
           }
         ],
         "quiz": {
