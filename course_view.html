@@ -105,10 +105,16 @@ border-radius:10px;font-size:11px;
 font-size:11px;opacity:0.75;white-space:nowrap;flex-shrink:0;text-align:center;
 }
 
-/* ===== LESSON ROWS ===== */
-.lecture-body{display:none;}
-.lecture-body.open-body{display:block;}
+.lecture-body{
+max-height:0;
+overflow:hidden;
+transition:max-height 0.4s ease;
+}
 
+.lecture-body.open-body{
+max-height:1000px;
+}
+  
 .lesson-row{
 display:flex;align-items:center;gap:13px;
 padding:13px 18px;border-bottom:1px solid var(--border);
@@ -168,6 +174,214 @@ border-top:2px solid #ede7f6;
 }
 .lesson-content-wrap.visible{display:block;}
 
+
+.lesson-content-wrap{
+max-height:0;
+overflow:hidden;
+opacity:0;
+transform:translateY(-10px);
+transition:all 0.35s ease;
+}
+
+.lesson-content-wrap.visible{
+max-height:1000px;
+opacity:1;
+transform:translateY(0);
+}
+
+
+.lesson-row{
+transition:all 0.25s ease;
+}
+
+.lesson-row:hover{
+transform:translateY(-3px);
+box-shadow:0 8px 20px rgba(106,27,154,0.15);
+}
+
+.lesson-row:active{
+transform:scale(0.97);
+}
+  
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px) scale(0.96);
+}
+to{
+opacity:1;
+transform:translateY(0) scale(1);
+}
+}
+
+  .close-content-btn{
+transition:all 0.2s ease;
+}
+
+.close-content-btn:hover{
+background:white;
+color:var(--primary);
+}
+
+.close-content-btn:active{
+transform:scale(0.9);
+}
+  button, .file-link-btn, .quiz-submit-btn{
+transition:all 0.25s ease;
+}
+
+button:active, .file-link-btn:active, .quiz-submit-btn:active{
+transform:scale(0.96);
+}
+  .lesson-icon{
+transition:all 0.3s ease;
+}
+
+.lesson-row:hover .lesson-icon{
+transform:rotate(-8deg) scale(1.1);
+}
+  .info-card, .lecture-block{
+backdrop-filter: blur(10px);
+border:1px solid rgba(255,255,255,0.3);
+}
+ body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background: radial-gradient(circle at 20% 30%, rgba(106,27,154,0.08), transparent),
+radial-gradient(circle at 80% 70%, rgba(156,39,176,0.08), transparent);
+z-index:-1;
+}
+  header{
+box-shadow:0 8px 30px rgba(106,27,154,0.25);
+}
+  .row-arrow, .lec-arrow{
+transition:all 0.3s ease;
+}
+
+.row-arrow.open, .lec-arrow.open{
+transform:rotate(90deg) scale(1.1);
+background:rgba(106,27,154,0.1);
+}
+  .q-card{
+transition:all 0.25s ease;
+}
+
+.q-card:hover{
+transform:translateY(-2px);
+box-shadow:0 6px 18px rgba(0,0,0,0.1);
+}
+  .skeleton{
+height:80px;
+border-radius:14px;
+background:linear-gradient(90deg,#eee,#f5f5f5,#eee);
+animation:shine 1.2s infinite;
+margin-bottom:10px;
+}
+/* ===== THEME TOGGLE ===== */
+.theme-toggle{
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.toggle-track{
+width:70px;
+height:34px;
+background:#1e293b;
+border-radius:50px;
+position:relative;
+display:flex;
+align-items:center;
+padding:0 6px;
+cursor:pointer;
+transition:background 0.3s;
+}
+
+.toggle-icon{
+font-size:14px;
+z-index:1;
+}
+
+.sun{
+color:#facc15;
+margin-right:auto;
+}
+
+.moon{
+color:#fff;
+margin-left:auto;
+}
+
+.toggle-thumb{
+position:absolute;
+width:28px;
+height:28px;
+background:#fff;
+border-radius:50%;
+top:3px;
+right:4px;
+transition:all 0.3s cubic-bezier(.4,2,.6,1);
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+}
+
+/* ===== LIGHT MODE ===== */
+body.light-mode{
+--bg:#f4f0fb;
+--card:#fff;
+--text:#1e1e2e;
+--border:#f0eaf8;
+}
+
+/* ===== DARK MODE ===== */
+body.dark-mode{
+--bg:#0f172a;
+--card:#1e293b;
+--text:#e5e7eb;
+--border:#334155;
+}
+
+/* الخلفية */
+body.dark-mode{
+background:linear-gradient(135deg,#0f172a,#020617);
+}
+
+/* تحريك الزر */
+body.light-mode .toggle-thumb{
+right:4px;
+background:#fff;
+}
+
+body.dark-mode .toggle-thumb{
+right:38px;
+background:#0f172a;
+}
+
+/* تحسين الكروت في الدارك */
+body.dark-mode .lecture-block,
+body.dark-mode .info-card{
+background:#1e293b;
+box-shadow:0 8px 30px rgba(0,0,0,0.4);
+}
+
+/* النص */
+body.dark-mode .lesson-name,
+body.dark-mode .info-title{
+color:#fff;
+}
+
+body.dark-mode .lesson-label,
+body.dark-mode .info-desc{
+color:#cbd5f5;
+}
+@keyframes shine{
+0%{background-position:-200px;}
+100%{background-position:200px;}
+}
 .content-header{
 background:linear-gradient(135deg,var(--primary),var(--primary-dark));
 color:white;padding:12px 18px;
@@ -305,13 +519,20 @@ transform:rotate(90deg);
 <body>
 
 <header>
-<div class="header-inner">
+<div class="header-inner">  
 <button class="back-btn" onclick="history.back()">
 <svg viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v4h11v6H10v4z"/></svg>
 العودة
 </button>
 <div class="header-title" id="courseName">جاري التحميل...</div>
 <div class="header-spacer"></div>
+  <div class="theme-toggle" onclick="toggleTheme()">
+  <div class="toggle-track">
+    <div class="toggle-icon sun">☀️</div>
+    <div class="toggle-icon moon">🌙</div>
+    <div class="toggle-thumb" id="toggleThumb"></div>
+  </div>
+</div>
 </div>
 </header>
 
@@ -436,7 +657,30 @@ ${quizHtml}
 </div>`;
 }).join("");
 }
+function toggleTheme(){
+const body = document.body;
 
+if(body.classList.contains("dark-mode")){
+body.classList.remove("dark-mode");
+body.classList.add("light-mode");
+localStorage.setItem("theme","light");
+}else{
+body.classList.remove("light-mode");
+body.classList.add("dark-mode");
+localStorage.setItem("theme","dark");
+}
+}
+
+// تحميل الثيم عند فتح الصفحة
+(function(){
+const saved = localStorage.getItem("theme");
+
+if(saved === "dark"){
+document.body.classList.add("dark-mode");
+}else{
+document.body.classList.add("light-mode");
+}
+})();
 function buildQuizRow(lec, li){
 if(lec.quiz.questions&&lec.quiz.questions.length){
 return `
