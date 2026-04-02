@@ -849,38 +849,24 @@ if(!data.secure_url)throw"upload failed";
 return data.secure_url;
 }
 
-async function uploadMedia(file, resourceType, progressBarId){
-  const fd = new FormData();
-  fd.append("file", file);
-  fd.append("upload_preset", "my_upload");
-  if(resourceType === "video"){ fd.append("quality","auto"); }
-  const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`;
-  return new Promise((resolve, reject)=>{
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", url);
-    xhr.timeout = 0;
-    xhr.upload.onprogress = function(e){
-      if(e.lengthComputable){
-        const pct = Math.round((e.loaded/e.total)*100);
-        const bar = document.getElementById(progressBarId);
-        if(bar) bar.style.width = pct + "%";
-        const mb = (e.loaded/1048576).toFixed(1);
-        const tot = (e.total/1048576).toFixed(1);
-        const lm = document.getElementById("loaderMsg");
-        if(lm) lm.innerText = "جاري الرفع... " + pct + "%
-(" + mb + " / " + tot + " MB)";
-      }
-    };
-    xhr.onload = function(){
-      try{
-        const d = JSON.parse(xhr.responseText);
-        if(d.secure_url) resolve(d.secure_url);
-        else reject("فشل: " + (d.error?.message||"unknown"));
-      }catch(e){ reject(e); }
-    };
-    xhr.onerror = ()=> reject("خطأ في الاتصال");
-    xhr.send(fd);
-  });
+async function uploadMedia(file,resourceType,progressBarId){
+const fd=new FormData();fd.append("file",file);fd.append("upload_preset","my_upload");
+const url=`https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`;
+return new Promise((resolve,reject)=>{
+const xhr=new XMLHttpRequest();xhr.open("POST",url);
+xhr.upload.onprogress=function(e){
+if(e.lengthComputable){
+const pct=(e.loaded/e.total)*100;
+document.getElementById(progressBarId).style.width=pct+"%";
+}
+};
+xhr.onload=function(){
+try{const data=JSON.parse(xhr.responseText);if(data.secure_url)resolve(data.secure_url);else reject("fail");}
+catch(e){reject(e);}
+};
+xhr.onerror=()=>reject("network error");
+xhr.send(fd);
+});
 }
 
 // ===== IMAGE MODAL =====
