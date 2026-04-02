@@ -51,7 +51,13 @@
       {
         "title": "12213",
         "topics": "123213213\n13213213",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "1232313123",
+            "type": "video-upload",
+            "mediaUrl": "https://res.cloudinary.com/ddiegmhji/video/upload/v1775172520/edcnieqhvtrhxwx5vv6y.mp4"
+          }
+        ],
         "quiz": null
       }
     ]
