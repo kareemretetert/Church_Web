@@ -599,9 +599,6 @@ font-size:18px;
 }
 
 }
-.fade-out{
-animation: fadeOut 0.4s forwards;
-}
 
 /* شاشات كبيرة */
 @media(min-width:1200px){
@@ -695,9 +692,6 @@ margin:auto;
 button, .upload-btn, .answer-options div{
 touch-action: manipulation;
 }  
-  #imgViewer img{
-cursor:zoom-out;
-}
   /* تعديل كرت تعديل السؤال */
 #editModal .modal-content {
     background: rgba(255, 255, 255, 0.95); /* خلفية شبه شفافة */
@@ -750,52 +744,12 @@ cursor:zoom-out;
     outline: none;
 }
 
-.fade-out{
-animation: fadeOut 0.4s forwards;
-}
-
-@keyframes fadeOut{
-to{
-opacity:0;
-transform:scale(0.7) rotate(3deg);
-filter:blur(2px);
-}
-}
-  #imageModal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.8);
-justify-content:center;
-align-items:center;
-z-index:9999;
-cursor:zoom-out;
-}
-
-#imageModal img{
-max-width:90%;
-max-height:90%;
-border-radius:12px;
-}
-  #imageModal{
-animation: fadeIn 0.3s;
-}
-
-#imageModal img{
-animation: zoomIn 0.3s;
-}
-
-@keyframes fadeIn{
-from{opacity:0}
-to{opacity:1}
-}
-
-@keyframes zoomIn{
-from{transform:scale(0.8)}
-to{transform:scale(1)}
+/* معاينة الصورة */
+#editModal #editPreview {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: block;
 }
 </style>
 </head>
@@ -1142,6 +1096,7 @@ btn.innerText = "إخفاء الأسئلة"
 
 }
 
+  
 // نشر الامتحان
 async function publishQuiz(){
 
@@ -1356,7 +1311,7 @@ div.innerHTML = `
 <div class="q-body" id="body-${i}" style="display:block;">
     <p class="q-text">${q.question}</p>
 
-  ${q.image ? `<img src="${q.image}" class="q-img" onclick="openImage(this.src)">` : ""}
+    ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
 
     <ul class="q-options">
         ${q.options.map((opt,idx)=>`
@@ -1391,6 +1346,8 @@ let btn = document.getElementById("toggleBtn")
 btn.style.display = questions.length === 0 ? "none" : "block"
 
 }
+
+
 
 
 function moveUp(index){
@@ -1459,19 +1416,8 @@ document.getElementById("answerNumber").value = q.answer
 editIndex = i
 }
   function deleteQuestion(i){
-
-let cards = document.querySelectorAll(".q-card")
-let card = cards[i]
-
-// شغل الانيميشن
-card.classList.add("fade-out")
-
-// استنى الانيميشن يخلص
-setTimeout(()=>{
-    questions.splice(i,1)
-    renderQuestions()
-},400)
-
+questions.splice(i,1)
+renderQuestions()
 }
 
 
@@ -1506,61 +1452,28 @@ function openEdit(i){
     document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
 
     // المعاينة
-   let preview = document.getElementById("editPreview")
-let deleteBtn = document.getElementById("deleteEditImg")
-
-// عرض الصورة
-if(q.image){
-    preview.src = q.image
-    preview.style.display = "block"
-    deleteBtn.style.display = "block"
-}else{
-    preview.style.display = "none"
-    deleteBtn.style.display = "none"
-}
-
-// 👇 ربط زر الحذف هنا
-deleteBtn.onclick = function(){
-
-    preview.classList.add("fade-out")
-
-    setTimeout(()=>{
-        preview.src = ""
-        preview.style.display = "none"
-        preview.classList.remove("fade-out")
-
-        document.getElementById("editImage").value = ""
-        document.getElementById("editImgText").innerText = "تم حذف الصورة"
-
-        if(currentEditIndex !== null){
-            questions[currentEditIndex].image = ""
-        }
-
-        deleteBtn.style.display = "none"
-    },400)
-}
-
-// 👇 رفع صورة جديدة
-let input = document.getElementById("editImage")
-input.value = ""
-
-input.onchange = function (){
-    let file = this.files[0]
-
-    if(file){
-        preview.src = URL.createObjectURL(file)
+    let preview = document.getElementById("editPreview")
+    if(q.image){
+        preview.src = q.image
         preview.style.display = "block"
-
-        document.getElementById("editImgText").innerText = "📸 " + file.name
-
-        deleteBtn.style.display = "block" // 👈 دي أهم سطر كان ناقص
     }else{
         preview.style.display = "none"
-        document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
-
-        deleteBtn.style.display = "none"
     }
-}
+
+    // ربط تغيير الصورة مباشرة
+    let input = document.getElementById("editImage")
+    input.value = "" // مهم جداً
+    input.onchange = function (){
+        let file = this.files[0]
+        if(file){
+            preview.src = URL.createObjectURL(file)
+            preview.style.display = "block"
+            document.getElementById("editImgText").innerText = "📸 " + file.name
+        }else{
+            preview.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+        }
+    }
 }
 
 
@@ -1656,15 +1569,6 @@ if(e.target == modal){
 modal.style.display = "none"
 }
 }
-
-function openImage(src){
-document.getElementById("modalImg").src = src
-document.getElementById("imageModal").style.display = "flex"
-}
-
-function closeImage(){
-document.getElementById("imageModal").style.display = "none"
-}
 </script>
 
 
@@ -1683,10 +1587,7 @@ document.getElementById("imageModal").style.display = "none"
 <label style="color:black;">صورة (اختياري)</label>
 <div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
 <div class="upload-text" id="editImgText"style="color:black;">لم يتم اختيار صورة</div>
-  <img id="editPreview" onclick="openImage(this.src)" style="width:100%; margin-top:10px; border-radius:10px; display:none;cursor:zoom-in;">
-  <button id="deleteEditImg" style="background:#ff416c; margin-top:10px; display:none;">
-🗑️ حذف الصورة
-</button>
+  <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
 <input type="file" id="editImage" accept="image/*" hidden>
 
 <div class="options">
@@ -1723,11 +1624,5 @@ document.getElementById("imageModal").style.display = "none"
 قد يستغرق الأمر بعض الوقت
 </p>
 </div>
-
-
-<div id="imageModal" onclick="closeImage()">
-    <img id="modalImg">
-</div>
-  
 </body>
 </html>
