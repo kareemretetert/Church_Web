@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة إدارة الكورسات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+font-family:'Cairo',sans-serif;direction:rtl;padding:20px;
+background:linear-gradient(-45deg,#667eea,#764ba2,#43cea2,#185a9d);
+background-size:400% 400%;animation:gradientBG 10s ease infinite;
+min-height:100vh;overflow-x:hidden;
+}
+@keyframes gradientBG{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeOut{to{opacity:0;transform:scale(0.7) rotate(3deg);filter:blur(2px);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes zoomIn{from{transform:scale(0.8);}to{transform:scale(1);}}
+
+.section{
+max-width:1000px;margin:20px auto;padding:20px;border-radius:20px;
+background:rgba(255,255,255,0.15);backdrop-filter:blur(15px);
+box-shadow:0 10px 40px rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.2);animation:fade 0.5s;
+}
+h1{text-align:center;color:#fff;margin-bottom:5px;font-size:clamp(20px,4vw,28px);}
+h2{text-align:center;color:#fff;margin-bottom:15px;font-size:clamp(17px,3vw,22px);}
+label{display:block;margin-top:12px;color:#eee;font-weight:bold;font-size:14px;}
+input,textarea,select{
+width:100%;margin-top:6px;padding:13px;border-radius:12px;border:none;
+background:rgba(255,255,255,0.92);font-size:15px;font-family:'Cairo',sans-serif;transition:0.3s;
+}
+textarea{min-height:80px;resize:vertical;}
+input:focus,textarea:focus,select:focus{transform:scale(1.01);box-shadow:0 0 10px rgba(255,255,255,0.5);outline:none;}
+button{
+width:100%;margin-top:12px;padding:13px;border:none;border-radius:14px;cursor:pointer;
+font-size:15px;font-weight:bold;font-family:'Cairo',sans-serif;
+background:linear-gradient(135deg,#00c6ff,#0072ff);color:white;transition:0.3s;
+}
+button:hover{transform:scale(1.04);box-shadow:0 5px 20px rgba(0,0,0,0.3);}
+button.danger{background:linear-gradient(135deg,#ff416c,#ff4b2b);}
+button.warning{background:linear-gradient(135deg,#f7971e,#ffd200);color:#333;}
+button.success{background:linear-gradient(135deg,#43cea2,#185a9d);}
+
+.upload-btn{
+background:linear-gradient(135deg,#43cea2,#185a9d);color:#fff;text-align:center;
+padding:13px;border-radius:14px;margin-top:10px;cursor:pointer;transition:0.3s;font-weight:bold;font-size:14px;
+}
+.upload-btn:hover{transform:scale(1.04);}
+.upload-text{font-size:13px;color:#888;margin-top:5px;text-align:center;}
+
+/* CARDS */
+.card{
+background:rgba(255,255,255,0.93);padding:18px;margin-top:15px;
+border-radius:18px;box-shadow:0 6px 20px rgba(0,0,0,0.2);animation:fade 0.5s;transition:0.3s;
+}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.25);}
+.card-title{font-size:18px;font-weight:800;color:#333;}
+.card-meta{font-size:13px;color:#666;margin:4px 0;}
+.card-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.card-actions button{flex:1;min-width:100px;padding:9px;font-size:13px;margin-top:0;}
+
+/* MODAL */
+.modal{
+position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.75);display:none;justify-content:center;align-items:center;z-index:9999;padding:10px;
+}
+.modal.open{display:flex;}
+.modal-content{
+background:rgba(255,255,255,0.97);backdrop-filter:blur(15px);border-radius:20px;
+padding:22px;width:95%;max-width:580px;max-height:90vh;overflow-y:auto;
+animation:zoomIn 0.3s;box-shadow:0 15px 50px rgba(0,0,0,0.4);
+}
+.modal-content h3{color:#333;margin-bottom:15px;text-align:center;font-size:18px;}
+.modal-content label{color:#444;}
+.modal-content input,.modal-content textarea,.modal-content select{background:#f5f5f5;}
+.modal-actions{display:flex;gap:10px;margin-top:15px;}
+.modal-actions button{flex:1;}
+
+/* LECTURE CARD */
+.lecture-card{
+background:rgba(255,255,255,0.9);border-radius:14px;padding:14px;
+margin-top:10px;border-right:5px solid #6a1b9a;
+}
+.lecture-title{font-weight:800;font-size:16px;color:#333;}
+.lesson-item{
+background:#f5f5f5;border-radius:10px;padding:10px 14px;margin-top:8px;
+display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+}
+.lesson-type{font-size:12px;padding:3px 10px;border-radius:20px;font-weight:bold;}
+.type-video{background:#e3f2fd;color:#1565c0;}
+.type-video-upload{background:#dceefb;color:#0d47a1;}
+.type-image{background:#e8f5e9;color:#2e7d32;}
+.type-file{background:#fff3e0;color:#e65100;}
+.type-file-upload{background:#fde8c8;color:#bf360c;}
+.type-text{background:#fce4ec;color:#880e4f;}
+
+/* BADGE */
+.badge{display:inline-block;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:bold;}
+.badge-purple{background:#ede7f6;color:#6a1b9a;}
+.badge-blue{background:#e3f2fd;color:#1565c0;}
+.badge-orange{background:#fff3e0;color:#e65100;}
+.quiz-badge{background:#fff3e0;color:#e65100;display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:bold;margin-top:4px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:15px;}
+.stat-box{background:rgba(255,255,255,0.2);border-radius:14px;padding:14px;text-align:center;color:#fff;}
+.stat-box .num{font-size:28px;font-weight:800;}
+.stat-box .lbl{font-size:13px;opacity:0.85;}
+
+/* QUIZ BUILDER */
+.quiz-section{background:#f9f5ff;border-radius:14px;padding:16px;margin-top:14px;border:2px solid #ede7f6;}
+.quiz-section h4{color:#6a1b9a;margin-bottom:12px;font-size:15px;text-align:center;}
+.answer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px;}
+.answer-grid div{
+background:#f0f0f0;padding:10px;text-align:center;border-radius:12px;
+cursor:pointer;font-weight:bold;transition:0.3s;border:2px solid transparent;font-size:14px;
+}
+.answer-grid div.active{background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;border-color:#0072ff;}
+.answer-grid div:hover{transform:scale(1.05);}
+@media(max-width:500px){.answer-grid{grid-template-columns:repeat(2,1fr);}}
+.q-card-dash{
+background:#fff;border-radius:12px;padding:12px;margin-top:10px;
+border-right:4px solid #6a1b9a;box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+.q-card-dash .q-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;}
+.q-card-dash .q-head span{font-weight:700;font-size:14px;color:#333;flex:1;}
+.q-opts{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.q-opt{background:#f0f0f0;padding:5px 12px;border-radius:10px;font-size:13px;}
+.q-opt.correct{background:#e8f5e9;color:#2e7d32;font-weight:bold;}
+
+/* PROGRESS */
+.progress-wrap{background:#e0e0e0;border-radius:10px;height:8px;margin-top:8px;overflow:hidden;display:none;}
+.progress-bar{height:100%;background:linear-gradient(135deg,#43cea2,#00c6ff);width:0%;transition:width 0.2s;border-radius:10px;}
+
+/* LOADER */
+#loader{
+position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.82);
+display:none;justify-content:center;align-items:center;flex-direction:column;z-index:99999;
+}
+#loader p{color:white;font-size:18px;text-align:center;margin-top:12px;line-height:1.6;}
+.spinner{width:60px;height:60px;border:6px solid #eee;border-top:6px solid #00c6ff;border-radius:50%;animation:spin 1s linear infinite;}
+
+/* IMAGE MODAL */
+#imageModal{
+display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+background:rgba(0,0,0,0.88);justify-content:center;align-items:center;z-index:99999;cursor:zoom-out;
+}
+#imageModal img{max-width:92%;max-height:92%;border-radius:12px;animation:zoomIn 0.3s;}
+.img-preview{width:100%;margin-top:10px;border-radius:12px;display:none;cursor:zoom-in;}
+
+.empty{text-align:center;color:rgba(255,255,255,0.7);padding:30px;font-size:15px;}
+.fade-out{animation:fadeOut 0.4s forwards;}
+
+@media(max-width:600px){
+body{padding:10px;}.section{padding:14px;}
+.card-actions{flex-direction:column;}.card-actions button{width:100%;}
+.modal-content{padding:16px;}
+}
+@media(min-width:1200px){.section{max-width:1100px;}}
+</style>
+</head>
+<body>
+
+<div style="text-align:center;margin-bottom:10px;">
+<h1>🎓 لوحة إدارة الكورسات</h1>
+<p style="color:rgba(255,255,255,0.8);font-size:14px;">كنيسة السيدة العذراء مريم</p>
+</div>
+
+<!-- STATS -->
+<div class="section">
+<div class="stats-grid">
+<div class="stat-box"><div class="num" id="statCourses">0</div><div class="lbl">كورسات</div></div>
+<div class="stat-box"><div class="num" id="statLectures">0</div><div class="lbl">محاضرات</div></div>
+<div class="stat-box"><div class="num" id="statLessons">0</div><div class="lbl">دروس</div></div>
+<div class="stat-box"><div class="num" id="statQuizzes">0</div><div class="lbl">امتحانات</div></div>
+</div>
+<button onclick="openAddCourse()" class="success">➕ إضافة كورس جديد</button>
+</div>
+
+<!-- COURSES -->
+<div class="section">
+<h2>📚 الكورسات الحالية</h2>
+<div id="coursesList"><div class="empty">لا يوجد كورسات بعد</div></div>
+</div>
+
+
+<!-- ===== MODALS ===== -->
+
+<!-- COURSE MODAL -->
+<div class="modal" id="courseModal">
+<div class="modal-content">
+<h3 id="courseModalTitle">➕ إضافة كورس</h3>
+<label>اسم الكورس *</label>
+<input id="courseTitle" placeholder="مثال: كورس اللغة العربية">
+<label>وصف الكورس</label>
+<textarea id="courseDesc" placeholder="وصف مختصر..."></textarea>
+<label>صورة الغلاف (اختياري)</label>
+<div class="upload-btn" onclick="document.getElementById('courseCover').click()">🖼 اختيار صورة الغلاف</div>
+<p class="upload-text" id="coverText">لم يتم اختيار صورة</p>
+<img id="coverPreview" class="img-preview" onclick="openImage(this.src)">
+<button id="deleteCoverBtn" class="danger" style="display:none;margin-top:8px;" onclick="deleteCover()">🗑 حذف الصورة</button>
+<input type="file" id="courseCover" accept="image/*" hidden>
+<div class="modal-actions">
+<button onclick="saveCourse()" class="success">💾 حفظ</button>
+<button onclick="document.getElementById('courseModal').classList.remove('open')" class="danger">❌ إلغاء</button>
+</div>
+</div>
+</div>
+
+<!-- LECTURE MODAL -->
+<div class="modal" id="lectureModal">
+<div class="modal-content">
+<h3>📖 محاضرة</h3>
+<label>عنوان المحاضرة *</label>
+<input id="lectureTitle" placeholder="مثال: المحاضرة الأولى">
+<label>الموضوعات (سطر لكل موضوع)</label>
+<textarea id="lectureTopics" placeholder="بلاغة: الأسلوب الخبري&#10;أدب: المدرسة الرومانتيكية"></textarea>
+<div class="modal-actions">
+<button onclick="saveLecture()" class="success">💾 حفظ</button>
+<button onclick="document.getElementById('lectureModal').classList.remove('open')" class="danger">❌ إلغاء</button>
+</div>
+</div>
+</div>
+
+<!-- LESSON MODAL -->
+<div class="modal" id="lessonModal">
+<div class="modal-content">
+<h3 id="lessonModalTitle">📌 إضافة درس</h3>
+
+<label>عنوان الدرس *</label>
+<input id="lessonTitle" placeholder="مثال: جزء الشرح والتدريبات">
+
+<label>نوع المحتوى *</label>
+<select id="lessonType" onchange="updateLessonFields()">
+<option value="">-- اختر النوع --</option>
+<option value="video">🎬 فيديو — رابط إنترنت</option>
+<option value="video-upload">📤 فيديو — رفع من الجهاز</option>
+<option value="image">🖼 صورة</option>
+<option value="file">🔗 ملف PDF — رابط</option>
+<option value="file-upload">📤 ملف PDF — رفع من الجهاز</option>
+<option value="text">📝 نص تعليمي</option>
+</select>
+
+<div id="videoFields" style="display:none;">
+<label>رابط الفيديو</label>
+<input id="lessonVideoUrl" placeholder="https://youtube.com/... أو رابط مباشر">
+<p style="font-size:12px;color:#888;margin-top:4px;">يدعم YouTube و Google Drive وأي رابط مباشر</p>
+</div>
+
+<div id="videoUploadFields" style="display:none;">
+<label>رفع فيديو من جهازك</label>
+<div class="upload-btn" onclick="document.getElementById('lessonVideoFile').click()">🎬 اختيار فيديو</div>
+<p class="upload-text" id="lessonVideoText">لم يتم اختيار فيديو</p>
+<div class="progress-wrap" id="videoProgress"><div class="progress-bar" id="videoProgressBar"></div></div>
+<input type="file" id="lessonVideoFile" accept="video/*" hidden>
+</div>
+
+<div id="imageFields" style="display:none;">
+<label>صورة الدرس</label>
+<div class="upload-btn" onclick="document.getElementById('lessonImage').click()">🖼 اختيار صورة</div>
+<p class="upload-text" id="lessonImgText">لم يتم اختيار صورة</p>
+<img id="lessonImgPreview" class="img-preview" onclick="openImage(this.src)">
+<input type="file" id="lessonImage" accept="image/*" hidden>
+</div>
+
+<div id="fileFields" style="display:none;">
+<label>رابط ملف PDF</label>
+<input id="lessonFileUrl" placeholder="https://drive.google.com/...">
+<p style="font-size:12px;color:#888;margin-top:4px;">ارفع الملف على Google Drive وخذ رابط المشاركة</p>
+</div>
+
+<div id="fileUploadFields" style="display:none;">
+<label>رفع ملف PDF من جهازك</label>
+<div class="upload-btn" onclick="document.getElementById('lessonFileUpload').click()">📄 اختيار ملف PDF</div>
+<p class="upload-text" id="lessonFileText">لم يتم اختيار ملف</p>
+<div class="progress-wrap" id="fileProgress"><div class="progress-bar" id="fileProgressBar"></div></div>
+<input type="file" id="lessonFileUpload" accept=".pdf,application/pdf" hidden>
+</div>
+
+<div id="textFields" style="display:none;">
+<label>النص</label>
+<textarea id="lessonText" placeholder="اكتب محتوى الدرس هنا..."></textarea>
+</div>
+
+<div class="modal-actions">
+<button onclick="saveLesson()" class="success">💾 حفظ الدرس</button>
+<button onclick="closeLessonModal()" class="danger">❌ إلغاء</button>
+</div>
+</div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div class="modal" id="quizModal">
+<div class="modal-content" style="max-width:640px;">
+<h3 id="quizModalTitle">📝 إضافة امتحان</h3>
+<p id="quizCourseLabel" style="text-align:center;background:#ede7f6;color:#6a1b9a;font-weight:bold;font-size:13px;padding:8px;border-radius:10px;margin-bottom:14px;"></p>
+
+<label>اسم الامتحان *</label>
+<input id="quizName" placeholder="مثال: امتحان المحاضرة الأولى">
+
+<label>وقت الامتحان (دقائق)</label>
+<input id="quizTime" type="number" value="30" min="1">
+
+<!-- ADD QUESTION SECTION -->
+<div class="quiz-section">
+<h4>➕ إضافة سؤال جديد</h4>
+
+<label style="color:#333;">نص السؤال *</label>
+<input id="qText" placeholder="اكتب السؤال..." style="background:#fff;">
+
+<label style="color:#333;">صورة للسؤال (اختياري)</label>
+<div class="upload-btn" onclick="document.getElementById('qImage').click()" style="font-size:13px;padding:10px;">🖼 اختيار صورة للسؤال</div>
+<p class="upload-text" id="qImgText">لم يتم اختيار صورة</p>
+<img id="qImgPreview" style="width:100%;max-height:150px;object-fit:cover;border-radius:10px;display:none;margin-top:8px;cursor:zoom-in;" onclick="openImage(this.src)">
+<input type="file" id="qImage" accept="image/*" hidden>
+
+<label style="color:#333;margin-top:12px;">الاختيارات (على الأقل 2)</label>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;">
+<input id="qOpt1" placeholder="اختيار 1" style="background:#fff;">
+<input id="qOpt2" placeholder="اختيار 2" style="background:#fff;">
+<input id="qOpt3" placeholder="اختيار 3 (اختياري)" style="background:#fff;">
+<input id="qOpt4" placeholder="اختيار 4 (اختياري)" style="background:#fff;">
+</div>
+
+<label style="color:#333;margin-top:12px;">الإجابة الصحيحة</label>
+<div class="answer-grid" id="answerGrid">
+<div onclick="selectAnswer(1)" data-val="1">1</div>
+<div onclick="selectAnswer(2)" data-val="2">2</div>
+<div onclick="selectAnswer(3)" data-val="3">3</div>
+<div onclick="selectAnswer(4)" data-val="4">4</div>
+</div>
+<button onclick="addQuizQuestion()" style="margin-top:12px;background:linear-gradient(135deg,#667eea,#764ba2);">➕ إضافة السؤال للقائمة</button>
+</div>
+
+<p id="qCount" style="color:#6a1b9a;font-weight:bold;text-align:center;margin-top:12px;font-size:15px;">عدد الأسئلة: 0</p>
+<div id="quizQuestionsList"></div>
+
+<div class="modal-actions" style="margin-top:15px;">
+<button onclick="saveFullQuiz()" class="success">💾 حفظ الامتحان</button>
+<button onclick="closeQuizModal()" class="danger">❌ إلغاء</button>
+</div>
+</div>
+</div>
+
+<!-- IMAGE VIEWER -->
+<div id="imageModal" onclick="closeImage()"><img id="modalImg"></div>
+
+<!-- LOADER -->
+<div id="loader"><div class="spinner"></div><p id="loaderMsg">جاري التنفيذ...</p></div>
+
+
+<script>
+// ===== PASSWORD =====
+const PASSWORD = "kimo123";
+const entered = prompt("🔐 ادخل كلمة المرور:");
+if(entered !== PASSWORD){
+document.body.innerHTML=`<div style="text-align:center;margin-top:120px;color:#fff;font-family:Cairo,sans-serif;font-size:24px;">❌ كلمة المرور غير صحيحة</div>`;
+throw new Error("access denied");
+}
+
+// ===== STATE =====
+let courses = [];
+let editCourseIndex = null;
+let currentCourseIndex = null;
+let currentLectureIndex = null;
+let editLectureIndex = null;
+let editLessonIndex = null;
+let currentCoverImageUrl = "";
+let currentLessonMediaUrl = "";
+
+// Quiz
+let quizQuestions = [];
+let quizSelectedAnswer = null;
+let quizCurrentImgUrl = "";
+
+// ===== INIT =====
+window.onload = async function(){
+await loadCourses();
+initFileListeners();
+};
+
+// ===== LOAD =====
+async function loadCourses(){
+try{
+const res = await fetch("courses.json");
+courses = await res.json();
+if(!Array.isArray(courses)) courses = [];
+}catch{ courses=[]; }
+renderCourses();
+}
+
+// ===== STATS =====
+function updateStats(){
+let lec=0, less=0, quiz=0;
+courses.forEach(c=>{
+if(c.lectures){ lec+=c.lectures.length;
+c.lectures.forEach(l=>{
+if(l.lessons) less+=l.lessons.length;
+if(l.quiz && l.quiz.questions && l.quiz.questions.length) quiz++;
+});
+}
+});
+document.getElementById("statCourses").innerText=courses.length;
+document.getElementById("statLectures").innerText=lec;
+document.getElementById("statLessons").innerText=less;
+document.getElementById("statQuizzes").innerText=quiz;
+}
+
+// ===== RENDER =====
+function renderCourses(){
+const el=document.getElementById("coursesList");
+if(!courses.length){ el.innerHTML=`<div class="empty">📭 لا يوجد كورسات — اضغط "إضافة كورس جديد"</div>`; updateStats(); return; }
+el.innerHTML=courses.map((c,ci)=>{
+const lc=c.lectures?c.lectures.length:0;
+let ls=0,qz=0;
+if(c.lectures) c.lectures.forEach(l=>{ if(l.lessons)ls+=l.lessons.length; if(l.quiz&&l.quiz.questions&&l.quiz.questions.length)qz++; });
+return `<div class="card" id="course-card-${ci}">
+${c.cover?`<img src="${c.cover}" style="width:100%;max-height:140px;object-fit:cover;border-radius:12px;margin-bottom:10px;cursor:zoom-in;" onclick="openImage('${c.cover}')">` : ""}
+<div class="card-title">📚 ${c.title}</div>
+${c.desc?`<div class="card-meta">${c.desc}</div>`:""}
+<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+<span class="badge badge-purple">📖 ${lc} محاضرة</span>
+<span class="badge badge-blue">📌 ${ls} درس</span>
+<span class="badge badge-orange">📝 ${qz} امتحان</span>
+</div>
+<div style="margin-top:12px;">${renderLectures(c.lectures||[],ci)}</div>
+<div class="card-actions">
+<button onclick="openAddLecture(${ci})" class="success">➕ محاضرة</button>
+<button onclick="openEditCourse(${ci})" class="warning">✏️ تعديل</button>
+<button onclick="deleteCourse(${ci})" class="danger">🗑 حذف</button>
+</div></div>`;
+}).join("");
+updateStats();
+}
+
+function renderLectures(lectures,ci){
+if(!lectures.length) return `<p style="color:#999;font-size:13px;text-align:center;">لا توجد محاضرات بعد</p>`;
+return lectures.map((lec,li)=>{
+const lc=lec.lessons?lec.lessons.length:0;
+const hasQuiz=lec.quiz&&lec.quiz.questions&&lec.quiz.questions.length;
+const tpics=lec.topics?lec.topics.split('\n').filter(Boolean).map(t=>`<span style="background:#ede7f6;color:#6a1b9a;padding:2px 8px;border-radius:10px;margin:2px;display:inline-block;font-size:11px;">${t}</span>`).join(""):"";
+return `<div class="lecture-card">
+<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+<div style="flex:1;">
+<div class="lecture-title">📖 ${lec.title}</div>
+${tpics?`<div style="margin-top:4px;">${tpics}</div>`:""}
+<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;">
+<span class="badge badge-blue">📌 ${lc} درس</span>
+${hasQuiz?`<span class="quiz-badge">📝 ${lec.quiz.questions.length} سؤال</span>`:""}
+</div>
+</div>
+<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;">
+<button onclick="openAddLesson(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#43cea2,#185a9d);">➕ درس</button>
+<button onclick="openQuizModal(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#f7971e,#ffd200);color:#333;">${hasQuiz?"✏️ امتحان":"📝 امتحان"}</button>
+<button onclick="editLecture(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">✏️</button>
+<button onclick="deleteLecture(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#ff416c,#ff4b2b);">🗑</button>
+</div>
+</div>
+<div style="margin-top:8px;">${renderLessons(lec.lessons||[],ci,li)}</div>
+</div>`;
+}).join("");
+}
+
+function renderLessons(lessons,ci,li){
+if(!lessons.length) return "";
+const tl={video:"🎬 رابط",  "video-upload":"📤 فيديو مرفوع",image:"🖼 صورة",file:"🔗 ملف رابط","file-upload":"📤 ملف مرفوع",text:"📝 نص"};
+const tc={video:"type-video","video-upload":"type-video-upload",image:"type-image",file:"type-file","file-upload":"type-file-upload",text:"type-text"};
+return lessons.map((ls,si)=>`
+<div class="lesson-item">
+<span style="font-weight:600;font-size:14px;">${ls.title}</span>
+<div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;">
+<span class="lesson-type ${tc[ls.type]||''}">${tl[ls.type]||ls.type}</span>
+<button onclick="editLesson(${ci},${li},${si})" style="margin-top:0;padding:5px 9px;font-size:12px;width:auto;background:linear-gradient(135deg,#f7971e,#ffd200);color:#333;">✏️</button>
+<button onclick="deleteLesson(${ci},${li},${si})" style="margin-top:0;padding:5px 9px;font-size:12px;width:auto;background:linear-gradient(135deg,#ff416c,#ff4b2b);">🗑</button>
+</div>
+</div>`).join("");
+}
+
+// ===== FILE LISTENERS =====
+function initFileListeners(){
+// Video upload
+document.getElementById("lessonVideoFile").onchange=async function(){
+const file=this.files[0]; if(!file)return;
+document.getElementById("lessonVideoText").innerText="⏳ جاري الرفع...";
+document.getElementById("videoProgress").style.display="block";
+showLoader("جاري رفع الفيديو...\nقد يستغرق بعض الوقت");
+try{
+currentLessonMediaUrl=await uploadMedia(file,"video","videoProgressBar");
+document.getElementById("lessonVideoText").innerText="✅ "+file.name;
+}catch(e){alert("فشل رفع الفيديو");document.getElementById("lessonVideoText").innerText="❌ فشل الرفع";}
+hideLoader();
+};
+
+// File upload
+document.getElementById("lessonFileUpload").onchange=async function(){
+const file=this.files[0]; if(!file)return;
+document.getElementById("lessonFileText").innerText="⏳ جاري الرفع...";
+document.getElementById("fileProgress").style.display="block";
+showLoader("جاري رفع الملف...");
+try{
+currentLessonMediaUrl=await uploadMedia(file,"raw","fileProgressBar");
+document.getElementById("lessonFileText").innerText="✅ "+file.name;
+}catch(e){alert("فشل رفع الملف");document.getElementById("lessonFileText").innerText="❌ فشل الرفع";}
+hideLoader();
+};
+
+// Quiz question image
+document.getElementById("qImage").onchange=async function(){
+const file=this.files[0]; if(!file)return;
+showLoader("جاري رفع الصورة...");
+try{
+quizCurrentImgUrl=await uploadImage(file);
+document.getElementById("qImgPreview").src=quizCurrentImgUrl;
+document.getElementById("qImgPreview").style.display="block";
+document.getElementById("qImgText").innerText="✅ "+file.name;
+}catch(e){alert("فشل رفع الصورة");}
+hideLoader();
+};
+}
+
+// ===== COURSE =====
+function openAddCourse(){
+editCourseIndex=null; currentCoverImageUrl="";
+document.getElementById("courseTitle").value="";
+document.getElementById("courseDesc").value="";
+document.getElementById("coverText").innerText="لم يتم اختيار صورة";
+document.getElementById("coverPreview").style.display="none";
+document.getElementById("deleteCoverBtn").style.display="none";
+document.getElementById("courseModalTitle").innerText="➕ إضافة كورس جديد";
+document.getElementById("courseModal").classList.add("open");
+document.getElementById("courseCover").value="";
+document.getElementById("courseCover").onchange=async function(){
+const file=this.files[0]; if(!file)return;
+showLoader("جاري رفع الصورة...");
+try{ currentCoverImageUrl=await uploadImage(file); setCoverPreview(currentCoverImageUrl,file.name); }catch(e){alert("فشل رفع الصورة");}
+hideLoader();
+};
+}
+
+function openEditCourse(ci){
+editCourseIndex=ci; const c=courses[ci];
+currentCoverImageUrl=c.cover||"";
+document.getElementById("courseTitle").value=c.title;
+document.getElementById("courseDesc").value=c.desc||"";
+if(c.cover){ setCoverPreview(c.cover,"موجودة"); }
+else{ document.getElementById("coverPreview").style.display="none"; document.getElementById("deleteCoverBtn").style.display="none"; document.getElementById("coverText").innerText="لم يتم اختيار صورة"; }
+document.getElementById("courseModalTitle").innerText="✏️ تعديل الكورس";
+document.getElementById("courseModal").classList.add("open");
+document.getElementById("courseCover").value="";
+document.getElementById("courseCover").onchange=async function(){
+const file=this.files[0]; if(!file)return;
+showLoader("جاري رفع الصورة...");
+try{ currentCoverImageUrl=await uploadImage(file); setCoverPreview(currentCoverImageUrl,file.name); }catch(e){alert("فشل رفع الصورة");}
+hideLoader();
+};
+}
+
+function setCoverPreview(url,name){
+document.getElementById("coverPreview").src=url;
+document.getElementById("coverPreview").style.display="block";
+document.getElementById("coverText").innerText="✅ "+name;
+document.getElementById("deleteCoverBtn").style.display="block";
+}
+
+function deleteCover(){
+currentCoverImageUrl="";
+document.getElementById("coverPreview").style.display="none";
+document.getElementById("coverText").innerText="تم حذف الصورة";
+document.getElementById("deleteCoverBtn").style.display="none";
+}
+
+async function saveCourse(){
+const title=document.getElementById("courseTitle").value.trim();
+if(!title){alert("اكتب اسم الكورس");return;}
+showLoader("جاري الحفظ...");
+try{
+const obj={title,desc:document.getElementById("courseDesc").value.trim(),cover:currentCoverImageUrl,lectures:editCourseIndex!==null?(courses[editCourseIndex].lectures||[]):[]};
+if(editCourseIndex!==null){courses[editCourseIndex]={...courses[editCourseIndex],...obj};}
+else{courses.push(obj);}
+await saveToDB();
+document.getElementById("courseModal").classList.remove("open");
+renderCourses();
+}catch(e){alert("حدث خطأ");}
+hideLoader();
+}
+
+function deleteCourse(ci){
+if(!confirm("حذف الكورس نهائياً؟"))return;
+const card=document.getElementById(`course-card-${ci}`);
+card.classList.add("fade-out");
+setTimeout(async()=>{courses.splice(ci,1);await saveToDB();renderCourses();},400);
+}
+
+// ===== LECTURE =====
+function openAddLecture(ci){
+currentCourseIndex=ci;editLectureIndex=null;
+document.getElementById("lectureTitle").value="";
+document.getElementById("lectureTopics").value="";
+document.getElementById("lectureModal").classList.add("open");
+}
+
+function editLecture(ci,li){
+currentCourseIndex=ci;editLectureIndex=li;
+const lec=courses[ci].lectures[li];
+document.getElementById("lectureTitle").value=lec.title;
+document.getElementById("lectureTopics").value=lec.topics||"";
+document.getElementById("lectureModal").classList.add("open");
+}
+
+async function saveLecture(){
+const title=document.getElementById("lectureTitle").value.trim();
+if(!title){alert("اكتب عنوان المحاضرة");return;}
+showLoader("جاري الحفظ...");
+const ci=currentCourseIndex;
+if(!courses[ci].lectures)courses[ci].lectures=[];
+const ex=editLectureIndex!==null?courses[ci].lectures[editLectureIndex]:{};
+const obj={title,topics:document.getElementById("lectureTopics").value.trim(),lessons:ex.lessons||[],quiz:ex.quiz||null};
+if(editLectureIndex!==null){courses[ci].lectures[editLectureIndex]=obj;}
+else{courses[ci].lectures.push(obj);}
+await saveToDB();
+document.getElementById("lectureModal").classList.remove("open");
+renderCourses();hideLoader();
+}
+
+function deleteLecture(ci,li){
+if(!confirm("حذف المحاضرة؟"))return;
+courses[ci].lectures.splice(li,1);saveToDB();renderCourses();
+}
+
+// ===== LESSON =====
+function resetLessonModal(){
+["lessonTitle","lessonVideoUrl","lessonFileUrl","lessonText"].forEach(id=>document.getElementById(id).value="");
+document.getElementById("lessonType").value="";
+document.getElementById("lessonImgText").innerText="لم يتم اختيار صورة";
+document.getElementById("lessonImgPreview").style.display="none";
+document.getElementById("lessonVideoText").innerText="لم يتم اختيار فيديو";
+document.getElementById("lessonFileText").innerText="لم يتم اختيار ملف";
+document.getElementById("videoProgress").style.display="none";
+document.getElementById("fileProgress").style.display="none";
+currentLessonMediaUrl="";
+updateLessonFields();
+}
+
+function openAddLesson(ci,li){
+currentCourseIndex=ci;currentLectureIndex=li;editLessonIndex=null;
+resetLessonModal();
+document.getElementById("lessonModalTitle").innerText="📌 إضافة درس";
+document.getElementById("lessonModal").classList.add("open");
+}
+
+function editLesson(ci,li,si){
+currentCourseIndex=ci;currentLectureIndex=li;editLessonIndex=si;
+const ls=courses[ci].lectures[li].lessons[si];
+currentLessonMediaUrl=ls.mediaUrl||ls.imageUrl||"";
+document.getElementById("lessonTitle").value=ls.title;
+document.getElementById("lessonType").value=ls.type;
+if(ls.type==="video") document.getElementById("lessonVideoUrl").value=ls.videoUrl||"";
+if(ls.type==="file") document.getElementById("lessonFileUrl").value=ls.fileUrl||"";
+if(ls.type==="text") document.getElementById("lessonText").value=ls.text||"";
+if(ls.type==="image"){
+document.getElementById("lessonImgPreview").src=ls.imageUrl||"";
+document.getElementById("lessonImgPreview").style.display=ls.imageUrl?"block":"none";
+document.getElementById("lessonImgText").innerText=ls.imageUrl?"✅ يوجد صورة":"لم يتم اختيار صورة";
+}
+if(ls.type==="video-upload") document.getElementById("lessonVideoText").innerText=ls.mediaUrl?"✅ فيديو مرفوع مسبقاً":"لم يتم اختيار فيديو";
+if(ls.type==="file-upload") document.getElementById("lessonFileText").innerText=ls.mediaUrl?"✅ ملف مرفوع مسبقاً":"لم يتم اختيار ملف";
+updateLessonFields();
+document.getElementById("lessonModalTitle").innerText="✏️ تعديل درس";
+document.getElementById("lessonModal").classList.add("open");
+}
+
+function updateLessonFields(){
+const t=document.getElementById("lessonType").value;
+["videoFields","videoUploadFields","imageFields","fileFields","fileUploadFields","textFields"].forEach(id=>document.getElementById(id).style.display="none");
+if(t==="video") document.getElementById("videoFields").style.display="block";
+if(t==="video-upload") document.getElementById("videoUploadFields").style.display="block";
+if(t==="image"){
+document.getElementById("imageFields").style.display="block";
+document.getElementById("lessonImage").value="";
+document.getElementById("lessonImage").onchange=async function(){
+const file=this.files[0]; if(!file)return;
+showLoader("جاري رفع الصورة...");
+try{
+currentLessonMediaUrl=await uploadImage(file);
+document.getElementById("lessonImgPreview").src=currentLessonMediaUrl;
+document.getElementById("lessonImgPreview").style.display="block";
+document.getElementById("lessonImgText").innerText="✅ "+file.name;
+}catch(e){alert("فشل رفع الصورة");}
+hideLoader();
+};
+}
+if(t==="file") document.getElementById("fileFields").style.display="block";
+if(t==="file-upload") document.getElementById("fileUploadFields").style.display="block";
+if(t==="text") document.getElementById("textFields").style.display="block";
+}
+
+async function saveLesson(){
+const title=document.getElementById("lessonTitle").value.trim();
+const type=document.getElementById("lessonType").value;
+if(!title){alert("اكتب عنوان الدرس");return;}
+if(!type){alert("اختر نوع المحتوى");return;}
+showLoader("جاري الحفظ...");
+const ci=currentCourseIndex,li=currentLectureIndex;
+const obj={title,type};
+if(type==="video") obj.videoUrl=document.getElementById("lessonVideoUrl").value.trim();
+if(type==="video-upload") obj.mediaUrl=currentLessonMediaUrl;
+if(type==="image") obj.imageUrl=currentLessonMediaUrl;
+if(type==="file") obj.fileUrl=document.getElementById("lessonFileUrl").value.trim();
+if(type==="file-upload") obj.mediaUrl=currentLessonMediaUrl;
+if(type==="text") obj.text=document.getElementById("lessonText").value.trim();
+if(!courses[ci].lectures[li].lessons)courses[ci].lectures[li].lessons=[];
+if(editLessonIndex!==null){courses[ci].lectures[li].lessons[editLessonIndex]=obj;}
+else{courses[ci].lectures[li].lessons.push(obj);}
+await saveToDB();closeLessonModal();renderCourses();hideLoader();
+}
+
+function deleteLesson(ci,li,si){
+if(!confirm("حذف هذا الدرس؟"))return;
+courses[ci].lectures[li].lessons.splice(si,1);saveToDB();renderCourses();
+}
+
+function closeLessonModal(){document.getElementById("lessonModal").classList.remove("open");}
+
+// ===== QUIZ =====
+function openQuizModal(ci,li){
+currentCourseIndex=ci;currentLectureIndex=li;
+const courseTitle=courses[ci].title;
+const lecTitle=courses[ci].lectures[li].title;
+const ex=courses[ci].lectures[li].quiz;
+
+document.getElementById("quizCourseLabel").innerText=`📚 ${courseTitle}  ›  📖 ${lecTitle}`;
+document.getElementById("quizModalTitle").innerText=ex&&ex.questions&&ex.questions.length?"✏️ تعديل الامتحان":"📝 إضافة امتحان جديد";
+
+if(ex&&ex.questions){
+quizQuestions=JSON.parse(JSON.stringify(ex.questions));
+document.getElementById("quizName").value=ex.name||"";
+document.getElementById("quizTime").value=ex.time||30;
+}else{
+quizQuestions=[];
+document.getElementById("quizName").value="";
+document.getElementById("quizTime").value=30;
+}
+clearQForm();renderQuizQs();
+document.getElementById("quizModal").classList.add("open");
+}
+
+function clearQForm(){
+document.getElementById("qText").value="";
+document.getElementById("qOpt1").value="";document.getElementById("qOpt2").value="";
+document.getElementById("qOpt3").value="";document.getElementById("qOpt4").value="";
+document.getElementById("qImgText").innerText="لم يتم اختيار صورة";
+document.getElementById("qImgPreview").style.display="none";
+document.getElementById("qImage").value="";
+quizSelectedAnswer=null;quizCurrentImgUrl="";
+document.querySelectorAll("#answerGrid div").forEach(d=>d.classList.remove("active"));
+}
+
+function selectAnswer(num){
+quizSelectedAnswer=num;
+document.querySelectorAll("#answerGrid div").forEach(d=>d.classList.remove("active"));
+document.querySelector(`#answerGrid div[data-val="${num}"]`).classList.add("active");
+}
+
+function addQuizQuestion(){
+const text=document.getElementById("qText").value.trim();
+const opts=[
+document.getElementById("qOpt1").value.trim(),
+document.getElementById("qOpt2").value.trim(),
+document.getElementById("qOpt3").value.trim(),
+document.getElementById("qOpt4").value.trim()
+].filter(Boolean);
+if(!text){alert("اكتب نص السؤال");return;}
+if(opts.length<2){alert("أضف اختيارين على الأقل");return;}
+if(!quizSelectedAnswer){alert("اختر رقم الإجابة الصحيحة");return;}
+if(quizSelectedAnswer>opts.length){alert("رقم الإجابة أكبر من عدد الاختيارات");return;}
+quizQuestions.push({question:text,options:opts,answer:quizSelectedAnswer,image:quizCurrentImgUrl});
+clearQForm();renderQuizQs();
+}
+
+function renderQuizQs(){
+document.getElementById("qCount").innerText=`عدد الأسئلة: ${quizQuestions.length}`;
+const el=document.getElementById("quizQuestionsList");
+if(!quizQuestions.length){el.innerHTML="";return;}
+el.innerHTML=quizQuestions.map((q,i)=>`
+<div class="q-card-dash">
+<div class="q-head">
+<span>س${i+1}: ${q.question}</span>
+<button onclick="delQ(${i})" style="background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;font-size:12px;width:auto;margin:0;font-family:Cairo,sans-serif;">🗑</button>
+</div>
+${q.image?`<img src="${q.image}" style="width:100%;max-height:110px;object-fit:cover;border-radius:8px;margin-top:8px;">` :""}
+<div class="q-opts">${q.options.map((o,idx)=>`<span class="q-opt ${q.answer===idx+1?'correct':''}">${idx+1}) ${o}</span>`).join("")}</div>
+</div>`).join("");
+}
+
+function delQ(i){if(!confirm("حذف السؤال؟"))return;quizQuestions.splice(i,1);renderQuizQs();}
+
+async function saveFullQuiz(){
+const name=document.getElementById("quizName").value.trim();
+const time=parseInt(document.getElementById("quizTime").value)||30;
+if(!name){alert("اكتب اسم الامتحان");return;}
+if(!quizQuestions.length){alert("أضف سؤالاً واحداً على الأقل");return;}
+showLoader("جاري حفظ الامتحان...");
+const ci=currentCourseIndex,li=currentLectureIndex;
+courses[ci].lectures[li].quiz={
+name,time,
+courseTitle:courses[ci].title,
+questions:quizQuestions
+};
+await saveToDB();closeQuizModal();renderCourses();hideLoader();
+alert(`✅ تم حفظ الامتحان "${name}" بنجاح!`);
+}
+
+function closeQuizModal(){
+document.getElementById("quizModal").classList.remove("open");
+quizQuestions=[];
+}
+
+// ===== SAVE =====
+async function saveToDB(){
+await fetch("/.netlify/functions/saveCourses",{
+method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(courses)
+});
+}
+
+// ===== CLOUDINARY =====
+async function compressImage(file){
+return new Promise(resolve=>{
+const img=new Image(),reader=new FileReader();
+reader.onload=e=>{img.src=e.target.result;};
+img.onload=function(){
+const canvas=document.createElement("canvas");
+const maxW=900,scale=maxW/img.width;
+canvas.width=maxW;canvas.height=img.height*scale;
+canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
+canvas.toBlob(blob=>resolve(blob),"image/jpeg",0.75);
+};
+reader.readAsDataURL(file);
+});
+}
+
+async function uploadImage(file){
+const compressed=await compressImage(file);
+const fd=new FormData();fd.append("file",compressed);fd.append("upload_preset","my_upload");
+const res=await fetch("https://api.cloudinary.com/v1_1/ddiegmhji/image/upload",{method:"POST",body:fd});
+const data=await res.json();
+if(!data.secure_url)throw"upload failed";
+return data.secure_url;
+}
+
+async function uploadMedia(file, resourceType, progressBarId){
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", "my_upload");
+  if(resourceType === "video"){ fd.append("quality","auto"); }
+  const url = `https://api.cloudinary.com/v1_1/ddiegmhji/${resourceType}/upload`;
+  return new Promise((resolve, reject)=>{
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", url);
+    xhr.timeout = 0;
+    xhr.upload.onprogress = function(e){
+      if(e.lengthComputable){
+        const pct = Math.round((e.loaded/e.total)*100);
+        const bar = document.getElementById(progressBarId);
+        if(bar) bar.style.width = pct + "%";
+        const mb = (e.loaded/1048576).toFixed(1);
+        const tot = (e.total/1048576).toFixed(1);
+        const lm = document.getElementById("loaderMsg");
+        if(lm) lm.innerText = "جاري الرفع... " + pct + "%
+(" + mb + " / " + tot + " MB)";
+      }
+    };
+    xhr.onload = function(){
+      try{
+        const d = JSON.parse(xhr.responseText);
+        if(d.secure_url) resolve(d.secure_url);
+        else reject("فشل: " + (d.error?.message||"unknown"));
+      }catch(e){ reject(e); }
+    };
+    xhr.onerror = ()=> reject("خطأ في الاتصال");
+    xhr.send(fd);
+  });
+}
+
+// ===== IMAGE MODAL =====
+function openImage(src){document.getElementById("modalImg").src=src;document.getElementById("imageModal").style.display="flex";}
+function closeImage(){document.getElementById("imageModal").style.display="none";}
+
+// ===== LOADER =====
+function showLoader(msg="جاري التنفيذ... ⏳"){
+document.getElementById("loaderMsg").innerText=msg;
+document.getElementById("loader").style.display="flex";
+}
+function hideLoader(){document.getElementById("loader").style.display="none";}
+
+// CLOSE ON BG CLICK
+window.onclick=function(e){
+["courseModal","lectureModal","lessonModal","quizModal"].forEach(id=>{
+const m=document.getElementById(id);
+if(e.target===m)m.classList.remove("open");
+});
+};
+</script>
+</body>
+</html>
