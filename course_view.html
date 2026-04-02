@@ -294,6 +294,12 @@ border-radius:50%;animation:spin 0.85s linear infinite;
 .content-body{padding:12px;}
 .header-spacer{width:60px;}
 }
+.row-arrow{
+transition:transform 0.3s;
+}
+.row-arrow.open{
+transform:rotate(90deg);
+}
 </style>
 </head>
 <body>
@@ -330,7 +336,11 @@ image:`<svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v
 file:`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
 "file-upload":`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
 text:`<svg viewBox="0 0 24 24"><path d="M3 4h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"/></svg>`,
-quiz:`<svg viewBox="0 0 24 24"><path d="M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 14l-4-4 1.4-1.4 2.6 2.6 5.6-5.6L19 10l-7 7z"/></svg>`,
+quiz:`<svg viewBox="0 0 24 24">
+<path d="M9 2h6v2H9zM5 6h14v14H5z" fill="none"/>
+<path d="M7 10h5v2H7zm0 4h7v2H7zm0-8h10v2H7z"/>
+<circle cx="17" cy="15" r="2"/>
+</svg>`,
 arrow:`<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 };
 const TYPE_LABELS = {video:"فيديو","video-upload":"فيديو",image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"};
@@ -399,7 +409,7 @@ const lessonsHtml = lsCount
 <div class="lesson-name">${ls.title}</div>
 <div class="lesson-label">${TYPE_LABELS[ls.type]||ls.type}</div>
 </div>
-<div class="row-arrow">${ICONS.arrow}</div>
+<div class="row-arrow" id="arrow-${li}-${si}">${ICONS.arrow}</div>
 </div>
 <div class="lesson-content-wrap" id="content-${li}-${si}">
 <div class="content-header">
@@ -502,20 +512,27 @@ arrow.classList.toggle("open", !isOpen);
 function toggleContent(li, si){
 const id = `content-${li}-${si}`;
 const wrap = document.getElementById(id);
+const arrow = document.getElementById(`arrow-${li}-${si}`);
+
 const isVisible = wrap.classList.contains("visible");
 
 if(isVisible){
+stopMedia(wrap); // وقف الفيديو
 wrap.classList.remove("visible");
+arrow.classList.remove("open");
 return;
 }
 
-// close any other open content
+// اقفل أي محتوى تاني
 closeAllContents();
 
+// افتح الحالي
 wrap.classList.add("visible");
+arrow.classList.add("open");
+
 openContentId = `${li}-${si}`;
 
-// scroll to content smoothly
+// scroll
 setTimeout(()=>{
 const row = document.getElementById(`row-${li}-${si}`);
 const offset = row.getBoundingClientRect().top + window.scrollY - 70;
@@ -525,13 +542,30 @@ window.scrollTo({top: offset, behavior: 'smooth'});
 
 function closeContent(e, li, si){
 e.stopPropagation();
-document.getElementById(`content-${li}-${si}`).classList.remove("visible");
+
+const wrap = document.getElementById(`content-${li}-${si}`);
+const arrow = document.getElementById(`arrow-${li}-${si}`);
+
+stopMedia(wrap); // وقف الفيديو
+
+wrap.classList.remove("visible");
+arrow.classList.remove("open");
+
 openContentId = null;
 }
 
 function closeAllContents(){
-document.querySelectorAll(".lesson-content-wrap.visible").forEach(el=>el.classList.remove("visible"));
-// stop quiz timer if running
+document.querySelectorAll(".lesson-content-wrap.visible").forEach(el=>{
+stopMedia(el); // وقف أي فيديو شغال
+el.classList.remove("visible");
+});
+
+// اقفل كل الأسهم
+document.querySelectorAll(".row-arrow").forEach(a=>{
+a.classList.remove("open");
+});
+
+// stop quiz timer
 if(quizTimer){ clearInterval(quizTimer); quizTimer=null; }
 }
 
@@ -659,6 +693,22 @@ document.getElementById("imgZoom").classList.add("show");
 }
 
 loadCourse();
+
+  function stopMedia(container){
+
+// وقف الفيديوهات العادية
+container.querySelectorAll("video").forEach(v=>{
+v.pause();
+v.currentTime = 0;
+});
+
+// وقف iframe (يوتيوب وغيره)
+container.querySelectorAll("iframe").forEach(frame=>{
+const src = frame.src;
+frame.src = "";
+frame.src = src;
+});
+}
 </script>
 </body>
 </html>
