@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الكورسات التعليمية</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+--primary:#6a1b9a;
+--primary-dark:#4a148c;
+--bg:#f4f0fb;
+--card:#fff;
+--text:#1e1e2e;
+--muted:#6b7280;
+--shadow:0 8px 30px rgba(106,27,154,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);min-height:100vh;}
+
+/* ===== HEADER ===== */
+header{
+position:relative;overflow:hidden;
+background:linear-gradient(135deg,var(--primary) 0%,#9c27b0 50%,var(--primary-dark) 100%);
+color:white;text-align:center;padding:36px 16px 28px;
+}
+header::before{
+content:"";position:absolute;top:-60px;right:-60px;
+width:220px;height:220px;border-radius:50%;
+background:rgba(255,255,255,0.06);
+}
+header::after{
+content:"";position:absolute;bottom:-40px;left:-40px;
+width:160px;height:160px;border-radius:50%;
+background:rgba(255,255,255,0.04);
+}
+header h1{font-size:clamp(20px,5vw,30px);font-weight:800;margin-bottom:4px;position:relative;}
+header p{font-size:13px;opacity:0.8;position:relative;}
+
+/* ===== BACK BUTTON - محسّن للموبايل ===== */
+.nav-bar{
+display:flex;align-items:center;justify-content:flex-end;
+padding:0 16px;margin-bottom:8px;position:relative;
+}
+.back-btn{
+display:inline-flex;align-items:center;gap:6px;
+padding:10px 20px;
+background:rgba(255,255,255,0.18);
+border:1.5px solid rgba(255,255,255,0.5);
+border-radius:25px;color:white;text-decoration:none;
+font-size:14px;font-family:'Cairo',sans-serif;
+font-weight:700;cursor:pointer;transition:0.25s;
+-webkit-tap-highlight-color:transparent;
+touch-action:manipulation;
+}
+.back-btn:hover,.back-btn:active{
+background:rgba(255,255,255,0.32);
+transform:scale(1.04);
+}
+.back-btn svg{width:16px;height:16px;fill:white;flex-shrink:0;}
+
+/* ===== SEARCH ===== */
+.search-wrap{
+max-width:620px;margin:22px auto 0;padding:0 16px;
+}
+.search-box{
+display:flex;align-items:center;gap:10px;
+background:#fff;border-radius:16px;padding:10px 16px;
+box-shadow:0 4px 20px rgba(106,27,154,0.1);
+border:2px solid transparent;transition:0.3s;
+}
+.search-box:focus-within{border-color:var(--primary);}
+.search-box svg{width:18px;height:18px;fill:var(--muted);flex-shrink:0;}
+.search-box input{
+border:none;outline:none;font-size:15px;font-family:'Cairo',sans-serif;
+width:100%;background:transparent;color:var(--text);
+}
+.search-box input::placeholder{color:#bbb;}
+
+/* ===== GRID ===== */
+.container{
+max-width:1200px;margin:22px auto 50px;padding:0 16px;
+display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;
+}
+
+/* ===== CARD ===== */
+.card{
+background:var(--card);border-radius:22px;
+box-shadow:var(--shadow);overflow:hidden;
+display:flex;flex-direction:column;
+transition:transform 0.28s,box-shadow 0.28s;
+animation:fadeUp 0.45s both;
+}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(106,27,154,0.16);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+
+.card-cover{width:100%;height:168px;object-fit:cover;display:block;}
+.card-cover-ph{
+width:100%;height:168px;
+background:linear-gradient(135deg,#ede7f6,#d1c4e9);
+display:flex;align-items:center;justify-content:center;font-size:52px;
+}
+
+.card-body{padding:18px;flex:1;display:flex;flex-direction:column;gap:0;}
+.card-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;line-height:1.4;}
+.card-desc{color:var(--muted);font-size:13px;flex:1;line-height:1.65;margin-bottom:14px;}
+
+.meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.badge{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
+.badge-purple{background:#ede7f6;color:#6a1b9a;}
+.badge-blue{background:#e3f2fd;color:#1565c0;}
+.badge-orange{background:#fff3e0;color:#e65100;}
+
+.enroll-btn{
+width:100%;padding:13px;border:none;border-radius:14px;
+background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+color:white;font-weight:800;font-size:15px;font-family:'Cairo',sans-serif;
+cursor:pointer;transition:0.25s;letter-spacing:0.3px;
+-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.enroll-btn:hover{opacity:0.92;transform:scale(1.02);}
+.enroll-btn:active{transform:scale(0.98);}
+
+/* ===== EMPTY ===== */
+.empty{
+text-align:center;padding:70px 20px;grid-column:1/-1;color:var(--muted);
+}
+.empty .e-icon{font-size:64px;margin-bottom:14px;}
+.empty p{font-size:16px;}
+
+/* ===== LOADING ===== */
+.skeleton{
+background:#fff;border-radius:22px;overflow:hidden;box-shadow:var(--shadow);
+animation:pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+.sk-cover{height:168px;background:#e9e4f0;}
+.sk-body{padding:18px;}
+.sk-line{background:#e9e4f0;border-radius:8px;margin-bottom:10px;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+.container{grid-template-columns:1fr;gap:14px;}
+header{padding:28px 14px 22px;}
+}
+@media(min-width:601px) and (max-width:920px){
+.container{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+
+<header>
+<div class="nav-bar">
+<a href="compition.html" class="back-btn">
+<svg viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v4h11v6H10v4z"/></svg>
+العودة
+</a>
+</div>
+<h1>🎓 الكورسات التعليمية</h1>
+<p>كنيسة السيدة العذراء مريم</p>
+</header>
+
+<div class="search-wrap">
+<div class="search-box">
+<svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="#9ca3af" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+<input type="text" id="searchInput" placeholder="ابحث عن كورس..." oninput="filterCourses()">
+</div>
+</div>
+
+<div class="container" id="courseGrid">
+<!-- Skeletons -->
+<div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:70%;"></div><div class="sk-line" style="height:13px;width:90%;"></div><div class="sk-line" style="height:13px;width:60%;margin-top:18px;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+<div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:60%;"></div><div class="sk-line" style="height:13px;width:85%;"></div><div class="sk-line" style="height:13px;width:55%;margin-top:18px;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+<div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:75%;"></div><div class="sk-line" style="height:13px;width:88%;"></div><div class="sk-line" style="height:13px;width:65%;margin-top:18px;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+</div>
+
+<script>
+let allCourses = [];
+
+async function loadCourses(){
+try{
+const res = await fetch("courses.json");
+allCourses = await res.json();
+if(!Array.isArray(allCourses)) allCourses = [];
+}catch{ allCourses = []; }
+renderCourses(allCourses);
+}
+
+function renderCourses(list){
+const grid = document.getElementById("courseGrid");
+if(!list.length){
+grid.innerHTML = `<div class="empty"><div class="e-icon">📭</div><p>لا توجد كورسات متاحة حالياً</p></div>`;
+return;
+}
+grid.innerHTML = list.map((c,i)=>{
+const lc = c.lectures ? c.lectures.length : 0;
+let ls = 0, qz = 0;
+if(c.lectures) c.lectures.forEach(l=>{
+if(l.lessons) ls += l.lessons.length;
+if(l.quiz && l.quiz.questions && l.quiz.questions.length) qz++;
+});
+return `
+<div class="card" style="animation-delay:${i*0.07}s">
+${c.cover
+? `<img src="${c.cover}" class="card-cover" alt="${c.title}" loading="lazy">`
+: `<div class="card-cover-ph">📚</div>`}
+<div class="card-body">
+<div class="card-title">${c.title}</div>
+<div class="card-desc">${c.desc || '&nbsp;'}</div>
+<div class="meta-row">
+<span class="badge badge-purple">📖 ${lc} محاضرة</span>
+<span class="badge badge-blue">📌 ${ls} درس</span>
+${qz ? `<span class="badge badge-orange">📝 ${qz} امتحان</span>` : ""}
+</div>
+<button class="enroll-btn" onclick="goToCourse(${i})">الدخول للكورس ←</button>
+</div>
+</div>`;
+}).join("");
+}
+
+function filterCourses(){
+const q = document.getElementById("searchInput").value.trim().toLowerCase();
+renderCourses(q ? allCourses.filter(c=>
+c.title.toLowerCase().includes(q)||(c.desc&&c.desc.toLowerCase().includes(q))
+) : allCourses);
+}
+
+function goToCourse(i){
+localStorage.setItem("courseIndex", i);
+window.location = "course_view.html";
+}
+
+loadCourses();
+</script>
+</body>
+</html>
