@@ -7,16 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
---primary:#6a1b9a;
---primary-dark:#4a148c;
---red:#c62828;
---red-dark:#b71c1c;
---bg:#f4f0fb;
---card:#fff;
---text:#1e1e2e;
---muted:#6b7280;
---border:#f0eaf8;
---shadow:0 6px 24px rgba(106,27,154,0.09);
+--primary:#7c3aed;
+--primary-light:#a78bfa;
+--primary-dark:#5b21b6;
+
+--bg:#f8fafc;
+--bg-soft:#f1f5f9;
+--card:#ffffff;
+
+--text:#0f172a;
+--text-light:#64748b;
+
+--border:#e2e8f0;
+
+--shadow:0 10px 30px rgba(0,0,0,0.08);
+--glow:0 0 20px rgba(124,58,237,0.25);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Cairo',sans-serif;background:var(--bg);min-height:100vh;}
@@ -396,7 +401,67 @@ font-size:12px;font-family:'Cairo',sans-serif;font-weight:700;
 }
 
 .content-body{padding:16px;}
+body.dark-mode{
+--primary:#8b5cf6;
+--primary-light:#c4b5fd;
+--primary-dark:#6d28d9;
 
+--bg:#020617;
+--bg-soft:#0f172a;
+--card:#0f172a;
+
+--text:#e2e8f0;
+--text-light:#94a3b8;
+
+--border:#1e293b;
+
+--shadow:0 10px 40px rgba(0,0,0,0.6);
+--glow:0 0 25px rgba(139,92,246,0.35);
+}
+  body{
+background:var(--bg);
+color:var(--text);
+transition:background 0.4s ease, color 0.3s ease;
+}
+  .info-card,
+.lecture-block{
+background:var(--card);
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+transition:all 0.3s ease;
+}
+  .info-title,
+.lesson-name{
+color:var(--text);
+}
+
+.info-desc,
+.lesson-label{
+color:var(--text-light);
+}
+  header{
+background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+box-shadow:var(--glow);
+}
+  .lesson-row:hover{
+background:var(--bg-soft);
+}
+  .lesson-content-wrap{
+background:var(--bg-soft);
+}
+  .toggle-track{
+background:var(--bg-soft);
+box-shadow:inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.toggle-thumb{
+background:var(--primary);
+box-shadow:var(--glow);
+}
+
+body.dark-mode .toggle-thumb{
+transform:translateX(-34px);
+}
 /* VIDEO */
 .video-wrap{
 position:relative;padding-bottom:56.25%;height:0;overflow:hidden;
@@ -514,6 +579,23 @@ transition:transform 0.3s;
 .row-arrow.open{
 transform:rotate(90deg);
 }
+  body{
+transition:all 0.4s ease;
+}
+  body::before{
+content:"";
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:
+radial-gradient(circle at 20% 30%, rgba(124,58,237,0.15), transparent),
+radial-gradient(circle at 80% 70%, rgba(139,92,246,0.15), transparent);
+z-index:-1;
+pointer-events:none;
+}
+  
 </style>
 </head>
 <body>
@@ -657,19 +739,28 @@ ${quizHtml}
 </div>`;
 }).join("");
 }
-function toggleTheme(){
-const body = document.body;
+function setTheme(mode){
+document.body.classList.remove("light-mode","dark-mode");
+document.body.classList.add(mode+"-mode");
+localStorage.setItem("theme",mode);
+}
 
-if(body.classList.contains("dark-mode")){
-body.classList.remove("dark-mode");
-body.classList.add("light-mode");
-localStorage.setItem("theme","light");
+function toggleTheme(){
+const isDark = document.body.classList.contains("dark-mode");
+setTheme(isDark ? "light" : "dark");
+}
+
+// Auto detect + حفظ
+(function(){
+const saved = localStorage.getItem("theme");
+
+if(saved){
+setTheme(saved);
 }else{
-body.classList.remove("light-mode");
-body.classList.add("dark-mode");
-localStorage.setItem("theme","dark");
+const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+setTheme(prefersDark ? "dark" : "light");
 }
-}
+})();
 
 // تحميل الثيم عند فتح الصفحة
 (function(){
