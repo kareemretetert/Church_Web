@@ -547,7 +547,10 @@ transform:translateY(0) scale(1);
    .lec-block{
 transition:transform .25s ease, box-shadow .25s ease;
 }
-
+.fade-out{
+  opacity:0;
+  transition:0.3s;
+}
 .lec-block:hover{
 transform:translateY(-4px) scale(1.01);
 box-shadow:0 20px 40px rgba(0,0,0,.15);
@@ -575,10 +578,12 @@ pointer-events:none;
 
 <header>
   <div class="hdr">
-    <button class="back-btn" onclick="history.back()">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      العودة
-    </button>
+    <button class="back-btn" onclick="goToCourses()">
+  <svg viewBox="0 0 24 24">
+    <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  العودة
+</button>
     <div class="hdr-title" id="courseName">جاري التحميل...</div>
     <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع الليلي">
       <div class="toggle-track">
@@ -884,6 +889,13 @@ function buildLecture(lec, li){
   </div>`;
 }
 
+   function goToCourses(){
+  document.body.classList.add("fade-out");
+
+  setTimeout(()=>{
+    window.location.replace("courses_list.htm");
+  }, 300);
+}
 function buildRow(ls, li, si){
   const ic = TICLS[ls.type] || "it";
   const content = buildContent(ls);
