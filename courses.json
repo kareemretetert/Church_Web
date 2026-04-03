@@ -127,7 +127,13 @@
       {
         "title": "gfhgf",
         "topics": "hgfhfghfghf",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "fghgfh",
+            "type": "text",
+            "text": "fghfghgfhgfhgh"
+          }
+        ],
         "quiz": null
       }
     ]
