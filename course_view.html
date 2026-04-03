@@ -681,7 +681,6 @@ arrow:`<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" st
 const TYPE_LABELS = {video:"فيديو","video-upload":"فيديو",image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"};
 const TYPE_ICON_CLASS = {video:"icon-video","video-upload":"icon-video",image:"icon-image",file:"icon-file","file-upload":"icon-file",text:"icon-text"};
 
-const progressKey = "course_progress_" + courseIndex;
 
 function getProgress(){
 return JSON.parse(localStorage.getItem(progressKey) || "{}");
@@ -704,6 +703,7 @@ icon: "icon-192.png"
   
 // ===== STATE =====
 const courseIndex = localStorage.getItem("courseIndex");
+const progressKey = "course_progress_" + courseIndex;
 let course = null;
 let openContentId = null; // "li-si" or "quiz-li"
 let quizData = null, quizAnswers = {}, quizTimer = null, quizTimeLeft = 0, quizTotalTime = 0;
@@ -760,7 +760,7 @@ const topics = lec.topics ? lec.topics.split('\n').filter(Boolean).map(t=>`<span
 
 const lessonsHtml = lsCount
 ? lessons.map((ls,si)=>`
-<div class="lesson-row ${isLocked(li,si)?'locked':''}" onclick="${isLocked(li,si)?'return':''} toggleContent(${li},${si})">
+<div class="lesson-row ${isLocked(li,si)?'locked':''}" onclick="${isLocked(li,si)?'return':''} toggleContent(${li},${si})"id="row-${li}-${si}">
 <div class="lesson-icon ${TYPE_ICON_CLASS[ls.type]||'icon-text'}">${ICONS[ls.type]||ICONS.text}</div>
 <div class="lesson-info">
 <div class="lesson-name">
