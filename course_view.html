@@ -82,11 +82,28 @@ body{
    HEADER
 ══════════════════════════════════════════ */
 header{
-  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-  border-bottom:1px solid var(--bdr);
-  position:sticky;top:0;z-index:300;
-  box-shadow:var(--sh-hdr);
+  position:sticky;
+  top:0;
+  z-index:300;
   overflow:hidden;
+
+  /* 🎨 Gradient */
+  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
+
+  /* 💎 Glass Effect */
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+
+  background-color:rgba(255,255,255,0.08);
+
+  border-bottom:1px solid var(--bdr);
+
+  box-shadow:0 8px 30px rgba(0,0,0,0.15);
+
+  transition:
+    background .4s ease,
+    box-shadow .3s ease,
+    backdrop-filter .3s ease;
 }
 header::before{
   content:"";position:absolute;top:-60px;right:-60px;
@@ -104,6 +121,7 @@ body.dark{
 --hdr1:#0f172a;
 --hdr2:#1e1b4b;
 --hdr3:#020617;
+   
 }
 .back-btn{
   display:inline-flex;align-items:center;gap:6px;
@@ -542,6 +560,15 @@ opacity:0.5;
 filter:grayscale(0.8);
 pointer-events:none;
 }
+   body.dark header{
+  background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+  background-color:rgba(15,23,42,0.75);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  box-shadow:0 10px 40px rgba(0,0,0,0.5);
+}
 </style>
 </head>
 <body>
@@ -604,7 +631,14 @@ const TICLS = {
   const mode = saved || (prefersDark ? "dark" : "light");
   applyTheme(mode);
 })();
-
+window.addEventListener("scroll",()=>{
+  const header = document.querySelector("header");
+  if(window.scrollY > 20){
+    header.classList.add("scrolled");
+  }else{
+    header.classList.remove("scrolled");
+  }
+});
 function applyTheme(mode){
   document.body.classList.toggle("dark", mode === "dark");
   localStorage.setItem("cv_theme", mode);
