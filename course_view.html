@@ -16,7 +16,9 @@
 --card:#ffffff;
 
 --text:#0f172a;
---text-light:#64748b;
+--text-light:#475569;
+
+--muted:#64748b; /* 🔥 مهم */
 
 --border:#e2e8f0;
 
@@ -361,9 +363,13 @@ right:4px;
 background:#fff;
 }
 
+.toggle-thumb{
+right:4px;
+transition:transform 0.3s cubic-bezier(.4,2,.6,1);
+}
+
 body.dark-mode .toggle-thumb{
-right:38px;
-background:#0f172a;
+transform:translateX(-34px);
 }
 
 /* تحسين الكروت في الدارك */
@@ -438,6 +444,23 @@ color:var(--text);
 .info-desc,
 .lesson-label{
 color:var(--text-light);
+}
+  .lecture-block.locked{
+opacity:0.5;
+pointer-events:none;
+position:relative;
+}
+
+.lecture-block.locked::after{
+content:"🔒 المحاضرة مقفولة";
+position:absolute;
+top:10px;
+left:10px;
+background:#000;
+color:#fff;
+padding:4px 10px;
+border-radius:10px;
+font-size:11px;
 }
   header{
 background:linear-gradient(135deg,var(--primary),var(--primary-dark));
@@ -632,6 +655,37 @@ animation:expand 0.4s ease;
   .lesson-row:active{
 transform:scale(0.96);
 }
+  body.dark-mode{
+--text:#e2e8f0;
+--text-light:#94a3b8;
+--muted:#94a3b8;
+}
+  .info-desc,
+.lesson-label{
+color:var(--text-light);
+}
+
+.empty-lec{
+color:var(--muted);
+}
+
+.quiz-sub{
+color:var(--muted);
+}
+  .lesson-content-wrap{
+background:var(--bg-soft);
+}
+
+.q-card{
+background:var(--card);
+}
+  .lesson-row:hover{
+background:rgba(124,58,237,0.08);
+}
+  .text-content{
+background:var(--card);
+color:var(--text);
+}
 </style>
 </head>
 <body>
@@ -760,7 +814,7 @@ const topics = lec.topics ? lec.topics.split('\n').filter(Boolean).map(t=>`<span
 
 const lessonsHtml = lsCount
 ? lessons.map((ls,si)=>`
-<div class="lesson-row ${isLocked(li,si)?'locked':''}" onclick="${isLocked(li,si)?'return':''} toggleContent(${li},${si})"id="row-${li}-${si}">
+<div class="lecture-block ${isLectureLocked(li)?'locked':''}">
 <div class="lesson-icon ${TYPE_ICON_CLASS[ls.type]||'icon-text'}">${ICONS[ls.type]||ICONS.text}</div>
 <div class="lesson-info">
 <div class="lesson-name">
@@ -783,7 +837,7 @@ const quizHtml = hasQuiz ? buildQuizRow(lec, li) : "";
 
 return `
 <div class="lecture-block" style="animation-delay:${li*0.06}s">
-<div class="lecture-header" onclick="toggleLecture(${li})">
+<div class="lecture-header" onclick="${isLectureLocked(li)?'return':''} toggleLecture(${li})">
 <div class="lec-arrow" id="arrow-${li}">${ICONS.arrow}</div>
 <div class="lec-info">
 <div class="lec-num">المحاضرة ${li+1}</div>
@@ -799,22 +853,33 @@ ${quizHtml}
 </div>`;
 }).join("");
 }
+function getLectureProgress(li){
+const progress = getProgress();
+const lessons = course.lectures[li].lessons || [];
+
+if(!lessons.length) return 0;
+
+let done = 0;
+
+lessons.forEach((_,si)=>{
+if(progress[`${li}-${si}`]) done++;
+});
+
+return done / lessons.length;
+}  
 function setTheme(mode){
 document.body.classList.remove("light-mode","dark-mode");
 document.body.classList.add(mode+"-mode");
 localStorage.setItem("theme",mode);
 }
-function isLocked(li, si){
-if(li === 0 && si === 0) return false;
+function isLectureLocked(li){
+if(li === 0) return false;
 
-const progress = getProgress();
+// المحاضرة السابقة
+const prevProgress = getLectureProgress(li - 1);
 
-// افتح لو اللي قبله متعمل
-if(si > 0){
-return !progress[`${li}-${si-1}`];
-}else{
-return !progress[`${li-1}-0`];
-}
+// لازم 70%
+return prevProgress < 0.7;
 }
 function toggleTheme(){
 const isDark = document.body.classList.contains("dark-mode");
