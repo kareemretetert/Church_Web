@@ -445,7 +445,23 @@ body.dark .q-card{box-shadow:0 2px 10px rgba(0,0,0,.4);}
   border-radius:50%;animation:spin .85s linear infinite;
 }
 .empty-lec{text-align:center;padding:22px;color:var(--tx3);font-size:13px;}
+.lec-progress{
+width:100%;
+height:6px;
+background:rgba(255,255,255,0.2);
+border-radius:10px;
+margin-top:8px;
+overflow:hidden;
+}
 
+.lec-progress-bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#22c55e,#4ade80,#22c55e);
+border-radius:10px;
+transition:width 0.6s cubic-bezier(.22,1,.36,1);
+box-shadow:0 0 10px rgba(34,197,94,.6);
+}
 /* ══════════════════════════════════════════
    KEYFRAMES
 ══════════════════════════════════════════ */
@@ -467,6 +483,31 @@ body.dark .q-card{box-shadow:0 2px 10px rgba(0,0,0,.4);}
   .lesson-row,.quiz-row{padding:12px 14px;gap:10px;}
   .c-body{padding:12px;}
   .l-ico{width:40px;height:40px;}
+}
+   .c-wrap.open{
+animation:netflixOpen .45s cubic-bezier(.22,1,.36,1);
+}
+
+@keyframes netflixOpen{
+0%{
+opacity:0;
+transform:translateY(20px) scale(0.96);
+}
+100%{
+opacity:1;
+transform:translateY(0) scale(1);
+}
+}
+   .lec-block{
+transition:transform .25s ease, box-shadow .25s ease;
+}
+
+.lec-block:hover{
+transform:translateY(-4px) scale(1.01);
+box-shadow:0 20px 40px rgba(0,0,0,.15);
+}
+   .lec-block.completed{
+box-shadow:0 0 20px rgba(34,197,94,.4), var(--sh);
 }
 </style>
 </head>
@@ -554,26 +595,35 @@ let quizData = null, quizAns = {}, qTimer = null, qLeft = 0, qTotal = 0;
 function getProgress(){ return JSON.parse(localStorage.getItem(PROG_KEY)||"{}"); }
 function saveProgress(d){ localStorage.setItem(PROG_KEY, JSON.stringify(d)); }
 function markDone(li, si){
-  const p = getProgress(); p[`${li}-${si}`] = true; saveProgress(p);
-  // علامة ✔ على الدرس
-  const el = document.getElementById(`done-${li}-${si}`);
-  if(el) el.classList.add("show");
-  // تحقق فوري: هل المحاضرة التالية انفتحت الآن؟
-  checkUnlock(li);
+let progress = getProgress();
+
+if(progress[`${li}-${si}`]) return;
+
+progress[`${li}-${si}`] = true;
+saveProgress(progress);
+
+// تحديث UI
+const el = document.getElementById(`done-${li}-${si}`);
+if(el) el.classList.add("show");
+
+// 🔥 المهم
+updateLectureProgress(li);
+checkLectureCompletion(li);
+checkUnlock(li);
 }
 
 function checkUnlock(li){
-  // المحاضرة التالية
-  const nextLi = li + 1;
-  if(!course || !course.lectures || nextLi >= course.lectures.length) return;
+const nextLi = li + 1;
 
-  const wasLocked = isLocked(nextLi);
-  if(!wasLocked) return; // كانت مفتوحة أصلاً
+if(!course || nextLi >= course.lectures.length) return;
 
-  // إذا وصلنا الآن لـ 70% — افتحها فوراً بدون refresh
-  if(getLecPct(li) >= 0.7){
-    unlockLecture(nextLi);
-  }
+if(getLecPct(li) >= 0.7){
+unlockLecture(nextLi);
+
+// 🔥 تحديث مباشر
+updateLectureProgress(li);
+updateLectureProgress(nextLi);
+}
 }
 
 function unlockLecture(li){
@@ -601,11 +651,18 @@ function unlockLecture(li){
   }
 }
 function restoreProgress(){
-  const p = getProgress();
-  Object.keys(p).forEach(k=>{
-    const el = document.getElementById("done-"+k);
-    if(el) el.classList.add("show");
-  });
+const progress = getProgress();
+
+Object.keys(progress).forEach(key=>{
+const el = document.getElementById("done-" + key);
+if(el) el.classList.add("show");
+});
+
+// 🔥 أهم سطرين
+course.lectures.forEach((_,li)=>{
+updateLectureProgress(li);
+checkLectureCompletion(li);
+});
 }
 
 /* ══════════════════════════════════════════
@@ -644,7 +701,11 @@ async function loadCourse(){
       `<p style="text-align:center;color:#ef4444;padding:40px;">خطأ في التحميل</p>`;
   }
 }
+function isLectureLocked(li){
+if(li === 0) return false;
 
+return getLecPct(li - 1) < 0.7;
+}
 /* ══════════════════════════════════════════
    RENDER
 ══════════════════════════════════════════ */
@@ -682,7 +743,9 @@ function renderCourse(){
   document.getElementById("lecturesEl").innerHTML =
     lects.map((lec, li) => buildLecture(lec, li)).join("");
 }
-
+function getQuizKey(li){
+return "quiz_" + CI + "_" + li;
+}
 function buildLecture(lec, li){
   const locked = isLocked(li);
   const lessons = lec.lessons || [];
@@ -710,6 +773,9 @@ function buildLecture(lec, li){
       <div class="lec-meta">
         <div class="lec-num">المحاضرة ${li+1}</div>
         <div class="lec-name">${lec.title}</div>
+        <div class="lec-progress">
+  <div class="lec-progress-bar" id="lpbar-${li}"></div>
+</div>
         ${tops ? `<div class="lec-topics">${tops}</div>` : ""}
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
@@ -726,7 +792,33 @@ function buildLecture(lec, li){
     </div>
   </div>`;
 }
+function toggleContent(li, si){
 
+const id = `content-${li}-${si}`;
+const wrap = document.getElementById(id);
+const isVisible = wrap.classList.contains("visible");
+
+if(isVisible){
+wrap.classList.remove("visible");
+return;
+}
+
+closeAllContents();
+
+wrap.classList.add("visible");
+
+// 🔥 تسجيل التقدم
+markDone(li, si);
+
+// scroll ناعم
+setTimeout(()=>{
+const row = document.getElementById(`row-${li}-${si}`);
+if(!row) return;
+
+const offset = row.getBoundingClientRect().top + window.scrollY - 70;
+window.scrollTo({top: offset, behavior: 'smooth'});
+}, 80);
+}
 function buildRow(ls, li, si){
   const ic = TICLS[ls.type] || "it";
   const content = buildContent(ls);
@@ -836,7 +928,14 @@ function buildContent(ls){
 
   return `<p style="color:var(--tx3);text-align:center;padding:20px;">نوع المحتوى غير معروف</p>`;
 }
+function updateLectureProgress(li){
+const pct = Math.round(getLecPct(li)*100);
+const bar = document.getElementById(`lpbar-${li}`);
 
+if(bar){
+bar.style.width = pct + "%";
+}
+}
 /* ══════════════════════════════════════════
    STOP MEDIA — يوقف كل صوت وفيديو
 ══════════════════════════════════════════ */
@@ -876,7 +975,12 @@ function togLec(li){
   body.classList.toggle("open", !open);
   arr.classList.toggle("open", !open);
 }
-
+function checkLectureCompletion(li){
+if(getLecPct(li) >= 0.7){
+const block = document.querySelector(`#lbody-${li}`)?.closest(".lec-block");
+if(block) block.classList.add("completed");
+}
+}
 function showLockMsg(li){
   const needed = li; // prev lecture
   const pct = Math.round(getLecPct(li - 1) * 100);
@@ -944,7 +1048,11 @@ function togQuiz(li){
   const lec = course.lectures[li];
   quizData = lec.quiz;
   quizAns = {}; qLeft = qTotal = (quizData.time || 30) * 60;
-
+  const saved = localStorage.getItem(getQuizKey(li));
+if(saved){
+showQuizResult(li, JSON.parse(saved));
+return;
+}
   document.getElementById(`qbody-${li}`).innerHTML = buildQuiz(li);
   wrap.classList.add("open");
   qrow?.classList.add("open");
@@ -957,7 +1065,26 @@ function togQuiz(li){
 
   startTimer(li);
 }
+function showQuizResult(li, data){
+const pct = Math.round((data.score/data.total)*100);
 
+document.getElementById(`qbody-${li}`).innerHTML = `
+<div class="res-wrap">
+<div class="res-score">${data.score}/${data.total}</div>
+<div class="res-pct">${pct}%</div>
+
+<button class="qz-submit" onclick="retryQuiz(${li})">
+🔁 إعادة الامتحان
+</button>
+</div>
+`;
+
+document.getElementById(`qwrap-${li}`).classList.add("open");
+}
+   function retryQuiz(li){
+localStorage.removeItem(getQuizKey(li));
+togQuiz(li);
+}
 function closeQuiz(e, li){
   e.stopPropagation();
   clearInterval(qTimer); qTimer = null;
@@ -1018,7 +1145,29 @@ function startTimer(li){
     if(qLeft <= 0){ clearInterval(qTimer); submitQuiz(li); }
   }, 1000);
 }
+const progressKey = "course_progress_" + CI;
 
+function getProgress(){
+return JSON.parse(localStorage.getItem(progressKey) || "{}");
+}
+
+function saveProgress(data){
+localStorage.setItem(progressKey, JSON.stringify(data));
+}
+   function getLecPct(li){
+const progress = getProgress();
+const lessons = course.lectures[li].lessons || [];
+
+if(!lessons.length) return 0;
+
+let done = 0;
+
+lessons.forEach((_,si)=>{
+if(progress[`${li}-${si}`]) done++;
+});
+
+return done / lessons.length;
+}
 function submitQuiz(li){
   clearInterval(qTimer); qTimer = null;
   const qs = quizData.questions;
@@ -1043,6 +1192,11 @@ function submitQuiz(li){
         <div class="rqa-q">س${i+1}: ${q.question}</div>
         <div class="rqa-a" style="color:${ok?"#16a34a":"#dc2626"}">${ok?"✅":"❌"} إجابتك: ${ch?q.options[ch-1]:"لم تجب"}</div>
         ${!ok?`<div class="rqa-a" style="color:#16a34a">✅ الصحيحة: ${q.options[q.answer-1]}</div>`:""}
+        localStorage.setItem(getQuizKey(li), JSON.stringify({
+score: sc,
+total: qs.length,
+answers: quizAns
+}));
       </div>`;
     }).join("")}
     </div>
