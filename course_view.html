@@ -547,10 +547,6 @@ transform:translateY(0) scale(1);
    .lec-block{
 transition:transform .25s ease, box-shadow .25s ease;
 }
-.fade-out{
-  opacity:0;
-  transition:0.1s;
-}
 .lec-block:hover{
 transform:translateY(-4px) scale(1.01);
 box-shadow:0 20px 40px rgba(0,0,0,.15);
@@ -890,11 +886,7 @@ function buildLecture(lec, li){
 }
 
    function goToCourses(){
-  document.body.classList.add("fade-out");
-
-  setTimeout(()=>{
     window.location.replace("courses_list.htm");
-  }, 100);
 }
 function buildRow(ls, li, si){
   const ic = TICLS[ls.type] || "it";
