@@ -536,6 +536,11 @@ box-shadow:0 20px 40px rgba(0,0,0,.15);
    .lec-block.completed{
 box-shadow:0 0 20px rgba(34,197,94,.4), var(--sh);
 }
+   .lec-block.locked{
+opacity:0.5;
+filter:grayscale(0.8);
+pointer-events:none;
+}
 </style>
 </head>
 <body>
@@ -637,6 +642,7 @@ if(el) el.classList.add("show");
 updateLectureProgress(li);
 checkLectureCompletion(li);
 checkUnlock(li);
+   renderLectures(); 
 }
 
 function checkUnlock(li){
@@ -646,14 +652,18 @@ if(!course || nextLi >= course.lectures.length) return;
 
 if(getLecPct(li) >= 0.7){
 
-// 🔥 افتح فعليًا
-unlockLecture(nextLi);
-
-// 🔥 عدّل الـ logic
+// افتح فعلي
 course.lectures[nextLi].__unlocked = true;
 
-// تحديث UI
-updateLectureProgress(li);
+// 🔥 امسح أي Overlay / رسالة قفل
+const lockMsg = document.getElementById(`lockmsg-${nextLi}`);
+if(lockMsg) lockMsg.remove();
+
+// 🔥 شيل شكل القفل
+const block = document.querySelector(`#lbody-${nextLi}`)?.closest(".lec-block");
+if(block) block.classList.remove("locked");
+
+// 🔥 تحديث البار
 updateLectureProgress(nextLi);
 }
 }
@@ -701,6 +711,19 @@ checkUnlock(li); // ← ضيف دي
 /* ══════════════════════════════════════════
    LECTURE LOCK (70% of prev lecture needed)
 ══════════════════════════════════════════ */
+   function unlockUI(li){
+const block = document.querySelector(`#lbody-${li}`)?.closest(".lec-block");
+
+if(block){
+block.classList.remove("locked");
+block.style.opacity = "1";
+block.style.filter = "none";
+block.style.pointerEvents = "auto";
+}
+
+const lockMsg = document.getElementById(`lockmsg-${li}`);
+if(lockMsg) lockMsg.remove();
+}
 function getLecPct(li){
   const lec = course.lectures[li];
   const lessons = lec.lessons||[];
