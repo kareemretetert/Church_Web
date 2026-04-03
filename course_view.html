@@ -6,1186 +6,996 @@
 <title>محتوى الكورس</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ══════════════════════════════════════════
+   DESIGN TOKENS — light & dark
+══════════════════════════════════════════ */
 :root{
---primary:#7c3aed;
---primary-light:#a78bfa;
---primary-dark:#5b21b6;
-
---bg:#f8fafc;
---bg-soft:#f1f5f9;
---card:#ffffff;
-
---text:#0f172a;
---text-light:#475569;
-
---muted:#64748b; /* 🔥 مهم */
-
---border:#e2e8f0;
-
---shadow:0 10px 30px rgba(0,0,0,0.08);
---glow:0 0 20px rgba(124,58,237,0.25);
+  /* brand */
+  --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
+  /* red (lecture header) */
+  --red:#c62828; --red-dk:#b71c1c;
+  /* surfaces */
+  --bg:#f4f0fb; --surface:#ffffff; --surface2:#f1ecfc;
+  /* text — high contrast in both modes */
+  --tx:#0f172a; --tx2:#374151; --tx3:#6b7280;
+  /* borders */
+  --bdr:#e2e8f0;
+  /* icons bg */
+  --ico-v:#dbeafe; --ico-i:#dcfce7; --ico-f:#ffedd5; --ico-t:#fce7f3; --ico-q:#fef9c3;
+  /* icon fg */
+  --ico-v-c:#1d4ed8; --ico-i-c:#15803d; --ico-f-c:#c2410c; --ico-t-c:#9d174d; --ico-q-c:#b45309;
+  /* lesson hover */
+  --row-hover:#ede9fe;
+  /* content bg */
+  --content-bg:#f5f0ff;
+  /* quiz option */
+  --opt-bg:#ede9fe; --opt-sel:#ddd6fe;
+  /* shadows */
+  --sh:0 4px 20px rgba(109,40,217,.10);
+  --sh-hdr:0 6px 24px rgba(109,40,217,.25);
+  /* badge */
+  --bdg-p-bg:#ede7f6; --bdg-p-c:#5b21b6;
+  --bdg-b-bg:#dbeafe; --bdg-b-c:#1e40af;
+  --bdg-o-bg:#ffedd5; --bdg-o-c:#c2410c;
+  /* lock */
+  --lock-bg:#fef2f2; --lock-bdr:#fecaca; --lock-c:#991b1b;
+  /* result */
+  --res-ok-bg:#dcfce7; --res-no-bg:#fee2e2;
+  /* quiz row */
+  --quiz-row-bg:#fffbeb; --quiz-row-bdr:#fde68a;
 }
+
+/* DARK MODE — overrides only */
+body.dark{
+  --bg:#0d0d1a; --surface:#161627; --surface2:#1e1e33;
+  --tx:#f0f0ff; --tx2:#c4c4e0; --tx3:#8888aa;
+  --bdr:#2a2a44;
+  --ico-v:#1e3a5f; --ico-i:#14432a; --ico-f:#431407; --ico-t:#3b0a2a; --ico-q:#3b2800;
+  --ico-v-c:#93c5fd; --ico-i-c:#86efac; --ico-f-c:#fdba74; --ico-t-c:#f9a8d4; --ico-q-c:#fde68a;
+  --row-hover:#1e1e38;
+  --content-bg:#12122a;
+  --opt-bg:#1e1e38; --opt-sel:#2d2b5e;
+  --sh:0 4px 24px rgba(0,0,0,.5);
+  --sh-hdr:0 6px 24px rgba(0,0,0,.6);
+  --bdg-p-bg:#2d1b69; --bdg-p-c:#c4b5fd;
+  --bdg-b-bg:#1e3a5f; --bdg-b-c:#93c5fd;
+  --bdg-o-bg:#431407; --bdg-o-c:#fdba74;
+  --lock-bg:#1a0a0a; --lock-bdr:#7f1d1d; --lock-c:#fca5a5;
+  --res-ok-bg:#14432a; --res-no-bg:#450a0a;
+  --quiz-row-bg:#1c1500; --quiz-row-bdr:#78350f;
+}
+
+/* ══════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Cairo',sans-serif;background:var(--bg);min-height:100vh;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);color:var(--tx);
+  min-height:100vh;overflow-x:hidden;
+  transition:background .3s,color .3s;
+}
 
-/* ===== HEADER ===== */
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
 header{
-background:linear-gradient(135deg,var(--primary),#9c27b0,var(--primary-dark));
-color:white;padding:0;position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--p),#9333ea,var(--p-dk));
+  position:sticky;top:0;z-index:300;
+  box-shadow:var(--sh-hdr);
+  overflow:hidden;
 }
-header::before{content:"";position:absolute;top:-50px;left:-50px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,0.05);}
+header::before{
+  content:"";position:absolute;top:-60px;right:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(255,255,255,.06);pointer-events:none;
+}
+.hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
 
-.header-inner{
-display:flex;align-items:center;gap:12px;
-padding:14px 16px;position:relative;
-}
 .back-btn{
-display:inline-flex;align-items:center;justify-content:center;gap:5px;
-padding:9px 16px;background:rgba(255,255,255,0.18);
-border:1.5px solid rgba(255,255,255,0.45);border-radius:22px;
-color:white;text-decoration:none;font-size:13px;
-font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;
-transition:0.22s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
-flex-shrink:0;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);
+  border-radius:22px;background:rgba(255,255,255,.15);
+  color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;flex-shrink:0;
+  transition:background .2s,transform .15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.back-btn:hover,.back-btn:active{background:rgba(255,255,255,0.3);}
-.back-btn svg{width:14px;height:14px;fill:white;}
-.header-title{
-flex:1;text-align:center;font-size:clamp(15px,3.5vw,20px);
-font-weight:800;line-height:1.3;
+.back-btn:hover{background:rgba(255,255,255,.28);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:14px;height:14px;fill:#fff;}
+
+.hdr-title{
+  flex:1;text-align:center;color:#fff;
+  font-size:clamp(14px,3.5vw,19px);font-weight:800;line-height:1.3;
 }
-.header-spacer{width:80px;flex-shrink:0;}/* balance */
 
-/* ===== COURSE INFO CARD ===== */
-.page-wrap{max-width:860px;margin:0 auto;padding:18px 14px 60px;}
+/* theme toggle */
+.theme-btn{
+  width:42px;height:42px;flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,.4);border-radius:50%;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;
+  transition:background .2s,transform .2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.theme-btn:hover{background:rgba(255,255,255,.3);}
+.theme-btn:active{transform:scale(.9);}
 
+/* ══════════════════════════════════════════
+   PAGE
+══════════════════════════════════════════ */
+.page{max-width:860px;margin:0 auto;padding:20px 14px 70px;}
+
+/* ══════════════════════════════════════════
+   INFO CARD
+══════════════════════════════════════════ */
 .info-card{
-background:var(--card);border-radius:20px;
-box-shadow:var(--shadow);overflow:hidden;margin-bottom:22px;
+  background:var(--surface);border-radius:22px;overflow:hidden;
+  box-shadow:var(--sh);margin-bottom:24px;
+  border:1px solid var(--bdr);
+  animation:fadeUp .5s both;
 }
-.info-cover{width:100%;max-height:210px;object-fit:cover;display:block;}
+.info-cover{width:100%;max-height:220px;object-fit:cover;display:block;}
 .info-body{padding:18px 20px;}
-.info-title{font-size:19px;font-weight:800;color:var(--text);}
-.info-desc{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.7;}
+.info-title{font-size:19px;font-weight:800;color:var(--tx);}
+.info-desc{color:var(--tx2);font-size:13px;margin-top:6px;line-height:1.7;}
 .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 .badge{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
-.badge-purple{background:#ede7f6;color:#6a1b9a;}
-.badge-blue{background:#e3f2fd;color:#1565c0;}
-.badge-orange{background:#fff3e0;color:#e65100;}
+.b-p{background:var(--bdg-p-bg);color:var(--bdg-p-c);}
+.b-b{background:var(--bdg-b-bg);color:var(--bdg-b-c);}
+.b-o{background:var(--bdg-o-bg);color:var(--bdg-o-c);}
 
-/* ===== LECTURE BLOCK ===== */
-.lecture-block{
-background:var(--card);border-radius:18px;
-box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden;
-animation:fadeUp 0.4s both;
+/* ══════════════════════════════════════════
+   LECTURE BLOCK
+══════════════════════════════════════════ */
+.lec-block{
+  background:var(--surface);border-radius:20px;
+  box-shadow:var(--sh);margin-bottom:14px;overflow:hidden;
+  border:1px solid var(--bdr);
+  animation:fadeUp .4s both;
 }
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 
 /* RED HEADER */
-.lecture-header{
-background:linear-gradient(135deg,var(--red),var(--red-dark));
-color:white;padding:15px 18px;cursor:pointer;
-display:flex;align-items:center;gap:12px;
-user-select:none;-webkit-tap-highlight-color:transparent;
-transition:background 0.2s;
+.lec-hdr{
+  background:linear-gradient(135deg,var(--red),var(--red-dk));
+  color:#fff;padding:15px 18px;cursor:pointer;
+  display:flex;align-items:center;gap:12px;
+  user-select:none;-webkit-tap-highlight-color:transparent;
+  transition:filter .2s;
 }
-.lecture-header:active{background:linear-gradient(135deg,var(--red-dark),#8b0000);}
+.lec-hdr:hover{filter:brightness(1.08);}
+.lec-hdr:active{filter:brightness(.9);}
 
-.lec-arrow{
-width:28px;height:28px;flex-shrink:0;
-background:rgba(255,255,255,0.18);border-radius:50%;
-display:flex;align-items:center;justify-content:center;
-transition:transform 0.3s;
+/* LOCKED HEADER */
+.lec-hdr.locked{
+  background:linear-gradient(135deg,#64748b,#475569);
+  cursor:not-allowed;
 }
-.lec-arrow svg{width:14px;height:14px;fill:white;}
-.lec-arrow.open{transform:rotate(90deg);}
+.lec-hdr.locked:hover{filter:none;}
 
-.lec-info{flex:1;min-width:0;}
-.lec-num{font-size:11px;opacity:0.75;margin-bottom:2px;}
-.lec-name{font-size:16px;font-weight:800;line-height:1.3;}
+/* arrow circle */
+.lec-arr{
+  width:30px;height:30px;flex-shrink:0;
+  background:rgba(255,255,255,.2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+}
+.lec-arr svg{width:15px;height:15px;fill:#fff;}
+.lec-arr.open{transform:rotate(90deg);}
+
+.lec-meta{flex:1;min-width:0;}
+.lec-num{font-size:11px;opacity:.75;margin-bottom:2px;}
+.lec-name{font-size:16px;font-weight:800;line-height:1.35;}
 .lec-topics{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
-.topic-tag{
-background:rgba(255,255,255,0.2);padding:3px 10px;
-border-radius:10px;font-size:11px;
-}
-.lec-count{
-font-size:11px;opacity:0.75;white-space:nowrap;flex-shrink:0;text-align:center;
+.topic-tag{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:10px;font-size:11px;}
+.lec-cnt{font-size:11px;opacity:.75;white-space:nowrap;flex-shrink:0;}
+
+/* LOCK BADGE */
+.lock-badge{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(0,0,0,.25);border-radius:14px;
+  padding:4px 10px;font-size:11px;font-weight:700;color:#fff;
+  white-space:nowrap;
 }
 
-.lecture-body{
-max-height:0;
-overflow:hidden;
-transition:max-height 0.4s ease;
+/* LOCK NOTICE */
+.lock-notice{
+  background:var(--lock-bg);border:1px solid var(--lock-bdr);
+  border-radius:0 0 18px 18px;padding:14px 18px;
+  display:flex;align-items:center;gap:10px;
 }
+.lock-notice span{font-size:13px;color:var(--lock-c);font-weight:600;}
 
-.lecture-body.open-body{
-max-height:1000px;
+/* BODY — grid slide */
+.lec-body{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .36s ease;
 }
-  
+.lec-body.open{grid-template-rows:1fr;}
+.lec-body-inner{overflow:hidden;}
+
+/* ══════════════════════════════════════════
+   LESSON ROW
+══════════════════════════════════════════ */
 .lesson-row{
-display:flex;align-items:center;gap:13px;
-padding:13px 18px;border-bottom:1px solid var(--border);
-cursor:pointer;transition:background 0.18s;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  display:flex;align-items:center;gap:13px;
+  padding:13px 18px;border-bottom:1px solid var(--bdr);
+  cursor:pointer;
+  transition:background .15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  position:relative;
 }
-.lesson-row:last-child{border-bottom:none;}
-.lesson-row:hover{background:#faf5ff;}
-.lesson-row:active{background:#f3e8ff;}
+.lesson-row:last-of-type{border-bottom:none;}
+.lesson-row:hover{background:var(--row-hover);}
+.lesson-row:active{background:var(--opt-sel);}
 
 /* ICON BOX */
-.lesson-icon{
-width:44px;height:44px;border-radius:13px;
-display:flex;align-items:center;justify-content:center;flex-shrink:0;
+.l-ico{
+  width:44px;height:44px;border-radius:13px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .2s;
 }
-.lesson-icon svg{width:22px;height:22px;}
-.icon-video{background:#e3f2fd;}  .icon-video svg{fill:#1565c0;}
-.icon-image{background:#e8f5e9;}  .icon-image svg{fill:#2e7d32;}
-.icon-file {background:#fff3e0;}  .icon-file  svg{fill:#e65100;}
-.icon-text {background:#fce4ec;}  .icon-text  svg{fill:#880e4f;}
-.icon-quiz {background:#fff8e1;}  .icon-quiz  svg{fill:#f57f17;}
+.lesson-row:hover .l-ico{transform:scale(1.08) rotate(-5deg);}
+.l-ico svg{width:22px;height:22px;}
+.iv{background:var(--ico-v);} .iv svg{fill:var(--ico-v-c);}
+.ii{background:var(--ico-i);} .ii svg{fill:var(--ico-i-c);}
+.if{background:var(--ico-f);} .if svg{fill:var(--ico-f-c);}
+.it{background:var(--ico-t);} .it svg{fill:var(--ico-t-c);}
+.iq{background:var(--ico-q);} .iq svg{fill:var(--ico-q-c);}
 
-.lesson-info{flex:1;min-width:0;}
-.lesson-name{font-size:14px;font-weight:700;color:var(--text);line-height:1.4;}
-.lesson-label{font-size:12px;color:var(--muted);margin-top:2px;}
+.l-info{flex:1;min-width:0;}
+.l-name{font-size:14px;font-weight:700;color:var(--tx);line-height:1.4;}
+.l-lbl{font-size:12px;color:var(--tx3);margin-top:2px;}
 
-.row-arrow{
-width:28px;height:28px;flex-shrink:0;
-background:var(--border);border-radius:50%;
-display:flex;align-items:center;justify-content:center;
+/* done check */
+.done-mark{
+  display:none;font-size:11px;font-weight:800;
+  background:#dcfce7;color:#15803d;
+  padding:2px 7px;border-radius:10px;margin-right:5px;
 }
-.row-arrow svg{width:12px;height:12px;fill:var(--muted);}
+body.dark .done-mark{background:#14432a;color:#86efac;}
+.done-mark.show{display:inline;}
 
-/* QUIZ ROW */
+/* ROW ARROW */
+.row-arr{
+  width:28px;height:28px;flex-shrink:0;
+  background:var(--surface2);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1),background .2s;
+}
+.row-arr svg{width:12px;height:12px;stroke:var(--tx3);transition:stroke .2s;}
+.row-arr.open{transform:rotate(90deg);background:var(--opt-sel);}
+.row-arr.open svg{stroke:var(--p);}
+
+/* ══════════════════════════════════════════
+   QUIZ ROW
+══════════════════════════════════════════ */
 .quiz-row{
-display:flex;align-items:center;gap:13px;padding:13px 18px;
-background:#fffde7;border-top:2px solid #ffe082;
-cursor:pointer;transition:background 0.18s;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
-text-decoration:none;
+  display:flex;align-items:center;gap:13px;padding:13px 18px;
+  background:var(--quiz-row-bg);border-top:2px solid var(--quiz-row-bdr);
+  cursor:pointer;transition:background .15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  text-decoration:none;
 }
-.quiz-row:hover{background:#fff9c4;}
-.quiz-row:active{background:#fff59d;}
-.quiz-name{font-size:14px;font-weight:700;color:#e65100;}
-.quiz-sub{font-size:12px;color:#888;margin-top:2px;}
+.quiz-row:hover{filter:brightness(.97);}
+.quiz-row:active{filter:brightness(.93);}
+.quiz-row.open .row-arr{transform:rotate(90deg);background:var(--opt-sel);}
+.q-name{font-size:14px;font-weight:700;color:var(--ico-q-c);}
+.q-sub{font-size:12px;color:var(--tx3);margin-top:2px;}
 
-/* EMPTY */
-.empty-lec{
-text-align:center;padding:22px;color:var(--muted);font-size:13px;
+/* ══════════════════════════════════════════
+   INLINE CONTENT
+══════════════════════════════════════════ */
+.c-wrap{
+  display:grid;grid-template-rows:0fr;
+  transition:grid-template-rows .36s ease,opacity .3s;
+  opacity:0;
 }
+.c-wrap.open{grid-template-rows:1fr;opacity:1;}
+.c-inner{overflow:hidden;}
 
-/* ===== INLINE CONTENT (not overlay) ===== */
-.lesson-content-wrap{
-background:#f9f5ff;border-radius:0 0 18px 18px;
-overflow:hidden;display:none;
-border-top:2px solid #ede7f6;
+.c-hdr{
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;padding:11px 18px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;
 }
-.lesson-content-wrap.visible{display:block;}
+.c-hdr-title{font-size:14px;font-weight:700;flex:1;color:#fff;}
+.c-close{
+  background:rgba(255,255,255,.18);border:none;color:#fff;
+  padding:6px 14px;border-radius:16px;cursor:pointer;
+  font-size:12px;font-family:'Cairo',sans-serif;font-weight:700;
+  -webkit-tap-highlight-color:transparent;
+  transition:background .2s;
+}
+.c-close:hover{background:rgba(255,255,255,.35);}
+.c-close:active{transform:scale(.93);}
+.c-body{padding:16px;background:var(--content-bg);}
 
-
-.lesson-content-wrap{
-max-height:0;
-overflow:hidden;
-opacity:0;
-transform:translateY(-10px);
-transition:all 0.35s ease;
-}
-
-.lesson-content-wrap.visible{
-max-height:1000px;
-opacity:1;
-transform:translateY(0);
-}
-
-
-.lesson-row{
-transition:all 0.25s ease;
-}
-
-.lesson-row:hover{
-transform:translateY(-3px);
-box-shadow:0 8px 20px rgba(106,27,154,0.15);
-}
-
-.lesson-row:active{
-transform:scale(0.97);
-}
-  
-
-@keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(30px) scale(0.96);
-}
-to{
-opacity:1;
-transform:translateY(0) scale(1);
-}
-}
-
-  .close-content-btn{
-transition:all 0.2s ease;
-}
-
-.close-content-btn:hover{
-background:white;
-color:var(--primary);
-}
-
-.close-content-btn:active{
-transform:scale(0.9);
-}
-  button, .file-link-btn, .quiz-submit-btn{
-transition:all 0.25s ease;
-}
-
-button:active, .file-link-btn:active, .quiz-submit-btn:active{
-transform:scale(0.96);
-}
-  .lesson-icon{
-transition:all 0.3s ease;
-}
-
-.lesson-row:hover .lesson-icon{
-transform:rotate(-8deg) scale(1.1);
-}
-  .info-card, .lecture-block{
-backdrop-filter: blur(10px);
-border:1px solid rgba(255,255,255,0.3);
-}
- body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background: radial-gradient(circle at 20% 30%, rgba(106,27,154,0.08), transparent),
-radial-gradient(circle at 80% 70%, rgba(156,39,176,0.08), transparent);
-z-index:-1;
-}
-  header{
-box-shadow:0 8px 30px rgba(106,27,154,0.25);
-}
-  .row-arrow, .lec-arrow{
-transition:all 0.3s ease;
-}
-
-.row-arrow.open, .lec-arrow.open{
-transform:rotate(90deg) scale(1.1);
-background:rgba(106,27,154,0.1);
-}
-  .q-card{
-transition:all 0.25s ease;
-}
-
-.q-card:hover{
-transform:translateY(-2px);
-box-shadow:0 6px 18px rgba(0,0,0,0.1);
-}
-  .skeleton{
-height:80px;
-border-radius:14px;
-background:linear-gradient(90deg,#eee,#f5f5f5,#eee);
-animation:shine 1.2s infinite;
-margin-bottom:10px;
-}
-/* ===== THEME TOGGLE ===== */
-.theme-toggle{
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.toggle-track{
-width:70px;
-height:34px;
-background:#1e293b;
-border-radius:50px;
-position:relative;
-display:flex;
-align-items:center;
-padding:0 6px;
-cursor:pointer;
-transition:background 0.3s;
-}
-
-.toggle-icon{
-font-size:14px;
-z-index:1;
-}
-
-.sun{
-color:#facc15;
-margin-right:auto;
-}
-
-.moon{
-color:#fff;
-margin-left:auto;
-}
-
-.toggle-thumb{
-position:absolute;
-width:28px;
-height:28px;
-background:#fff;
-border-radius:50%;
-top:3px;
-right:4px;
-transition:all 0.3s cubic-bezier(.4,2,.6,1);
-box-shadow:0 4px 10px rgba(0,0,0,0.2);
-}
-
-/* ===== LIGHT MODE ===== */
-body.light-mode{
---bg:#f4f0fb;
---card:#fff;
---text:#1e1e2e;
---border:#f0eaf8;
-}
-
-/* ===== DARK MODE ===== */
-body.dark-mode{
---bg:#0f172a;
---card:#1e293b;
---text:#e5e7eb;
---border:#334155;
-}
-
-/* الخلفية */
-body.dark-mode{
-background:linear-gradient(135deg,#0f172a,#020617);
-}
-
-/* تحريك الزر */
-body.light-mode .toggle-thumb{
-right:4px;
-background:#fff;
-}
-
-.toggle-thumb{
-right:4px;
-transition:transform 0.3s cubic-bezier(.4,2,.6,1);
-}
-
-body.dark-mode .toggle-thumb{
-transform:translateX(-34px);
-}
-
-/* تحسين الكروت في الدارك */
-body.dark-mode .lecture-block,
-body.dark-mode .info-card{
-background:#1e293b;
-box-shadow:0 8px 30px rgba(0,0,0,0.4);
-}
-
-/* النص */
-body.dark-mode .lesson-name,
-body.dark-mode .info-title{
-color:#fff;
-}
-
-body.dark-mode .lesson-label,
-body.dark-mode .info-desc{
-color:#cbd5f5;
-}
-@keyframes shine{
-0%{background-position:-200px;}
-100%{background-position:200px;}
-}
-.content-header{
-background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-color:white;padding:12px 18px;
-display:flex;justify-content:space-between;align-items:center;
-}
-.content-title{font-size:14px;font-weight:700;flex:1;}
-.close-content-btn{
-background:rgba(255,255,255,0.2);border:none;color:white;
-padding:6px 14px;border-radius:16px;cursor:pointer;
-font-size:12px;font-family:'Cairo',sans-serif;font-weight:700;
--webkit-tap-highlight-color:transparent;
-}
-
-.content-body{padding:16px;}
-body.dark-mode{
---primary:#8b5cf6;
---primary-light:#c4b5fd;
---primary-dark:#6d28d9;
-
---bg:#020617;
---bg-soft:#0f172a;
---card:#0f172a;
-
---text:#e2e8f0;
---text-light:#94a3b8;
-
---border:#1e293b;
-
---shadow:0 10px 40px rgba(0,0,0,0.6);
---glow:0 0 25px rgba(139,92,246,0.35);
-}
-  body{
-background:var(--bg);
-color:var(--text);
-transition:background 0.4s ease, color 0.3s ease;
-}
-  .info-card,
-.lecture-block{
-background:var(--card);
-box-shadow:var(--shadow);
-border:1px solid var(--border);
-transition:all 0.3s ease;
-}
-  .info-title,
-.lesson-name{
-color:var(--text);
-}
-
-.info-desc,
-.lesson-label{
-color:var(--text-light);
-}
-  .lecture-block.locked{
-opacity:0.5;
-pointer-events:none;
-position:relative;
-}
-
-.lecture-block.locked::after{
-content:"🔒 المحاضرة مقفولة";
-position:absolute;
-top:10px;
-left:10px;
-background:#000;
-color:#fff;
-padding:4px 10px;
-border-radius:10px;
-font-size:11px;
-}
-  header{
-background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-box-shadow:var(--glow);
-}
-  .lesson-row:hover{
-background:var(--bg-soft);
-}
-  .lesson-content-wrap{
-background:var(--bg-soft);
-}
-  .toggle-track{
-background:var(--bg-soft);
-box-shadow:inset 0 0 10px rgba(0,0,0,0.1);
-}
-
-.toggle-thumb{
-background:var(--primary);
-box-shadow:var(--glow);
-}
-
-body.dark-mode .toggle-thumb{
-transform:translateX(-34px);
-}
 /* VIDEO */
-.video-wrap{
-position:relative;padding-bottom:56.25%;height:0;overflow:hidden;
-border-radius:12px;background:#000;
+.vid-wrap{
+  position:relative;padding-bottom:56.25%;height:0;overflow:hidden;
+  border-radius:14px;background:#000;
 }
-.video-wrap iframe,.video-wrap video{
-position:absolute;top:0;left:0;width:100%;height:100%;border:none;border-radius:12px;
+.vid-wrap iframe,.vid-wrap video{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  border:none;border-radius:14px;
 }
 
 /* IMAGE */
-.content-img{
-width:100%;max-height:70vh;object-fit:contain;
-border-radius:12px;display:block;cursor:zoom-in;
+.c-img{
+  width:100%;max-height:70vh;object-fit:contain;
+  border-radius:14px;display:block;cursor:zoom-in;
+  transition:transform .2s;
 }
+.c-img:hover{transform:scale(1.01);}
 
 /* FILE */
-.file-embed{width:100%;height:70vh;border:none;border-radius:12px;background:#fff;}
-
-/* FILE LINK fallback */
-.file-link-btn{
-display:inline-flex;align-items:center;gap:8px;
-padding:12px 22px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-color:#fff;border-radius:14px;font-family:'Cairo',sans-serif;font-weight:700;
-font-size:14px;text-decoration:none;transition:0.2s;
+.file-fr{width:100%;height:70vh;border:none;border-radius:14px;background:#fff;}
+.file-link{
+  display:inline-flex;align-items:center;gap:8px;margin-top:10px;
+  padding:11px 22px;background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;border-radius:14px;font-family:'Cairo',sans-serif;
+  font-weight:700;font-size:14px;text-decoration:none;
+  transition:opacity .2s,transform .15s;
 }
-.file-link-btn:hover{opacity:0.9;}
+.file-link:hover{opacity:.9;}
+.file-link:active{transform:scale(.96);}
 
 /* TEXT */
-.text-content{
-background:#fff;border-radius:12px;padding:20px;
-font-size:15px;line-height:1.9;color:var(--text);white-space:pre-wrap;
-box-shadow:0 2px 10px rgba(0,0,0,0.06);
+.txt-box{
+  background:var(--surface);border-radius:14px;padding:22px;
+  font-size:15px;line-height:1.9;color:var(--tx);white-space:pre-wrap;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
 }
+body.dark .txt-box{box-shadow:0 2px 10px rgba(0,0,0,.4);}
 
-/* ===== QUIZ INLINE ===== */
-.quiz-wrap{max-width:100%;}
-.quiz-timer-box{
-background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-color:#fff;border-radius:14px;padding:12px 18px;
-display:flex;justify-content:space-between;align-items:center;
-margin-bottom:12px;
+/* ══════════════════════════════════════════
+   QUIZ INLINE
+══════════════════════════════════════════ */
+.qz-timer{
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;border-radius:14px;padding:12px 18px;margin-bottom:12px;
+  display:flex;justify-content:space-between;align-items:center;
 }
-.quiz-timer-label{font-size:13px;font-weight:700;}
-.quiz-timer-val{font-size:24px;font-weight:800;}
-.quiz-timer-bar-wrap{height:6px;background:#ede7f6;border-radius:10px;margin-bottom:18px;overflow:hidden;}
-.quiz-timer-bar{height:100%;background:var(--primary);width:100%;transition:width 1s,background 0.5s;border-radius:10px;}
+.qz-tlbl{font-size:13px;font-weight:700;}
+.qz-tval{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;}
+.qz-bar-wrap{height:7px;background:var(--surface2);border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.qz-bar{height:100%;width:100%;background:var(--p);transition:width 1s linear,background .5s;border-radius:10px;}
 
 .q-card{
-background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;
-box-shadow:0 2px 10px rgba(0,0,0,0.07);
+  background:var(--surface);border-radius:14px;padding:16px;margin-bottom:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.07);
 }
-.q-text{font-weight:700;font-size:15px;color:var(--text);margin-bottom:10px;}
-.q-img{width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
-.q-option{
-display:flex;align-items:center;gap:10px;
-background:#f5f2ff;padding:10px 14px;border-radius:10px;
-margin-bottom:8px;cursor:pointer;transition:background 0.18s;
--webkit-tap-highlight-color:transparent;
+body.dark .q-card{box-shadow:0 2px 10px rgba(0,0,0,.4);}
+.q-txt{font-weight:700;font-size:15px;color:var(--tx);margin-bottom:10px;line-height:1.5;}
+.q-img-thumb{width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
+.q-opt{
+  display:flex;align-items:center;gap:10px;
+  background:var(--opt-bg);padding:10px 14px;border-radius:11px;
+  margin-bottom:8px;cursor:pointer;
+  transition:background .15s,border-color .15s,transform .12s;
+  border:2px solid transparent;
+  -webkit-tap-highlight-color:transparent;
 }
-.q-option:last-child{margin-bottom:0;}
-.q-option.selected{background:#ede7f6;border:2px solid var(--primary);}
-.q-option:active{background:#e8def8;}
-.q-option input{width:auto;margin:0;cursor:pointer;accent-color:var(--primary);}
-.q-option span{font-size:14px;color:var(--text);}
-
-.quiz-submit-btn{
-width:100%;padding:14px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:800;
-font-family:'Cairo',sans-serif;cursor:pointer;margin-top:4px;
--webkit-tap-highlight-color:transparent;
+.q-opt:last-child{margin-bottom:0;}
+.q-opt:hover{filter:brightness(.97);}
+.q-opt.sel{background:var(--opt-sel);border-color:var(--p);transform:scale(1.01);}
+.q-opt:active{transform:scale(.97);}
+.q-opt input{width:auto;margin:0;accent-color:var(--p);}
+.q-opt span{font-size:14px;color:var(--tx);}
+.qz-submit{
+  width:100%;padding:14px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;font-size:16px;font-weight:800;font-family:'Cairo',sans-serif;
+  cursor:pointer;margin-top:6px;
+  transition:transform .15s,box-shadow .15s;
+  -webkit-tap-highlight-color:transparent;
 }
+.qz-submit:hover{transform:scale(1.02);box-shadow:0 6px 20px rgba(109,40,217,.4);}
+.qz-submit:active{transform:scale(.97);}
 
-/* QUIZ RESULTS */
-.result-wrap{background:#fff;border-radius:18px;padding:28px 20px;text-align:center;}
-.result-score{font-size:64px;font-weight:800;line-height:1;}
-.result-pct{font-size:22px;font-weight:700;margin-top:6px;}
-.result-msg{font-size:14px;color:var(--muted);margin-top:10px;}
-.result-qa{margin-top:20px;text-align:right;}
-.rqa-item{border-radius:12px;padding:12px 14px;margin-bottom:8px;}
-.rqa-right{background:#e8f5e9;}
-.rqa-wrong{background:#ffebee;}
-.rqa-q{font-weight:700;font-size:13px;color:#333;margin-bottom:4px;}
-.rqa-ans{font-size:13px;}
+/* RESULTS */
+.res-wrap{background:var(--surface);border-radius:18px;padding:28px 20px;text-align:center;}
+.res-score{font-size:68px;font-weight:800;line-height:1;}
+.res-pct{font-size:22px;font-weight:700;margin-top:6px;}
+.res-msg{font-size:14px;color:var(--tx2);margin-top:10px;}
+.res-qa{margin-top:20px;text-align:right;}
+.rqa{border-radius:13px;padding:12px 14px;margin-bottom:8px;}
+.rqa-ok{background:var(--res-ok-bg);}
+.rqa-no{background:var(--res-no-bg);}
+.rqa-q{font-weight:700;font-size:13px;color:var(--tx);margin-bottom:4px;}
+.rqa-a{font-size:13px;margin-bottom:2px;}
 
-/* ===== IMAGE ZOOM ===== */
+/* ══════════════════════════════════════════
+   IMAGE ZOOM
+══════════════════════════════════════════ */
 #imgZoom{
-display:none;position:fixed;top:0;left:0;width:100%;height:100%;
-background:rgba(0,0,0,0.9);z-index:9999;
-justify-content:center;align-items:center;cursor:zoom-out;
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.92);z-index:9999;
+  justify-content:center;align-items:center;cursor:zoom-out;
 }
 #imgZoom.show{display:flex;}
-#imgZoom img{max-width:95%;max-height:95%;border-radius:10px;animation:zoomIn 0.25s;}
-@keyframes zoomIn{from{transform:scale(0.82);}to{transform:scale(1);}}
+#imgZoom img{max-width:96%;max-height:96%;border-radius:12px;animation:scaleIn .25s cubic-bezier(.34,1.56,.64,1);}
 
-/* ===== SPINNER ===== */
-.spinner-wrap{text-align:center;padding:50px 20px;}
-.spinner{
-display:inline-block;width:44px;height:44px;
-border:5px solid #ede7f6;border-top:5px solid var(--primary);
-border-radius:50%;animation:spin 0.85s linear infinite;
+/* ══════════════════════════════════════════
+   SPINNER / EMPTY
+══════════════════════════════════════════ */
+.spin-wrap{text-align:center;padding:60px 20px;}
+.spin{
+  display:inline-block;width:46px;height:46px;
+  border:5px solid var(--surface2);border-top:5px solid var(--p);
+  border-radius:50%;animation:spin .85s linear infinite;
 }
+.empty-lec{text-align:center;padding:22px;color:var(--tx3);font-size:13px;}
+
+/* ══════════════════════════════════════════
+   KEYFRAMES
+══════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{transform:scale(.78);}to{transform:scale(1);}}
 @keyframes spin{to{transform:rotate(360deg);}}
 
-/* ===== RESPONSIVE ===== */
+/* ══════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════ */
 @media(max-width:600px){
-.page-wrap{padding:14px 10px 60px;}
-.lecture-header{padding:13px 14px;}
-.lesson-row,.quiz-row{padding:12px 14px;}
-.content-body{padding:12px;}
-.header-spacer{width:60px;}
-}
-.row-arrow{
-transition:transform 0.3s;
-}
-.row-arrow.open{
-transform:rotate(90deg);
-}
-  body{
-transition:all 0.4s ease;
-}
-  body::before{
-content:"";
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:
-radial-gradient(circle at 20% 30%, rgba(124,58,237,0.15), transparent),
-radial-gradient(circle at 80% 70%, rgba(139,92,246,0.15), transparent);
-z-index:-1;
-pointer-events:none;
-}
-.done-mark{
-color:#22c55e;
-font-size:12px;
-margin-right:6px;
-display:none;
-}
-.done-mark.show{
-display:inline;
-}  
-  .lesson-row.locked{
-opacity:0.5;
-pointer-events:none;
-position:relative;
-}
-
-.lesson-row.locked::after{
-content:"🔒";
-position:absolute;
-left:10px;
-font-size:14px;
-}
- .lesson-content-wrap{
-transition:all 0.4s cubic-bezier(.22,1,.36,1);
-transform-origin:top;
-}
-
-.lesson-content-wrap.visible{
-animation:expand 0.4s ease;
-}
-
-@keyframes expand{
-0%{opacity:0; transform:scaleY(0.9);}
-100%{opacity:1; transform:scaleY(1);}
-}
-  .lesson-row:active{
-transform:scale(0.96);
-}
-  body.dark-mode{
---text:#e2e8f0;
---text-light:#94a3b8;
---muted:#94a3b8;
-}
-  .info-desc,
-.lesson-label{
-color:var(--text-light);
-}
-
-.empty-lec{
-color:var(--muted);
-}
-
-.quiz-sub{
-color:var(--muted);
-}
-  .lesson-content-wrap{
-background:var(--bg-soft);
-}
-
-.q-card{
-background:var(--card);
-}
-  .lesson-row:hover{
-background:rgba(124,58,237,0.08);
-}
-  .text-content{
-background:var(--card);
-color:var(--text);
+  .page{padding:14px 10px 70px;}
+  .lec-hdr{padding:13px 14px;}
+  .lesson-row,.quiz-row{padding:12px 14px;gap:10px;}
+  .c-body{padding:12px;}
+  .l-ico{width:40px;height:40px;}
 }
 </style>
 </head>
 <body>
 
 <header>
-<div class="header-inner">  
-<button class="back-btn" onclick="history.back()">
-<svg viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v4h11v6H10v4z"/></svg>
-العودة
-</button>
-<div class="header-title" id="courseName">جاري التحميل...</div>
-<div class="header-spacer"></div>
-  <div class="theme-toggle" onclick="toggleTheme()">
-  <div class="toggle-track">
-    <div class="toggle-icon sun">☀️</div>
-    <div class="toggle-icon moon">🌙</div>
-    <div class="toggle-thumb" id="toggleThumb"></div>
+  <div class="hdr">
+    <button class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      العودة
+    </button>
+    <div class="hdr-title" id="courseName">جاري التحميل...</div>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn" title="تبديل الوضع">🌙</button>
   </div>
-</div>
-</div>
 </header>
 
-<div class="page-wrap">
-<div id="courseInfoSection"></div>
-<div id="lecturesContent">
-<div class="spinner-wrap"><div class="spinner"></div></div>
-</div>
+<div class="page">
+  <div id="infoSection"></div>
+  <div id="lecturesEl"><div class="spin-wrap"><div class="spin"></div></div></div>
 </div>
 
-<!-- IMAGE ZOOM -->
-<div id="imgZoom" onclick="this.classList.remove('show')">
-<img id="imgZoomSrc">
-</div>
+<div id="imgZoom" onclick="this.classList.remove('show')"><img id="imgZoomSrc"></div>
 
 <script>
-// ===== SVG ICONS =====
-const ICONS = {
-video:`<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
-"video-upload":`<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>`,
-image:`<svg viewBox="0 0 24 24"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-10-9 3 4 2-2.5 3 3.5H5l4-5z"/></svg>`,
-file:`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
-"file-upload":`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
-text:`<svg viewBox="0 0 24 24"><path d="M3 4h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"/></svg>`,
-quiz:  `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" fill="#fff8e1" stroke="#f57f17" stroke-width="1.5"/><line x1="8" y1="7" x2="16" y2="7" stroke="#f57f17" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="11" x2="16" y2="11" stroke="#f57f17" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="15" x2="12" y2="15" stroke="#f57f17" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 16.5l1.5 1.5 3-3" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-arrow:`<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+/* ══════════════════════════════════════════
+   SVG ICONS
+══════════════════════════════════════════ */
+const IC = {
+  video:         `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>`,
+  "video-upload":`<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>`,
+  image:         `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-10-9 3 4 2-2.5 3 3.5H5l4-5z"/></svg>`,
+  file:          `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
+  "file-upload": `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
+  text:          `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"/></svg>`,
+  quiz:          `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" fill="currentColor" opacity=".15" stroke="currentColor" stroke-width="1.6"/><line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 16.5l1.5 1.5 3-3" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  arrow:         `<svg viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  lock:          `<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>`,
 };
-const TYPE_LABELS = {video:"فيديو","video-upload":"فيديو",image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"};
-const TYPE_ICON_CLASS = {video:"icon-video","video-upload":"icon-video",image:"icon-image",file:"icon-file","file-upload":"icon-file",text:"icon-text"};
 
+const TLBL = {
+  video:"فيديو","video-upload":"فيديو",
+  image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"
+};
+const TICLS = {
+  video:"iv","video-upload":"iv",
+  image:"ii",file:"if","file-upload":"if",text:"it"
+};
 
-function getProgress(){
-return JSON.parse(localStorage.getItem(progressKey) || "{}");
+/* ══════════════════════════════════════════
+   THEME
+══════════════════════════════════════════ */
+(function initTheme(){
+  const saved = localStorage.getItem("cv_theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  const mode = saved || (prefersDark ? "dark" : "light");
+  applyTheme(mode);
+})();
+
+function applyTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  const btn = document.getElementById("themeBtn");
+  if(btn) btn.textContent = mode === "dark" ? "☀️" : "🌙";
+  localStorage.setItem("cv_theme", mode);
 }
 
-function saveProgress(data){
-localStorage.setItem(progressKey, JSON.stringify(data));
-}
-  function requestNotification(){
-Notification.requestPermission();
-}
-  function sendNotification(msg){
-if(Notification.permission === "granted"){
-new Notification("📚 الكورس",{
-body: msg,
-icon: "icon-192.png"
-});
-}
-}
-  
-// ===== STATE =====
-const courseIndex = localStorage.getItem("courseIndex");
-const progressKey = "course_progress_" + courseIndex;
-let course = null;
-let openContentId = null; // "li-si" or "quiz-li"
-let quizData = null, quizAnswers = {}, quizTimer = null, quizTimeLeft = 0, quizTotalTime = 0;
-
-// ===== LOAD =====
-async function loadCourse(){
-try{
-const res = await fetch("courses.json");
-const all = await res.json();
-course = all[courseIndex];
-if(!course){ document.getElementById("lecturesContent").innerHTML=`<p style="text-align:center;color:red;padding:40px;">الكورس غير موجود</p>`; return; }
-renderCourse();
-updateProgressUI();  
-}catch(e){
-document.getElementById("lecturesContent").innerHTML=`<p style="text-align:center;color:red;padding:40px;">خطأ في التحميل</p>`;
-}
-}
-
-// ===== RENDER =====
-function renderCourse(){
-document.getElementById("courseName").innerText = course.title;
-document.title = course.title;
-
-// Info card
-const lc = course.lectures ? course.lectures.length : 0;
-let ls=0, qz=0;
-if(course.lectures) course.lectures.forEach(l=>{ if(l.lessons) ls+=l.lessons.length; if(l.quiz&&l.quiz.questions&&l.quiz.questions.length) qz++; });
-
-document.getElementById("courseInfoSection").innerHTML = `
-<div class="info-card">
-${course.cover?`<img src="${course.cover}" class="info-cover" alt="${course.title}" loading="lazy">`:""}
-<div class="info-body">
-<div class="info-title">${course.title}</div>
-${course.desc?`<div class="info-desc">${course.desc}</div>`:""}
-<div class="meta-row">
-<span class="badge badge-purple">📖 ${lc} محاضرة</span>
-<span class="badge badge-blue">📌 ${ls} درس</span>
-${qz?`<span class="badge badge-orange">📝 ${qz} امتحان</span>`:""}
-</div>
-</div>
-</div>`;
-
-const el = document.getElementById("lecturesContent");
-if(!course.lectures||!course.lectures.length){
-el.innerHTML=`<div style="text-align:center;padding:50px;color:var(--muted);">📭 لا يوجد محتوى بعد</div>`;
-return;
-}
-
-el.innerHTML = course.lectures.map((lec,li)=>{
-const lessons = lec.lessons || [];
-const hasQuiz = lec.quiz && (lec.quiz.url || (lec.quiz.questions&&lec.quiz.questions.length));
-const lsCount = lessons.length;
-const topics = lec.topics ? lec.topics.split('\n').filter(Boolean).map(t=>`<span class="topic-tag">${t}</span>`).join("") : "";
-
-const lessonsHtml = lsCount
-? lessons.map((ls,si)=>`
-<div class="lecture-block ${isLectureLocked(li)?'locked':''}">
-<div class="lesson-icon ${TYPE_ICON_CLASS[ls.type]||'icon-text'}">${ICONS[ls.type]||ICONS.text}</div>
-<div class="lesson-info">
-<div class="lesson-name">
-${ls.title} <span class="done-mark" id="done-${li}-${si}">✔</span>
-</div>
-<div class="lesson-label">${TYPE_LABELS[ls.type]||ls.type}</div>
-</div>
-<div class="row-arrow" id="arrow-${li}-${si}">${ICONS.arrow}</div>
-</div>
-<div class="lesson-content-wrap" id="content-${li}-${si}">
-<div class="content-header">
-<span class="content-title">${ls.title}</span>
-<button class="close-content-btn" onclick="closeContent(event,${li},${si})">✕ إغلاق</button>
-</div>
-<div class="content-body">${buildContentHTML(ls)}</div>
-</div>`).join("")
-: `<div class="empty-lec">لا توجد دروس في هذه المحاضرة بعد</div>`;
-
-const quizHtml = hasQuiz ? buildQuizRow(lec, li) : "";
-
-return `
-<div class="lecture-block" style="animation-delay:${li*0.06}s">
-<div class="lecture-header" onclick="${isLectureLocked(li)?'return':''} toggleLecture(${li})">
-<div class="lec-arrow" id="arrow-${li}">${ICONS.arrow}</div>
-<div class="lec-info">
-<div class="lec-num">المحاضرة ${li+1}</div>
-<div class="lec-name">${lec.title}</div>
-${topics?`<div class="lec-topics">${topics}</div>`:""}
-</div>
-<div class="lec-count">${lsCount} دروس${hasQuiz?" · امتحان":""}</div>
-</div>
-<div class="lecture-body" id="lec-body-${li}">
-${lessonsHtml}
-${quizHtml}
-</div>
-</div>`;
-}).join("");
-}
-function getLectureProgress(li){
-const progress = getProgress();
-const lessons = course.lectures[li].lessons || [];
-
-if(!lessons.length) return 0;
-
-let done = 0;
-
-lessons.forEach((_,si)=>{
-if(progress[`${li}-${si}`]) done++;
-});
-
-return done / lessons.length;
-}  
-function setTheme(mode){
-document.body.classList.remove("light-mode","dark-mode");
-document.body.classList.add(mode+"-mode");
-localStorage.setItem("theme",mode);
-}
-function isLectureLocked(li){
-if(li === 0) return false;
-
-// المحاضرة السابقة
-const prevProgress = getLectureProgress(li - 1);
-
-// لازم 70%
-return prevProgress < 0.7;
-}
 function toggleTheme(){
-const isDark = document.body.classList.contains("dark-mode");
-setTheme(isDark ? "light" : "dark");
+  applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
 }
 
-// Auto detect + حفظ
-(function(){
-const saved = localStorage.getItem("theme");
+/* ══════════════════════════════════════════
+   STATE
+══════════════════════════════════════════ */
+const CI = localStorage.getItem("courseIndex") || "0";
+const PROG_KEY = "cv_prog_" + CI;
+let course = null;
+let quizData = null, quizAns = {}, qTimer = null, qLeft = 0, qTotal = 0;
 
-if(saved){
-setTheme(saved);
-}else{
-const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-setTheme(prefersDark ? "dark" : "light");
+/* ══════════════════════════════════════════
+   PROGRESS
+══════════════════════════════════════════ */
+function getProgress(){ return JSON.parse(localStorage.getItem(PROG_KEY)||"{}"); }
+function saveProgress(d){ localStorage.setItem(PROG_KEY, JSON.stringify(d)); }
+function markDone(li, si){
+  const p = getProgress(); p[`${li}-${si}`] = true; saveProgress(p);
+  const el = document.getElementById(`done-${li}-${si}`);
+  if(el) el.classList.add("show");
 }
-})();
-
-// تحميل الثيم عند فتح الصفحة
-(function(){
-const saved = localStorage.getItem("theme");
-
-if(saved === "dark"){
-document.body.classList.add("dark-mode");
-}else{
-document.body.classList.add("light-mode");
+function restoreProgress(){
+  const p = getProgress();
+  Object.keys(p).forEach(k=>{
+    const el = document.getElementById("done-"+k);
+    if(el) el.classList.add("show");
+  });
 }
-})();
+
+/* ══════════════════════════════════════════
+   LECTURE LOCK (70% of prev lecture needed)
+══════════════════════════════════════════ */
+function getLecPct(li){
+  const lec = course.lectures[li];
+  const lessons = lec.lessons||[];
+  if(!lessons.length) return 1;
+  const p = getProgress();
+  let done = 0;
+  lessons.forEach((_,si)=>{ if(p[`${li}-${si}`]) done++; });
+  return done / lessons.length;
+}
+function isLocked(li){
+  if(li === 0) return false;
+  return getLecPct(li - 1) < 0.7;
+}
+
+/* ══════════════════════════════════════════
+   LOAD
+══════════════════════════════════════════ */
+async function loadCourse(){
+  try{
+    const all = await fetch("courses.json").then(r=>r.json());
+    course = all[CI];
+    if(!course){
+      document.getElementById("lecturesEl").innerHTML =
+        `<p style="text-align:center;color:#ef4444;padding:40px;">الكورس غير موجود</p>`;
+      return;
+    }
+    renderCourse();
+    restoreProgress();
+  }catch(e){
+    document.getElementById("lecturesEl").innerHTML =
+      `<p style="text-align:center;color:#ef4444;padding:40px;">خطأ في التحميل</p>`;
+  }
+}
+
+/* ══════════════════════════════════════════
+   RENDER
+══════════════════════════════════════════ */
+function renderCourse(){
+  document.getElementById("courseName").innerText = course.title;
+  document.title = course.title;
+
+  const lects = course.lectures || [];
+  let totalLessons = 0, totalQuizzes = 0;
+  lects.forEach(l=>{
+    if(l.lessons) totalLessons += l.lessons.length;
+    if(l.quiz?.questions?.length) totalQuizzes++;
+  });
+
+  document.getElementById("infoSection").innerHTML = `
+  <div class="info-card">
+    ${course.cover ? `<img src="${course.cover}" class="info-cover" loading="lazy">` : ""}
+    <div class="info-body">
+      <div class="info-title">${course.title}</div>
+      ${course.desc ? `<div class="info-desc">${course.desc}</div>` : ""}
+      <div class="meta-row">
+        <span class="badge b-p">📖 ${lects.length} محاضرة</span>
+        <span class="badge b-b">📌 ${totalLessons} درس</span>
+        ${totalQuizzes ? `<span class="badge b-o">📝 ${totalQuizzes} امتحان</span>` : ""}
+      </div>
+    </div>
+  </div>`;
+
+  if(!lects.length){
+    document.getElementById("lecturesEl").innerHTML =
+      `<div style="text-align:center;padding:50px;color:var(--tx3)">📭 لا يوجد محتوى بعد</div>`;
+    return;
+  }
+
+  document.getElementById("lecturesEl").innerHTML =
+    lects.map((lec, li) => buildLecture(lec, li)).join("");
+}
+
+function buildLecture(lec, li){
+  const locked = isLocked(li);
+  const lessons = lec.lessons || [];
+  const hasQ = lec.quiz && (lec.quiz.url || lec.quiz.questions?.length);
+  const tops = lec.topics
+    ? lec.topics.split('\n').filter(Boolean)
+        .map(t=>`<span class="topic-tag">${t}</span>`).join("") : "";
+
+  const rowsHtml = lessons.length
+    ? lessons.map((ls, si) => buildRow(ls, li, si)).join("")
+    : `<div class="empty-lec">لا توجد دروس في هذه المحاضرة بعد</div>`;
+
+  const quizHtml = hasQ ? buildQuizRow(lec, li) : "";
+
+  const lockBadge = locked
+    ? `<div class="lock-badge"><svg viewBox="0 0 24 24" width="13" height="13" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#fff" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>مقفولة</div>` : "";
+
+  const lockNotice = locked
+    ? `<div class="lock-notice"><svg viewBox="0 0 24 24" width="20" height="20" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="var(--lock-c)" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="var(--lock-c)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="var(--lock-c)"/></svg><span>أكمل 70% من المحاضرة ${li} أولاً لفتح هذه المحاضرة</span></div>` : "";
+
+  return `
+  <div class="lec-block" style="animation-delay:${li*.07}s">
+    <div class="lec-hdr${locked?" locked":""}" onclick="${locked?"showLockMsg("+li+")":"togLec("+li+")"}">
+      <div class="lec-arr" id="larr-${li}">${IC.arrow}</div>
+      <div class="lec-meta">
+        <div class="lec-num">المحاضرة ${li+1}</div>
+        <div class="lec-name">${lec.title}</div>
+        ${tops ? `<div class="lec-topics">${tops}</div>` : ""}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="lec-cnt">${lessons.length} درس${hasQ?" · امتحان":""}</div>
+        ${lockBadge}
+      </div>
+    </div>
+    ${lockNotice}
+    <div class="lec-body" id="lbody-${li}">
+      <div class="lec-body-inner">
+        ${rowsHtml}
+        ${quizHtml}
+      </div>
+    </div>
+  </div>`;
+}
+
+function buildRow(ls, li, si){
+  const ic = TICLS[ls.type] || "it";
+  const content = buildContent(ls);
+  return `
+  <div class="lesson-row" id="lrow-${li}-${si}" onclick="togContent(${li},${si})">
+    <div class="l-ico ${ic}">${IC[ls.type]||IC.text}</div>
+    <div class="l-info">
+      <div class="l-name">
+        <span class="done-mark" id="done-${li}-${si}">✔ تم</span>${ls.title}
+      </div>
+      <div class="l-lbl">${TLBL[ls.type]||ls.type}</div>
+    </div>
+    <div class="row-arr" id="rarr-${li}-${si}">${IC.arrow}</div>
+  </div>
+  <div class="c-wrap" id="cwrap-${li}-${si}">
+    <div class="c-inner">
+      <div class="c-hdr">
+        <span class="c-hdr-title">${ls.title}</span>
+        <button class="c-close" onclick="closeContent(event,${li},${si})">✕ إغلاق</button>
+      </div>
+      <div class="c-body" id="cbody-${li}-${si}">${content}</div>
+    </div>
+  </div>`;
+}
+
 function buildQuizRow(lec, li){
-if(lec.quiz.questions&&lec.quiz.questions.length){
-return `
-<div class="quiz-row" onclick="openQuizInline(${li})">
-<div class="lesson-icon icon-quiz">${ICONS.quiz}</div>
-<div class="lesson-info">
-<div class="quiz-name">${lec.quiz.name||"الامتحان"}</div>
-<div class="quiz-sub">${lec.quiz.questions.length} سؤال • ${lec.quiz.time||30} دقيقة</div>
-</div>
-<div class="row-arrow">${ICONS.arrow}</div>
-</div>
-<div class="lesson-content-wrap" id="quiz-content-${li}">
-<div class="content-header">
-<span class="content-title">${lec.quiz.name||"الامتحان"}</span>
-<button class="close-content-btn" onclick="closeQuizContent(event,${li})">✕ إغلاق</button>
-</div>
-<div class="content-body" id="quiz-body-${li}"></div>
-</div>`;
-}
-return `
-<a href="${lec.quiz.url}" class="quiz-row">
-<div class="lesson-icon icon-quiz">${ICONS.quiz}</div>
-<div class="lesson-info">
-<div class="quiz-name">${lec.quiz.name||"الامتحان"}</div>
-<div class="quiz-sub">اضغط لبدء الامتحان</div>
-</div>
-<div class="row-arrow">${ICONS.arrow}</div>
-</a>`;
-}
-
-function buildContentHTML(ls){
-const t = ls.type;
-if(t==="video"||t==="video-upload"){
-const url = ls.videoUrl||ls.mediaUrl||"";
-const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
-const embed = yt ? `https://www.youtube.com/embed/${yt[1]}?rel=0` : url;
-const isDirect = t==="video-upload"||url.match(/\.(mp4|webm|ogg|mov)(\?|$)/i);
-if(isDirect&&!yt){
-return `<div class="video-wrap"><video controls src="${url}" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:12px;"></video></div>`;
-}
-return `<div class="video-wrap"><iframe src="${embed}" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe></div>`;
-}
-if(t==="image"){
-return `<img src="${ls.imageUrl||''}" class="content-img" alt="${ls.title}" onclick="zoomImg(this.src)">`;
-}
-if(t==="file"||t==="file-upload"){
-const url = ls.fileUrl||ls.mediaUrl||"";
-return `<iframe src="${url}" class="file-embed"></iframe>
-<div style="text-align:center;margin-top:10px;">
-<a href="${url}" target="_blank" class="file-link-btn">📄 فتح الملف في تبويب جديد</a>
-</div>`;
-}
-if(t==="text"){
-return `<div class="text-content">${(ls.text||"").replace(/\n/g,"<br>")}</div>`;
-}
-return `<p style="color:var(--muted);text-align:center;padding:20px;">لا يوجد محتوى</p>`;
+  if(lec.quiz.questions?.length){
+    return `
+    <div class="quiz-row" id="qrow-${li}" onclick="togQuiz(${li})">
+      <div class="l-ico iq">${IC.quiz}</div>
+      <div class="l-info">
+        <div class="q-name">${lec.quiz.name||"الامتحان"}</div>
+        <div class="q-sub">${lec.quiz.questions.length} سؤال · ${lec.quiz.time||30} دقيقة</div>
+      </div>
+      <div class="row-arr" id="qrarr-${li}">${IC.arrow}</div>
+    </div>
+    <div class="c-wrap" id="qwrap-${li}">
+      <div class="c-inner">
+        <div class="c-hdr">
+          <span class="c-hdr-title">📝 ${lec.quiz.name||"الامتحان"}</span>
+          <button class="c-close" onclick="closeQuiz(event,${li})">✕ إغلاق</button>
+        </div>
+        <div class="c-body" id="qbody-${li}"></div>
+      </div>
+    </div>`;
+  }
+  return `
+  <a href="${lec.quiz.url}" class="quiz-row">
+    <div class="l-ico iq">${IC.quiz}</div>
+    <div class="l-info">
+      <div class="q-name">${lec.quiz.name||"الامتحان"}</div>
+      <div class="q-sub">اضغط لبدء الامتحان ←</div>
+    </div>
+    <div class="row-arr">${IC.arrow}</div>
+  </a>`;
 }
 
-// ===== TOGGLE LECTURE =====
-function toggleLecture(li){
-const body = document.getElementById(`lec-body-${li}`);
-const arrow = document.getElementById(`arrow-${li}`);
-const isOpen = body.classList.contains("open-body");
-body.classList.toggle("open-body", !isOpen);
-arrow.classList.toggle("open", !isOpen);
+/* ══════════════════════════════════════════
+   BUILD CONTENT
+══════════════════════════════════════════ */
+function buildContent(ls){
+  const t = ls.type;
+
+  if(t === "video" || t === "video-upload"){
+    const url = ls.videoUrl || ls.mediaUrl || "";
+    if(!url) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا يوجد رابط فيديو</p>`;
+    const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
+    if(yt){
+      return `<div class="vid-wrap">
+        <iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" allowfullscreen
+          allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture">
+        </iframe></div>`;
+    }
+    const isDirect = t === "video-upload" || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
+    if(isDirect){
+      return `<div class="vid-wrap">
+        <video controls preload="metadata"
+          style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:14px;"
+          src="${url}">
+        </video></div>`;
+    }
+    // رابط عام — iframe
+    return `<div class="vid-wrap">
+      <iframe src="${url}" allowfullscreen></iframe></div>`;
+  }
+
+  if(t === "image"){
+    const url = ls.imageUrl || "";
+    if(!url) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا توجد صورة</p>`;
+    return `<img src="${url}" class="c-img" alt="${ls.title}" onclick="zoomImg(this.src)">`;
+  }
+
+  if(t === "file" || t === "file-upload"){
+    const url = ls.fileUrl || ls.mediaUrl || "";
+    if(!url) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا يوجد ملف</p>`;
+    return `<iframe src="${url}" class="file-fr"></iframe>
+      <div style="text-align:center;">
+        <a href="${url}" target="_blank" class="file-link">📄 فتح الملف في تبويب جديد</a>
+      </div>`;
+  }
+
+  if(t === "text"){
+    const txt = ls.text || "";
+    if(!txt) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا يوجد نص</p>`;
+    return `<div class="txt-box">${txt.replace(/\n/g,"<br>")}</div>`;
+  }
+
+  return `<p style="color:var(--tx3);text-align:center;padding:20px;">نوع المحتوى غير معروف</p>`;
 }
 
-// ===== TOGGLE CONTENT INLINE =====
-function toggleContent(li, si){
-const id = `content-${li}-${si}`;
-const wrap = document.getElementById(id);
-const arrow = document.getElementById(`arrow-${li}-${si}`);
-
-const isVisible = wrap.classList.contains("visible");
-
-if(isVisible){
-stopMedia(wrap); // وقف الفيديو
-wrap.classList.remove("visible");
-arrow.classList.remove("open");
-return;
+/* ══════════════════════════════════════════
+   STOP MEDIA — يوقف كل صوت وفيديو
+══════════════════════════════════════════ */
+function stopMedia(el){
+  if(!el) return;
+  el.querySelectorAll("video").forEach(v=>{
+    try{ v.pause(); }catch(e){}
+    v.removeAttribute("src");
+    v.load();
+  });
+  el.querySelectorAll("iframe").forEach(fr=>{
+    fr.src = "about:blank";
+  });
 }
 
-// اقفل أي محتوى تاني
-closeAllContents();
-
-// افتح الحالي
-wrap.classList.add("visible");
-arrow.classList.add("open");
-
-openContentId = `${li}-${si}`;
-let progress = getProgress();
-progress[`${li}-${si}`] = true;
-saveProgress(progress);
-updateProgressUI();
-// scroll
-setTimeout(()=>{
-const row = document.getElementById(`row-${li}-${si}`);
-const offset = row.getBoundingClientRect().top + window.scrollY - 70;
-window.scrollTo({top: offset, behavior: 'smooth'});
-}, 80);
+/* ══════════════════════════════════════════
+   CLOSE ALL
+══════════════════════════════════════════ */
+function closeAll(){
+  clearInterval(qTimer); qTimer = null;
+  document.querySelectorAll(".c-wrap.open").forEach(w=>{
+    const body = w.querySelector(".c-body");
+    if(body) stopMedia(body);
+    w.classList.remove("open");
+  });
+  document.querySelectorAll(".row-arr.open").forEach(r=>r.classList.remove("open"));
+  document.querySelectorAll(".quiz-row.open").forEach(r=>r.classList.remove("open"));
 }
-function updateProgressUI(){
-const progress = getProgress();
 
-Object.keys(progress).forEach(key=>{
-const el = document.getElementById("done-" + key);
-if(el) el.classList.add("show");
-});
+/* ══════════════════════════════════════════
+   TOGGLE LECTURE
+══════════════════════════════════════════ */
+function togLec(li){
+  const body = document.getElementById(`lbody-${li}`);
+  const arr  = document.getElementById(`larr-${li}`);
+  const open = body.classList.contains("open");
+  body.classList.toggle("open", !open);
+  arr.classList.toggle("open", !open);
 }
+
+function showLockMsg(li){
+  const needed = li; // prev lecture
+  const pct = Math.round(getLecPct(li - 1) * 100);
+  alert(`🔒 هذه المحاضرة مقفولة\nأكمل ${70-pct}% إضافية من المحاضرة ${li} لفتحها\n(مكتمل حالياً: ${pct}%)`);
+}
+
+/* ══════════════════════════════════════════
+   TOGGLE CONTENT (درس)
+══════════════════════════════════════════ */
+function togContent(li, si){
+  const wrap = document.getElementById(`cwrap-${li}-${si}`);
+  const rarr = document.getElementById(`rarr-${li}-${si}`);
+  const isOpen = wrap.classList.contains("open");
+
+  if(isOpen){
+    stopMedia(document.getElementById(`cbody-${li}-${si}`));
+    wrap.classList.remove("open");
+    rarr.classList.remove("open");
+    return;
+  }
+
+  closeAll();
+
+  wrap.classList.add("open");
+  rarr.classList.add("open");
+
+  // mark progress
+  markDone(li, si);
+
+  setTimeout(()=>{
+    const row = document.getElementById(`lrow-${li}-${si}`);
+    if(row){
+      const top = row.getBoundingClientRect().top + window.scrollY - 72;
+      window.scrollTo({top, behavior:"smooth"});
+    }
+  }, 80);
+}
+
 function closeContent(e, li, si){
-e.stopPropagation();
-
-const wrap = document.getElementById(`content-${li}-${si}`);
-const arrow = document.getElementById(`arrow-${li}-${si}`);
-
-stopMedia(wrap); // وقف الفيديو
-
-wrap.classList.remove("visible");
-arrow.classList.remove("open");
-
-openContentId = null;
+  e.stopPropagation();
+  stopMedia(document.getElementById(`cbody-${li}-${si}`));
+  document.getElementById(`cwrap-${li}-${si}`).classList.remove("open");
+  document.getElementById(`rarr-${li}-${si}`).classList.remove("open");
 }
 
-function closeAllContents(){
-document.querySelectorAll(".lesson-content-wrap.visible").forEach(el=>{
-stopMedia(el); // وقف أي فيديو شغال
-el.classList.remove("visible");
-});
+/* ══════════════════════════════════════════
+   TOGGLE QUIZ
+══════════════════════════════════════════ */
+function togQuiz(li){
+  const wrap = document.getElementById(`qwrap-${li}`);
+  const qrow = document.getElementById(`qrow-${li}`);
+  const rarr = document.getElementById(`qrarr-${li}`);
+  const isOpen = wrap.classList.contains("open");
 
-// اقفل كل الأسهم
-document.querySelectorAll(".row-arrow").forEach(a=>{
-a.classList.remove("open");
-});
+  if(isOpen){
+    clearInterval(qTimer); qTimer = null;
+    wrap.classList.remove("open");
+    qrow?.classList.remove("open");
+    rarr?.classList.remove("open");
+    return;
+  }
 
-// stop quiz timer
-if(quizTimer){ clearInterval(quizTimer); quizTimer=null; }
+  closeAll();
+
+  const lec = course.lectures[li];
+  quizData = lec.quiz;
+  quizAns = {}; qLeft = qTotal = (quizData.time || 30) * 60;
+
+  document.getElementById(`qbody-${li}`).innerHTML = buildQuiz(li);
+  wrap.classList.add("open");
+  qrow?.classList.add("open");
+  rarr?.classList.add("open");
+
+  setTimeout(()=>{
+    const r = (qrow || wrap).getBoundingClientRect();
+    window.scrollTo({top: r.top + window.scrollY - 72, behavior:"smooth"});
+  }, 80);
+
+  startTimer(li);
 }
 
-// ===== QUIZ INLINE =====
-function openQuizInline(li){
-const lec = course.lectures[li];
-const wrap = document.getElementById(`quiz-content-${li}`);
-const isVisible = wrap.classList.contains("visible");
-
-if(isVisible){ wrap.classList.remove("visible"); return; }
-
-closeAllContents();
-
-quizData = lec.quiz;
-quizAnswers = {};
-quizTimeLeft = (quizData.time||30)*60;
-quizTotalTime = quizTimeLeft;
-
-document.getElementById(`quiz-body-${li}`).innerHTML = buildQuizHTML(li);
-wrap.classList.add("visible");
-
-setTimeout(()=>{
-const qrow = wrap.previousElementSibling;
-const offset = (qrow||wrap).getBoundingClientRect().top + window.scrollY - 70;
-window.scrollTo({top: offset, behavior:'smooth'});
-},80);
-
-startQuizTimer(li);
+function closeQuiz(e, li){
+  e.stopPropagation();
+  clearInterval(qTimer); qTimer = null;
+  document.getElementById(`qwrap-${li}`).classList.remove("open");
+  document.getElementById(`qrow-${li}`)?.classList.remove("open");
+  document.getElementById(`qrarr-${li}`)?.classList.remove("open");
 }
 
-function closeQuizContent(e, li){
-e.stopPropagation();
-clearInterval(quizTimer); quizTimer=null;
-document.getElementById(`quiz-content-${li}`).classList.remove("visible");
+/* ══════════════════════════════════════════
+   QUIZ
+══════════════════════════════════════════ */
+function buildQuiz(li){
+  const qs = quizData.questions;
+  return `<div>
+  <div class="qz-timer">
+    <span class="qz-tlbl">⏱ الوقت المتبقي</span>
+    <span class="qz-tval" id="qt-${li}">--:--</span>
+  </div>
+  <div class="qz-bar-wrap"><div class="qz-bar" id="qb-${li}"></div></div>
+  ${qs.map((q,i)=>`
+  <div class="q-card">
+    <div class="q-txt">س${i+1}: ${q.question}</div>
+    ${q.image ? `<img src="${q.image}" class="q-img-thumb">` : ""}
+    ${q.options.map((o,oi)=>`
+    <div class="q-opt" id="qo-${li}-${i}-${oi}" onclick="pickAns(${li},${i},${oi+1})">
+      <input type="radio" name="qq${li}_${i}" style="width:auto;margin:0;accent-color:var(--p);">
+      <span>${o}</span>
+    </div>`).join("")}
+  </div>`).join("")}
+  <button class="qz-submit" onclick="submitQuiz(${li})">إنهاء الامتحان ✅</button>
+  </div>`;
 }
 
-function buildQuizHTML(li){
-const qs = quizData.questions;
-return `<div class="quiz-wrap">
-<div class="quiz-timer-box">
-<span class="quiz-timer-label">⏱ الوقت المتبقي</span>
-<span class="quiz-timer-val" id="qtimer-${li}">--:--</span>
-</div>
-<div class="quiz-timer-bar-wrap"><div class="quiz-timer-bar" id="qbar-${li}"></div></div>
-${qs.map((q,i)=>`
-<div class="q-card">
-<div class="q-text">س${i+1}: ${q.question}</div>
-${q.image?`<img src="${q.image}" class="q-img">`:""}
-${q.options.map((opt,oi)=>`
-<div class="q-option" id="qlbl-${li}-${i}-${oi}" onclick="pickAnswer(${li},${i},${oi+1})">
-<input type="radio" name="q${li}_${i}" style="width:auto;margin:0;accent-color:var(--primary);">
-<span>${opt}</span>
-</div>`).join("")}
-</div>`).join("")}
-<button class="quiz-submit-btn" onclick="submitQuiz(${li})">إنهاء الامتحان ✅</button>
-</div>`;
+function pickAns(li, qi, val){
+  quizAns[qi] = val;
+  const n = quizData.questions[qi].options.length;
+  for(let oi=0; oi<n; oi++){
+    const d = document.getElementById(`qo-${li}-${qi}-${oi}`);
+    if(d){
+      d.classList.toggle("sel", oi+1 === val);
+      d.querySelector("input").checked = (oi+1 === val);
+    }
+  }
 }
 
-function pickAnswer(li, qi, val){
-quizAnswers[qi] = val;
-const qs = quizData.questions;
-for(let oi=0;oi<qs[qi].options.length;oi++){
-const lbl = document.getElementById(`qlbl-${li}-${qi}-${oi}`);
-if(lbl){
-lbl.classList.toggle("selected", oi+1===val);
-const radio = lbl.querySelector("input");
-if(radio) radio.checked = (oi+1===val);
-}
-}
-}
-
-function startQuizTimer(li){
-clearInterval(quizTimer);
-quizTimer = setInterval(()=>{
-quizTimeLeft--;
-const m=Math.floor(quizTimeLeft/60), s=quizTimeLeft%60;
-const el=document.getElementById(`qtimer-${li}`);
-const bar=document.getElementById(`qbar-${li}`);
-if(el) el.innerText=`${m<10?"0"+m:m}:${s<10?"0"+s:s}`;
-if(bar){ bar.style.width=((quizTimeLeft/quizTotalTime)*100)+"%"; bar.style.background=quizTimeLeft<60?"#c62828":"var(--primary)"; }
-if(quizTimeLeft<=0){ clearInterval(quizTimer); submitQuiz(li); }
-},1000);
+function startTimer(li){
+  clearInterval(qTimer);
+  qTimer = setInterval(()=>{
+    qLeft--;
+    const m = Math.floor(qLeft/60), s = qLeft % 60;
+    const te = document.getElementById(`qt-${li}`);
+    const be = document.getElementById(`qb-${li}`);
+    if(te) te.innerText = `${m<10?"0"+m:m}:${s<10?"0"+s:s}`;
+    if(be){
+      be.style.width = ((qLeft/qTotal)*100)+"%";
+      be.style.background = qLeft < 60 ? "#dc2626" : "var(--p)";
+    }
+    if(qLeft <= 0){ clearInterval(qTimer); submitQuiz(li); }
+  }, 1000);
 }
 
 function submitQuiz(li){
-clearInterval(quizTimer); quizTimer=null;
-const qs = quizData.questions;
-const unanswered = qs.filter((_,i)=>!quizAnswers[i]).length;
-if(unanswered > 0){
-if(!confirm(`لم تجب على ${unanswered} سؤال. هل تريد الإنهاء؟`)) return;
-}
-let score=0;
-qs.forEach((q,i)=>{ if(quizAnswers[i]===q.answer) score++; });
-const pct=Math.round((score/qs.length)*100);
-const color=pct>=70?"#2e7d32":pct>=50?"#e65100":"#c62828";
-const emoji=pct>=70?"🎉":pct>=50?"👍":"📚";
-const msg=pct>=70?"أحسنت! نتيجة ممتازة 🌟":pct>=50?"نتيجة جيدة، يمكنك التحسين":"راجع المادة وحاول مجدداً";
-
-document.getElementById(`quiz-body-${li}`).innerHTML=`
-<div class="result-wrap">
-<div style="font-size:62px;margin-bottom:8px;">${emoji}</div>
-<div class="result-score" style="color:${color};">${score}/${qs.length}</div>
-<div class="result-pct" style="color:${color};">${pct}%</div>
-<p class="result-msg">${msg}</p>
-<div class="result-qa">
-${qs.map((q,i)=>{
-const chosen=quizAnswers[i];
-const isRight=chosen===q.answer;
-return `<div class="rqa-item ${isRight?'rqa-right':'rqa-wrong'}">
-<div class="rqa-q">س${i+1}: ${q.question}</div>
-<div class="rqa-ans" style="color:${isRight?'#2e7d32':'#c62828'};">
-${isRight?'✅':'❌'} إجابتك: ${chosen?q.options[chosen-1]:'لم تجب'}
-</div>
-${!isRight?`<div class="rqa-ans" style="color:#2e7d32;">✅ الصحيحة: ${q.options[q.answer-1]}</div>`:''}
-</div>`;
-}).join("")}
-</div>
-</div>`;
+  clearInterval(qTimer); qTimer = null;
+  const qs = quizData.questions;
+  const un = qs.filter((_,i)=>!quizAns[i]).length;
+  if(un > 0 && !confirm(`لم تجب على ${un} سؤال. هل تريد الإنهاء؟`)) return;
+  let sc = 0;
+  qs.forEach((q,i)=>{ if(quizAns[i] === q.answer) sc++; });
+  const pct = Math.round((sc/qs.length)*100);
+  const col = pct>=70 ? "#16a34a" : pct>=50 ? "#d97706" : "#dc2626";
+  const emo = pct>=70 ? "🎉" : pct>=50 ? "👍" : "📚";
+  const msg = pct>=70 ? "أحسنت! نتيجة ممتازة 🌟" : pct>=50 ? "نتيجة جيدة، يمكنك التحسين" : "راجع المادة وحاول مجدداً";
+  document.getElementById(`qbody-${li}`).innerHTML = `
+  <div class="res-wrap">
+    <div style="font-size:66px;margin-bottom:10px;">${emo}</div>
+    <div class="res-score" style="color:${col}">${sc}/${qs.length}</div>
+    <div class="res-pct" style="color:${col}">${pct}%</div>
+    <p class="res-msg">${msg}</p>
+    <div class="res-qa">
+    ${qs.map((q,i)=>{
+      const ch=quizAns[i], ok=ch===q.answer;
+      return `<div class="rqa ${ok?"rqa-ok":"rqa-no"}">
+        <div class="rqa-q">س${i+1}: ${q.question}</div>
+        <div class="rqa-a" style="color:${ok?"#16a34a":"#dc2626"}">${ok?"✅":"❌"} إجابتك: ${ch?q.options[ch-1]:"لم تجب"}</div>
+        ${!ok?`<div class="rqa-a" style="color:#16a34a">✅ الصحيحة: ${q.options[q.answer-1]}</div>`:""}
+      </div>`;
+    }).join("")}
+    </div>
+  </div>`;
 }
 
-// ===== IMAGE ZOOM =====
+/* ══════════════════════════════════════════
+   IMAGE ZOOM
+══════════════════════════════════════════ */
 function zoomImg(src){
-document.getElementById("imgZoomSrc").src = src;
-document.getElementById("imgZoom").classList.add("show");
+  document.getElementById("imgZoomSrc").src = src;
+  document.getElementById("imgZoom").classList.add("show");
 }
 
+/* ══════════════════════════════════════════
+   START
+══════════════════════════════════════════ */
 loadCourse();
-
-  function stopMedia(container){
-
-// وقف الفيديوهات العادية
-container.querySelectorAll("video").forEach(v=>{
-v.pause();
-v.currentTime = 0;
-});
-
-// وقف iframe (يوتيوب وغيره)
-container.querySelectorAll("iframe").forEach(frame=>{
-const src = frame.src;
-frame.src = "";
-frame.src = src;
-});
-}
 </script>
 </body>
 </html>
