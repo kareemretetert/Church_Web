@@ -90,7 +90,22 @@
             "imageUrl": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775221743/a9ypan736qbvxih4bnum.jpg"
           }
         ],
-        "quiz": null
+        "quiz": {
+          "name": "hhhhhhhhhhhhhhhhhh",
+          "time": 30,
+          "courseTitle": "كريم حسني",
+          "questions": [
+            {
+              "question": "mmmmmmmmmm",
+              "options": [
+                "nnn",
+                "bbbbbbbb"
+              ],
+              "answer": 1,
+              "image": ""
+            }
+          ]
+        }
       }
     ]
   },
