@@ -658,10 +658,11 @@ const el = document.getElementById("done-" + key);
 if(el) el.classList.add("show");
 });
 
-// 🔥 أهم سطرين
+// 🔥 المهم
 course.lectures.forEach((_,li)=>{
 updateLectureProgress(li);
 checkLectureCompletion(li);
+checkUnlock(li); // ← ضيف دي
 });
 }
 
@@ -701,11 +702,7 @@ async function loadCourse(){
       `<p style="text-align:center;color:#ef4444;padding:40px;">خطأ في التحميل</p>`;
   }
 }
-function isLectureLocked(li){
-if(li === 0) return false;
 
-return getLecPct(li - 1) < 0.7;
-}
 /* ══════════════════════════════════════════
    RENDER
 ══════════════════════════════════════════ */
@@ -792,33 +789,7 @@ function buildLecture(lec, li){
     </div>
   </div>`;
 }
-function toggleContent(li, si){
 
-const id = `content-${li}-${si}`;
-const wrap = document.getElementById(id);
-const isVisible = wrap.classList.contains("visible");
-
-if(isVisible){
-wrap.classList.remove("visible");
-return;
-}
-
-closeAllContents();
-
-wrap.classList.add("visible");
-
-// 🔥 تسجيل التقدم
-markDone(li, si);
-
-// scroll ناعم
-setTimeout(()=>{
-const row = document.getElementById(`row-${li}-${si}`);
-if(!row) return;
-
-const offset = row.getBoundingClientRect().top + window.scrollY - 70;
-window.scrollTo({top: offset, behavior: 'smooth'});
-}, 80);
-}
 function buildRow(ls, li, si){
   const ic = TICLS[ls.type] || "it";
   const content = buildContent(ls);
@@ -1145,29 +1116,7 @@ function startTimer(li){
     if(qLeft <= 0){ clearInterval(qTimer); submitQuiz(li); }
   }, 1000);
 }
-const progressKey = "course_progress_" + CI;
 
-function getProgress(){
-return JSON.parse(localStorage.getItem(progressKey) || "{}");
-}
-
-function saveProgress(data){
-localStorage.setItem(progressKey, JSON.stringify(data));
-}
-   function getLecPct(li){
-const progress = getProgress();
-const lessons = course.lectures[li].lessons || [];
-
-if(!lessons.length) return 0;
-
-let done = 0;
-
-lessons.forEach((_,si)=>{
-if(progress[`${li}-${si}`]) done++;
-});
-
-return done / lessons.length;
-}
 function submitQuiz(li){
   clearInterval(qTimer); qTimer = null;
   const qs = quizData.questions;
@@ -1175,6 +1124,11 @@ function submitQuiz(li){
   if(un > 0 && !confirm(`لم تجب على ${un} سؤال. هل تريد الإنهاء؟`)) return;
   let sc = 0;
   qs.forEach((q,i)=>{ if(quizAns[i] === q.answer) sc++; });
+   localStorage.setItem(getQuizKey(li), JSON.stringify({
+score: sc,
+total: qs.length,
+answers: quizAns
+}));
   const pct = Math.round((sc/qs.length)*100);
   const col = pct>=70 ? "#16a34a" : pct>=50 ? "#d97706" : "#dc2626";
   const emo = pct>=70 ? "🎉" : pct>=50 ? "👍" : "📚";
@@ -1192,11 +1146,6 @@ function submitQuiz(li){
         <div class="rqa-q">س${i+1}: ${q.question}</div>
         <div class="rqa-a" style="color:${ok?"#16a34a":"#dc2626"}">${ok?"✅":"❌"} إجابتك: ${ch?q.options[ch-1]:"لم تجب"}</div>
         ${!ok?`<div class="rqa-a" style="color:#16a34a">✅ الصحيحة: ${q.options[q.answer-1]}</div>`:""}
-        localStorage.setItem(getQuizKey(li), JSON.stringify({
-score: sc,
-total: qs.length,
-answers: quizAns
-}));
       </div>`;
     }).join("")}
     </div>
