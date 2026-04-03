@@ -549,7 +549,7 @@ transition:transform .25s ease, box-shadow .25s ease;
 }
 .fade-out{
   opacity:0;
-  transition:0.3s;
+  transition:0.1s;
 }
 .lec-block:hover{
 transform:translateY(-4px) scale(1.01);
@@ -894,7 +894,7 @@ function buildLecture(lec, li){
 
   setTimeout(()=>{
     window.location.replace("courses_list.htm");
-  }, 300);
+  }, 100);
 }
 function buildRow(ls, li, si){
   const ic = TICLS[ls.type] || "it";
