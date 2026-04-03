@@ -595,7 +595,43 @@ radial-gradient(circle at 80% 70%, rgba(139,92,246,0.15), transparent);
 z-index:-1;
 pointer-events:none;
 }
-  
+.done-mark{
+color:#22c55e;
+font-size:12px;
+margin-right:6px;
+display:none;
+}
+.done-mark.show{
+display:inline;
+}  
+  .lesson-row.locked{
+opacity:0.5;
+pointer-events:none;
+position:relative;
+}
+
+.lesson-row.locked::after{
+content:"🔒";
+position:absolute;
+left:10px;
+font-size:14px;
+}
+ .lesson-content-wrap{
+transition:all 0.4s cubic-bezier(.22,1,.36,1);
+transform-origin:top;
+}
+
+.lesson-content-wrap.visible{
+animation:expand 0.4s ease;
+}
+
+@keyframes expand{
+0%{opacity:0; transform:scaleY(0.9);}
+100%{opacity:1; transform:scaleY(1);}
+}
+  .lesson-row:active{
+transform:scale(0.96);
+}
 </style>
 </head>
 <body>
@@ -645,6 +681,27 @@ arrow:`<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" stroke="currentColor" st
 const TYPE_LABELS = {video:"فيديو","video-upload":"فيديو",image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"};
 const TYPE_ICON_CLASS = {video:"icon-video","video-upload":"icon-video",image:"icon-image",file:"icon-file","file-upload":"icon-file",text:"icon-text"};
 
+const progressKey = "course_progress_" + courseIndex;
+
+function getProgress(){
+return JSON.parse(localStorage.getItem(progressKey) || "{}");
+}
+
+function saveProgress(data){
+localStorage.setItem(progressKey, JSON.stringify(data));
+}
+  function requestNotification(){
+Notification.requestPermission();
+}
+  function sendNotification(msg){
+if(Notification.permission === "granted"){
+new Notification("📚 الكورس",{
+body: msg,
+icon: "icon-192.png"
+});
+}
+}
+  
 // ===== STATE =====
 const courseIndex = localStorage.getItem("courseIndex");
 let course = null;
@@ -659,6 +716,7 @@ const all = await res.json();
 course = all[courseIndex];
 if(!course){ document.getElementById("lecturesContent").innerHTML=`<p style="text-align:center;color:red;padding:40px;">الكورس غير موجود</p>`; return; }
 renderCourse();
+updateProgressUI();  
 }catch(e){
 document.getElementById("lecturesContent").innerHTML=`<p style="text-align:center;color:red;padding:40px;">خطأ في التحميل</p>`;
 }
@@ -702,10 +760,12 @@ const topics = lec.topics ? lec.topics.split('\n').filter(Boolean).map(t=>`<span
 
 const lessonsHtml = lsCount
 ? lessons.map((ls,si)=>`
-<div class="lesson-row" id="row-${li}-${si}" onclick="toggleContent(${li},${si})">
+<div class="lesson-row ${isLocked(li,si)?'locked':''}" onclick="${isLocked(li,si)?'return':''} toggleContent(${li},${si})">
 <div class="lesson-icon ${TYPE_ICON_CLASS[ls.type]||'icon-text'}">${ICONS[ls.type]||ICONS.text}</div>
 <div class="lesson-info">
-<div class="lesson-name">${ls.title}</div>
+<div class="lesson-name">
+${ls.title} <span class="done-mark" id="done-${li}-${si}">✔</span>
+</div>
 <div class="lesson-label">${TYPE_LABELS[ls.type]||ls.type}</div>
 </div>
 <div class="row-arrow" id="arrow-${li}-${si}">${ICONS.arrow}</div>
@@ -744,7 +804,18 @@ document.body.classList.remove("light-mode","dark-mode");
 document.body.classList.add(mode+"-mode");
 localStorage.setItem("theme",mode);
 }
+function isLocked(li, si){
+if(li === 0 && si === 0) return false;
 
+const progress = getProgress();
+
+// افتح لو اللي قبله متعمل
+if(si > 0){
+return !progress[`${li}-${si-1}`];
+}else{
+return !progress[`${li-1}-0`];
+}
+}
 function toggleTheme(){
 const isDark = document.body.classList.contains("dark-mode");
 setTheme(isDark ? "light" : "dark");
@@ -862,7 +933,10 @@ wrap.classList.add("visible");
 arrow.classList.add("open");
 
 openContentId = `${li}-${si}`;
-
+let progress = getProgress();
+progress[`${li}-${si}`] = true;
+saveProgress(progress);
+updateProgressUI();
 // scroll
 setTimeout(()=>{
 const row = document.getElementById(`row-${li}-${si}`);
@@ -870,7 +944,14 @@ const offset = row.getBoundingClientRect().top + window.scrollY - 70;
 window.scrollTo({top: offset, behavior: 'smooth'});
 }, 80);
 }
+function updateProgressUI(){
+const progress = getProgress();
 
+Object.keys(progress).forEach(key=>{
+const el = document.getElementById("done-" + key);
+if(el) el.classList.add("show");
+});
+}
 function closeContent(e, li, si){
 e.stopPropagation();
 
