@@ -63,7 +63,13 @@
       {
         "title": "ccccc",
         "topics": "eeeee\nfffffff",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "kjkj",
+            "type": "video",
+            "videoUrl": "https://www.youtube.com/watch?v=IoyaIC-HlKs"
+          }
+        ],
         "quiz": null
       }
     ]
