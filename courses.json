@@ -58,7 +58,22 @@
             "mediaUrl": "https://res.cloudinary.com/ddiegmhji/video/upload/v1775172520/edcnieqhvtrhxwx5vv6y.mp4"
           }
         ],
-        "quiz": null
+        "quiz": {
+          "name": "كيمو",
+          "time": 30,
+          "courseTitle": "كريم حسني",
+          "questions": [
+            {
+              "question": "gjhg",
+              "options": [
+                "gjhghg",
+                "ghghhghggjg"
+              ],
+              "answer": 2,
+              "image": ""
+            }
+          ]
+        }
       },
       {
         "title": "ccccc",
