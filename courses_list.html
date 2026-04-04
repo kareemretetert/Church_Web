@@ -137,11 +137,26 @@ header p{font-size:13px;opacity:.82;}
 
 /* ═══ CARD ═══ */
 .card{
-  background:var(--sf);border-radius:22px;box-shadow:var(--sh);
-  overflow:hidden;display:flex;flex-direction:column;
-  border:1px solid var(--bdr);
-  opacity:0;transform:translateY(28px);
-  transition:opacity .5s,transform .5s,box-shadow .28s;
+  background:rgba(255,255,255,.6);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border-radius:22px;
+  box-shadow:var(--sh);
+  border:1px solid rgba(255,255,255,.3);
+
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+
+  opacity:0;
+  transform:translateY(28px);
+  transition:all .4s ease, transform .2s;
+}
+
+/* Dark Mode */
+body.dark .card{
+  background:rgba(22,22,39,.6);
+  border:1px solid rgba(255,255,255,.08);
 }
 .card.show{opacity:1;transform:translateY(0);}
 .card:hover{box-shadow:var(--sh2);transform:translateY(-6px);}
@@ -198,6 +213,68 @@ header p{font-size:13px;opacity:.82;}
 }
 @media(min-width:601px) and (max-width:920px){
   .grid{grid-template-columns:repeat(2,1fr);}
+}
+  /* ═══ DYNAMIC BACKGROUND ═══ */
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(124,58,237,.25), transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(59,130,246,.25), transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(236,72,153,.15), transparent 50%);
+  z-index:-2;
+  animation: bgMove 12s ease-in-out infinite alternate;
+}
+
+@keyframes bgMove{
+  0%{transform:translate(0,0) scale(1);}
+  100%{transform:translate(-30px,-30px) scale(1.05);}
+}
+
+/* Noise Layer */
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity:.08;
+  z-index:-1;
+}
+  .card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(255,255,255,.25), transparent 60%);
+  opacity:0;
+  transition:opacity .3s;
+}
+
+.card:hover::before{
+  opacity:1;
+}
+  .enroll-btn{
+  position:relative;
+  overflow:hidden;
+}
+
+.enroll-btn::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+  transform:translateX(-100%);
+}
+
+.enroll-btn:hover::before{
+  animation:shine 1s;
+}
+
+@keyframes shine{
+  100%{transform:translateX(100%);}
+}
+  body.dark{
+  background:linear-gradient(135deg,#0d0d1a,#020617);
 }
 </style>
 </head>
