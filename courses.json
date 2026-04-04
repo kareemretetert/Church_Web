@@ -169,7 +169,13 @@
       {
         "title": "gfhgf",
         "topics": "fghgfhf\nfghfghfh",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "fghfgh",
+            "type": "image",
+            "imageUrl": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775337573/e1qxs4ho6edrdvsxvget.jpg"
+          }
+        ],
         "quiz": null,
         "locked": false
       }
