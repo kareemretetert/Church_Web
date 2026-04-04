@@ -175,15 +175,50 @@ body{padding:10px;}.section{padding:14px;}
 }
 
 /* زرار السهم */
-.toggle-btn{
-  transition:0.3s;
-  font-size:18px;
-  cursor:pointer;
-}
+
 
 .course.open .toggle-btn,
 .lecture.open .toggle-btn{
   transform:rotate(90deg);
+}
+  /* HEADER */
+.course-header, .lecture-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  padding:10px;
+}
+
+/* Chevron */
+.chevron{
+  width:10px;
+  height:10px;
+  border-right:2px solid #333;
+  border-bottom:2px solid #333;
+  transform:rotate(-45deg);
+  transition:0.3s;
+}
+
+.course.open .chevron,
+.lecture.open .chevron{
+  transform:rotate(45deg);
+}
+
+/* Animation */
+.course-body, .lecture-body{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transform:translateY(-10px);
+  transition:all 0.35s ease;
+}
+
+.course.open .course-body,
+.lecture.open .lecture-body{
+  max-height:5000px;
+  opacity:1;
+  transform:translateY(0);
 }
 </style>
 </head>
@@ -443,25 +478,40 @@ const lc=c.lectures?c.lectures.length:0;
 let ls=0,qz=0;
 if(c.lectures) c.lectures.forEach(l=>{ if(l.lessons)ls+=l.lessons.length; if(l.quiz&&l.quiz.questions&&l.quiz.questions.length)qz++; });
 return `<div class="card course" id="course-${ci}">
+
 ${c.cover?`<img src="${c.cover}" style="width:100%;max-height:140px;object-fit:cover;border-radius:12px;margin-bottom:10px;cursor:zoom-in;" onclick="openImage('${c.cover}')">` : ""}
-<div onclick="toggleCourse(${ci})" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-  <div class="card-title">📚 ${c.title}</div>
-  <div class="toggle-btn">▶</div>
+
+<!-- HEADER -->
+<div class="course-header" onclick="toggleCourse(${ci})">
+  <div>
+    <div class="card-title">📚 ${c.title}</div>
+    ${c.desc?`<div class="card-meta">${c.desc}</div>`:""}
+  </div>
+  <div class="chevron"></div>
 </div>
-${c.desc?`<div class="card-meta">${c.desc}</div>`:""}
+
+<!-- BODY -->
 <div class="course-body">
-<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
-</div> 
-<span class="badge badge-purple">📖 ${lc} محاضرة</span>
-<span class="badge badge-blue">📌 ${ls} درس</span>
-<span class="badge badge-orange">📝 ${qz} امتحان</span>
+
+  <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+    <span class="badge badge-purple">📖 ${lc} محاضرة</span>
+    <span class="badge badge-blue">📌 ${ls} درس</span>
+    <span class="badge badge-orange">📝 ${qz} امتحان</span>
+  </div>
+
+  <div style="margin-top:12px;">
+    ${renderLectures(c.lectures||[],ci)}
+  </div>
+
+  <div class="card-actions">
+    <button onclick="openAddLecture(${ci})" class="success">➕ محاضرة</button>
+    <button onclick="openEditCourse(${ci})" class="warning">✏️ تعديل</button>
+    <button onclick="deleteCourse(${ci})" class="danger">🗑 حذف</button>
+  </div>
+
 </div>
-<div style="margin-top:12px;">${renderLectures(c.lectures||[],ci)}</div>
-<div class="card-actions">
-<button onclick="openAddLecture(${ci})" class="success">➕ محاضرة</button>
-<button onclick="openEditCourse(${ci})" class="warning">✏️ تعديل</button>
-<button onclick="deleteCourse(${ci})" class="danger">🗑 حذف</button>
-</div></div>`;
+
+</div>`;
 }).join("");
 updateStats();
 }
@@ -473,28 +523,35 @@ const lc=lec.lessons?lec.lessons.length:0;
 const hasQuiz=lec.quiz&&lec.quiz.questions&&lec.quiz.questions.length;
 const tpics=lec.topics?lec.topics.split('\n').filter(Boolean).map(t=>`<span style="background:#ede7f6;color:#6a1b9a;padding:2px 8px;border-radius:10px;margin:2px;display:inline-block;font-size:11px;">${t}</span>`).join(""):"";
 return `<div class="lecture-card lecture" id="lecture-${ci}-${li}">
-<div onclick="toggleLecture(${ci},${li})" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
-  <div class="lecture-title">📖 ${lec.title}</div>
-  <div class="toggle-btn">▶</div>
+
+<!-- HEADER -->
+<div class="lecture-header" onclick="toggleLecture(${ci},${li})">
+  <div>
+    <div class="lecture-title">📖 ${lec.title}</div>
+    <div style="margin-top:4px;">
+      <span class="badge badge-blue">📌 ${lc} درس</span>
+      ${hasQuiz?`<span class="quiz-badge">📝 ${lec.quiz.questions.length} سؤال</span>`:""}
+    </div>
+  </div>
+  <div class="chevron"></div>
 </div>
 
+<!-- BODY -->
 <div class="lecture-body">
-<div style="flex:1;">
-<div class="lecture-title">📖 ${lec.title}</div>
-${tpics?`<div style="margin-top:4px;">${tpics}</div>`:""}
-<div style="margin-top:6px;display:flex;gap:5px;flex-wrap:wrap;">
-<span class="badge badge-blue">📌 ${lc} درس</span>
-${hasQuiz?`<span class="quiz-badge">📝 ${lec.quiz.questions.length} سؤال</span>`:""}
+
+  ${tpics?`<div style="margin-bottom:8px;">${tpics}</div>`:""}
+
+  <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;">
+    <button onclick="openAddLesson(${ci},${li})">➕ درس</button>
+    <button onclick="openQuizModal(${ci},${li})">${hasQuiz?"✏️ امتحان":"📝 امتحان"}</button>
+    <button onclick="editLecture(${ci},${li})">✏️</button>
+    <button onclick="deleteLecture(${ci},${li})">🗑</button>
+  </div>
+
+  ${renderLessons(lec.lessons||[],ci,li)}
+
 </div>
-</div>
-<div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:2px;">
-<button onclick="openAddLesson(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#43cea2,#185a9d);">➕ درس</button>
-<button onclick="openQuizModal(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#f7971e,#ffd200);color:#333;">${hasQuiz?"✏️ امتحان":"📝 امتحان"}</button>
-<button onclick="editLecture(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;">✏️</button>
-<button onclick="deleteLecture(${ci},${li})" style="margin-top:0;padding:7px 10px;font-size:12px;width:auto;background:linear-gradient(135deg,#ff416c,#ff4b2b);">🗑</button>
-</div>
-</div>
-<div style="margin-top:8px;">${renderLessons(lec.lessons||[],ci,li)}</div>
+
 </div>`;
 }).join("");
 }
@@ -923,14 +980,18 @@ const m=document.getElementById(id);
 if(e.target===m)m.classList.remove("open");
 });
 };
-  function toggleCourse(ci){
-  const el = document.getElementById(`course-${ci}`);
-  el.classList.toggle("open");
+function toggleCourse(ci){
+  document.querySelectorAll(".course").forEach(el=>{
+    if(el.id !== `course-${ci}`) el.classList.remove("open");
+  });
+  document.getElementById(`course-${ci}`).classList.toggle("open");
 }
 
 function toggleLecture(ci,li){
-  const el = document.getElementById(`lecture-${ci}-${li}`);
-  el.classList.toggle("open");
+  document.querySelectorAll(`#course-${ci} .lecture`).forEach(el=>{
+    if(el.id !== `lecture-${ci}-${li}`) el.classList.remove("open");
+  });
+  document.getElementById(`lecture-${ci}-${li}`).classList.toggle("open");
 }
 </script>
 </body>
