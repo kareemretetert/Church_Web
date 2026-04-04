@@ -159,6 +159,32 @@ body{padding:10px;}.section{padding:14px;}
 .modal-content{padding:16px;}
 }
 @media(min-width:1200px){.section{max-width:1100px;}}
+  /* ===== ACCORDION ===== */
+
+.course-body, .lecture-body{
+  max-height:0;
+  overflow:hidden;
+  opacity:0;
+  transition:all 0.4s ease;
+}
+
+.course.open .course-body,
+.lecture.open .lecture-body{
+  max-height:5000px;
+  opacity:1;
+}
+
+/* زرار السهم */
+.toggle-btn{
+  transition:0.3s;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.course.open .toggle-btn,
+.lecture.open .toggle-btn{
+  transform:rotate(90deg);
+}
 </style>
 </head>
 <body>
@@ -416,11 +442,16 @@ el.innerHTML=courses.map((c,ci)=>{
 const lc=c.lectures?c.lectures.length:0;
 let ls=0,qz=0;
 if(c.lectures) c.lectures.forEach(l=>{ if(l.lessons)ls+=l.lessons.length; if(l.quiz&&l.quiz.questions&&l.quiz.questions.length)qz++; });
-return `<div class="card" id="course-card-${ci}">
+return `<div class="card course" id="course-${ci}">
 ${c.cover?`<img src="${c.cover}" style="width:100%;max-height:140px;object-fit:cover;border-radius:12px;margin-bottom:10px;cursor:zoom-in;" onclick="openImage('${c.cover}')">` : ""}
-<div class="card-title">📚 ${c.title}</div>
+<div onclick="toggleCourse(${ci})" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+  <div class="card-title">📚 ${c.title}</div>
+  <div class="toggle-btn">▶</div>
+</div>
 ${c.desc?`<div class="card-meta">${c.desc}</div>`:""}
+<div class="course-body">
 <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+</div> 
 <span class="badge badge-purple">📖 ${lc} محاضرة</span>
 <span class="badge badge-blue">📌 ${ls} درس</span>
 <span class="badge badge-orange">📝 ${qz} امتحان</span>
@@ -441,8 +472,13 @@ return lectures.map((lec,li)=>{
 const lc=lec.lessons?lec.lessons.length:0;
 const hasQuiz=lec.quiz&&lec.quiz.questions&&lec.quiz.questions.length;
 const tpics=lec.topics?lec.topics.split('\n').filter(Boolean).map(t=>`<span style="background:#ede7f6;color:#6a1b9a;padding:2px 8px;border-radius:10px;margin:2px;display:inline-block;font-size:11px;">${t}</span>`).join(""):"";
-return `<div class="lecture-card">
-<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+return `<div class="lecture-card lecture" id="lecture-${ci}-${li}">
+<div onclick="toggleLecture(${ci},${li})" style="display:flex;justify-content:space-between;align-items:center;cursor:pointer;">
+  <div class="lecture-title">📖 ${lec.title}</div>
+  <div class="toggle-btn">▶</div>
+</div>
+
+<div class="lecture-body">
 <div style="flex:1;">
 <div class="lecture-title">📖 ${lec.title}</div>
 ${tpics?`<div style="margin-top:4px;">${tpics}</div>`:""}
@@ -887,6 +923,15 @@ const m=document.getElementById(id);
 if(e.target===m)m.classList.remove("open");
 });
 };
+  function toggleCourse(ci){
+  const el = document.getElementById(`course-${ci}`);
+  el.classList.toggle("open");
+}
+
+function toggleLecture(ci,li){
+  const el = document.getElementById(`lecture-${ci}-${li}`);
+  el.classList.toggle("open");
+}
 </script>
 </body>
 </html>
