@@ -162,7 +162,13 @@
       {
         "title": "yyyyyyyyyyyyyyy",
         "topics": "fghgfhf",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "hjkjk",
+            "type": "text",
+            "text": "hjkjhkhjkhj"
+          }
+        ],
         "quiz": null,
         "locked": false
       },
