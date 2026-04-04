@@ -6,368 +6,334 @@
 <title>الكورسات التعليمية</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ═══════════ TOKENS ═══════════ */
 :root{
---primary:#6a1b9a;
---primary-dark:#4a148c;
---bg:#f4f0fb;
---card:#fff;
---text:#1e1e2e;
---muted:#6b7280;
---shadow:0 8px 30px rgba(106,27,154,0.10);
+  --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
+  --bg:#f4f0fb; --sf:#fff; --sf2:#f1ecfc;
+  --tx:#0f172a; --tx2:#374151; --tx3:#6b7280;
+  --bdr:#e2e8f0;
+  --sh:0 8px 30px rgba(109,40,217,.10);
+  --sh2:0 20px 50px rgba(109,40,217,.18);
+  --hdr1:#7c3aed; --hdr2:#9333ea; --hdr3:#5b21b6;
+  --bp-bg:#ede7f6; --bp-c:#5b21b6;
+  --bb-bg:#dbeafe; --bb-c:#1e40af;
+  --bo-bg:#ffedd5; --bo-c:#c2410c;
+  --inp-bg:#fff; --inp-bdr:#e2e8f0;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Cairo',sans-serif;background:var(--bg);min-height:100vh;}
+body.dark{
+  --bg:#0d0d1a; --sf:#161627; --sf2:#1e1e33;
+  --tx:#f0f0ff; --tx2:#c4c4e0; --tx3:#8888aa;
+  --bdr:#2a2a44;
+  --sh:0 8px 30px rgba(0,0,0,.4);
+  --sh2:0 20px 50px rgba(0,0,0,.6);
+  --hdr1:#0f172a; --hdr2:#1e1b4b; --hdr3:#020617;
+  --bp-bg:#2d1b69; --bp-c:#c4b5fd;
+  --bb-bg:#1e3a5f; --bb-c:#93c5fd;
+  --bo-bg:#431407; --bo-c:#fdba74;
+  --inp-bg:#1e1e33; --inp-bdr:#2a2a44;
+}
 
-/* ===== HEADER ===== */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;transition:background .3s,color .3s;}
+
+/* ═══ HEADER ═══ */
 header{
-position:relative;overflow:hidden;
-background:linear-gradient(135deg,var(--primary) 0%,#9c27b0 50%,var(--primary-dark) 100%);
-color:white;text-align:center;padding:36px 16px 28px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(270deg,var(--hdr1),var(--hdr2),var(--hdr3));
+  background-size:400% 400%;
+  animation:gradMove 12s ease infinite;
+  color:#fff;text-align:center;padding:0;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);
 }
+@keyframes gradMove{0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
 header::before{
-content:"";position:absolute;top:-60px;right:-60px;
-width:220px;height:220px;border-radius:50%;
-background:rgba(255,255,255,0.06);
+  content:"";position:absolute;top:-60px;right:-60px;
+  width:240px;height:240px;border-radius:50%;
+  background:rgba(255,255,255,.06);animation:float 7s ease-in-out infinite;pointer-events:none;
 }
 header::after{
-content:"";position:absolute;bottom:-40px;left:-40px;
-width:160px;height:160px;border-radius:50%;
-background:rgba(255,255,255,0.04);
+  content:"";position:absolute;bottom:-50px;left:-50px;
+  width:180px;height:180px;border-radius:50%;
+  background:rgba(255,255,255,.04);animation:float 9s ease-in-out infinite reverse;pointer-events:none;
 }
-header h1{font-size:clamp(20px,5vw,30px);font-weight:800;margin-bottom:4px;position:relative;}
-header p{font-size:13px;opacity:0.8;position:relative;}
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
 
-/* ===== BACK BUTTON - محسّن للموبايل ===== */
+/* nav bar inside header */
 .nav-bar{
-display:flex;align-items:center;justify-content:flex-end;
-padding:0 16px;margin-bottom:8px;position:relative;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px 6px;position:relative;
 }
 .back-btn{
-display:inline-flex;align-items:center;gap:6px;
-padding:10px 20px;
-background:rgba(255,255,255,0.18);
-border:1.5px solid rgba(255,255,255,0.5);
-border-radius:25px;color:white;text-decoration:none;
-font-size:14px;font-family:'Cairo',sans-serif;
-font-weight:700;cursor:pointer;transition:0.25s;
--webkit-tap-highlight-color:transparent;
-touch-action:manipulation;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;background:rgba(255,255,255,.18);
+  border:1.5px solid rgba(255,255,255,.45);border-radius:24px;
+  color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;text-decoration:none;
+  transition:background .2s,transform .15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.back-btn:hover,.back-btn:active{
-background:rgba(255,255,255,0.32);
-transform:scale(1.04);
-}
-.back-btn svg{width:16px;height:16px;fill:white;flex-shrink:0;}
+.back-btn:hover{background:rgba(255,255,255,.3);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:15px;height:15px;fill:#fff;}
 
-/* ===== SEARCH ===== */
-.search-wrap{
-max-width:620px;margin:22px auto 0;padding:0 16px;
+/* THEME SWITCH */
+.theme-toggle{display:flex;align-items:center;}
+.toggle-track{
+  width:64px;height:32px;border-radius:50px;
+  background:#1e293b;position:relative;
+  display:flex;align-items:center;padding:0 5px;cursor:pointer;
+  border:1.5px solid rgba(255,255,255,.3);transition:background .3s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
+.toggle-track:active{transform:scale(.95);}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{
+  position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;
+  transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+body.dark .toggle-track{background:rgba(109,40,217,.5);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
+
+.hdr-content{padding:14px 16px 28px;position:relative;}
+header h1{font-size:clamp(22px,5vw,32px);font-weight:800;margin-bottom:5px;}
+header p{font-size:13px;opacity:.82;}
+
+/* ═══ SEARCH ═══ */
+.search-wrap{max-width:620px;margin:22px auto 0;padding:0 16px;}
 .search-box{
-display:flex;align-items:center;gap:10px;
-background:#fff;border-radius:16px;padding:10px 16px;
-box-shadow:0 4px 20px rgba(106,27,154,0.1);
-border:2px solid transparent;transition:0.3s;
+  display:flex;align-items:center;gap:10px;
+  background:var(--inp-bg);border-radius:16px;padding:11px 18px;
+  box-shadow:var(--sh);border:2px solid transparent;
+  transition:border-color .25s,box-shadow .25s;
 }
-.search-box:focus-within{border-color:var(--primary);}
-.search-box svg{width:18px;height:18px;fill:var(--muted);flex-shrink:0;}
+.search-box:focus-within{border-color:var(--p);box-shadow:0 0 0 4px rgba(124,58,237,.12);}
+.search-box svg{width:18px;height:18px;stroke:var(--tx3);fill:none;flex-shrink:0;}
 .search-box input{
-border:none;outline:none;font-size:15px;font-family:'Cairo',sans-serif;
-width:100%;background:transparent;color:var(--text);
+  border:none;outline:none;font-size:15px;font-family:'Cairo',sans-serif;
+  width:100%;background:transparent;color:var(--tx);
 }
-.search-box input::placeholder{color:#bbb;}
+.search-box input::placeholder{color:var(--tx3);}
 
-/* ===== GRID ===== */
-.container{
-max-width:1200px;margin:22px auto 50px;padding:0 16px;
-display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px;
+/* ═══ STATS BAR ═══ */
+.stats-bar{
+  display:flex;gap:10px;justify-content:center;flex-wrap:wrap;
+  max-width:620px;margin:14px auto 0;padding:0 16px;
+}
+.stat-chip{
+  background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);
+  border-radius:20px;padding:6px 14px;font-size:12px;font-weight:700;color:#fff;
+  display:flex;align-items:center;gap:5px;
 }
 
-/* ===== CARD ===== */
+/* ═══ GRID ═══ */
+.grid{
+  max-width:1200px;margin:24px auto 60px;padding:0 16px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:22px;
+}
+
+/* ═══ CARD ═══ */
 .card{
-background:rgba(255,255,255,0.85);
-backdrop-filter:blur(12px);
--webkit-backdrop-filter:blur(12px);
-border-radius:22px;
-box-shadow:0 10px 30px rgba(0,0,0,0.08);
-overflow:hidden;
-display:flex;
-flex-direction:column;
-
-transform-style:preserve-3d;
-transition:transform 0.10s ease-out, box-shadow 0.10s ease-out;
-will-change: transform;
-
-opacity:0;
-transform:translateY(30px);
+  background:var(--sf);border-radius:22px;box-shadow:var(--sh);
+  overflow:hidden;display:flex;flex-direction:column;
+  border:1px solid var(--bdr);
+  opacity:0;transform:translateY(28px);
+  transition:opacity .5s,transform .5s,box-shadow .28s;
 }
-
-.card.show{
-opacity:1;
-transform:translateY(0);
-}
-
-.card:hover{
-box-shadow:0 20px 50px rgba(106,27,154,0.18);
-}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(106,27,154,0.16);}
-@keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
-
-.card-cover{width:100%;height:168px;object-fit:cover;display:block;}
+.card.show{opacity:1;transform:translateY(0);}
+.card:hover{box-shadow:var(--sh2);transform:translateY(-6px);}
+.card-cover{width:100%;height:172px;object-fit:cover;display:block;}
 .card-cover-ph{
-width:100%;height:168px;
-background:linear-gradient(135deg,#ede7f6,#d1c4e9);
-display:flex;align-items:center;justify-content:center;font-size:52px;
+  width:100%;height:172px;
+  background:linear-gradient(135deg,var(--sf2),var(--bdr));
+  display:flex;align-items:center;justify-content:center;font-size:56px;
 }
-header{
-box-shadow:0 10px 40px rgba(0,0,0,0.2);
-}
-  .search-box{
-transition:0.3s, transform 0.25s;
-}
-
-.search-box:hover{
-transform:scale(1.02);
-}
-.card-body{padding:18px;flex:1;display:flex;flex-direction:column;gap:0;}
-.card-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:6px;line-height:1.4;}
-.card-desc{color:var(--muted);font-size:13px;flex:1;line-height:1.65;margin-bottom:14px;}
-
+.card-body{padding:18px;flex:1;display:flex;flex-direction:column;}
+.card-title{font-size:17px;font-weight:800;color:var(--tx);margin-bottom:6px;line-height:1.4;}
+.card-desc{color:var(--tx3);font-size:13px;flex:1;line-height:1.65;margin-bottom:14px;min-height:20px;}
 .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
-.badge{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
-.badge-purple{background:#ede7f6;color:#6a1b9a;}
-.badge-blue{background:#e3f2fd;color:#1565c0;}
-.badge-orange{background:#fff3e0;color:#e65100;}
+.bdg{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
+.bp{background:var(--bp-bg);color:var(--bp-c);}
+.bb{background:var(--bb-bg);color:var(--bb-c);}
+.bo{background:var(--bo-bg);color:var(--bo-c);}
 
 .enroll-btn{
-width:100%;padding:13px;border:none;border-radius:14px;
-background:linear-gradient(135deg,var(--primary),var(--primary-dark));
-color:white;font-weight:800;font-size:15px;font-family:'Cairo',sans-serif;
-cursor:pointer;transition:0.25s;letter-spacing:0.3px;
--webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  width:100%;padding:13px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;font-weight:800;font-size:15px;font-family:'Cairo',sans-serif;
+  cursor:pointer;position:relative;overflow:hidden;
+  transition:transform .2s,box-shadow .2s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
-.enroll-btn:hover{opacity:0.92;transform:scale(1.02);}
-.enroll-btn:active{transform:scale(0.98);}
+.enroll-btn::after{
+  content:"";position:absolute;top:0;left:-100%;width:100%;height:100%;
+  background:linear-gradient(120deg,transparent,rgba(255,255,255,.35),transparent);
+  transition:left .5s;
+}
+.enroll-btn:hover::after{left:100%;}
+.enroll-btn:hover{transform:scale(1.02);box-shadow:0 6px 20px rgba(109,40,217,.4);}
+.enroll-btn:active{transform:scale(.97);}
 
-/* ===== EMPTY ===== */
-.empty{
-text-align:center;padding:70px 20px;grid-column:1/-1;color:var(--muted);
-}
+/* ═══ EMPTY / SKELETON ═══ */
+.empty{text-align:center;padding:70px 20px;grid-column:1/-1;color:var(--tx3);}
 .empty .e-icon{font-size:64px;margin-bottom:14px;}
 .empty p{font-size:16px;}
-
-/* ===== LOADING ===== */
 .skeleton{
-background:#fff;border-radius:22px;overflow:hidden;box-shadow:var(--shadow);
-animation:pulse 1.4s ease-in-out infinite;
+  background:var(--sf);border-radius:22px;overflow:hidden;
+  box-shadow:var(--sh);border:1px solid var(--bdr);
+  animation:pulse 1.4s ease-in-out infinite;
 }
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
-.sk-cover{height:168px;background:#e9e4f0;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+.sk-cover{height:172px;background:var(--sf2);}
 .sk-body{padding:18px;}
-.sk-line{background:#e9e4f0;border-radius:8px;margin-bottom:10px;}
+.sk-line{background:var(--sf2);border-radius:8px;margin-bottom:10px;}
 
-/* ===== RESPONSIVE ===== */
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:600px){
-.container{grid-template-columns:1fr;gap:14px;}
-header{padding:28px 14px 22px;}
+  .grid{grid-template-columns:1fr;gap:14px;}
+  header h1{font-size:22px;}
 }
 @media(min-width:601px) and (max-width:920px){
-.container{grid-template-columns:repeat(2,1fr);}
-}
-  header{
-background:linear-gradient(270deg,var(--primary),#9c27b0,var(--primary-dark));
-background-size:400% 400%;
-animation:gradientMove 10s ease infinite;
-}
-
-@keyframes gradientMove{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-  .card{
-transform-style:preserve-3d;
-perspective:1000px;
-transition:transform 0.3s ease, box-shadow 0.3s;
-}
-  .enroll-btn{
-position:relative;
-overflow:hidden;
-}
-
-.enroll-btn::before{
-content:"";
-position:absolute;
-top:0;
-left:-100%;
-width:100%;
-height:100%;
-background:linear-gradient(120deg,transparent,rgba(255,255,255,0.5),transparent);
-transition:0.5s;
-}
-
-.enroll-btn:hover::before{
-left:100%;
-}
-  .card{
-opacity:0;
-transform:translateY(30px);
-transition:0.6s;
-}
-
-.card.show{
-opacity:1;
-transform:translateY(0);
-}
-  header::before, header::after{
-animation:float 6s ease-in-out infinite;
-}
-
-@keyframes float{
-0%,100%{transform:translateY(0);}
-50%{transform:translateY(-15px);}
+  .grid{grid-template-columns:repeat(2,1fr);}
 }
 </style>
 </head>
 <body>
 
 <header>
-<div class="nav-bar">
-<a href="index.html" class="back-btn">
-<svg viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7v4h11v6H10v4z"/></svg>
-العودة
-</a>
-</div>
-<h1>🎓 الكورسات التعليمية</h1>
-<p>كنيسة السيدة العذراء مريم</p>
+  <div class="nav-bar">
+    <a href="index.html" class="back-btn">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      العودة
+    </a>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
+  </div>
+  <div class="hdr-content">
+    <h1>🎓 الكورسات التعليمية</h1>
+    <p>كنيسة السيدة العذراء مريم</p>
+  </div>
 </header>
 
 <div class="search-wrap">
-<div class="search-box">
-<svg viewBox="0 0 24 24"><path d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" stroke="#9ca3af" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-<input type="text" id="searchInput" placeholder="ابحث عن كورس..." oninput="filterCourses()">
+  <div class="search-box">
+    <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="searchInput" placeholder="ابحث عن كورس..." oninput="filterCourses()">
+  </div>
 </div>
-</div>
-
-<div class="container" id="courseGrid">
-<!-- Skeletons -->
-<div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:70%;"></div><div class="sk-line" style="height:13px;width:90%;"></div><div class="sk-line" style="height:13px;width:60%;margin-top:18px;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
-<div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:60%;"></div><div class="sk-line" style="height:13px;width:85%;"></div><div class="sk-line" style="height:13px;width:55%;margin-top:18px;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
-<div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:75%;"></div><div class="sk-line" style="height:13px;width:88%;"></div><div class="sk-line" style="height:13px;width:65%;margin-top:18px;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+<div class="stats-bar" id="statsBar" style="display:none;">
+  <span class="stat-chip" id="stat1">📚</span>
+  <span class="stat-chip" id="stat2">📌</span>
+  <span class="stat-chip" id="stat3">📝</span>
 </div>
 
-  <script>
-const observer = new IntersectionObserver(entries=>{
-entries.forEach(entry=>{
-if(entry.isIntersecting){
-entry.target.classList.add("show");
-}
-});
-},{threshold:0.2});
+<div class="grid" id="courseGrid">
+  <div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:70%;"></div><div class="sk-line" style="height:13px;width:90%;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+  <div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:60%;"></div><div class="sk-line" style="height:13px;width:85%;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+  <div class="skeleton"><div class="sk-cover"></div><div class="sk-body"><div class="sk-line" style="height:18px;width:75%;"></div><div class="sk-line" style="height:13px;width:88%;"></div><div class="sk-line" style="height:40px;margin-top:18px;border-radius:12px;"></div></div></div>
+</div>
 
-document.querySelectorAll(".card").forEach(el=>{
-observer.observe(el);
-});
-</script>
 <script>
-let allCourses = [];
+/* THEME */
+(function(){
+  const s=localStorage.getItem("cv_theme");
+  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s||(d?"dark":"light"));
+})();
+function applyTheme(m){document.body.classList.toggle("dark",m==="dark");localStorage.setItem("cv_theme",m);}
+function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
+
+/* INTERSECTION OBSERVER for card animations */
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting) e.target.classList.add("show");});
+},{threshold:.15});
+
+let allCourses=[];
 
 async function loadCourses(){
-try{
-const res = await fetch("courses.json");
-allCourses = await res.json();
-if(!Array.isArray(allCourses)) allCourses = [];
-}catch{ allCourses = []; }
-renderCourses(allCourses);
+  try{
+    const res=await fetch("courses.json");
+    allCourses=await res.json();
+    if(!Array.isArray(allCourses)) allCourses=[];
+  }catch{allCourses=[];}
+  renderCourses(allCourses);
+  updateStats(allCourses);
 }
 
 function renderCourses(list){
-const grid = document.getElementById("courseGrid");
-if(!list.length){
-grid.innerHTML = `<div class="empty"><div class="e-icon">📭</div><p>لا توجد كورسات متاحة حالياً</p></div>`;
-return;
+  const grid=document.getElementById("courseGrid");
+  if(!list.length){
+    grid.innerHTML=`<div class="empty"><div class="e-icon">📭</div><p>لا توجد كورسات متاحة حالياً</p></div>`;
+    return;
+  }
+  grid.innerHTML=list.map((c,i)=>{
+    const lc=c.lectures?c.lectures.length:0;
+    let ls=0,qz=0;
+    if(c.lectures) c.lectures.forEach(l=>{
+      if(l.lessons) ls+=l.lessons.length;
+      if(l.quiz?.questions?.length) qz++;
+    });
+    return `
+    <div class="card">
+      ${c.cover
+        ?`<img src="${c.cover}" class="card-cover" alt="${c.title}" loading="lazy">`
+        :`<div class="card-cover-ph">📚</div>`}
+      <div class="card-body">
+        <div class="card-title">${c.title}</div>
+        <div class="card-desc">${c.desc||""}</div>
+        <div class="meta-row">
+          <span class="bdg bp">📖 ${lc} محاضرة</span>
+          <span class="bdg bb">📌 ${ls} درس</span>
+          ${qz?`<span class="bdg bo">📝 ${qz} امتحان</span>`:""}
+        </div>
+        <button class="enroll-btn" onclick="goTo(${allCourses.indexOf(c)})">الدخول للكورس ←</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  // activate observer
+  grid.querySelectorAll(".card").forEach((el,i)=>{
+    el.style.transitionDelay=`${i*.06}s`;
+    observer.observe(el);
+  });
 }
-grid.innerHTML = list.map((c,i)=>{
-const lc = c.lectures ? c.lectures.length : 0;
-let ls = 0, qz = 0;
-if(c.lectures) c.lectures.forEach(l=>{
-if(l.lessons) ls += l.lessons.length;
-if(l.quiz && l.quiz.questions && l.quiz.questions.length) qz++;
-});
-return `
-<div class="card" style="animation-delay:${i*0.07}s">
-${c.cover
-? `<img src="${c.cover}" class="card-cover" alt="${c.title}" loading="lazy">`
-: `<div class="card-cover-ph">كورس</div>`}
-<div class="card-body">
-<div class="card-title">${c.title}</div>
-<div class="card-desc">${c.desc || '&nbsp;'}</div>
-<div class="meta-row">
-<span class="badge badge-purple">📖 ${lc} محاضرة</span>
-<span class="badge badge-blue">📌 ${ls} درس</span>
-${qz ? `<span class="badge badge-orange">📝 ${qz} امتحان</span>` : ""}
-</div>
-<button class="enroll-btn" onclick="goToCourse(${i})">الدخول للكورس ←</button>
-</div>
-</div>`;
-}).join("");
-  activateAnimations();
+
+function updateStats(list){
+  let ls=0,qz=0;
+  list.forEach(c=>{
+    if(c.lectures) c.lectures.forEach(l=>{
+      if(l.lessons) ls+=l.lessons.length;
+      if(l.quiz?.questions?.length) qz++;
+    });
+  });
+  if(list.length){
+    document.getElementById("stat1").innerHTML=`📚 ${list.length} كورس`;
+    document.getElementById("stat2").innerHTML=`📌 ${ls} درس`;
+    document.getElementById("stat3").innerHTML=`📝 ${qz} امتحان`;
+    document.getElementById("statsBar").style.display="flex";
+  }
 }
 
 function filterCourses(){
-const q = document.getElementById("searchInput").value.trim().toLowerCase();
-renderCourses(q ? allCourses.filter(c=>
-c.title.toLowerCase().includes(q)||(c.desc&&c.desc.toLowerCase().includes(q))
-) : allCourses);
-}
-function activateAnimations(){
-
-// Scroll animation
-
-
-document.querySelectorAll(".card").forEach(el=>{
-observer.observe(el);
-});
-
-// 3D hover (خفيف)
-document.querySelectorAll(".card").forEach(card=>{
-
-card.addEventListener("mouseenter", ()=>{
-
-card.addEventListener("mousemove", moveHandler);
-
-});
-
-card.addEventListener("mouseleave", ()=>{
-card.style.transform = "rotateX(0) rotateY(0) scale(1)";
-card.removeEventListener("mousemove", moveHandler);
-});
-
-function moveHandler(e){
-const rect = card.getBoundingClientRect();
-const x = e.clientX - rect.left;
-const y = e.clientY - rect.top;
-
-const centerX = rect.width / 2;
-const centerY = rect.height / 2;
-
-const rotateX = -(y - centerY) / 40;
-const rotateY = (x - centerX) / 40;
-
-card.style.transform =
-`rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.06)`;
+  const q=document.getElementById("searchInput").value.trim().toLowerCase();
+  const filtered=q?allCourses.filter(c=>c.title.toLowerCase().includes(q)||(c.desc&&c.desc.toLowerCase().includes(q))):allCourses;
+  renderCourses(filtered);
 }
 
-});
-
-}
-function goToCourse(i){
-localStorage.setItem("courseIndex", i);
-window.location = "course_view.html";
+function goTo(i){
+  localStorage.setItem("courseIndex",i);
+  window.location="course_view.html";
 }
 
 loadCourses();
 </script>
-  
 </body>
 </html>
