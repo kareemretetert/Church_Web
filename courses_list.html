@@ -224,10 +224,10 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  background:
-    radial-gradient(circle at 20% 30%, rgba(124,58,237,.25), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(59,130,246,.25), transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(236,72,153,.15), transparent 50%);
+ background:
+    radial-gradient(circle at 20% 30%, rgba(124,58,237,.18), transparent 45%),
+    radial-gradient(circle at 80% 70%, rgba(59,130,246,.18), transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(236,72,153,.10), transparent 55%);
   z-index:-2;
   animation: bgMove 12s ease-in-out infinite alternate;
 }
@@ -287,16 +287,16 @@ body::after{
   z-index:-3;
   pointer-events:none;
 }
-  body{
+ body{
   background: linear-gradient(
-    120deg,
-    #ece7f5,
-    #e9e3f8,
-    #f0ebfa,
-    #e6e0f3
+    140deg,
+    #dcd6f0,
+    #d4cdee,
+    #e2dcf5,
+    #cfc7ea
   );
   background-size: 300% 300%;
-  animation: gradientMove 12s ease infinite;
+  animation: gradientMove 14s ease infinite;
 }
   @keyframes gradientMove{
   0%{background-position:0% 50%;}
@@ -351,6 +351,12 @@ body::after{
 }
   body.dark #particles{
   filter:brightness(1.5);
+}
+  .card{
+  background:rgba(255,255,255,.75);
+}
+  body.dark .card{
+  background:rgba(22,22,39,.75);
 }
 </style>
 </head>
@@ -510,14 +516,15 @@ class Particle{
     if(this.x<0 || this.x>canvas.width) this.speedX*=-1;
     if(this.y<0 || this.y>canvas.height) this.speedY*=-1;
   }
-  draw(){
-   ctx.fillStyle = document.body.classList.contains("dark")
-  ? "rgba(167,139,250,0.4)"
-  : "rgba(124,58,237,0.3)";
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctx.fill();
-  }
+ draw(){
+  ctx.fillStyle = document.body.classList.contains("dark")
+    ? "rgba(180,160,255,0.5)"
+    : "rgba(90,60,200,0.45)"; // أغمق بكتير
+
+  ctx.beginPath();
+  ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+  ctx.fill();
+}
 }
 
 function initParticles(){
@@ -533,6 +540,26 @@ function animateParticles(){
     p.update();
     p.draw();
   });
+
+for(let i=0;i<particlesArray.length;i++){
+  for(let j=i;j<particlesArray.length;j++){
+    let dx = particlesArray[i].x - particlesArray[j].x;
+    let dy = particlesArray[i].y - particlesArray[j].y;
+    let dist = Math.sqrt(dx*dx + dy*dy);
+
+    if(dist < 120){
+      ctx.strokeStyle = document.body.classList.contains("dark")
+        ? "rgba(167,139,250,0.15)"
+        : "rgba(90,60,200,0.15)";
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.moveTo(particlesArray[i].x,particlesArray[i].y);
+      ctx.lineTo(particlesArray[j].x,particlesArray[j].y);
+      ctx.stroke();
+    }
+  }
+}
+  
   requestAnimationFrame(animateParticles);
 }
 
