@@ -6,69 +6,57 @@
 <title>محتوى الكورس</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ══════════════════════════════════════════
-   DESIGN TOKENS — light & dark
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
 :root{
-  /* brand */
   --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
-  /* red (lecture header) */
- --lec1:#2563eb;
---lec2:#4f46e5;
-  /* surfaces */
-  --bg:#f4f0fb; --surface:#ffffff; --surface2:#f1ecfc;
-  /* text — high contrast in both modes */
+  --lec1:#2563eb; --lec2:#4f46e5;
+  --bg:#f4f0fb; --sf:#fff; --sf2:#f1ecfc;
   --tx:#0f172a; --tx2:#374151; --tx3:#6b7280;
-  /* borders */
   --bdr:#e2e8f0;
-  /* icons bg */
-  --ico-v:#dbeafe; --ico-i:#dcfce7; --ico-f:#ffedd5; --ico-t:#fce7f3; --ico-q:#fef9c3;
-  /* icon fg */
-  --ico-v-c:#1d4ed8; --ico-i-c:#15803d; --ico-f-c:#c2410c; --ico-t-c:#9d174d; --ico-q-c:#b45309;
-  /* lesson hover */
-  --row-hover:#ede9fe;
-  /* content bg */
-  --content-bg:#f5f0ff;
-  /* quiz option */
-  --opt-bg:#ede9fe; --opt-sel:#ddd6fe;
-  /* shadows */
+  --iv-bg:#dbeafe; --iv-c:#1d4ed8;
+  --ii-bg:#dcfce7; --ii-c:#15803d;
+  --if-bg:#ffedd5; --if-c:#c2410c;
+  --it-bg:#fce7f3; --it-c:#9d174d;
+  --iq-bg:#fef9c3; --iq-c:#b45309;
+  --rh:#ede9fe; --cb:#f5f0ff;
+  --os:#ede9fe; --oss:#ddd6fe;
   --sh:0 4px 20px rgba(109,40,217,.10);
-  --sh-hdr:0 6px 24px rgba(109,40,217,.25);
-  /* badge */
-  --bdg-p-bg:#ede7f6; --bdg-p-c:#5b21b6;
-  --bdg-b-bg:#dbeafe; --bdg-b-c:#1e40af;
-  --bdg-o-bg:#ffedd5; --bdg-o-c:#c2410c;
-  /* lock */
-  --lock-bg:#fef2f2; --lock-bdr:#fecaca; --lock-c:#991b1b;
-  /* result */
-  --res-ok-bg:#dcfce7; --res-no-bg:#fee2e2;
-  /* quiz row */
-  --quiz-row-bg:#fffbeb; --quiz-row-bdr:#fde68a;
+  --sh2:0 8px 32px rgba(109,40,217,.18);
+  --shdr:0 6px 24px rgba(109,40,217,.25);
+  --bp-bg:#ede7f6; --bp-c:#5b21b6;
+  --bb-bg:#dbeafe; --bb-c:#1e40af;
+  --bo-bg:#ffedd5; --bo-c:#c2410c;
+  --lk-bg:#fef2f2; --lk-bdr:#fecaca; --lk-c:#991b1b;
+  --ok-bg:#dcfce7; --no-bg:#fee2e2;
+  --qr-bg:#fffbeb; --qr-bdr:#fde68a;
+  --hdr1:#7c3aed; --hdr2:#9333ea; --hdr3:#5b21b6;
+  --prog:#22c55e;
 }
-
-/* DARK MODE — overrides only */
 body.dark{
-  --bg:#0d0d1a; --surface:#161627; --surface2:#1e1e33;
+  --bg:#0d0d1a; --sf:#161627; --sf2:#1e1e33;
   --tx:#f0f0ff; --tx2:#c4c4e0; --tx3:#8888aa;
   --bdr:#2a2a44;
-  --ico-v:#1e3a5f; --ico-i:#14432a; --ico-f:#431407; --ico-t:#3b0a2a; --ico-q:#3b2800;
-  --ico-v-c:#93c5fd; --ico-i-c:#86efac; --ico-f-c:#fdba74; --ico-t-c:#f9a8d4; --ico-q-c:#fde68a;
-  --row-hover:#1e1e38;
-  --content-bg:#12122a;
-  --opt-bg:#1e1e38; --opt-sel:#2d2b5e;
+  --iv-bg:#1e3a5f; --iv-c:#93c5fd;
+  --ii-bg:#14432a; --ii-c:#86efac;
+  --if-bg:#431407; --if-c:#fdba74;
+  --it-bg:#3b0a2a; --it-c:#f9a8d4;
+  --iq-bg:#3b2800; --iq-c:#fde68a;
+  --rh:#1e1e38; --cb:#12122a;
+  --os:#1e1e38; --oss:#2d2b5e;
   --sh:0 4px 24px rgba(0,0,0,.5);
-  --sh-hdr:0 6px 24px rgba(0,0,0,.6);
-  --bdg-p-bg:#2d1b69; --bdg-p-c:#c4b5fd;
-  --bdg-b-bg:#1e3a5f; --bdg-b-c:#93c5fd;
-  --bdg-o-bg:#431407; --bdg-o-c:#fdba74;
-  --lock-bg:#1a0a0a; --lock-bdr:#7f1d1d; --lock-c:#fca5a5;
-  --res-ok-bg:#14432a; --res-no-bg:#450a0a;
-  --quiz-row-bg:#1c1500; --quiz-row-bdr:#78350f;
+  --sh2:0 8px 40px rgba(0,0,0,.6);
+  --shdr:0 6px 24px rgba(0,0,0,.6);
+  --bp-bg:#2d1b69; --bp-c:#c4b5fd;
+  --bb-bg:#1e3a5f; --bb-c:#93c5fd;
+  --bo-bg:#431407; --bo-c:#fdba74;
+  --lk-bg:#1a0a0a; --lk-bdr:#7f1d1d; --lk-c:#fca5a5;
+  --ok-bg:#14432a; --no-bg:#450a0a;
+  --qr-bg:#1c1500; --qr-bdr:#78350f;
+  --hdr1:#0f172a; --hdr2:#1e1b4b; --hdr3:#020617;
+  --prog:#4ade80;
 }
-
-/* ══════════════════════════════════════════
-   RESET & BASE
-══════════════════════════════════════════ */
 *{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
 body{
@@ -78,51 +66,21 @@ body{
   transition:background .3s,color .3s;
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    HEADER
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 header{
-  position:sticky;
-  top:0;
-  z-index:300;
-  overflow:hidden;
-
-  /* 🎨 Gradient */
   background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-
-  /* 💎 Glass Effect */
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-
-  background-color:rgba(255,255,255,0.08);
-
-  border-bottom:1px solid var(--bdr);
-
-  box-shadow:0 8px 30px rgba(0,0,0,0.15);
-
-  transition:
-    background .4s ease,
-    box-shadow .3s ease,
-    backdrop-filter .3s ease;
+  position:sticky;top:0;z-index:300;
+  box-shadow:var(--shdr);overflow:hidden;
+  transition:background .4s;
 }
 header::before{
   content:"";position:absolute;top:-60px;right:-60px;
   width:220px;height:220px;border-radius:50%;
-  background:rgba(255,255,255,.06);pointer-events:none;
+  background:rgba(255,255,255,.05);pointer-events:none;
 }
 .hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
-:root{
---hdr1:#7c3aed;
---hdr2:#9333ea;
---hdr3:#5b21b6;
-}
-
-body.dark{
---hdr1:#0f172a;
---hdr2:#1e1b4b;
---hdr3:#020617;
-   
-}
 .back-btn{
   display:inline-flex;align-items:center;gap:6px;
   padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);
@@ -135,51 +93,36 @@ body.dark{
 .back-btn:hover{background:rgba(255,255,255,.28);}
 .back-btn:active{transform:scale(.95);}
 .back-btn svg{width:14px;height:14px;fill:#fff;}
+.hdr-title{flex:1;text-align:center;color:#fff;font-size:clamp(14px,3.5vw,19px);font-weight:800;line-height:1.3;}
 
-.hdr-title{
-  flex:1;text-align:center;color:#fff;
-  font-size:clamp(14px,3.5vw,19px);font-weight:800;line-height:1.3;
-}
-
-/* ── theme toggle switch ── */
+/* THEME SWITCH */
 .theme-toggle{display:flex;align-items:center;flex-shrink:0;}
 .toggle-track{
   width:64px;height:32px;border-radius:50px;
   background:#1e293b;position:relative;
-  display:flex;align-items:center;
-  padding:0 5px;cursor:pointer;
-  border:1.5px solid rgba(255,255,255,.3);
-  transition:background .3s;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
+  display:flex;align-items:center;padding:0 5px;cursor:pointer;
+  border:1.5px solid rgba(255,255,255,.3);transition:background .3s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
 }
 .toggle-track:active{transform:scale(.95);}
 .t-icon{font-size:14px;z-index:1;line-height:1;}
 .t-sun{color:#facc15;margin-left:auto;}
 .t-moon{color:#e2e8f0;margin-right:auto;}
 .toggle-thumb{
-  position:absolute;
-  width:24px;height:24px;border-radius:50%;
-  background:#fff;
-  right:3px;
+  position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;
   transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;
   box-shadow:0 2px 8px rgba(0,0,0,.25);
 }
 body.dark .toggle-track{background:rgba(109,40,217,.5);}
 body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
 
-/* ══════════════════════════════════════════
-   PAGE
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   PAGE & INFO
+═══════════════════════════════════════ */
 .page{max-width:860px;margin:0 auto;padding:20px 14px 70px;}
-
-/* ══════════════════════════════════════════
-   INFO CARD
-══════════════════════════════════════════ */
 .info-card{
-  background:var(--surface);border-radius:22px;overflow:hidden;
-  box-shadow:var(--sh);margin-bottom:24px;
-  border:1px solid var(--bdr);
+  background:var(--sf);border-radius:22px;overflow:hidden;
+  box-shadow:var(--sh);margin-bottom:24px;border:1px solid var(--bdr);
   animation:fadeUp .5s both;
 }
 .info-cover{width:100%;max-height:220px;object-fit:cover;display:block;}
@@ -187,24 +130,26 @@ body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
 .info-title{font-size:19px;font-weight:800;color:var(--tx);}
 .info-desc{color:var(--tx2);font-size:13px;margin-top:6px;line-height:1.7;}
 .meta-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-.badge{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
-.b-p{background:var(--bdg-p-bg);color:var(--bdg-p-c);}
-.b-b{background:var(--bdg-b-bg);color:var(--bdg-b-c);}
-.b-o{background:var(--bdg-o-bg);color:var(--bdg-o-c);}
+.bdg{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
+.bp{background:var(--bp-bg);color:var(--bp-c);}
+.bb{background:var(--bb-bg);color:var(--bb-c);}
+.bo{background:var(--bo-bg);color:var(--bo-c);}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    LECTURE BLOCK
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 .lec-block{
-  background:var(--surface);border-radius:20px;
-  box-shadow:var(--sh);margin-bottom:14px;overflow:hidden;
-  border:1px solid var(--bdr);
+  background:var(--sf);border-radius:20px;box-shadow:var(--sh);
+  margin-bottom:14px;overflow:hidden;border:1px solid var(--bdr);
   animation:fadeUp .4s both;
+  transition:transform .25s,box-shadow .25s;
 }
+.lec-block:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
+.lec-block.completed{box-shadow:0 0 0 2px rgba(34,197,94,.5),var(--sh);}
 
-/* RED HEADER */
+/* LECTURE HEADER */
 .lec-hdr{
- background:linear-gradient(135deg,var(--lec1),var(--lec2));
+  background:linear-gradient(135deg,var(--lec1),var(--lec2));
   color:#fff;padding:15px 18px;cursor:pointer;
   display:flex;align-items:center;gap:12px;
   user-select:none;-webkit-tap-highlight-color:transparent;
@@ -212,28 +157,7 @@ body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
 }
 .lec-hdr:hover{filter:brightness(1.08);}
 .lec-hdr:active{filter:brightness(.9);}
-body.dark{
---lec1:#1e3a8a;
---lec2:#312e81;
-}
-   .lec-hdr:hover{
-transform:scale(1.01);
-}
-   .lec-hdr{
-background-size:200% 200%;
-animation:gradMove 6s ease infinite;
-}
-
-@keyframes gradMove{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
-/* LOCKED HEADER */
-.lec-hdr.locked{
-  background:linear-gradient(135deg,#64748b,#475569);
-  cursor:not-allowed;
-}
+.lec-hdr.locked{background:linear-gradient(135deg,#64748b,#475569);cursor:not-allowed;}
 .lec-hdr.locked:hover{filter:none;}
 
 /* arrow circle */
@@ -245,54 +169,51 @@ animation:gradMove 6s ease infinite;
 }
 .lec-arr svg{width:15px;height:15px;fill:#fff;}
 .lec-arr.open{transform:rotate(90deg);}
-
 .lec-meta{flex:1;min-width:0;}
 .lec-num{font-size:11px;opacity:.75;margin-bottom:2px;}
 .lec-name{font-size:16px;font-weight:800;line-height:1.35;}
-.lec-topics{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
-.topic-tag{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:10px;font-size:11px;}
 .lec-cnt{font-size:11px;opacity:.75;white-space:nowrap;flex-shrink:0;}
 
-/* LOCK BADGE */
-.lock-badge{
+/* progress bar */
+.lec-prog{width:100%;height:5px;background:rgba(255,255,255,.2);border-radius:10px;margin-top:8px;overflow:hidden;}
+.lec-prog-bar{height:100%;width:0;background:var(--prog);border-radius:10px;transition:width .6s cubic-bezier(.22,1,.36,1);}
+
+/* topics — مخفية لما تكون فاضية */
+.lec-topics{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px;}
+.topic-tag{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:10px;font-size:11px;}
+
+/* lock badge */
+.lock-bdg{
   display:flex;align-items:center;gap:5px;
   background:rgba(0,0,0,.25);border-radius:14px;
-  padding:4px 10px;font-size:11px;font-weight:700;color:#fff;
-  white-space:nowrap;
+  padding:4px 10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;
 }
-
-/* LOCK NOTICE */
+/* lock notice */
 .lock-notice{
-  background:var(--lock-bg);border:1px solid var(--lock-bdr);
+  background:var(--lk-bg);border:1px solid var(--lk-bdr);
   border-radius:0 0 18px 18px;padding:14px 18px;
   display:flex;align-items:center;gap:10px;
 }
-.lock-notice span{font-size:13px;color:var(--lock-c);font-weight:600;}
+.lock-notice span{font-size:13px;color:var(--lk-c);font-weight:600;}
 
-/* BODY — grid slide */
-.lec-body{
-  display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows .36s ease;
-}
+/* BODY slide */
+.lec-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .36s ease;}
 .lec-body.open{grid-template-rows:1fr;}
 .lec-body-inner{overflow:hidden;}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    LESSON ROW
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 .lesson-row{
   display:flex;align-items:center;gap:13px;
   padding:13px 18px;border-bottom:1px solid var(--bdr);
-  cursor:pointer;
-  transition:background .15s;
+  cursor:pointer;transition:background .15s;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-  position:relative;
 }
 .lesson-row:last-of-type{border-bottom:none;}
-.lesson-row:hover{background:var(--row-hover);}
-.lesson-row:active{background:var(--opt-sel);}
+.lesson-row:hover{background:var(--rh);}
+.lesson-row:active{background:var(--oss);}
 
-/* ICON BOX */
 .l-ico{
   width:44px;height:44px;border-radius:13px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;
@@ -300,59 +221,55 @@ animation:gradMove 6s ease infinite;
 }
 .lesson-row:hover .l-ico{transform:scale(1.08) rotate(-5deg);}
 .l-ico svg{width:22px;height:22px;}
-.iv{background:var(--ico-v);} .iv svg{fill:var(--ico-v-c);}
-.ii{background:var(--ico-i);} .ii svg{fill:var(--ico-i-c);}
-.if{background:var(--ico-f);} .if svg{fill:var(--ico-f-c);}
-.it{background:var(--ico-t);} .it svg{fill:var(--ico-t-c);}
-.iq{background:var(--ico-q);} .iq svg{fill:var(--ico-q-c);}
-
+.iv{background:var(--iv-bg);} .iv svg{fill:var(--iv-c);}
+.ii{background:var(--ii-bg);} .ii svg{fill:var(--ii-c);}
+.if{background:var(--if-bg);} .if svg{fill:var(--if-c);}
+.it{background:var(--it-bg);} .it svg{fill:var(--it-c);}
+.iq{background:var(--iq-bg);} .iq svg{fill:var(--iq-c);}
 .l-info{flex:1;min-width:0;}
 .l-name{font-size:14px;font-weight:700;color:var(--tx);line-height:1.4;}
 .l-lbl{font-size:12px;color:var(--tx3);margin-top:2px;}
 
-/* done check */
 .done-mark{
   display:none;font-size:11px;font-weight:800;
   background:#dcfce7;color:#15803d;
-  padding:2px 7px;border-radius:10px;margin-right:5px;
+  padding:2px 7px;border-radius:10px;margin-left:5px;
 }
 body.dark .done-mark{background:#14432a;color:#86efac;}
 .done-mark.show{display:inline;}
 
-/* ROW ARROW */
 .row-arr{
   width:28px;height:28px;flex-shrink:0;
-  background:var(--surface2);border-radius:50%;
+  background:var(--sf2);border-radius:50%;
   display:flex;align-items:center;justify-content:center;
   transition:transform .3s cubic-bezier(.34,1.56,.64,1),background .2s;
 }
-.row-arr svg{width:12px;height:12px;stroke:var(--tx3);transition:stroke .2s;}
-.row-arr.open{transform:rotate(90deg);background:var(--opt-sel);}
+.row-arr svg{width:12px;height:12px;stroke:var(--tx3);fill:none;transition:stroke .2s;}
+.row-arr.open{transform:rotate(90deg);background:var(--oss);}
 .row-arr.open svg{stroke:var(--p);}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    QUIZ ROW
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 .quiz-row{
   display:flex;align-items:center;gap:13px;padding:13px 18px;
-  background:var(--quiz-row-bg);border-top:2px solid var(--quiz-row-bdr);
+  background:var(--qr-bg);border-top:2px solid var(--qr-bdr);
   cursor:pointer;transition:background .15s;
   -webkit-tap-highlight-color:transparent;touch-action:manipulation;
   text-decoration:none;
 }
 .quiz-row:hover{filter:brightness(.97);}
 .quiz-row:active{filter:brightness(.93);}
-.quiz-row.open .row-arr{transform:rotate(90deg);background:var(--opt-sel);}
-.q-name{font-size:14px;font-weight:700;color:var(--ico-q-c);}
+.quiz-row.open .row-arr{transform:rotate(90deg);background:var(--oss);}
+.q-name{font-size:14px;font-weight:700;color:var(--iq-c);}
 .q-sub{font-size:12px;color:var(--tx3);margin-top:2px;}
 
-/* ══════════════════════════════════════════
-   INLINE CONTENT
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   INLINE CONTENT WRAPPER
+═══════════════════════════════════════ */
 .c-wrap{
   display:grid;grid-template-rows:0fr;
-  transition:grid-template-rows .36s ease,opacity .3s;
-  opacity:0;
+  transition:grid-template-rows .36s ease,opacity .3s;opacity:0;
 }
 .c-wrap.open{grid-template-rows:1fr;opacity:1;}
 .c-inner{overflow:hidden;}
@@ -360,20 +277,17 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
 .c-hdr{
   background:linear-gradient(135deg,var(--p),var(--p-dk));
   color:#fff;padding:11px 18px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
 }
 .c-hdr-title{font-size:14px;font-weight:700;flex:1;color:#fff;}
 .c-close{
   background:rgba(255,255,255,.18);border:none;color:#fff;
   padding:6px 14px;border-radius:16px;cursor:pointer;
   font-size:12px;font-family:'Cairo',sans-serif;font-weight:700;
-  -webkit-tap-highlight-color:transparent;
-  transition:background .2s;
+  -webkit-tap-highlight-color:transparent;transition:background .2s;
 }
 .c-close:hover{background:rgba(255,255,255,.35);}
-.c-close:active{transform:scale(.93);}
-.c-body{padding:16px;background:var(--content-bg);}
+.c-body{padding:16px;background:var(--cb);}
 
 /* VIDEO */
 .vid-wrap{
@@ -384,38 +298,27 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
   position:absolute;top:0;left:0;width:100%;height:100%;
   border:none;border-radius:14px;
 }
-
 /* IMAGE */
-.c-img{
-  width:100%;max-height:70vh;object-fit:contain;
-  border-radius:14px;display:block;cursor:zoom-in;
-  transition:transform .2s;
-}
-.c-img:hover{transform:scale(1.01);}
-
+.c-img{width:100%;max-height:70vh;object-fit:contain;border-radius:14px;display:block;cursor:zoom-in;}
 /* FILE */
 .file-fr{width:100%;height:70vh;border:none;border-radius:14px;background:#fff;}
 .file-link{
   display:inline-flex;align-items:center;gap:8px;margin-top:10px;
   padding:11px 22px;background:linear-gradient(135deg,var(--p),var(--p-dk));
-  color:#fff;border-radius:14px;font-family:'Cairo',sans-serif;
-  font-weight:700;font-size:14px;text-decoration:none;
-  transition:opacity .2s,transform .15s;
+  color:#fff;border-radius:14px;font-family:'Cairo',sans-serif;font-weight:700;font-size:14px;
+  text-decoration:none;transition:opacity .2s;
 }
 .file-link:hover{opacity:.9;}
-.file-link:active{transform:scale(.96);}
-
 /* TEXT */
 .txt-box{
-  background:var(--surface);border-radius:14px;padding:22px;
+  background:var(--sf);border-radius:14px;padding:22px;
   font-size:15px;line-height:1.9;color:var(--tx);white-space:pre-wrap;
   box-shadow:0 2px 10px rgba(0,0,0,.07);
 }
-body.dark .txt-box{box-shadow:0 2px 10px rgba(0,0,0,.4);}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    QUIZ INLINE
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 .qz-timer{
   background:linear-gradient(135deg,var(--p),var(--p-dk));
   color:#fff;border-radius:14px;padding:12px 18px;margin-bottom:12px;
@@ -423,27 +326,21 @@ body.dark .txt-box{box-shadow:0 2px 10px rgba(0,0,0,.4);}
 }
 .qz-tlbl{font-size:13px;font-weight:700;}
 .qz-tval{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;}
-.qz-bar-wrap{height:7px;background:var(--surface2);border-radius:10px;margin-bottom:16px;overflow:hidden;}
-.qz-bar{height:100%;width:100%;background:var(--p);transition:width 1s linear,background .5s;border-radius:10px;}
-
-.q-card{
-  background:var(--surface);border-radius:14px;padding:16px;margin-bottom:12px;
-  box-shadow:0 2px 10px rgba(0,0,0,.07);
-}
-body.dark .q-card{box-shadow:0 2px 10px rgba(0,0,0,.4);}
+.qz-bw{height:7px;background:var(--sf2);border-radius:10px;margin-bottom:16px;overflow:hidden;}
+.qz-b{height:100%;width:100%;background:var(--p);transition:width 1s linear,background .5s;border-radius:10px;}
+.q-card{background:var(--sf);border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 10px rgba(0,0,0,.07);}
 .q-txt{font-weight:700;font-size:15px;color:var(--tx);margin-bottom:10px;line-height:1.5;}
-.q-img-thumb{width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
+.q-img-t{width:100%;max-height:160px;object-fit:cover;border-radius:10px;margin-bottom:10px;}
 .q-opt{
   display:flex;align-items:center;gap:10px;
-  background:var(--opt-bg);padding:10px 14px;border-radius:11px;
+  background:var(--os);padding:10px 14px;border-radius:11px;
   margin-bottom:8px;cursor:pointer;
-  transition:background .15s,border-color .15s,transform .12s;
-  border:2px solid transparent;
+  transition:background .15s,border-color .15s,transform .12s;border:2px solid transparent;
   -webkit-tap-highlight-color:transparent;
 }
 .q-opt:last-child{margin-bottom:0;}
 .q-opt:hover{filter:brightness(.97);}
-.q-opt.sel{background:var(--opt-sel);border-color:var(--p);transform:scale(1.01);}
+.q-opt.sel{background:var(--oss);border-color:var(--p);transform:scale(1.01);}
 .q-opt:active{transform:scale(.97);}
 .q-opt input{width:auto;margin:0;accent-color:var(--p);}
 .q-opt span{font-size:14px;color:var(--tx);}
@@ -452,77 +349,54 @@ body.dark .q-card{box-shadow:0 2px 10px rgba(0,0,0,.4);}
   background:linear-gradient(135deg,var(--p),var(--p-dk));
   color:#fff;font-size:16px;font-weight:800;font-family:'Cairo',sans-serif;
   cursor:pointer;margin-top:6px;
-  transition:transform .15s,box-shadow .15s;
-  -webkit-tap-highlight-color:transparent;
+  transition:transform .15s,box-shadow .15s;-webkit-tap-highlight-color:transparent;
 }
 .qz-submit:hover{transform:scale(1.02);box-shadow:0 6px 20px rgba(109,40,217,.4);}
 .qz-submit:active{transform:scale(.97);}
-
-/* RESULTS */
-.res-wrap{background:var(--surface);border-radius:18px;padding:28px 20px;text-align:center;}
+.res-wrap{background:var(--sf);border-radius:18px;padding:28px 20px;text-align:center;}
 .res-score{font-size:68px;font-weight:800;line-height:1;}
 .res-pct{font-size:22px;font-weight:700;margin-top:6px;}
 .res-msg{font-size:14px;color:var(--tx2);margin-top:10px;}
 .res-qa{margin-top:20px;text-align:right;}
 .rqa{border-radius:13px;padding:12px 14px;margin-bottom:8px;}
-.rqa-ok{background:var(--res-ok-bg);}
-.rqa-no{background:var(--res-no-bg);}
+.rqa-ok{background:var(--ok-bg);} .rqa-no{background:var(--no-bg);}
 .rqa-q{font-weight:700;font-size:13px;color:var(--tx);margin-bottom:4px;}
 .rqa-a{font-size:13px;margin-bottom:2px;}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    IMAGE ZOOM
-══════════════════════════════════════════ */
-#imgZoom{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.92);z-index:9999;
-  justify-content:center;align-items:center;cursor:zoom-out;
-}
+═══════════════════════════════════════ */
+#imgZoom{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;justify-content:center;align-items:center;cursor:zoom-out;}
 #imgZoom.show{display:flex;}
 #imgZoom img{max-width:96%;max-height:96%;border-radius:12px;animation:scaleIn .25s cubic-bezier(.34,1.56,.64,1);}
 
-/* ══════════════════════════════════════════
-   SPINNER / EMPTY
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   SPINNER & EMPTY
+═══════════════════════════════════════ */
 .spin-wrap{text-align:center;padding:60px 20px;}
-.spin{
-  display:inline-block;width:46px;height:46px;
-  border:5px solid var(--surface2);border-top:5px solid var(--p);
-  border-radius:50%;animation:spin .85s linear infinite;
-}
+.spin{display:inline-block;width:46px;height:46px;border:5px solid var(--sf2);border-top:5px solid var(--p);border-radius:50%;animation:spin .85s linear infinite;}
 .empty-lec{text-align:center;padding:22px;color:var(--tx3);font-size:13px;}
-.lec-progress{
-width:100%;
-height:6px;
-background:rgba(255,255,255,0.2);
-border-radius:10px;
-margin-top:8px;
-overflow:hidden;
-}
 
-.lec-progress-bar{
-height:100%;
-width:0%;
-background:linear-gradient(90deg,#22c55e,#4ade80,#22c55e);
-border-radius:10px;
-transition:width 0.6s cubic-bezier(.22,1,.36,1);
-box-shadow:0 0 10px rgba(34,197,94,.6);
-}
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    KEYFRAMES
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-@keyframes unlockPop{
-  0%{box-shadow:0 0 0 0 rgba(109,40,217,.5);}
-  40%{box-shadow:0 0 0 12px rgba(109,40,217,.0),0 6px 28px rgba(109,40,217,.35);}
-  100%{box-shadow:var(--sh);}
-}
 @keyframes scaleIn{from{transform:scale(.78);}to{transform:scale(1);}}
 @keyframes spin{to{transform:rotate(360deg);}}
+@keyframes unlockPop{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.6);}
+  40%{box-shadow:0 0 0 14px rgba(34,197,94,0),0 6px 28px rgba(34,197,94,.3);}
+  100%{box-shadow:var(--sh);}
+}
+@keyframes cOpen{
+  from{opacity:0;transform:translateY(16px) scale(.97);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.c-wrap.open{animation:cOpen .4s cubic-bezier(.22,1,.36,1);}
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    RESPONSIVE
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 @media(max-width:600px){
   .page{padding:14px 10px 70px;}
   .lec-hdr{padding:13px 14px;}
@@ -530,62 +404,22 @@ box-shadow:0 0 10px rgba(34,197,94,.6);
   .c-body{padding:12px;}
   .l-ico{width:40px;height:40px;}
 }
-   .c-wrap.open{
-animation:netflixOpen .45s cubic-bezier(.22,1,.36,1);
-}
-
-@keyframes netflixOpen{
-0%{
-opacity:0;
-transform:translateY(20px) scale(0.96);
-}
-100%{
-opacity:1;
-transform:translateY(0) scale(1);
-}
-}
-   .lec-block{
-transition:transform .25s ease, box-shadow .25s ease;
-}
-.lec-block:hover{
-transform:translateY(-4px) scale(1.01);
-box-shadow:0 20px 40px rgba(0,0,0,.15);
-}
-   .lec-block.completed{
-box-shadow:0 0 20px rgba(34,197,94,.4), var(--sh);
-}
-   .lec-block.locked{
-opacity:0.5;
-filter:grayscale(0.8);
-pointer-events:none;
-}
- body.dark header{
-  background:linear-gradient(135deg,#1e293b,#334155,#1e293b);
-  background-color:rgba(15,23,42,0.75);
-
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-
-  box-shadow:0 10px 40px rgba(0,0,0,0.5);
-}
 </style>
 </head>
 <body>
 
 <header>
   <div class="hdr">
-    <button class="back-btn" onclick="goToCourses()">
-  <svg viewBox="0 0 24 24">
-    <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-  العودة
-</button>
+    <button class="back-btn" onclick="history.back()">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      العودة
+    </button>
     <div class="hdr-title" id="courseName">جاري التحميل...</div>
-    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع الليلي">
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
       <div class="toggle-track">
         <span class="t-icon t-sun">☀️</span>
         <span class="t-icon t-moon">🌙</span>
-        <div class="toggle-thumb" id="toggleThumb"></div>
+        <div class="toggle-thumb"></div>
       </div>
     </div>
   </div>
@@ -599,305 +433,234 @@ pointer-events:none;
 <div id="imgZoom" onclick="this.classList.remove('show')"><img id="imgZoomSrc"></div>
 
 <script>
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    SVG ICONS
-══════════════════════════════════════════ */
-const IC = {
-  video:         `<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>`,
+═══════════════════════════════════════ */
+const IC={
+  video:`<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>`,
   "video-upload":`<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>`,
-  image:         `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-10-9 3 4 2-2.5 3 3.5H5l4-5z"/></svg>`,
-  file:          `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
-  "file-upload": `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
-  text:          `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"/></svg>`,
-  quiz:          `<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" fill="currentColor" opacity=".15" stroke="currentColor" stroke-width="1.6"/><line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 16.5l1.5 1.5 3-3" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  arrow:         `<svg viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  lock:          `<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="currentColor"/></svg>`,
+  image:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zm-10-9 3 4 2-2.5 3 3.5H5l4-5z"/></svg>`,
+  file:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
+  "file-upload":`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`,
+  text:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 4h18v2H3zm0 4h18v2H3zm0 4h12v2H3zm0 4h12v2H3z"/></svg>`,
+  quiz:`<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="2" width="16" height="20" rx="2" fill="currentColor" opacity=".15" stroke="currentColor" stroke-width="1.6"/><line x1="8" y1="7" x2="16" y2="7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="11" x2="16" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="15" x2="12" y2="15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M13.5 16.5l1.5 1.5 3-3" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  arrow:`<svg viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 };
+const TLBL={video:"فيديو","video-upload":"فيديو",image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"};
+const TICLS={video:"iv","video-upload":"iv",image:"ii",file:"if","file-upload":"if",text:"it"};
 
-const TLBL = {
-  video:"فيديو","video-upload":"فيديو",
-  image:"صورة",file:"ملف PDF","file-upload":"ملف PDF",text:"نص تعليمي"
-};
-const TICLS = {
-  video:"iv","video-upload":"iv",
-  image:"ii",file:"if","file-upload":"if",text:"it"
-};
-
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    THEME
-══════════════════════════════════════════ */
-(function initTheme(){
-  const saved = localStorage.getItem("cv_theme");
-  const prefersDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
-  const mode = saved || (prefersDark ? "dark" : "light");
-  applyTheme(mode);
+═══════════════════════════════════════ */
+(function(){
+  const s=localStorage.getItem("cv_theme");
+  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s||(d?"dark":"light"));
 })();
-window.addEventListener("scroll",()=>{
-  const header = document.querySelector("header");
-  if(window.scrollY > 20){
-    header.classList.add("scrolled");
-  }else{
-    header.classList.remove("scrolled");
-  }
-});
-function applyTheme(mode){
-  document.body.classList.toggle("dark", mode === "dark");
-  localStorage.setItem("cv_theme", mode);
+function applyTheme(m){
+  document.body.classList.toggle("dark",m==="dark");
+  localStorage.setItem("cv_theme",m);
 }
+function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
 
-function toggleTheme(){
-  applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
-}
-
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    STATE
-══════════════════════════════════════════ */
-const CI = localStorage.getItem("courseIndex") || "0";
-const PROG_KEY = "cv_prog_" + CI;
-let course = null;
-let quizData = null, quizAns = {}, qTimer = null, qLeft = 0, qTotal = 0;
+═══════════════════════════════════════ */
+const CI=localStorage.getItem("courseIndex")||"0";
+const PROG_KEY="cv_prog_"+CI;
+let course=null;
+let quizData=null,quizAns={},qTimer=null,qLeft=0,qTotal=0;
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    PROGRESS
-══════════════════════════════════════════ */
-function getProgress(){ return JSON.parse(localStorage.getItem(PROG_KEY)||"{}"); }
-function saveProgress(d){ localStorage.setItem(PROG_KEY, JSON.stringify(d)); }
-function markDone(li, si){
-let progress = getProgress();
+═══════════════════════════════════════ */
+function getP(){return JSON.parse(localStorage.getItem(PROG_KEY)||"{}");}
+function saveP(d){localStorage.setItem(PROG_KEY,JSON.stringify(d));}
 
-if(progress[`${li}-${si}`]) return;
+function markDone(li,si){
+  const p=getP();
+  if(p[`${li}-${si}`]) return;
+  p[`${li}-${si}`]=true; saveP(p);
+  const el=document.getElementById(`done-${li}-${si}`);
+  if(el) el.classList.add("show");
+  updateProgBar(li);
+  checkUnlock(li);
+}
 
-progress[`${li}-${si}`] = true;
-saveProgress(progress);
+function restoreProgress(){
+  const p=getP();
+  Object.keys(p).forEach(k=>{
+    const el=document.getElementById("done-"+k);
+    if(el) el.classList.add("show");
+  });
+  course.lectures.forEach((_,li)=>{
+    updateProgBar(li);
+    checkCompletion(li);
+    // فتح المحاضرات المفتوحة مسبقاً بدون refresh
+    if(li>0 && getLecPct(li-1)>=0.7){
+      course.lectures[li].__unlocked=true;
+      applyUnlockUI(li,false); // false = بدون animation
+    }
+  });
+}
 
-// تحديث UI
-const el = document.getElementById(`done-${li}-${si}`);
-if(el) el.classList.add("show");
+function getLecPct(li){
+  const lec=course.lectures[li];
+  const les=lec.lessons||[];
+  if(!les.length) return 1;
+  const p=getP(); let done=0;
+  les.forEach((_,si)=>{if(p[`${li}-${si}`]) done++;});
+  return done/les.length;
+}
 
-// 🔥 المهم
-updateLectureProgress(li);
-checkLectureCompletion(li);
-checkUnlock(li);
-   renderLectures(); 
+function isLocked(li){
+  if(li===0) return false;
+  if(course.lectures[li].__unlocked) return false;
+  return getLecPct(li-1)<0.7;
+}
+
+function updateProgBar(li){
+  const pct=Math.round(getLecPct(li)*100);
+  const bar=document.getElementById(`lpbar-${li}`);
+  if(bar) bar.style.width=pct+"%";
+}
+
+function checkCompletion(li){
+  if(getLecPct(li)>=0.7){
+    const block=document.getElementById(`lbody-${li}`)?.closest(".lec-block");
+    if(block) block.classList.add("completed");
+  }
 }
 
 function checkUnlock(li){
-const nextLi = li + 1;
-
-if(!course || nextLi >= course.lectures.length) return;
-
-if(getLecPct(li) >= 0.7){
-
-// افتح فعلي
-course.lectures[nextLi].__unlocked = true;
-
-// 🔥 امسح أي Overlay / رسالة قفل
-const lockMsg = document.getElementById(`lockmsg-${nextLi}`);
-if(lockMsg) lockMsg.remove();
-
-// 🔥 شيل شكل القفل
-const block = document.querySelector(`#lbody-${nextLi}`)?.closest(".lec-block");
-if(block) block.classList.remove("locked");
-
-// 🔥 تحديث البار
-updateLectureProgress(nextLi);
-}
+  const next=li+1;
+  if(!course||next>=course.lectures.length) return;
+  if(getLecPct(li)>=0.7 && !course.lectures[next].__unlocked){
+    course.lectures[next].__unlocked=true;
+    applyUnlockUI(next,true); // true = مع animation
+  }
 }
 
-function unlockLecture(li){
-  const hdr   = document.querySelector(`#lbody-${li}`)?.previousElementSibling;
-  const body  = document.getElementById(`lbody-${li}`);
-  const notice= document.getElementById(`lock-notice-${li}`);
-  const badge = document.getElementById(`lock-badge-${li}`);
-  const arr   = document.getElementById(`larr-${li}`);
+/* يطبّق فتح المحاضرة على الـ DOM فوراً */
+function applyUnlockUI(li,animate){
+  const hdr=document.getElementById(`lhdr-${li}`);
+  const notice=document.getElementById(`lock-notice-${li}`);
+  const badge=document.getElementById(`lock-badge-${li}`);
+  const block=document.getElementById(`lbody-${li}`)?.closest(".lec-block");
 
   if(hdr){
     hdr.classList.remove("locked");
-    hdr.setAttribute("onclick", `togLec(${li})`);
+    hdr.onclick=()=>togLec(li);
   }
-  if(notice) notice.style.display = "none";
-  if(badge)  badge.style.display  = "none";
+  if(notice) notice.style.display="none";
+  if(badge)  badge.style.display="none";
 
-  // نبض انيميشن تنبيه
-  if(body){
-    const block = body.closest(".lec-block");
-    if(block){
-      block.style.animation = "none";
-      block.offsetHeight; // reflow
-      block.style.animation = "unlockPop .6s cubic-bezier(.34,1.56,.64,1) both";
-    }
+  if(animate && block){
+    block.style.animation="none";
+    block.offsetHeight; // force reflow
+    block.style.animation="unlockPop .7s ease both";
   }
-}
-function restoreProgress(){
-const progress = getProgress();
-
-Object.keys(progress).forEach(key=>{
-const el = document.getElementById("done-" + key);
-if(el) el.classList.add("show");
-});
-
-// 🔥 المهم
-course.lectures.forEach((_,li)=>{
-updateLectureProgress(li);
-checkLectureCompletion(li);
-checkUnlock(li); // ← ضيف دي
-});
+  if(block) block.classList.remove("locked-block");
 }
 
-/* ══════════════════════════════════════════
-   LECTURE LOCK (70% of prev lecture needed)
-══════════════════════════════════════════ */
-   function unlockUI(li){
-const block = document.querySelector(`#lbody-${li}`)?.closest(".lec-block");
-
-if(block){
-block.classList.remove("locked");
-block.style.opacity = "1";
-block.style.filter = "none";
-block.style.pointerEvents = "auto";
-}
-
-const lockMsg = document.getElementById(`lockmsg-${li}`);
-if(lockMsg) lockMsg.remove();
-}
-function getLecPct(li){
-  const lec = course.lectures[li];
-  const lessons = lec.lessons||[];
-  if(!lessons.length) return 1;
-  const p = getProgress();
-  let done = 0;
-  lessons.forEach((_,si)=>{ if(p[`${li}-${si}`]) done++; });
-  return done / lessons.length;
-}
-function isLocked(li){
-if(li === 0) return false;
-
-// 🔥 لو اتفكت قبل كده
-if(course.lectures[li].__unlocked) return false;
-
-return getLecPct(li - 1) < 0.7;
-}
-
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    LOAD
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 async function loadCourse(){
   try{
-    const all = await fetch("courses.json").then(r=>r.json());
-    course = all[CI];
+    const all=await fetch("courses.json").then(r=>r.json());
+    course=all[CI];
     if(!course){
-      document.getElementById("lecturesEl").innerHTML =
-        `<p style="text-align:center;color:#ef4444;padding:40px;">الكورس غير موجود</p>`;
+      document.getElementById("lecturesEl").innerHTML=`<p style="text-align:center;color:#ef4444;padding:40px;">الكورس غير موجود</p>`;
       return;
     }
     renderCourse();
     restoreProgress();
   }catch(e){
-    document.getElementById("lecturesEl").innerHTML =
-      `<p style="text-align:center;color:#ef4444;padding:40px;">خطأ في التحميل</p>`;
+    document.getElementById("lecturesEl").innerHTML=`<p style="text-align:center;color:#ef4444;padding:40px;">خطأ في التحميل</p>`;
   }
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    RENDER
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function renderCourse(){
-  document.getElementById("courseName").innerText = course.title;
-  document.title = course.title;
+  document.getElementById("courseName").innerText=course.title;
+  document.title=course.title;
+  const lects=course.lectures||[];
+  let tl=0,tq=0;
+  lects.forEach(l=>{if(l.lessons)tl+=l.lessons.length;if(l.quiz?.questions?.length)tq++;});
 
-  const lects = course.lectures || [];
-  let totalLessons = 0, totalQuizzes = 0;
-  lects.forEach(l=>{
-    if(l.lessons) totalLessons += l.lessons.length;
-    if(l.quiz?.questions?.length) totalQuizzes++;
-  });
-
-  document.getElementById("infoSection").innerHTML = `
+  document.getElementById("infoSection").innerHTML=`
   <div class="info-card">
-    ${course.cover ? `<img src="${course.cover}" class="info-cover" loading="lazy">` : ""}
+    ${course.cover?`<img src="${course.cover}" class="info-cover" loading="lazy">`:""}
     <div class="info-body">
       <div class="info-title">${course.title}</div>
-      ${course.desc ? `<div class="info-desc">${course.desc}</div>` : ""}
+      ${course.desc?`<div class="info-desc">${course.desc}</div>`:""}
       <div class="meta-row">
-        <span class="badge b-p">📖 ${lects.length} محاضرة</span>
-        <span class="badge b-b">📌 ${totalLessons} درس</span>
-        ${totalQuizzes ? `<span class="badge b-o">📝 ${totalQuizzes} امتحان</span>` : ""}
+        <span class="bdg bp">📖 ${lects.length} محاضرة</span>
+        <span class="bdg bb">📌 ${tl} درس</span>
+        ${tq?`<span class="bdg bo">📝 ${tq} امتحان</span>`:""}
       </div>
     </div>
   </div>`;
 
   if(!lects.length){
-    document.getElementById("lecturesEl").innerHTML =
-      `<div style="text-align:center;padding:50px;color:var(--tx3)">📭 لا يوجد محتوى بعد</div>`;
+    document.getElementById("lecturesEl").innerHTML=`<div style="text-align:center;padding:50px;color:var(--tx3)">📭 لا يوجد محتوى بعد</div>`;
     return;
   }
-
-  document.getElementById("lecturesEl").innerHTML =
-    lects.map((lec, li) => buildLecture(lec, li)).join("");
+  document.getElementById("lecturesEl").innerHTML=lects.map(buildLecture).join("");
 }
-function getQuizKey(li){
-return "quiz_" + CI + "_" + li;
-}
-function buildLecture(lec, li){
-  const locked = isLocked(li);
-  const lessons = lec.lessons || [];
-  const hasQ = lec.quiz && (lec.quiz.url || lec.quiz.questions?.length);
-  const tops = lec.topics
-    ? lec.topics.split('\n').filter(Boolean)
-        .map(t=>`<span class="topic-tag">${t}</span>`).join("") : "";
 
-  const rowsHtml = lessons.length
-    ? lessons.map((ls, si) => buildRow(ls, li, si)).join("")
-    : `<div class="empty-lec">لا توجد دروس في هذه المحاضرة بعد</div>`;
+function buildLecture(lec,li){
+  const locked=isLocked(li);
+  const les=lec.lessons||[];
+  const hasQ=lec.quiz&&(lec.quiz.url||lec.quiz.questions?.length);
+  // topics — نعرضها فقط لو فيها محتوى فعلي
+  const topicsArr=lec.topics?lec.topics.split('\n').filter(t=>t.trim()):[]; 
+  const tops=topicsArr.map(t=>`<span class="topic-tag">${t}</span>`).join("");
 
-  const quizHtml = hasQ ? buildQuizRow(lec, li) : "";
+  const rows=les.length
+    ?les.map((ls,si)=>buildRow(ls,li,si)).join("")
+    :`<div class="empty-lec">لا توجد دروس في هذه المحاضرة بعد</div>`;
 
-  const lockBadge = locked
-    ? `<div class="lock-badge" id="lock-badge-${li}"><svg viewBox="0 0 24 24" width="13" height="13" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#fff" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>مقفولة</div>` : "";
+  const qHtml=hasQ?buildQuizRow(lec,li):"";
 
-  const lockNotice = locked
-    ? `<div class="lock-notice" id="lock-notice-${li}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="var(--lock-c)" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="var(--lock-c)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="var(--lock-c)"/></svg><span>أكمل 70% من المحاضرة ${li} أولاً لفتح هذه المحاضرة</span></div>` : "";
+  const lockBdg=locked
+    ?`<div class="lock-bdg" id="lock-badge-${li}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#fff" stroke-width="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg> مقفولة</div>`:"";
+
+  const lockNote=locked
+    ?`<div class="lock-notice" id="lock-notice-${li}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="var(--lk-c)" stroke-width="1.8"/><path d="M8 11V7a4 4 0 0 1 8 0v4" stroke="var(--lk-c)" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16" r="1.5" fill="var(--lk-c)"/></svg><span>أكمل 70% من المحاضرة ${li} أولاً لفتح هذه المحاضرة</span></div>`:"";
 
   return `
-  <div class="lec-block" style="animation-delay:${li*.07}s">
-    <div class="lec-hdr${locked?" locked":""}" onclick="${locked?"showLockMsg("+li+")":"togLec("+li+")"}">
+  <div class="lec-block${locked?" locked-block":""}" style="animation-delay:${li*.07}s">
+    <div class="lec-hdr${locked?" locked":""}" id="lhdr-${li}" onclick="${locked?`showLockMsg(${li})`:`togLec(${li})`}">
       <div class="lec-arr" id="larr-${li}">${IC.arrow}</div>
       <div class="lec-meta">
         <div class="lec-num">المحاضرة ${li+1}</div>
         <div class="lec-name">${lec.title}</div>
-        <div class="lec-progress">
-  <div class="lec-progress-bar" id="lpbar-${li}"></div>
-</div>
-        ${tops ? `<div class="lec-topics">${tops}</div>` : ""}
+        <div class="lec-prog"><div class="lec-prog-bar" id="lpbar-${li}"></div></div>
+        ${tops?`<div class="lec-topics">${tops}</div>`:""}
       </div>
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="lec-cnt">${lessons.length} درس${hasQ?" , امتحان":""}</div>
-        ${lockBadge}
+        <div class="lec-cnt">${les.length} درس${hasQ?" · امتحان":""}</div>
+        ${lockBdg}
       </div>
     </div>
-    ${lockNotice}
+    ${lockNote}
     <div class="lec-body" id="lbody-${li}">
-      <div class="lec-body-inner">
-        ${rowsHtml}
-        ${quizHtml}
-      </div>
+      <div class="lec-body-inner">${rows}${qHtml}</div>
     </div>
   </div>`;
 }
 
-   function goToCourses(){
-    window.location.replace("courses_list.htm");
-}
-function buildRow(ls, li, si){
-  const ic = TICLS[ls.type] || "it";
-  const content = buildContent(ls);
+function buildRow(ls,li,si){
+  const ic=TICLS[ls.type]||"it";
   return `
   <div class="lesson-row" id="lrow-${li}-${si}" onclick="togContent(${li},${si})">
     <div class="l-ico ${ic}">${IC[ls.type]||IC.text}</div>
     <div class="l-info">
-      <div class="l-name">
-        <span class="done-mark" id="done-${li}-${si}">✔ تم</span>${ls.title}
-      </div>
+      <div class="l-name">${ls.title}<span class="done-mark" id="done-${li}-${si}">✔ تم</span></div>
       <div class="l-lbl">${TLBL[ls.type]||ls.type}</div>
     </div>
     <div class="row-arr" id="rarr-${li}-${si}">${IC.arrow}</div>
@@ -908,12 +671,12 @@ function buildRow(ls, li, si){
         <span class="c-hdr-title">${ls.title}</span>
         <button class="c-close" onclick="closeContent(event,${li},${si})">✕ إغلاق</button>
       </div>
-      <div class="c-body" id="cbody-${li}-${si}">${content}</div>
+      <div class="c-body" id="cbody-${li}-${si}"></div>
     </div>
   </div>`;
 }
 
-function buildQuizRow(lec, li){
+function buildQuizRow(lec,li){
   if(lec.quiz.questions?.length){
     return `
     <div class="quiz-row" id="qrow-${li}" onclick="togQuiz(${li})">
@@ -945,124 +708,95 @@ function buildQuizRow(lec, li){
   </a>`;
 }
 
-/* ══════════════════════════════════════════
-   BUILD CONTENT
-══════════════════════════════════════════ */
-function buildContent(ls){
-  const t = ls.type;
-
-  if(t === "video" || t === "video-upload"){
-    const url = ls.videoUrl || ls.mediaUrl || "";
+/* ═══════════════════════════════════════
+   BUILD CONTENT — الحل الصحيح للفيديو
+   لا نضع المحتوى وقت البناء، بل عند الفتح فقط
+═══════════════════════════════════════ */
+function buildContentHTML(ls){
+  const t=ls.type;
+  if(t==="video"||t==="video-upload"){
+    const url=ls.videoUrl||ls.mediaUrl||"";
     if(!url) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا يوجد رابط فيديو</p>`;
-    const yt = url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
-    if(yt){
-      return `<div class="vid-wrap">
-        <iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" allowfullscreen
-          allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture">
-        </iframe></div>`;
-    }
-    const isDirect = t === "video-upload" || /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
-    if(isDirect){
-      return `<div class="vid-wrap">
-        <video controls preload="metadata"
-          style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:14px;"
-          src="${url}">
-        </video></div>`;
-    }
-    // رابط عام — iframe
-    return `<div class="vid-wrap">
-      <iframe src="${url}" allowfullscreen></iframe></div>`;
+    const yt=url.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/);
+    if(yt) return `<div class="vid-wrap"><iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" allowfullscreen allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture"></iframe></div>`;
+    const isDirect=t==="video-upload"||/\.(mp4|webm|ogg|mov)(\?|$)/i.test(url);
+    if(isDirect) return `<div class="vid-wrap"><video controls preload="metadata" style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:14px;" src="${url}"></video></div>`;
+    return `<div class="vid-wrap"><iframe src="${url}" allowfullscreen></iframe></div>`;
   }
-
-  if(t === "image"){
-    const url = ls.imageUrl || "";
+  if(t==="image"){
+    const url=ls.imageUrl||"";
     if(!url) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا توجد صورة</p>`;
     return `<img src="${url}" class="c-img" alt="${ls.title}" onclick="zoomImg(this.src)">`;
   }
-
-  if(t === "file" || t === "file-upload"){
-    const url = ls.fileUrl || ls.mediaUrl || "";
+  if(t==="file"||t==="file-upload"){
+    const url=ls.fileUrl||ls.mediaUrl||"";
     if(!url) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا يوجد ملف</p>`;
-    return `<iframe src="${url}" class="file-fr"></iframe>
-      <div style="text-align:center;">
-        <a href="${url}" target="_blank" class="file-link">📄 فتح الملف في تبويب جديد</a>
-      </div>`;
+    return `<iframe src="${url}" class="file-fr"></iframe><div style="text-align:center;"><a href="${url}" target="_blank" class="file-link">📄 فتح في تبويب جديد</a></div>`;
   }
-
-  if(t === "text"){
-    const txt = ls.text || "";
+  if(t==="text"){
+    const txt=ls.text||"";
     if(!txt) return `<p style="color:var(--tx3);text-align:center;padding:20px;">لا يوجد نص</p>`;
     return `<div class="txt-box">${txt.replace(/\n/g,"<br>")}</div>`;
   }
+  return `<p style="color:var(--tx3);text-align:center;padding:20px;">نوع غير معروف</p>`;
+}
 
-  return `<p style="color:var(--tx3);text-align:center;padding:20px;">نوع المحتوى غير معروف</p>`;
-}
-function updateLectureProgress(li){
-const pct = Math.round(getLecPct(li)*100);
-const bar = document.getElementById(`lpbar-${li}`);
-
-if(bar){
-bar.style.width = pct + "%";
-}
-}
-/* ══════════════════════════════════════════
-   STOP MEDIA — يوقف كل صوت وفيديو
-══════════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   STOP MEDIA — يوقف كل شيء فوراً
+═══════════════════════════════════════ */
 function stopMedia(el){
   if(!el) return;
+  // إيقاف <video>
   el.querySelectorAll("video").forEach(v=>{
-    try{ v.pause(); }catch(e){}
+    try{v.pause();}catch(e){}
     v.removeAttribute("src");
     v.load();
   });
-  el.querySelectorAll("iframe").forEach(fr=>{
-    fr.src = "about:blank";
-  });
+  // إيقاف <iframe> — blank
+  el.querySelectorAll("iframe").forEach(fr=>{fr.src="about:blank";});
+  // مسح المحتوى كله → عند الفتح التالي يُعاد بناؤه من الصفر
+  el.innerHTML="";
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    CLOSE ALL
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function closeAll(){
-  clearInterval(qTimer); qTimer = null;
+  clearInterval(qTimer); qTimer=null;
   document.querySelectorAll(".c-wrap.open").forEach(w=>{
-    const body = w.querySelector(".c-body");
-    if(body) stopMedia(body);
+    const b=w.querySelector(".c-body");
+    if(b) stopMedia(b);
     w.classList.remove("open");
   });
   document.querySelectorAll(".row-arr.open").forEach(r=>r.classList.remove("open"));
   document.querySelectorAll(".quiz-row.open").forEach(r=>r.classList.remove("open"));
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    TOGGLE LECTURE
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function togLec(li){
-  const body = document.getElementById(`lbody-${li}`);
-  const arr  = document.getElementById(`larr-${li}`);
-  const open = body.classList.contains("open");
-  body.classList.toggle("open", !open);
-  arr.classList.toggle("open", !open);
-}
-function checkLectureCompletion(li){
-if(getLecPct(li) >= 0.7){
-const block = document.querySelector(`#lbody-${li}`)?.closest(".lec-block");
-if(block) block.classList.add("completed");
-}
+  const body=document.getElementById(`lbody-${li}`);
+  const arr=document.getElementById(`larr-${li}`);
+  const open=body.classList.contains("open");
+  body.classList.toggle("open",!open);
+  arr.classList.toggle("open",!open);
 }
 function showLockMsg(li){
-  const needed = li; // prev lecture
-  const pct = Math.round(getLecPct(li - 1) * 100);
-  alert(`🔒 هذه المحاضرة مقفولة\nأكمل ${70-pct}% إضافية من المحاضرة ${li} لفتحها\n(مكتمل حالياً: ${pct}%)`);
+  const pct=Math.round(getLecPct(li-1)*100);
+  const need=Math.max(0,70-pct);
+  alert(`🔒 هذه المحاضرة مقفولة\nأكمل ${need}% إضافية من المحاضرة ${li}\n(مكتمل حالياً: ${pct}%)`);
 }
 
-/* ══════════════════════════════════════════
-   TOGGLE CONTENT (درس)
-══════════════════════════════════════════ */
-function togContent(li, si){
-  const wrap = document.getElementById(`cwrap-${li}-${si}`);
-  const rarr = document.getElementById(`rarr-${li}-${si}`);
-  const isOpen = wrap.classList.contains("open");
+/* ═══════════════════════════════════════
+   TOGGLE CONTENT
+   — يُعيد بناء المحتوى عند كل فتح
+   — يمسحه عند كل إغلاق
+═══════════════════════════════════════ */
+function togContent(li,si){
+  const wrap=document.getElementById(`cwrap-${li}-${si}`);
+  const rarr=document.getElementById(`rarr-${li}-${si}`);
+  const isOpen=wrap.classList.contains("open");
 
   if(isOpen){
     stopMedia(document.getElementById(`cbody-${li}-${si}`));
@@ -1073,39 +807,41 @@ function togContent(li, si){
 
   closeAll();
 
+  // ← أعد بناء المحتوى هنا (مش وقت renderCourse)
+  const ls=course.lectures[li].lessons[si];
+  document.getElementById(`cbody-${li}-${si}`).innerHTML=buildContentHTML(ls);
+
   wrap.classList.add("open");
   rarr.classList.add("open");
-
-  // mark progress
-  markDone(li, si);
+  markDone(li,si);
 
   setTimeout(()=>{
-    const row = document.getElementById(`lrow-${li}-${si}`);
+    const row=document.getElementById(`lrow-${li}-${si}`);
     if(row){
-      const top = row.getBoundingClientRect().top + window.scrollY - 72;
-      window.scrollTo({top, behavior:"smooth"});
+      const top=row.getBoundingClientRect().top+window.scrollY-72;
+      window.scrollTo({top,behavior:"smooth"});
     }
-  }, 80);
+  },80);
 }
 
-function closeContent(e, li, si){
+function closeContent(e,li,si){
   e.stopPropagation();
   stopMedia(document.getElementById(`cbody-${li}-${si}`));
   document.getElementById(`cwrap-${li}-${si}`).classList.remove("open");
   document.getElementById(`rarr-${li}-${si}`).classList.remove("open");
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    TOGGLE QUIZ
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function togQuiz(li){
-  const wrap = document.getElementById(`qwrap-${li}`);
-  const qrow = document.getElementById(`qrow-${li}`);
-  const rarr = document.getElementById(`qrarr-${li}`);
-  const isOpen = wrap.classList.contains("open");
+  const wrap=document.getElementById(`qwrap-${li}`);
+  const qrow=document.getElementById(`qrow-${li}`);
+  const rarr=document.getElementById(`qrarr-${li}`);
+  const isOpen=wrap.classList.contains("open");
 
   if(isOpen){
-    clearInterval(qTimer); qTimer = null;
+    clearInterval(qTimer); qTimer=null;
     wrap.classList.remove("open");
     qrow?.classList.remove("open");
     rarr?.classList.remove("open");
@@ -1114,79 +850,48 @@ function togQuiz(li){
 
   closeAll();
 
-  const lec = course.lectures[li];
-  quizData = lec.quiz;
-  quizAns = {}; qLeft = qTotal = (quizData.time || 30) * 60;
-  const saved = localStorage.getItem(getQuizKey(li));
-if(saved){
-showQuizResult(li, JSON.parse(saved));
-return;
-}
-  document.getElementById(`qbody-${li}`).innerHTML = buildQuiz(li);
+  quizData=course.lectures[li].quiz;
+  quizAns={}; qLeft=qTotal=(quizData.time||30)*60;
+
+  const qbody=document.getElementById(`qbody-${li}`);
+  const saved=localStorage.getItem(`qr_${CI}_${li}`);
+  if(saved){
+    qbody.innerHTML=buildSavedResult(li,JSON.parse(saved));
+  }else{
+    qbody.innerHTML=buildQuiz(li);
+    startTimer(li);
+  }
+
   wrap.classList.add("open");
   qrow?.classList.add("open");
   rarr?.classList.add("open");
 
   setTimeout(()=>{
-    const r = (qrow || wrap).getBoundingClientRect();
-    window.scrollTo({top: r.top + window.scrollY - 72, behavior:"smooth"});
-  }, 80);
-
-  startTimer(li);
+    const r=(qrow||wrap).getBoundingClientRect();
+    window.scrollTo({top:r.top+window.scrollY-72,behavior:"smooth"});
+  },80);
 }
-function showQuizResult(li, data){
-const pct = Math.round((data.score/data.total)*100);
 
-document.getElementById(`qbody-${li}`).innerHTML = `
-<div class="res-wrap">
-<div class="res-score">${data.score}/${data.total}</div>
-<div class="res-pct">${pct}%</div>
-
-<button class="qz-submit" onclick="retryQuiz(${li})">
-🔁 إعادة الامتحان
-</button>
-</div>
-`;
-
-document.getElementById(`qwrap-${li}`).classList.add("open");
-}
-   function retryQuiz(li){
-localStorage.removeItem(getQuizKey(li));
-
-// إعادة تهيئة
-quizData = course.lectures[li].quiz;
-quizAns = {};
-qLeft = qTotal = (quizData.time || 30) * 60;
-
-// بناء الامتحان مباشرة بدون toggle
-document.getElementById(`qbody-${li}`).innerHTML = buildQuiz(li);
-
-// تشغيل التايمر
-startTimer(li);
-}
-function closeQuiz(e, li){
+function closeQuiz(e,li){
   e.stopPropagation();
-  clearInterval(qTimer); qTimer = null;
+  clearInterval(qTimer); qTimer=null;
   document.getElementById(`qwrap-${li}`).classList.remove("open");
   document.getElementById(`qrow-${li}`)?.classList.remove("open");
   document.getElementById(`qrarr-${li}`)?.classList.remove("open");
 }
 
-/* ══════════════════════════════════════════
+/* ═══════════════════════════════════════
    QUIZ
-══════════════════════════════════════════ */
+═══════════════════════════════════════ */
 function buildQuiz(li){
-  const qs = quizData.questions;
+  const qs=quizData.questions;
   return `<div>
-  <div class="qz-timer">
-    <span class="qz-tlbl">⏱ الوقت المتبقي</span>
-    <span class="qz-tval" id="qt-${li}">--:--</span>
-  </div>
-  <div class="qz-bar-wrap"><div class="qz-bar" id="qb-${li}"></div></div>
+  <div class="qz-timer"><span class="qz-tlbl">⏱ الوقت المتبقي</span><span class="qz-tval" id="qt-${li}">--:--</span></div>
+  <div class="qz-bw"><div class="qz-b" id="qb-${li}"></div></div>
   ${qs.map((q,i)=>`
   <div class="q-card">
     <div class="q-txt">س${i+1}: ${q.question}</div>
-    ${q.image ? `<img src="${q.image}" class="q-img-thumb">` : ""}
+    ${q.image?`<img src="${q.image}" class="q-img-t">`:""}
     ${q.options.map((o,oi)=>`
     <div class="q-opt" id="qo-${li}-${i}-${oi}" onclick="pickAns(${li},${i},${oi+1})">
       <input type="radio" name="qq${li}_${i}" style="width:auto;margin:0;accent-color:var(--p);">
@@ -1197,51 +902,63 @@ function buildQuiz(li){
   </div>`;
 }
 
-function pickAns(li, qi, val){
-  quizAns[qi] = val;
-  const n = quizData.questions[qi].options.length;
-  for(let oi=0; oi<n; oi++){
-    const d = document.getElementById(`qo-${li}-${qi}-${oi}`);
-    if(d){
-      d.classList.toggle("sel", oi+1 === val);
-      d.querySelector("input").checked = (oi+1 === val);
-    }
+function buildSavedResult(li,data){
+  const pct=Math.round((data.sc/data.tot)*100);
+  const col=pct>=70?"#16a34a":pct>=50?"#d97706":"#dc2626";
+  const emo=pct>=70?"🎉":pct>=50?"👍":"📚";
+  const msg=pct>=70?"أحسنت! نتيجة ممتازة 🌟":pct>=50?"نتيجة جيدة، يمكنك التحسين":"راجع المادة وحاول مجدداً";
+  return `<div class="res-wrap">
+    <div style="font-size:60px;margin-bottom:8px;">${emo}</div>
+    <div class="res-score" style="color:${col}">${data.sc}/${data.tot}</div>
+    <div class="res-pct" style="color:${col}">${pct}%</div>
+    <p class="res-msg">${msg}</p>
+    <button class="qz-submit" style="margin-top:18px;" onclick="retryQuiz(${li})">🔁 إعادة الامتحان</button>
+  </div>`;
+}
+
+function retryQuiz(li){
+  localStorage.removeItem(`qr_${CI}_${li}`);
+  quizData=course.lectures[li].quiz;
+  quizAns={}; qLeft=qTotal=(quizData.time||30)*60;
+  document.getElementById(`qbody-${li}`).innerHTML=buildQuiz(li);
+  startTimer(li);
+}
+
+function pickAns(li,qi,val){
+  quizAns[qi]=val;
+  const n=quizData.questions[qi].options.length;
+  for(let oi=0;oi<n;oi++){
+    const d=document.getElementById(`qo-${li}-${qi}-${oi}`);
+    if(d){d.classList.toggle("sel",oi+1===val);d.querySelector("input").checked=(oi+1===val);}
   }
 }
 
 function startTimer(li){
   clearInterval(qTimer);
-  qTimer = setInterval(()=>{
+  qTimer=setInterval(()=>{
     qLeft--;
-    const m = Math.floor(qLeft/60), s = qLeft % 60;
-    const te = document.getElementById(`qt-${li}`);
-    const be = document.getElementById(`qb-${li}`);
-    if(te) te.innerText = `${m<10?"0"+m:m}:${s<10?"0"+s:s}`;
-    if(be){
-      be.style.width = ((qLeft/qTotal)*100)+"%";
-      be.style.background = qLeft < 60 ? "#dc2626" : "var(--p)";
-    }
-    if(qLeft <= 0){ clearInterval(qTimer); submitQuiz(li); }
-  }, 1000);
+    const m=Math.floor(qLeft/60),s=qLeft%60;
+    const te=document.getElementById(`qt-${li}`);
+    const be=document.getElementById(`qb-${li}`);
+    if(te) te.innerText=`${m<10?"0"+m:m}:${s<10?"0"+s:s}`;
+    if(be){be.style.width=((qLeft/qTotal)*100)+"%";be.style.background=qLeft<60?"#dc2626":"var(--p)";}
+    if(qLeft<=0){clearInterval(qTimer);submitQuiz(li);}
+  },1000);
 }
 
 function submitQuiz(li){
-  clearInterval(qTimer); qTimer = null;
-  const qs = quizData.questions;
-  const un = qs.filter((_,i)=>!quizAns[i]).length;
-  if(un > 0 && !confirm(`لم تجب على ${un} سؤال. هل تريد الإنهاء؟`)) return;
-  let sc = 0;
-  qs.forEach((q,i)=>{ if(quizAns[i] === q.answer) sc++; });
-   localStorage.setItem(getQuizKey(li), JSON.stringify({
-score: sc,
-total: qs.length,
-answers: quizAns
-}));
-  const pct = Math.round((sc/qs.length)*100);
-  const col = pct>=70 ? "#16a34a" : pct>=50 ? "#d97706" : "#dc2626";
-  const emo = pct>=70 ? "🎉" : pct>=50 ? "👍" : "📚";
-  const msg = pct>=70 ? "أحسنت! نتيجة ممتازة 🌟" : pct>=50 ? "نتيجة جيدة، يمكنك التحسين" : "راجع المادة وحاول مجدداً";
-  document.getElementById(`qbody-${li}`).innerHTML = `
+  clearInterval(qTimer); qTimer=null;
+  const qs=quizData.questions;
+  const un=qs.filter((_,i)=>!quizAns[i]).length;
+  if(un>0&&!confirm(`لم تجب على ${un} سؤال. هل تريد الإنهاء؟`)) return;
+  let sc=0;
+  qs.forEach((q,i)=>{if(quizAns[i]===q.answer) sc++;});
+  localStorage.setItem(`qr_${CI}_${li}`,JSON.stringify({sc,tot:qs.length}));
+  const pct=Math.round((sc/qs.length)*100);
+  const col=pct>=70?"#16a34a":pct>=50?"#d97706":"#dc2626";
+  const emo=pct>=70?"🎉":pct>=50?"👍":"📚";
+  const msg=pct>=70?"أحسنت! نتيجة ممتازة 🌟":pct>=50?"نتيجة جيدة، يمكنك التحسين":"راجع المادة وحاول مجدداً";
+  document.getElementById(`qbody-${li}`).innerHTML=`
   <div class="res-wrap">
     <div style="font-size:66px;margin-bottom:10px;">${emo}</div>
     <div class="res-score" style="color:${col}">${sc}/${qs.length}</div>
@@ -1249,7 +966,7 @@ answers: quizAns
     <p class="res-msg">${msg}</p>
     <div class="res-qa">
     ${qs.map((q,i)=>{
-      const ch=quizAns[i], ok=ch===q.answer;
+      const ch=quizAns[i],ok=ch===q.answer;
       return `<div class="rqa ${ok?"rqa-ok":"rqa-no"}">
         <div class="rqa-q">س${i+1}: ${q.question}</div>
         <div class="rqa-a" style="color:${ok?"#16a34a":"#dc2626"}">${ok?"✅":"❌"} إجابتك: ${ch?q.options[ch-1]:"لم تجب"}</div>
@@ -1257,20 +974,15 @@ answers: quizAns
       </div>`;
     }).join("")}
     </div>
+    <button class="qz-submit" style="margin-top:18px;" onclick="retryQuiz(${li})">🔁 إعادة الامتحان</button>
   </div>`;
 }
 
-/* ══════════════════════════════════════════
-   IMAGE ZOOM
-══════════════════════════════════════════ */
 function zoomImg(src){
-  document.getElementById("imgZoomSrc").src = src;
+  document.getElementById("imgZoomSrc").src=src;
   document.getElementById("imgZoom").classList.add("show");
 }
 
-/* ══════════════════════════════════════════
-   START
-══════════════════════════════════════════ */
 loadCourse();
 </script>
 </body>
