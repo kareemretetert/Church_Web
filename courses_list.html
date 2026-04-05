@@ -493,7 +493,7 @@ function goTo(i){
 }
 
 loadCourses();
-  const canvas = document.getElementById("particles");
+ const canvas = document.getElementById("particles");
 const ctx = canvas.getContext("2d");
 
 canvas.width = innerWidth;
@@ -516,7 +516,7 @@ class Particle{
     if(this.x<0 || this.x>canvas.width) this.speedX*=-1;
     if(this.y<0 || this.y>canvas.height) this.speedY*=-1;
   }
- draw(){
+  draw(){
     ctx.fillStyle = "rgba(124,58,237,0.3)";
     ctx.beginPath();
     ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
@@ -537,26 +537,6 @@ function animateParticles(){
     p.update();
     p.draw();
   });
-
-for(let i=0;i<particlesArray.length;i++){
-  for(let j=i;j<particlesArray.length;j++){
-    let dx = particlesArray[i].x - particlesArray[j].x;
-    let dy = particlesArray[i].y - particlesArray[j].y;
-    let dist = Math.sqrt(dx*dx + dy*dy);
-
-    if(dist < 120){
-      ctx.strokeStyle = document.body.classList.contains("dark")
-        ? "rgba(167,139,250,0.15)"
-        : "rgba(90,60,200,0.15)";
-      ctx.lineWidth = 0.5;
-      ctx.beginPath();
-      ctx.moveTo(particlesArray[i].x,particlesArray[i].y);
-      ctx.lineTo(particlesArray[j].x,particlesArray[j].y);
-      ctx.stroke();
-    }
-  }
-}
-  
   requestAnimationFrame(animateParticles);
 }
 
