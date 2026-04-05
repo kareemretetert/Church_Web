@@ -358,6 +358,13 @@ body{
   body.dark .card{
   background:rgba(22,22,39,.75);
 }
+  body.dark .enroll-btn{
+  background: linear-gradient(135deg, #8b5cf6, #4c1d95);
+  box-shadow: 0 6px 25px rgba(139,92,246,.4);
+}
+  body.dark .enroll-btn:hover{
+  box-shadow: 0 10px 35px rgba(139,92,246,.6);
+}
 </style>
 </head>
 <body>
@@ -517,11 +524,16 @@ class Particle{
     if(this.y<0 || this.y>canvas.height) this.speedY*=-1;
   }
   draw(){
-    ctx.fillStyle = "rgba(124,58,237,0.3)";
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctx.fill();
+  if(document.body.classList.contains("dark")){
+    ctx.fillStyle = "rgba(167,139,250,0.6)"; // بنفسجي فاتح يبان في الدارك
+  }else{
+    ctx.fillStyle = "rgba(55,30,150,0.5)"; // بنفسجي غامق يبان في الفاتح
   }
+
+  ctx.beginPath();
+  ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+  ctx.fill();
+}
 }
 
 function initParticles(){
@@ -547,6 +559,43 @@ window.addEventListener("resize", ()=>{
   canvas.width = innerWidth;
   canvas.height = innerHeight;
   initParticles();
+});
+  let isScrolling = false;
+
+window.addEventListener("scroll", () => {
+  isScrolling = true;
+});
+
+function animateParticles(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  particlesArray.forEach(p=>{
+    p.update();
+    p.draw();
+  });
+
+  // لو فيه اسكرول، نزود الحركة شوية
+  if(isScrolling){
+    particlesArray.forEach(p=>{
+      p.x += p.speedX * 2;
+      p.y += p.speedY * 2;
+    });
+    isScrolling = false;
+  }
+
+  requestAnimationFrame(animateParticles);
+}
+  let lastScrollY = window.scrollY;
+
+window.addEventListener("scroll", () => {
+  let currentScroll = window.scrollY;
+  let diff = currentScroll - lastScrollY;
+
+  particlesArray.forEach(p=>{
+    p.y += diff * 0.05; // تحكم في القوة
+  });
+
+  lastScrollY = currentScroll;
 });
 </script>
 </body>
