@@ -412,6 +412,16 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
   z-index:-10;
   pointer-events:none;
 }
+   body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124,58,237,0.12), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(59,130,246,0.10), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(236,72,153,0.08), transparent 50%);
+  z-index:-20;
+}
 </style>
 </head>
 <body>
