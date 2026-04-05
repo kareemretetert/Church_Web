@@ -1,0 +1,81 @@
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  نظام الثيم المشترك — دليل الاستخدام
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+الملفان المشتركان:
+  • site-theme.css  — كل الألوان والهيدر والخلفية
+  • site-theme.js   — dark mode مشترك + particles
+
+━━ كيف تضيف لأي صفحة جديدة ━━
+
+1. في <head> — بعد Google Fonts مباشرة:
+
+   <link href="https://fonts.googleapis.com/..." rel="stylesheet">
+   <link rel="stylesheet" href="site-theme.css">   ← أضف هذا
+
+2. أول شيء في <body> قبل أي <script>:
+
+   <script src="site-theme.js"></script>            ← أضف هذا
+
+3. هيدر الصفحة — استخدم هذا الشكل الموحد:
+
+   <header class="site-header">
+     <div class="hdr-inner">
+
+       <!-- زرار العودة (غير الـ href حسب الصفحة) -->
+       <a href="index.html" class="site-back-btn">
+         <svg viewBox="0 0 24 24">
+           <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2"
+             fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+         </svg>
+         العودة
+       </a>
+
+       <!-- عنوان الصفحة -->
+       <div style="flex:1;text-align:center;color:#fff;
+                   font-size:clamp(16px,4vw,22px);font-weight:800;">
+         اسم الصفحة
+       </div>
+
+       <!-- زرار الداك مود - نفسه في كل الصفحات -->
+       <div class="theme-toggle" onclick="toggleTheme()">
+         <div class="toggle-track">
+           <span class="t-icon t-sun">☀️</span>
+           <span class="t-icon t-moon">🌙</span>
+           <div class="toggle-thumb"></div>
+         </div>
+       </div>
+
+     </div>
+   </header>
+
+━━ كيف يعمل ربط الداك مود ━━
+
+   عند الضغط على الزرار في أي صفحة:
+   → يُحفظ الاختيار في localStorage["site_theme"]
+   → يُبث للتبويبات الأخرى عبر BroadcastChannel
+   → كل صفحة تفتح تقرأ الاختيار المحفوظ تلقائياً
+
+   الصفحات كلها تشارك نفس المفتاح "site_theme"
+   فلما يغيّر المستخدم الوضع من أي صفحة، كل
+   الصفحات الأخرى المفتوحة تتغير في نفس اللحظة.
+
+━━ الـ Particles ━━
+
+   يُنشأ تلقائياً بواسطة site-theme.js
+   لا تحتاج تضيف <canvas> يدوياً
+   اللون يتغير مع الثيم تلقائياً
+
+━━ CSS Variables المتاحة ━━
+
+   --p, --p-dk, --p-lt     → ألوان brand
+   --bg                    → خلفية الصفحة
+   --sf, --sf2, --sf-solid → ألوان الـ surfaces
+   --tx, --tx2, --tx3      → ألوان النص
+   --bdr                   → لون الـ border
+   --sh, --sh2             → الظلال
+   --bp-bg, --bp-c         → badge بنفسجي
+   --bb-bg, --bb-c         → badge أزرق
+   --bo-bg, --bo-c         → badge برتقالي
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

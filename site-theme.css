@@ -1,0 +1,251 @@
+/* ═══════════════════════════════════════════════════
+   site-theme.css
+   ملف CSS مشترك لكل صفحات الموقع
+   يُضاف في كل صفحة: <link rel="stylesheet" href="site-theme.css">
+═══════════════════════════════════════════════════ */
+
+/* ─── DESIGN TOKENS ─── */
+:root{
+  --p:#7c3aed;    --p-dk:#5b21b6;  --p-lt:#a78bfa;
+  --lec1:#2563eb; --lec2:#4f46e5;
+
+  /* surfaces */
+  --bg:#f0ebfa;
+  --sf:rgba(255,255,255,.82);
+  --sf2:#ede7f6;
+  --sf-solid:#ffffff;
+
+  /* text */
+  --tx:#0f172a;  --tx2:#374151;  --tx3:#6b7280;
+
+  /* borders & shadow */
+  --bdr:#e2e8f0;
+  --sh:0 6px 24px rgba(109,40,217,.10);
+  --sh2:0 18px 48px rgba(109,40,217,.20);
+  --shdr:0 6px 28px rgba(109,40,217,.28);
+
+  /* header gradient */
+  --hdr1:#7c3aed; --hdr2:#9333ea; --hdr3:#5b21b6;
+
+  /* badges */
+  --bp-bg:#ede7f6; --bp-c:#5b21b6;
+  --bb-bg:#dbeafe; --bb-c:#1e40af;
+  --bo-bg:#ffedd5; --bo-c:#c2410c;
+
+  /* inputs */
+  --inp-bg:#fff; --inp-bdr:#e2e8f0;
+
+  /* icon colours */
+  --iv-bg:#dbeafe; --iv-c:#1d4ed8;
+  --ii-bg:#dcfce7; --ii-c:#15803d;
+  --if-bg:#ffedd5; --if-c:#c2410c;
+  --it-bg:#fce7f3; --it-c:#9d174d;
+  --iq-bg:#fef9c3; --iq-c:#b45309;
+
+  /* misc */
+  --row-hover:#ede9fe;
+  --content-bg:#f5f0ff;
+  --opt-bg:#ede9fe; --opt-sel:#ddd6fe;
+  --lk-bg:#fef2f2; --lk-bdr:#fecaca; --lk-c:#991b1b;
+  --ok-bg:#dcfce7; --no-bg:#fee2e2;
+  --qr-bg:#fffbeb; --qr-bdr:#fde68a;
+  --prog:#22c55e;
+
+  /* particles */
+  --ptcl-color:rgba(91,33,182,.45);
+}
+
+/* ─── DARK MODE ─── */
+body.dark{
+  --bg:#0d0d1a;
+  --sf:rgba(22,22,39,.82);
+  --sf2:#1e1e33;
+  --sf-solid:#161627;
+
+  --tx:#f0f0ff;  --tx2:#c4c4e0;  --tx3:#8888aa;
+  --bdr:#2a2a44;
+  --sh:0 6px 24px rgba(0,0,0,.5);
+  --sh2:0 18px 48px rgba(0,0,0,.65);
+  --shdr:0 6px 28px rgba(0,0,0,.55);
+
+  --hdr1:#0f172a; --hdr2:#1e1b4b; --hdr3:#020617;
+  --lec1:#1e3a8a; --lec2:#312e81;
+
+  --bp-bg:#2d1b69; --bp-c:#c4b5fd;
+  --bb-bg:#1e3a5f; --bb-c:#93c5fd;
+  --bo-bg:#431407; --bo-c:#fdba74;
+
+  --inp-bg:#1e1e33; --inp-bdr:#2a2a44;
+
+  --iv-bg:#1e3a5f; --iv-c:#93c5fd;
+  --ii-bg:#14432a; --ii-c:#86efac;
+  --if-bg:#431407; --if-c:#fdba74;
+  --it-bg:#3b0a2a; --it-c:#f9a8d4;
+  --iq-bg:#3b2800; --iq-c:#fde68a;
+
+  --row-hover:#1e1e38;
+  --content-bg:#12122a;
+  --opt-bg:#1e1e38; --opt-sel:#2d2b5e;
+  --lk-bg:#1a0a0a; --lk-bdr:#7f1d1d; --lk-c:#fca5a5;
+  --ok-bg:#14432a; --no-bg:#450a0a;
+  --qr-bg:#1c1500; --qr-bdr:#78350f;
+  --prog:#4ade80;
+
+  --ptcl-color:rgba(167,139,250,.55);
+}
+
+/* ─── RESET & BASE ─── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg); color:var(--tx);
+  min-height:100vh; overflow-x:hidden;
+  transition:background .35s,color .3s;
+  position:relative;
+}
+
+/* ─── ANIMATED BG ─── */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 28%, rgba(124,58,237,.13), transparent 50%),
+    radial-gradient(circle at 80% 68%, rgba(59,130,246,.11), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(236,72,153,.06), transparent 60%);
+  animation:bgPulse 14s ease-in-out infinite alternate;
+}
+body.dark::before{
+  background:
+    radial-gradient(circle at 18% 28%, rgba(109,40,217,.18), transparent 50%),
+    radial-gradient(circle at 80% 68%, rgba(29,78,216,.14), transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(139,92,246,.08), transparent 60%);
+}
+@keyframes bgPulse{
+  0%{transform:translate(0,0) scale(1);}
+  100%{transform:translate(-24px,-24px) scale(1.04);}
+}
+
+/* Noise overlay */
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background-image:url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity:.06;
+}
+body.dark::after{opacity:.04;}
+
+/* ─── PARTICLES CANVAS ─── */
+#site-particles{
+  position:fixed;inset:0;z-index:-1;pointer-events:none;
+}
+
+/* ─── HEADER ─── */
+.site-header{
+  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
+  background-size:400% 400%;
+  animation:hdrMove 14s ease infinite;
+  position:sticky;top:0;z-index:300;
+  box-shadow:var(--shdr);overflow:hidden;
+  transition:background .4s;
+}
+@keyframes hdrMove{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.site-header::before{
+  content:"";position:absolute;top:-60px;right:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(255,255,255,.06);pointer-events:none;
+  animation:floatOrb 8s ease-in-out infinite;
+}
+.site-header::after{
+  content:"";position:absolute;bottom:-50px;left:-50px;
+  width:170px;height:170px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+  animation:floatOrb 11s ease-in-out infinite reverse;
+}
+@keyframes floatOrb{0%,100%{transform:translateY(0);}50%{transform:translateY(-18px);}}
+
+.site-header .hdr-inner{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;position:relative;
+}
+
+/* ─── BACK BUTTON ─── */
+.site-back-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 18px;background:rgba(255,255,255,.16);
+  border:1.5px solid rgba(255,255,255,.45);border-radius:24px;
+  color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+  transition:background .2s,transform .15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.site-back-btn:hover{background:rgba(255,255,255,.30);}
+.site-back-btn:active{transform:scale(.95);}
+.site-back-btn svg{width:15px;height:15px;fill:#fff;}
+
+/* ─── THEME SWITCH ─── */
+.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
+.toggle-track{
+  width:64px;height:32px;border-radius:50px;
+  background:#1e293b;position:relative;
+  display:flex;align-items:center;padding:0 5px;cursor:pointer;
+  border:1.5px solid rgba(255,255,255,.30);
+  transition:background .3s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.toggle-track:active{transform:scale(.94);}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{
+  position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;
+  transition:transform .32s cubic-bezier(.4,2,.6,1),background .3s;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+body.dark .toggle-track{background:rgba(109,40,217,.55);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
+
+/* ─── BADGES ─── */
+.bdg{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:700;}
+.bp{background:var(--bp-bg);color:var(--bp-c);}
+.bb{background:var(--bb-bg);color:var(--bb-c);}
+.bo{background:var(--bo-bg);color:var(--bo-c);}
+
+/* ─── KEYFRAMES ─── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{transform:scale(.78);}to{transform:scale(1);}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.5;}}
+@keyframes cOpen{
+  from{opacity:0;transform:translateY(14px) scale(.97);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+@keyframes unlockPop{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.7);}
+  40%{box-shadow:0 0 0 14px rgba(34,197,94,0),0 6px 28px rgba(34,197,94,.3);}
+  100%{box-shadow:var(--sh);}
+}
+
+/* ─── SPINNER ─── */
+.site-spinner{
+  display:inline-block;width:46px;height:46px;
+  border:5px solid var(--sf2);border-top:5px solid var(--p);
+  border-radius:50%;animation:spin .85s linear infinite;
+}
+.site-spin-wrap{text-align:center;padding:60px 20px;}
+
+/* ─── IMAGE ZOOM ─── */
+#site-img-zoom{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.92);z-index:9999;
+  justify-content:center;align-items:center;cursor:zoom-out;
+}
+#site-img-zoom.show{display:flex;}
+#site-img-zoom img{max-width:96%;max-height:96%;border-radius:12px;animation:scaleIn .25s cubic-bezier(.34,1.56,.64,1);}
+
+/* ─── RESPONSIVE ─── */
+@media(max-width:600px){
+  .site-header .hdr-inner{padding:11px 12px;}
+}
