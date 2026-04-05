@@ -404,47 +404,6 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
   .c-body{padding:12px;}
   .l-ico{width:40px;height:40px;}
 }
-   .sidebar{
-  position: fixed;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 250px;
-
-  background: var(--card);
-  backdrop-filter: blur(15px);
-
-  border-left: 1px solid rgba(255,255,255,0.08);
-  padding: 20px;
-
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-
-  z-index: 1000;
-}
-
-.logo{
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.nav-item{
-  padding: 10px;
-  border-radius: 10px;
-  text-decoration: none;
-  color: var(--text);
-  transition: 0.3s;
-}
-
-.nav-item:hover{
-  background: rgba(255,255,255,0.08);
-  transform: translateX(-5px);
-}
-   body{
-  padding-right: 260px;
-}
 </style>
 </head>
 <body>
@@ -464,16 +423,6 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
       </div>
     </div>
   </div>
-   <div class="sidebar">
-  <div class="logo">📘 المحاضرات</div>
-
-  <a href="index.html" class="nav-item">🏠 الرئيسية</a>
-  <a href="lectures.html" class="nav-item">📚 المحاضرات</a>
-  <a href="calendar.html" class="nav-item">📅 الجدول</a>
-  <a href="settings.html" class="nav-item">⚙️ الإعدادات</a>
-
-  <button class="theme-btn" onclick="toggleTheme()">🌓 الوضع</button>
-</div>
 </header>
 
 <div class="page">
