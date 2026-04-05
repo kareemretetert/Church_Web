@@ -422,6 +422,64 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
     radial-gradient(circle at 50% 80%, rgba(236,72,153,0.08), transparent 50%);
   z-index:-20;
 }
+   :root{
+  --glow: rgba(0, 200, 255, 0.25);
+  --glow-strong: rgba(0, 200, 255, 0.45);
+}
+
+/* Dark mode */
+body.dark{
+  --glow: rgba(99, 102, 241, 0.25);
+  --glow-strong: rgba(167, 139, 250, 0.35);
+}
+   .lecture-card{
+  position: relative;
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(12px);
+  transition: 0.3s ease;
+  overflow: hidden;
+}
+
+/* 🌟 Glow border */
+.lecture-card::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  border-radius: 20px;
+  background: linear-gradient(120deg,
+    transparent,
+    var(--glow),
+    transparent
+  );
+  z-index:-1;
+  filter: blur(8px);
+  opacity: 0.7;
+}
+
+/* 🌈 Hover effect */
+.lecture-card:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 0 25px var(--glow-strong);
+}
+
+/* 🌌 inner glow line */
+.lecture-card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius: 18px;
+  border: 1px solid var(--glow);
+  pointer-events:none;
+}
+   body{
+  background:
+    radial-gradient(circle at 20% 20%, var(--glow) 0%, transparent 40%),
+    radial-gradient(circle at 80% 60%, var(--glow-strong) 0%, transparent 50%),
+    var(--bg);
+}
 </style>
 </head>
 <body>
