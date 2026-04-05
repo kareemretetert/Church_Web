@@ -404,6 +404,75 @@ body.dark .done-mark{background:#14432a;color:#86efac;}
   .c-body{padding:12px;}
   .l-ico{width:40px;height:40px;}
 }
+   /* ===== ROOT THEME ===== */
+:root{
+  --bg: #f5f7ff;
+  --card: rgba(255,255,255,0.6);
+  --text: #111;
+  --primary: #6d5efc;
+  --blur: blur(12px);
+}
+
+/* DARK MODE */
+body.dark{
+  --bg: #0b0f1a;
+  --card: rgba(20,20,35,0.55);
+  --text: #fff;
+  --primary: #a78bfa;
+}
+
+/* GLOBAL */
+body{
+  margin:0;
+  font-family: "Tajawal", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: 0.4s ease;
+}
+
+/* ===== GLASS CARD SYSTEM ===== */
+.card{
+  background: var(--card);
+  backdrop-filter: var(--blur);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 16px;
+  transition: 0.3s;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.card:hover{
+  transform: translateY(-6px) scale(1.01);
+}
+
+/* ===== BUTTONS ===== */
+.btn{
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn:hover{
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn{
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 999;
+  background: var(--card);
+  backdrop-filter: var(--blur);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -984,6 +1053,55 @@ function zoomImg(src){
 }
 
 loadCourse();
+
+
+   function initParticles(canvasId){
+  const canvas = document.getElementById(canvasId);
+  const ctx = canvas.getContext("2d");
+
+  let w,h;
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const particles = Array.from({length:70}, ()=>({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    r:Math.random()*2,
+    dx:(Math.random()-0.5)*0.5,
+    dy:(Math.random()-0.5)*0.5
+  }));
+
+  function animate(){
+    ctx.clearRect(0,0,w,h);
+
+    for(let p of particles){
+      p.x += p.dx;
+      p.y += p.dy;
+
+      if(p.x>w) p.x=0;
+      if(p.x<0) p.x=w;
+      if(p.y>h) p.y=0;
+      if(p.y<0) p.y=h;
+
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+      ctx.fillStyle = document.body.classList.contains("dark")
+        ? "rgba(167,139,250,0.3)"
+        : "rgba(99,102,241,0.25)";
+
+      ctx.fill();
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
 </script>
 </body>
 </html>
