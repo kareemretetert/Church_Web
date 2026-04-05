@@ -560,31 +560,6 @@ window.addEventListener("resize", ()=>{
   canvas.height = innerHeight;
   initParticles();
 });
-  let isScrolling = false;
-
-window.addEventListener("scroll", () => {
-  isScrolling = true;
-});
-
-function animateParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  particlesArray.forEach(p=>{
-    p.update();
-    p.draw();
-  });
-
-  // لو فيه اسكرول، نزود الحركة شوية
-  if(isScrolling){
-    particlesArray.forEach(p=>{
-      p.x += p.speedX * 2;
-      p.y += p.speedY * 2;
-    });
-    isScrolling = false;
-  }
-
-  requestAnimationFrame(animateParticles);
-}
  
 </script>
 </body>
