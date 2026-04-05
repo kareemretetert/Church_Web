@@ -585,18 +585,7 @@ function animateParticles(){
 
   requestAnimationFrame(animateParticles);
 }
-  let lastScrollY = window.scrollY;
-
-window.addEventListener("scroll", () => {
-  let currentScroll = window.scrollY;
-  let diff = currentScroll - lastScrollY;
-
-  particlesArray.forEach(p=>{
-    p.y += diff * 0.05; // تحكم في القوة
-  });
-
-  lastScrollY = currentScroll;
-});
+ 
 </script>
 </body>
 </html>
