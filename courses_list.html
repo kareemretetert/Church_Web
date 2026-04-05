@@ -516,15 +516,12 @@ class Particle{
     if(this.x<0 || this.x>canvas.width) this.speedX*=-1;
     if(this.y<0 || this.y>canvas.height) this.speedY*=-1;
   }
-draw(){
-  ctx.fillStyle = document.body.classList.contains("dark")
-    ? "rgba(167,139,250,0.4)"
-    : "rgba(124,58,237,0.35)"; // بس قللنا opacity
-
-  ctx.beginPath();
-  ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-  ctx.fill();
-}
+ draw(){
+    ctx.fillStyle = "rgba(124,58,237,0.3)";
+    ctx.beginPath();
+    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fill();
+  }
 }
 
 function initParticles(){
