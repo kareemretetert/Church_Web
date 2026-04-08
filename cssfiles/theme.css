@@ -331,3 +331,45 @@ header{
   height:14px;
   fill:#fff;
 }
+/* زر الرجوع فقط بدون ما يبوظ الهيدر */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  padding:8px 14px; /* أقل سنة عشان الموبايل */
+  border-radius:999px;
+
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.35);
+
+  color:#fff;
+  font-family:'Cairo',sans-serif;
+  font-size:13px;
+  font-weight:700;
+
+  cursor:pointer;
+  flex-shrink:0;
+
+  backdrop-filter:blur(6px); /* ده اللي كان ناقص */
+  -webkit-backdrop-filter:blur(6px);
+
+  transition:all .2s ease;
+}
+
+/* hover */
+.back-btn:hover{
+  background:rgba(255,255,255,.22);
+}
+
+/* click */
+.back-btn:active{
+  transform:scale(.96);
+}
+
+/* الأيقونة */
+.back-btn svg{
+  width:14px;
+  height:14px;
+  fill:#fff;
+}
