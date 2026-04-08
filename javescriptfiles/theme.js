@@ -1,14 +1,13 @@
+// تحميل الثيم أول ما الصفحة تفتح
 (function(){
-  const s = localStorage.getItem("cv_theme");
-  const d = window.matchMedia("(prefers-color-scheme:dark)").matches;
-  applyTheme(s || (d ? "dark" : "light"));
+  const saved = localStorage.getItem("theme");
+  if(saved){
+    document.body.classList.toggle("dark", saved === "dark");
+  }
 })();
 
-function applyTheme(mode){
-  document.body.classList.toggle("dark", mode === "dark");
-  localStorage.setItem("cv_theme", mode);
-}
-
+// تغيير الثيم
 function toggleTheme(){
-  applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
+  const isDark = document.body.classList.toggle("dark");
+  localStorage.setItem("theme", isDark ? "dark" : "light");
 }
