@@ -1,0 +1,170 @@
+/* ========== RESET ========== */
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+html,body{
+  font-family:'Cairo',sans-serif;
+  min-height:100%;
+}
+
+/* ========== HEADER ========== */
+
+.site-header{
+  background:linear-gradient(135deg,var(--hdr1),var(--hdr2));
+  color:white;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:var(--sh2);
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.header-title{
+  font-size:22px;
+  font-weight:800;
+}
+
+.header-nav{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+
+.nav-link{
+  text-decoration:none;
+  color:white;
+  border:1px solid rgba(255,255,255,.4);
+  padding:8px 14px;
+  border-radius:10px;
+  transition:.3s;
+}
+
+.nav-link:hover{
+  background:rgba(255,255,255,.15);
+}
+
+/* ========== THEME BUTTON ========== */
+
+.theme-toggle{
+  cursor:pointer;
+  background:rgba(255,255,255,.15);
+  padding:8px 12px;
+  border-radius:10px;
+  font-size:18px;
+  transition:.3s;
+}
+
+.theme-toggle:hover{
+  background:rgba(255,255,255,.25);
+}
+
+/* ========== MAIN CONTAINER ========== */
+
+.container{
+  width:min(1200px,95%);
+  margin:auto;
+  padding:30px 0;
+}
+
+/* ========== GRID ========== */
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+}
+
+/* ========== CARD ========== */
+
+.card{
+  background:var(--sf);
+  border:1px solid var(--bdr);
+  border-radius:18px;
+  padding:20px;
+  box-shadow:var(--sh);
+  transition:.3s;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--sh2);
+}
+
+.card-title{
+  font-size:20px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+
+.card-text{
+  color:var(--tx2);
+  line-height:1.8;
+  margin-bottom:15px;
+}
+
+/* ========== BUTTON ========== */
+
+.btn{
+  background:var(--p);
+  color:white;
+  border:none;
+  padding:10px 16px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:.3s;
+  font-weight:700;
+}
+
+.btn:hover{
+  background:var(--p-dk);
+}
+
+/* ========== INPUT ========== */
+
+.input{
+  width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--bdr);
+  margin-bottom:12px;
+  background:var(--sf);
+  color:var(--tx);
+}
+
+/* ========== FOOTER ========== */
+
+.site-footer{
+  text-align:center;
+  padding:18px;
+  background:var(--sf);
+  border-top:1px solid var(--bdr);
+  margin-top:40px;
+}
+
+.site-footer h2{
+  font-size:18px;
+  color:var(--tx2);
+}
+
+/* ========== MOBILE ========== */
+
+@media(max-width:768px){
+
+  .site-header{
+    flex-direction:column;
+    gap:10px;
+  }
+
+  .header-nav{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+}
