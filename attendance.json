@@ -31,6 +31,24 @@
             "present": true
           }
         ]
+      },
+      {
+        "date": "٠٨‏/٠٤‏/٢٠٢٦",
+        "dateISO": "2026-04-08",
+        "attendance": [
+          {
+            "name": "روماني عباس راضي",
+            "present": true
+          },
+          {
+            "name": "كريم حسني جابر",
+            "present": true
+          },
+          {
+            "name": "بيتر هاني",
+            "present": false
+          }
+        ]
       }
     ]
   },
