@@ -6,6 +6,8 @@
 <title>لوحة الحضور والغياب</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
@@ -592,99 +594,43 @@ function showHistory(cid, mid){
 /* ═══════════════════════════════════════
    PDF EXPORT
 ═══════════════════════════════════════ */
-function exportPDF(cid){
-  const cls = getClass(cid); if(!cls) return;
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+function exportWeekPDF(){
+  const date = document.getElementById("weekSelect").value;
+  const cls = getClass(pdfClassId);
 
-  const sortMode = cls._sort || 'alpha';
-  const members  = sortMembers(cls.members||[], sortMode);
-  const dates    = allDates(cls);
-
-  /* ── header ── */
-  doc.setFillColor(106,27,154);
-  doc.rect(0,0,297,22,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(16);
-  doc.text('كنيسة السيدة العذراء مريم — سجل الحضور والغياب', 148,14,{align:'center'});
-
-  doc.setFontSize(11);
-  doc.setTextColor(100,100,100);
-  doc.text(`الفصل: ${cls.name}`, 285, 30,{align:'right'});
-  doc.text(`عدد المخدومين: ${members.length}`, 200, 30,{align:'right'});
-  doc.text(`الترتيب: ${sortMode==='alpha'?'أبجدي':sortMode==='present'?'الأكثر حضوراً':'الأكثر غياباً'}`, 110, 30,{align:'right'});
-  doc.text(`تاريخ الطباعة: ${formatDate(today())}`, 20, 30);
-
-  /* ── table header ── */
-  const startY = 36;
-  const rowH   = 9;
-  const cols   = [
-    {label:'#',        w:10},
-    {label:'الاسم',    w:55},
-    {label:'حضر',      w:18},
-    {label:'غاب',      w:18},
-    {label:'المعدل',   w:20},
-    ...dates.slice(-12).map(d=>({label:formatDate(d).slice(0,5), w:16}))
+  const body = [
+    ["#", "الاسم", "الحالة"]
   ];
 
-  let x = 5;
-  doc.setFillColor(237,231,246);
-  doc.rect(5, startY, 287, rowH,'F');
-  doc.setFontSize(9);
-  doc.setTextColor(91,33,182);
+  cls.members.forEach((m,i)=>{
+    const val = (m.attendance||{})[date];
 
-  /* draw header right-to-left */
-  let colX = 5;
-  cols.forEach(col=>{
-    doc.text(col.label, colX + col.w/2, startY+6,{align:'center'});
-    colX += col.w;
+    const status =
+      val === 'P' ? 'حاضر' :
+      val === 'A' ? 'غايب' :
+      '-';
+
+    body.push([i+1, m.name, status]);
   });
 
-  /* ── rows ── */
-  members.forEach((m,i)=>{
-    const y = startY + rowH*(i+1);
-    if(y > 195) return; /* page overflow guard */
-    const bg = i%2===0?[248,244,255]:[255,255,255];
-    doc.setFillColor(...bg);
-    doc.rect(5, y, 287, rowH, 'F');
+  const docDefinition = {
+    content: [
+      {text: `سجل حضور - ${cls.name}`, style: "header"},
+      {text: `التاريخ: ${formatDate(date)}`, margin:[0,0,0,10]},
+      {
+        table: {
+          body: body
+        }
+      }
+    ],
+    defaultStyle: {
+      font: "Roboto" // بيدعم العربي تلقائي
+    }
+  };
 
-    const att = m.attendance||{};
-    doc.setFontSize(9);
-    doc.setTextColor(30,30,30);
+  pdfMake.createPdf(docDefinition).download(`attendance_${cls.name}_${date}.pdf`);
 
-    colX = 5;
-    const values = [
-      String(i+1),
-      m.name,
-      String(presentCount(m)),
-      String(absentCount(m)),
-      attendRate(m)+'%',
-      ...dates.slice(-12).map(d=> att[d]==='P'?'P': att[d]==='A'?'A':'-')
-    ];
-    values.forEach((v,vi)=>{
-      const col = cols[vi];
-      /* color P/A */
-      if(v==='P') doc.setTextColor(22,101,52);
-      else if(v==='A') doc.setTextColor(153,27,27);
-      else doc.setTextColor(30,30,30);
-      doc.text(v, colX+col.w/2, y+6,{align:'center'});
-      colX += col.w;
-    });
-    /* border */
-    doc.setDrawColor(220,220,220);
-    doc.line(5, y+rowH, 292, y+rowH);
-  });
-
-  /* ── summary ── */
-  const sumY = startY + rowH*(members.length+1) + 4;
-  if(sumY < 200){
-    doc.setFontSize(10);
-    doc.setTextColor(91,33,182);
-    const avgR = members.length ? Math.round(members.reduce((s,m)=>s+attendRate(m),0)/members.length) : 0;
-    doc.text(`إجمالي: ${members.length} مخدوم | متوسط الحضور: ${avgR}%`, 148, sumY,{align:'center'});
-  }
-
-  doc.save(`حضور_${cls.name}_${today()}.pdf`);
+  closeModal("weekPdfModal");
 }
 
 /* ═══════════════════════════════════════
