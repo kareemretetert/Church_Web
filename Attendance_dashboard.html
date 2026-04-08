@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الحضور والغياب — خدمة الأحد</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg1:#1a0533;--bg2:#0d1f4a;--bg3:#0a2e1a;
+  --accent:#c084fc;--accent2:#818cf8;--green:#34d399;--red:#f87171;
+  --gold:#fbbf24;--white:#f1f5f9;--glass:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.12);
+}
+body{
+  font-family:'Cairo',sans-serif;direction:rtl;
+  background:linear-gradient(-45deg,var(--bg1),var(--bg2),var(--bg3),#1a1a3e);
+  background-size:400% 400%;animation:bgAnim 14s ease infinite;
+  min-height:100vh;padding:16px;overflow-x:hidden;color:var(--white);
+}
+@keyframes bgAnim{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pop{0%{transform:scale(0.85)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,132,252,0.4)}50%{box-shadow:0 0 0 8px rgba(192,132,252,0)}}
+
+/* ====== HEADER ====== */
+.page-header{text-align:center;margin-bottom:20px;animation:fadeIn 0.5s;}
+.page-header h1{font-size:clamp(22px,5vw,32px);font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent2),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.page-header p{color:rgba(255,255,255,0.6);font-size:14px;margin-top:4px;}
+
+/* ====== STATS ====== */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:20px;}
+.stat-box{
+  background:var(--glass);border:1px solid var(--border);border-radius:18px;
+  padding:16px 10px;text-align:center;backdrop-filter:blur(12px);animation:fadeIn 0.5s;
+  transition:transform 0.3s;
+}
+.stat-box:hover{transform:translateY(-3px);}
+.stat-box .num{font-size:30px;font-weight:900;}
+.stat-box .lbl{font-size:12px;opacity:0.7;margin-top:2px;}
+.num-classes{color:var(--accent);}
+.num-students{color:var(--accent2);}
+.num-present{color:var(--green);}
+.num-absent{color:var(--red);}
+
+/* ====== SECTION ====== */
+.section{
+  max-width:960px;margin:0 auto 20px auto;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:22px;padding:20px;backdrop-filter:blur(14px);
+  animation:fadeIn 0.5s;
+}
+.section-title{font-size:18px;font-weight:800;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* ====== BUTTONS ====== */
+button{font-family:'Cairo',sans-serif;cursor:pointer;border:none;border-radius:14px;font-weight:700;transition:all 0.25s;}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:11px 20px;font-size:14px;}
+.btn-primary:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(124,58,237,0.4);}
+.btn-success{background:linear-gradient(135deg,#059669,#10b981);color:#fff;padding:11px 20px;font-size:14px;}
+.btn-success:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(16,185,129,0.35);}
+.btn-danger{background:linear-gradient(135deg,#dc2626,#ef4444);color:#fff;padding:11px 20px;font-size:14px;}
+.btn-danger:hover{transform:scale(1.04);}
+.btn-warning{background:linear-gradient(135deg,#d97706,#f59e0b);color:#fff;padding:10px 16px;font-size:13px;}
+.btn-warning:hover{transform:scale(1.04);}
+.btn-sm{padding:7px 14px;font-size:12px;border-radius:10px;}
+.btn-full{width:100%;}
+
+/* ====== INPUT ====== */
+input,select{
+  font-family:'Cairo',sans-serif;direction:rtl;background:rgba(255,255,255,0.1);
+  border:1px solid var(--border);border-radius:12px;padding:11px 14px;
+  font-size:14px;color:var(--white);width:100%;margin-top:6px;outline:none;transition:0.3s;
+}
+input::placeholder{color:rgba(255,255,255,0.4);}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(192,132,252,0.2);}
+select option{background:#1a0533;color:#fff;}
+label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;margin-top:10px;}
+
+/* ====== CLASS CARD ====== */
+.class-card{
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);
+  border-radius:18px;margin-bottom:14px;overflow:hidden;animation:fadeIn 0.4s;
+  transition:box-shadow 0.3s;
+}
+.class-card:hover{box-shadow:0 6px 30px rgba(192,132,252,0.15);}
+.class-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 18px;cursor:pointer;
+}
+.class-header-left{display:flex;align-items:center;gap:10px;}
+.class-title{font-size:17px;font-weight:800;color:var(--white);}
+.class-meta{font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;}
+.chevron-icon{width:10px;height:10px;border-left:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(-45deg);transition:0.3s;flex-shrink:0;}
+.class-card.open .chevron-icon{transform:rotate(135deg);}
+.class-body{max-height:0;overflow:hidden;transition:max-height 0.45s ease,opacity 0.35s;opacity:0;}
+.class-card.open .class-body{max-height:9999px;opacity:1;}
+.class-body-inner{padding:0 18px 18px;}
+
+/* ====== STUDENT TABLE ====== */
+.student-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;}
+.student-table th{
+  background:rgba(124,58,237,0.25);color:var(--accent);
+  padding:10px 8px;text-align:right;font-size:12px;font-weight:700;
+}
+.student-table th:first-child{border-radius:0 10px 0 0;}
+.student-table th:last-child{border-radius:10px 0 0 0;}
+.student-table td{padding:10px 8px;border-bottom:1px solid rgba(255,255,255,0.06);vertical-align:middle;}
+.student-table tr:hover td{background:rgba(255,255,255,0.04);}
+.student-name{font-weight:700;color:var(--white);}
+.week-dot{
+  display:inline-block;width:26px;height:26px;border-radius:50%;font-size:11px;
+  font-weight:700;line-height:26px;text-align:center;cursor:default;
+  transition:transform 0.2s;
+}
+.week-dot:hover{transform:scale(1.15);}
+.dot-present{background:rgba(52,211,153,0.25);color:var(--green);border:1px solid var(--green);}
+.dot-absent{background:rgba(248,113,113,0.2);color:var(--red);border:1px solid var(--red);}
+.dot-empty{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.1);}
+.count-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
+.badge-green{background:rgba(52,211,153,0.2);color:var(--green);}
+.badge-red{background:rgba(248,113,113,0.15);color:var(--red);}
+.badge-gray{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);}
+
+/* ====== ACTIONS ROW ====== */
+.actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.actions-row button{flex:1;min-width:130px;}
+
+/* ====== MODAL ====== */
+.modal{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;
+  z-index:9999;padding:12px;backdrop-filter:blur(4px);
+}
+.modal.open{display:flex;}
+.modal-box{
+  background:linear-gradient(160deg,#1e0a38,#0d1f3c);
+  border:1px solid var(--border);border-radius:24px;
+  padding:24px;width:95%;max-width:560px;max-height:90vh;
+  overflow-y:auto;animation:pop 0.3s;box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.modal-title{font-size:18px;font-weight:800;color:var(--accent);text-align:center;margin-bottom:18px;}
+.modal-actions{display:flex;gap:10px;margin-top:16px;}
+.modal-actions button{flex:1;}
+
+/* ====== ATTENDANCE MODAL ====== */
+.att-student-row{
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(255,255,255,0.05);border-radius:14px;
+  padding:12px 14px;margin-bottom:8px;border:1px solid rgba(255,255,255,0.07);
+  transition:0.3s;
+}
+.att-student-row:hover{background:rgba(255,255,255,0.09);}
+.att-name{font-size:15px;font-weight:700;}
+.att-toggle{
+  display:flex;border-radius:12px;overflow:hidden;border:1px solid var(--border);
+  flex-shrink:0;
+}
+.att-btn{
+  padding:7px 18px;font-size:13px;font-family:'Cairo',sans-serif;
+  font-weight:700;cursor:pointer;border:none;transition:0.25s;
+}
+.att-btn-present{background:rgba(52,211,153,0.15);color:var(--green);}
+.att-btn-present.active{background:var(--green);color:#fff;}
+.att-btn-absent{background:rgba(248,113,113,0.1);color:var(--red);}
+.att-btn-absent.active{background:var(--red);color:#fff;}
+
+/* ====== CONFIRM MODAL ====== */
+.download-preview{
+  background:rgba(255,255,255,0.05);border-radius:14px;padding:14px;
+  margin:12px 0;max-height:260px;overflow-y:auto;
+}
+.download-row{display:flex;justify-content:space-between;padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;}
+.download-row:last-child{border-bottom:none;}
+
+/* ====== LOADER ====== */
+#loader{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.85);display:none;justify-content:center;
+  align-items:center;flex-direction:column;z-index:99999;
+}
+.spinner{width:54px;height:54px;border:5px solid rgba(255,255,255,0.1);
+  border-top:5px solid var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;}
+#loader p{color:#fff;margin-top:14px;font-size:16px;}
+
+/* ====== EMPTY ====== */
+.empty-msg{text-align:center;padding:30px;color:rgba(255,255,255,0.4);font-size:15px;}
+
+/* ====== SORT TABS ====== */
+.sort-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
+.sort-tab{
+  padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;
+  cursor:pointer;transition:0.25s;background:rgba(255,255,255,0.07);
+  color:rgba(255,255,255,0.6);border:1px solid rgba(255,255,255,0.1);
+}
+.sort-tab.active{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border-color:transparent;}
+
+/* ====== RESPONSIVE ====== */
+@media(max-width:600px){
+  body{padding:10px;}
+  .section{padding:14px;}
+  .student-table{font-size:12px;}
+  .student-table th,.student-table td{padding:8px 5px;}
+  .actions-row button{min-width:100px;}
+}
+@media(min-width:1200px){.section{max-width:1100px;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="page-header">
+  <h1>✝️ لوحة الحضور والغياب</h1>
+  <p>خدمة الأحد — كنيسة السيدة العذراء مريم</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid" style="max-width:960px;margin:0 auto 20px auto;">
+  <div class="stat-box"><div class="num num-classes" id="statClasses">0</div><div class="lbl">فصول</div></div>
+  <div class="stat-box"><div class="num num-students" id="statStudents">0</div><div class="lbl">مخدومين</div></div>
+  <div class="stat-box"><div class="num num-present" id="statPresent">0</div><div class="lbl">حضور (آخر أسبوع)</div></div>
+  <div class="stat-box"><div class="num num-absent" id="statAbsent">0</div><div class="lbl">غياب (آخر أسبوع)</div></div>
+</div>
+
+<!-- TOP ACTIONS -->
+<div class="section">
+  <div class="section-title">⚙️ الإجراءات الرئيسية</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;">
+    <button class="btn-primary btn-full" onclick="openAddClass()">➕ إضافة فصل جديد</button>
+  </div>
+</div>
+
+<!-- CLASSES LIST -->
+<div class="section" id="classesSection">
+  <div class="section-title">🏫 الفصول الدراسية</div>
+  <div id="classesList"><div class="empty-msg">📭 لا يوجد فصول بعد — اضغط "إضافة فصل جديد"</div></div>
+</div>
+
+<!-- ===== MODALS ===== -->
+
+<!-- ADD CLASS MODAL -->
+<div class="modal" id="addClassModal">
+  <div class="modal-box">
+    <div class="modal-title" id="classModalTitle">➕ إضافة فصل جديد</div>
+    <label>اسم الفصل *</label>
+    <input id="classNameInput" placeholder="مثال: فصل النور — المرحلة الإعدادية">
+    <label>وصف الفصل (اختياري)</label>
+    <input id="classDescInput" placeholder="مثال: يضم طلاب الصف الأول الإعدادي">
+    <div class="modal-actions">
+      <button class="btn-success" onclick="saveClass()">💾 حفظ</button>
+      <button class="btn-danger" onclick="closeModal('addClassModal')">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD STUDENT MODAL -->
+<div class="modal" id="addStudentModal">
+  <div class="modal-box">
+    <div class="modal-title" id="studentModalTitle">➕ إضافة مخدوم</div>
+    <label>اسم المخدوم *</label>
+    <input id="studentNameInput" placeholder="الاسم الكامل">
+    <div class="modal-actions">
+      <button class="btn-success" onclick="saveStudent()">💾 حفظ</button>
+      <button class="btn-danger" onclick="closeModal('addStudentModal')">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- TAKE ATTENDANCE MODAL -->
+<div class="modal" id="attendanceModal">
+  <div class="modal-box" style="max-width:580px;">
+    <div class="modal-title">📋 تسجيل الحضور</div>
+    <div id="attendanceDate" style="text-align:center;background:rgba(192,132,252,0.15);border-radius:10px;padding:8px;margin-bottom:14px;font-size:13px;color:var(--accent);font-weight:700;"></div>
+    <div id="attendanceList"></div>
+    <div class="modal-actions" style="margin-top:18px;">
+      <button class="btn-success" onclick="finishAttendance()">✅ إنهاء وحفظ</button>
+      <button class="btn-danger" onclick="closeModal('attendanceModal')">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM SAVE MODAL -->
+<div class="modal" id="confirmModal">
+  <div class="modal-box">
+    <div class="modal-title">📊 نتيجة الحضور</div>
+    <div id="confirmSummary" style="text-align:center;margin-bottom:10px;font-size:15px;color:rgba(255,255,255,0.8);"></div>
+    <div class="download-preview" id="confirmList"></div>
+    <div class="modal-actions">
+      <button class="btn-primary" onclick="downloadWeeklyPDF()">⬇️ تنزيل PDF</button>
+      <button class="btn-success" onclick="confirmSaveAttendance()">✅ حفظ بدون تنزيل</button>
+      <button class="btn-danger" onclick="closeModal('confirmModal')">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADER -->
+<div id="loader"><div class="spinner"></div><p>جاري التحميل...</p></div>
+
+<script>
+// ===== STATE =====
+let classes = [];
+let editClassIndex = null;
+let editStudentIndex = null;
+let currentClassIndex = null;
+let pendingAttendance = null; // {classIndex, date, records: [{name, present}]}
+
+// ===== STORAGE KEY =====
+const STORAGE_KEY = 'attendance_dashboard_v1';
+
+// ===== INIT =====
+window.onload = function(){
+  loadData();
+  renderAll();
+};
+
+// ===== PERSIST =====
+function saveData(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(classes)); }catch(e){}
+}
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ classes = JSON.parse(raw); if(!Array.isArray(classes)) classes=[]; }
+  }catch{ classes=[]; }
+}
+
+// ===== STATS =====
+function updateStats(){
+  let totalStudents=0, lastPresent=0, lastAbsent=0;
+  classes.forEach(c=>{
+    totalStudents += (c.students||[]).length;
+    const recs = c.records||[];
+    if(recs.length){
+      const last = recs[recs.length-1];
+      last.attendance.forEach(a=>{
+        if(a.present) lastPresent++; else lastAbsent++;
+      });
+    }
+  });
+  document.getElementById('statClasses').innerText = classes.length;
+  document.getElementById('statStudents').innerText = totalStudents;
+  document.getElementById('statPresent').innerText = lastPresent;
+  document.getElementById('statAbsent').innerText = lastAbsent;
+}
+
+// ===== RENDER ALL =====
+function renderAll(){
+  updateStats();
+  renderClasses();
+}
+
+// ===== RENDER CLASSES =====
+function renderClasses(){
+  const el = document.getElementById('classesList');
+  if(!classes.length){
+    el.innerHTML='<div class="empty-msg">📭 لا يوجد فصول بعد — اضغط "إضافة فصل جديد"</div>';
+    return;
+  }
+  el.innerHTML = classes.map((c,ci)=> renderClassCard(c,ci)).join('');
+}
+
+function renderClassCard(c, ci){
+  const students = c.students || [];
+  const records = c.records || [];
+  const totalWeeks = records.length;
+
+  // Build student rows
+  const sorted = getSortedStudents(c, 'alpha');
+  const studentRows = sorted.map(({s, origIdx})=>{
+    let presentCount=0, absentCount=0;
+    const weekDots = records.map(rec=>{
+      const a = rec.attendance.find(x=>x.name===s.name);
+      if(!a) return `<span class="week-dot dot-empty" title="${rec.date}">—</span>`;
+      if(a.present){ presentCount++; return `<span class="week-dot dot-present" title="حضر — ${rec.date}">✓</span>`; }
+      else{ absentCount++; return `<span class="week-dot dot-absent" title="غاب — ${rec.date}">✗</span>`; }
+    }).join(' ');
+
+    return `<tr>
+      <td class="student-name">${s.name}</td>
+      <td style="white-space:nowrap;">${weekDots||'<span style="color:rgba(255,255,255,0.3);font-size:12px;">لا يوجد سجلات</span>'}</td>
+      <td><span class="count-badge badge-green">✓ ${presentCount}</span></td>
+      <td><span class="count-badge badge-red">✗ ${absentCount}</span></td>
+      <td>
+        <button class="btn-warning btn-sm" onclick="openEditStudent(${ci},${origIdx})">✏️</button>
+        <button class="btn-danger btn-sm" style="margin-right:4px;" onclick="deleteStudent(${ci},${origIdx})">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+
+  const tableHTML = students.length ? `
+    <div class="sort-tabs">
+      <span class="sort-tab active" onclick="changeSortTab(this,${ci},'alpha')">أ-ي</span>
+      <span class="sort-tab" onclick="changeSortTab(this,${ci},'most-present')">الأكثر حضوراً</span>
+    </div>
+    <div style="overflow-x:auto;">
+    <table class="student-table" id="table-${ci}">
+      <thead><tr>
+        <th>اسم المخدوم</th>
+        <th>السجل الأسبوعي (${totalWeeks} أسبوع)</th>
+        <th>حضر</th>
+        <th>غاب</th>
+        <th>إجراءات</th>
+      </tr></thead>
+      <tbody id="tbody-${ci}">${studentRows}</tbody>
+    </table>
+    </div>` : '<div class="empty-msg" style="padding:16px;">لا يوجد مخدومين في هذا الفصل بعد</div>';
+
+  return `<div class="class-card" id="class-${ci}">
+    <div class="class-header" onclick="toggleClass(${ci})">
+      <div class="class-header-left">
+        <div>
+          <div class="class-title">🏫 ${c.name}</div>
+          ${c.desc?`<div class="class-meta">${c.desc}</div>`:''}
+          <div class="class-meta">${students.length} مخدوم • ${totalWeeks} أسبوع مسجّل</div>
+        </div>
+      </div>
+      <div class="chevron-icon"></div>
+    </div>
+    <div class="class-body">
+      <div class="class-body-inner">
+        ${tableHTML}
+        <div class="actions-row">
+          <button class="btn-primary" onclick="openAddStudent(${ci})">➕ إضافة مخدوم</button>
+          ${students.length ? `<button class="btn-success" onclick="openAttendance(${ci})">📋 أخذ الغياب</button>` : ''}
+          ${totalWeeks ? `<button class="btn-warning" onclick="downloadClassPDF(${ci})">⬇️ تنزيل سجل الفصل PDF</button>` : ''}
+          <button class="btn-danger btn-sm" onclick="openEditClass(${ci})">✏️ تعديل الفصل</button>
+          <button class="btn-danger btn-sm" onclick="deleteClass(${ci})">🗑 حذف الفصل</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// ===== SORT =====
+function getSortedStudents(c, mode){
+  const students = c.students || [];
+  const records = c.records || [];
+  let indexed = students.map((s,i)=>({s,origIdx:i}));
+  if(mode==='alpha'){
+    indexed.sort((a,b)=>a.s.name.localeCompare(b.s.name,'ar'));
+  } else if(mode==='most-present'){
+    indexed.sort((a,b)=>{
+      const countPresent = s => records.reduce((n,rec)=>{
+        const att = rec.attendance.find(x=>x.name===s.name);
+        return n + (att&&att.present?1:0);
+      },0);
+      return countPresent(b.s) - countPresent(a.s);
+    });
+  }
+  return indexed;
+}
+
+function changeSortTab(el, ci, mode){
+  el.closest('.class-body-inner').querySelectorAll('.sort-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  const c = classes[ci];
+  const sorted = getSortedStudents(c, mode);
+  const records = c.records||[];
+  const tbody = document.getElementById('tbody-'+ci);
+  tbody.innerHTML = sorted.map(({s, origIdx})=>{
+    let presentCount=0, absentCount=0;
+    const weekDots = records.map(rec=>{
+      const a = rec.attendance.find(x=>x.name===s.name);
+      if(!a) return `<span class="week-dot dot-empty" title="${rec.date}">—</span>`;
+      if(a.present){ presentCount++; return `<span class="week-dot dot-present" title="حضر — ${rec.date}">✓</span>`; }
+      else{ absentCount++; return `<span class="week-dot dot-absent" title="غاب — ${rec.date}">✗</span>`; }
+    }).join(' ');
+    return `<tr>
+      <td class="student-name">${s.name}</td>
+      <td style="white-space:nowrap;">${weekDots||'—'}</td>
+      <td><span class="count-badge badge-green">✓ ${presentCount}</span></td>
+      <td><span class="count-badge badge-red">✗ ${absentCount}</span></td>
+      <td>
+        <button class="btn-warning btn-sm" onclick="openEditStudent(${ci},${origIdx})">✏️</button>
+        <button class="btn-danger btn-sm" style="margin-right:4px;" onclick="deleteStudent(${ci},${origIdx})">🗑</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// ===== TOGGLE CLASS =====
+function toggleClass(ci){
+  const card = document.getElementById('class-'+ci);
+  const isOpen = card.classList.contains('open');
+  document.querySelectorAll('.class-card').forEach(c=>c.classList.remove('open'));
+  if(!isOpen) card.classList.add('open');
+}
+
+// ===== ADD/EDIT CLASS =====
+function openAddClass(){
+  editClassIndex=null;
+  document.getElementById('classModalTitle').innerText='➕ إضافة فصل جديد';
+  document.getElementById('classNameInput').value='';
+  document.getElementById('classDescInput').value='';
+  openModal('addClassModal');
+}
+function openEditClass(ci){
+  editClassIndex=ci;
+  document.getElementById('classModalTitle').innerText='✏️ تعديل الفصل';
+  document.getElementById('classNameInput').value=classes[ci].name;
+  document.getElementById('classDescInput').value=classes[ci].desc||'';
+  openModal('addClassModal');
+}
+function saveClass(){
+  const name=document.getElementById('classNameInput').value.trim();
+  if(!name){alert('اكتب اسم الفصل');return;}
+  if(editClassIndex!==null){
+    classes[editClassIndex].name=name;
+    classes[editClassIndex].desc=document.getElementById('classDescInput').value.trim();
+  } else {
+    classes.push({name,desc:document.getElementById('classDescInput').value.trim(),students:[],records:[]});
+  }
+  saveData(); closeModal('addClassModal'); renderAll();
+}
+function deleteClass(ci){
+  if(!confirm(`حذف فصل "${classes[ci].name}" وكل بياناته؟`))return;
+  classes.splice(ci,1); saveData(); renderAll();
+}
+
+// ===== ADD/EDIT STUDENT =====
+function openAddStudent(ci){
+  currentClassIndex=ci; editStudentIndex=null;
+  document.getElementById('studentModalTitle').innerText='➕ إضافة مخدوم';
+  document.getElementById('studentNameInput').value='';
+  openModal('addStudentModal');
+}
+function openEditStudent(ci, si){
+  currentClassIndex=ci; editStudentIndex=si;
+  document.getElementById('studentModalTitle').innerText='✏️ تعديل اسم المخدوم';
+  document.getElementById('studentNameInput').value=classes[ci].students[si].name;
+  openModal('addStudentModal');
+}
+function saveStudent(){
+  const name=document.getElementById('studentNameInput').value.trim();
+  if(!name){alert('اكتب اسم المخدوم');return;}
+  const ci=currentClassIndex;
+  if(editStudentIndex!==null){
+    const oldName=classes[ci].students[editStudentIndex].name;
+    classes[ci].students[editStudentIndex].name=name;
+    // update name in records
+    (classes[ci].records||[]).forEach(rec=>{
+      rec.attendance.forEach(a=>{if(a.name===oldName) a.name=name;});
+    });
+  } else {
+    classes[ci].students.push({name});
+  }
+  saveData(); closeModal('addStudentModal'); renderAll();
+}
+function deleteStudent(ci, si){
+  const s=classes[ci].students[si];
+  if(!confirm(`حذف المخدوم "${s.name}"؟`))return;
+  const name=s.name;
+  classes[ci].students.splice(si,1);
+  // remove from records
+  (classes[ci].records||[]).forEach(rec=>{
+    rec.attendance=rec.attendance.filter(a=>a.name!==name);
+  });
+  saveData(); renderAll();
+}
+
+// ===== TAKE ATTENDANCE =====
+function openAttendance(ci){
+  currentClassIndex=ci;
+  const c=classes[ci];
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('attendanceDate').innerText='📅 '+dateStr;
+
+  // Init pending
+  pendingAttendance={
+    classIndex:ci,
+    date:now.toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'}),
+    dateISO:now.toISOString().split('T')[0],
+    records: c.students.map(s=>({name:s.name, present:null}))
+  };
+
+  const list=document.getElementById('attendanceList');
+  list.innerHTML=pendingAttendance.records.map((r,i)=>`
+    <div class="att-student-row" id="att-row-${i}">
+      <span class="att-name">${r.name}</span>
+      <div class="att-toggle">
+        <button class="att-btn att-btn-present" id="att-p-${i}" onclick="setAtt(${i},true)">✓ حضر</button>
+        <button class="att-btn att-btn-absent" id="att-a-${i}" onclick="setAtt(${i},false)">✗ غاب</button>
+      </div>
+    </div>`).join('');
+  openModal('attendanceModal');
+}
+
+function setAtt(i, present){
+  pendingAttendance.records[i].present=present;
+  const pBtn=document.getElementById('att-p-'+i);
+  const aBtn=document.getElementById('att-a-'+i);
+  if(present){ pBtn.classList.add('active'); aBtn.classList.remove('active'); }
+  else { aBtn.classList.add('active'); pBtn.classList.remove('active'); }
+  document.getElementById('att-row-'+i).style.background=present?'rgba(52,211,153,0.1)':'rgba(248,113,113,0.08)';
+}
+
+function finishAttendance(){
+  // Check all selected
+  const unset=pendingAttendance.records.filter(r=>r.present===null);
+  if(unset.length){
+    alert(`لم تختر حضور/غياب لـ ${unset.length} مخدوم:\n${unset.map(r=>r.name).join('، ')}`);
+    return;
+  }
+  closeModal('attendanceModal');
+
+  // Build confirm preview
+  const presentList=pendingAttendance.records.filter(r=>r.present);
+  const absentList=pendingAttendance.records.filter(r=>!r.present);
+  document.getElementById('confirmSummary').innerHTML=
+    `<strong style="color:var(--green)">✓ حضر: ${presentList.length}</strong> &nbsp;|&nbsp; <strong style="color:var(--red)">✗ غاب: ${absentList.length}</strong><br><small style="color:rgba(255,255,255,0.5);">${pendingAttendance.date}</small>`;
+
+  const listHTML=[
+    ...presentList.map(r=>`<div class="download-row"><span>${r.name}</span><span style="color:var(--green);font-weight:700;">✓ حضر</span></div>`),
+    ...absentList.map(r=>`<div class="download-row"><span>${r.name}</span><span style="color:var(--red);font-weight:700;">✗ غاب</span></div>`)
+  ].join('');
+  document.getElementById('confirmList').innerHTML=listHTML;
+  openModal('confirmModal');
+}
+
+function confirmSaveAttendance(){
+  const ci=pendingAttendance.classIndex;
+  classes[ci].records.push({
+    date:pendingAttendance.date,
+    dateISO:pendingAttendance.dateISO,
+    attendance:pendingAttendance.records.map(r=>({name:r.name,present:r.present}))
+  });
+  saveData(); closeModal('confirmModal'); renderAll();
+  pendingAttendance=null;
+}
+
+// ===== PDF: WEEKLY =====
+function downloadWeeklyPDF(){
+  const ci=pendingAttendance.classIndex;
+  const c=classes[ci];
+  const date=pendingAttendance.date;
+  const records=pendingAttendance.records;
+
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+
+  // Add Arabic font support via embedded subset
+  doc.setFont('helvetica','bold');
+
+  // Helper: reversed Arabic text for jsPDF
+  function ar(text){ return text; }
+
+  doc.setFillColor(26,5,51);
+  doc.rect(0,0,210,297,'F');
+
+  // Header
+  doc.setFillColor(124,58,237);
+  doc.rect(0,0,210,30,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(16);
+  doc.text('Attendance Report', 105, 12, {align:'center'});
+  doc.setFontSize(11);
+  doc.text('Church of the Virgin Mary - Sunday Service', 105, 22, {align:'center'});
+
+  doc.setTextColor(200,200,255);
+  doc.setFontSize(10);
+  doc.text('Class: '+c.name, 105, 38, {align:'center'});
+  doc.text('Date: '+date, 105, 45, {align:'center'});
+
+  const present=records.filter(r=>r.present).length;
+  const absent=records.filter(r=>!r.present).length;
+  doc.setTextColor(100,255,180);
+  doc.text('Present: '+present, 60, 52, {align:'center'});
+  doc.setTextColor(255,120,120);
+  doc.text('Absent: '+absent, 150, 52, {align:'center'});
+
+  // Table
+  const rows=records.map(r=>[r.name, r.present?'✓ Present':'✗ Absent']);
+  doc.autoTable({
+    startY:58,
+    head:[['Name','Status']],
+    body:rows,
+    theme:'grid',
+    headStyles:{fillColor:[124,58,237],textColor:[255,255,255],fontStyle:'bold',halign:'center'},
+    bodyStyles:{textColor:[220,220,255],fillColor:[30,15,60],halign:'center'},
+    alternateRowStyles:{fillColor:[20,8,50]},
+    columnStyles:{0:{halign:'right'},1:{halign:'center'}},
+    margin:{left:15,right:15}
+  });
+
+  // Footer
+  const pageH=doc.internal.pageSize.height;
+  doc.setFontSize(9);
+  doc.setTextColor(100,100,150);
+  doc.text('Generated by Attendance Dashboard', 105, pageH-8, {align:'center'});
+
+  doc.save('attendance-'+c.name+'-'+date+'.pdf');
+
+  // Also save the data
+  confirmSaveAttendance();
+}
+
+// ===== PDF: FULL CLASS =====
+function downloadClassPDF(ci){
+  const c=classes[ci];
+  const records=c.records||[];
+  if(!records.length){alert('لا يوجد سجلات لهذا الفصل');return;}
+
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  doc.setFont('helvetica','bold');
+
+  doc.setFillColor(26,5,51);
+  doc.rect(0,0,297,210,'F');
+
+  // Header
+  doc.setFillColor(79,70,229);
+  doc.rect(0,0,297,28,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFontSize(15);
+  doc.text('Full Attendance Record', 148, 11, {align:'center'});
+  doc.setFontSize(10);
+  doc.text('Class: '+c.name+'    |    Total Weeks: '+records.length+'    |    Students: '+c.students.length, 148, 21, {align:'center'});
+
+  // Build table
+  const weeks=records.map(r=>r.date);
+  const head=[['Student Name',...weeks,'Present','Absent']];
+  const body=c.students.map(s=>{
+    const weekCols=records.map(rec=>{
+      const a=rec.attendance.find(x=>x.name===s.name);
+      if(!a) return '-';
+      return a.present?'✓':'✗';
+    });
+    const present=weekCols.filter(v=>v==='✓').length;
+    const absent=weekCols.filter(v=>v==='✗').length;
+    return [s.name,...weekCols,present,absent];
+  });
+
+  // Sort alpha
+  body.sort((a,b)=>a[0].localeCompare(b[0],'ar'));
+
+  doc.autoTable({
+    startY:32,
+    head,
+    body,
+    theme:'grid',
+    headStyles:{fillColor:[79,70,229],textColor:[255,255,255],fontStyle:'bold',halign:'center',fontSize:9},
+    bodyStyles:{textColor:[220,220,255],fillColor:[30,15,60],halign:'center',fontSize:9},
+    alternateRowStyles:{fillColor:[20,8,50]},
+    columnStyles:{0:{halign:'right',fontStyle:'bold'}},
+    margin:{left:10,right:10},
+    didParseCell:function(data){
+      if(data.section==='body'){
+        const val=data.cell.raw;
+        if(val==='✓'){data.cell.styles.textColor=[52,211,153];}
+        else if(val==='✗'){data.cell.styles.textColor=[248,113,113];}
+      }
+    }
+  });
+
+  const pageH=doc.internal.pageSize.height;
+  doc.setFontSize(8);
+  doc.setTextColor(100,100,150);
+  doc.text('Generated by Attendance Dashboard', 148, pageH-5, {align:'center'});
+
+  doc.save('full-record-'+c.name+'.pdf');
+}
+
+// ===== MODAL HELPERS =====
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+window.onclick=function(e){
+  ['addClassModal','addStudentModal','attendanceModal','confirmModal'].forEach(id=>{
+    const m=document.getElementById(id);
+    if(m&&e.target===m) m.classList.remove('open');
+  });
+};
+</script>
+</body>
+</html>
