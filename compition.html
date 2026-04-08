@@ -21,24 +21,17 @@
 
 <header class="site-header">
 
-<div class="header-title">
-صفحة المسابقات
-</div>
+  <button class="back-btn" onclick="goBack()">
+    ⬅ رجوع
+  </button>
 
-<div class="header-nav">
+  <h1 class="header-title">صفحة المسابقات</h1>
 
-<a class="nav-link" href="index.html">الرئيسية</a>
-
-<a class="nav-link" href="courses_list.html">الكورسات</a>
-
-<a class="nav-link" href="compition.html">المسابقات</a>
-
-<div class="theme-toggle" onclick="toggleTheme()">🌙</div>
-
-</div>
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span class="theme-icon">🌙</span>
+  </div>
 
 </header>
-
 <!-- MAIN -->
 
 <div class="container">
@@ -166,6 +159,30 @@ window.location.href="qiaz3.html";
 
 }
 
+</script>
+  <script>
+function goBack(){
+  window.history.back();
+}
+
+/* theme */
+
+(function(){
+  const saved = localStorage.getItem("theme");
+  const dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(saved || (dark ? "dark" : "light"));
+})();
+
+function applyTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  localStorage.setItem("theme", mode);
+}
+
+function toggleTheme(){
+  applyTheme(
+    document.body.classList.contains("dark") ? "light" : "dark"
+  );
+}
 </script>
 
 </body>
