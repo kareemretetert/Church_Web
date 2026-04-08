@@ -25,9 +25,7 @@ body{
 @keyframes fadeIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pop{0%{transform:scale(0.85)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,132,252,0.4)}50%{box-shadow:0 0 0 8px rgba(192,132,252,0)}}
 
-/* ====== HEADER ====== */
 .page-header{text-align:center;margin-bottom:20px;animation:fadeIn 0.5s;}
 .page-header h1{font-size:clamp(22px,5vw,32px);font-weight:900;
   background:linear-gradient(135deg,var(--accent),var(--accent2),var(--green));
@@ -35,7 +33,6 @@ body{
 }
 .page-header p{color:rgba(255,255,255,0.6);font-size:14px;margin-top:4px;}
 
-/* ====== STATS ====== */
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:12px;margin-bottom:20px;}
 .stat-box{
   background:var(--glass);border:1px solid var(--border);border-radius:18px;
@@ -50,7 +47,6 @@ body{
 .num-present{color:var(--green);}
 .num-absent{color:var(--red);}
 
-/* ====== SECTION ====== */
 .section{
   max-width:960px;margin:0 auto 20px auto;
   background:var(--glass);border:1px solid var(--border);
@@ -59,7 +55,6 @@ body{
 }
 .section-title{font-size:18px;font-weight:800;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
 
-/* ====== BUTTONS ====== */
 button{font-family:'Cairo',sans-serif;cursor:pointer;border:none;border-radius:14px;font-weight:700;transition:all 0.25s;}
 .btn-primary{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;padding:11px 20px;font-size:14px;}
 .btn-primary:hover{transform:scale(1.04);box-shadow:0 6px 20px rgba(124,58,237,0.4);}
@@ -72,7 +67,6 @@ button{font-family:'Cairo',sans-serif;cursor:pointer;border:none;border-radius:1
 .btn-sm{padding:7px 14px;font-size:12px;border-radius:10px;}
 .btn-full{width:100%;}
 
-/* ====== INPUT ====== */
 input,select{
   font-family:'Cairo',sans-serif;direction:rtl;background:rgba(255,255,255,0.1);
   border:1px solid var(--border);border-radius:12px;padding:11px 14px;
@@ -83,7 +77,6 @@ input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(19
 select option{background:#1a0533;color:#fff;}
 label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;margin-top:10px;}
 
-/* ====== CLASS CARD ====== */
 .class-card{
   background:rgba(255,255,255,0.06);border:1px solid var(--border);
   border-radius:18px;margin-bottom:14px;overflow:hidden;animation:fadeIn 0.4s;
@@ -103,7 +96,6 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 .class-card.open .class-body{max-height:9999px;opacity:1;}
 .class-body-inner{padding:0 18px 18px;}
 
-/* ====== STUDENT TABLE ====== */
 .student-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;}
 .student-table th{
   background:rgba(124,58,237,0.25);color:var(--accent);
@@ -126,13 +118,10 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 .count-badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700;}
 .badge-green{background:rgba(52,211,153,0.2);color:var(--green);}
 .badge-red{background:rgba(248,113,113,0.15);color:var(--red);}
-.badge-gray{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);}
 
-/* ====== ACTIONS ROW ====== */
 .actions-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
 .actions-row button{flex:1;min-width:130px;}
 
-/* ====== MODAL ====== */
 .modal{
   position:fixed;top:0;left:0;width:100%;height:100%;
   background:rgba(0,0,0,0.8);display:none;justify-content:center;align-items:center;
@@ -149,7 +138,6 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 .modal-actions{display:flex;gap:10px;margin-top:16px;}
 .modal-actions button{flex:1;}
 
-/* ====== ATTENDANCE MODAL ====== */
 .att-student-row{
   display:flex;align-items:center;justify-content:space-between;
   background:rgba(255,255,255,0.05);border-radius:14px;
@@ -171,7 +159,6 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 .att-btn-absent{background:rgba(248,113,113,0.1);color:var(--red);}
 .att-btn-absent.active{background:var(--red);color:#fff;}
 
-/* ====== CONFIRM MODAL ====== */
 .download-preview{
   background:rgba(255,255,255,0.05);border-radius:14px;padding:14px;
   margin:12px 0;max-height:260px;overflow-y:auto;
@@ -180,7 +167,6 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
   border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;}
 .download-row:last-child{border-bottom:none;}
 
-/* ====== LOADER ====== */
 #loader{
   position:fixed;top:0;left:0;width:100%;height:100%;
   background:rgba(0,0,0,0.85);display:none;justify-content:center;
@@ -190,10 +176,8 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
   border-top:5px solid var(--accent);border-radius:50%;animation:spin 0.9s linear infinite;}
 #loader p{color:#fff;margin-top:14px;font-size:16px;}
 
-/* ====== EMPTY ====== */
 .empty-msg{text-align:center;padding:30px;color:rgba(255,255,255,0.4);font-size:15px;}
 
-/* ====== SORT TABS ====== */
 .sort-tabs{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;}
 .sort-tab{
   padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;
@@ -202,7 +186,17 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 }
 .sort-tab.active{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border-color:transparent;}
 
-/* ====== RESPONSIVE ====== */
+/* Save status indicator */
+.save-status{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:rgba(52,211,153,0.9);color:#fff;padding:10px 24px;
+  border-radius:30px;font-weight:700;font-size:14px;font-family:'Cairo',sans-serif;
+  z-index:99998;opacity:0;transition:opacity 0.4s;pointer-events:none;
+  backdrop-filter:blur(10px);
+}
+.save-status.show{opacity:1;}
+.save-status.error{background:rgba(248,113,113,0.9);}
+
 @media(max-width:600px){
   body{padding:10px;}
   .section{padding:14px;}
@@ -215,13 +209,11 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 </head>
 <body>
 
-<!-- HEADER -->
 <div class="page-header">
   <h1>✝️ لوحة الحضور والغياب</h1>
   <p>خدمة الأحد — كنيسة السيدة العذراء مريم</p>
 </div>
 
-<!-- STATS -->
 <div class="stats-grid" style="max-width:960px;margin:0 auto 20px auto;">
   <div class="stat-box"><div class="num num-classes" id="statClasses">0</div><div class="lbl">فصول</div></div>
   <div class="stat-box"><div class="num num-students" id="statStudents">0</div><div class="lbl">مخدومين</div></div>
@@ -229,7 +221,6 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
   <div class="stat-box"><div class="num num-absent" id="statAbsent">0</div><div class="lbl">غياب (آخر أسبوع)</div></div>
 </div>
 
-<!-- TOP ACTIONS -->
 <div class="section">
   <div class="section-title">⚙️ الإجراءات الرئيسية</div>
   <div style="display:flex;gap:10px;flex-wrap:wrap;">
@@ -237,13 +228,10 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
   </div>
 </div>
 
-<!-- CLASSES LIST -->
 <div class="section" id="classesSection">
   <div class="section-title">🏫 الفصول الدراسية</div>
   <div id="classesList"><div class="empty-msg">📭 لا يوجد فصول بعد — اضغط "إضافة فصل جديد"</div></div>
 </div>
-
-<!-- ===== MODALS ===== -->
 
 <!-- ADD CLASS MODAL -->
 <div class="modal" id="addClassModal">
@@ -300,8 +288,8 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
   </div>
 </div>
 
-<!-- LOADER -->
-<div id="loader"><div class="spinner"></div><p>جاري التحميل...</p></div>
+<div id="loader"><div class="spinner"></div><p>جاري الحفظ...</p></div>
+<div class="save-status" id="saveStatus">✅ تم الحفظ بنجاح</div>
 
 <script>
 // ===== STATE =====
@@ -309,35 +297,69 @@ let classes = [];
 let editClassIndex = null;
 let editStudentIndex = null;
 let currentClassIndex = null;
-let pendingAttendance = null; // {classIndex, date, records: [{name, present}]}
+let pendingAttendance = null;
 
-
+// ===== GITHUB CONFIG =====
+// ✅ غيّر هذه القيم لتناسب مشروعك
+const GITHUB_REPO = "kareemretetert/Church_Web";
+const GITHUB_FILE = "attendance.json";
+const GITHUB_BRANCH = "main";
+// ⚠️ لا تضع التوكن هنا مباشرة في الإنتاج — استخدم Netlify function
+const USE_NETLIFY = true; // true = يستخدم Netlify function | false = يقرأ فقط من GitHub
 
 // ===== INIT =====
-window.onload = function(){
-  loadData();
+window.onload = async function(){
+  await loadData();
   renderAll();
 };
 
-
+// ===== LOAD DATA FROM GITHUB =====
 async function loadData(){
   try{
-    const res = await fetch("attendance.json");
-    classes = await res.json();
-
-    if(!Array.isArray(classes)) classes = [];
-  }catch{
+    // يجرب يقرأ من GitHub مباشرةً (public repo) أو من Netlify function
+    const url = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if(res.ok){
+      const data = await res.json();
+      classes = Array.isArray(data) ? data : [];
+    } else {
+      classes = [];
+    }
+  }catch(e){
+    console.warn("تعذّر تحميل البيانات:", e);
     classes = [];
   }
 }
+
+// ===== SAVE DATA VIA NETLIFY FUNCTION =====
 async function saveData(){
-  await fetch("/.netlify/functions/saveAttendance", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(classes)
-  });
+  document.getElementById('loader').style.display='flex';
+  try{
+    const res = await fetch("/.netlify/functions/saveAttendance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(classes)
+    });
+    const result = await res.json();
+    if(res.ok && result.success){
+      showSaveStatus(true);
+    } else {
+      throw new Error(result.error || "فشل الحفظ");
+    }
+  }catch(e){
+    console.error("خطأ في الحفظ:", e);
+    showSaveStatus(false);
+  } finally {
+    document.getElementById('loader').style.display='none';
+  }
+}
+
+function showSaveStatus(success){
+  const el = document.getElementById('saveStatus');
+  el.className = 'save-status ' + (success ? '' : 'error');
+  el.innerText = success ? '✅ تم الحفظ بنجاح' : '❌ فشل الحفظ — تحقق من الاتصال';
+  el.classList.add('show');
+  setTimeout(()=> el.classList.remove('show'), 3000);
 }
 
 // ===== STATS =====
@@ -359,11 +381,7 @@ function updateStats(){
   document.getElementById('statAbsent').innerText = lastAbsent;
 }
 
-// ===== RENDER ALL =====
-function renderAll(){
-  updateStats();
-  renderClasses();
-}
+function renderAll(){ updateStats(); renderClasses(); }
 
 // ===== RENDER CLASSES =====
 function renderClasses(){
@@ -380,7 +398,6 @@ function renderClassCard(c, ci){
   const records = c.records || [];
   const totalWeeks = records.length;
 
-  // Build student rows
   const sorted = getSortedStudents(c, 'alpha');
   const studentRows = sorted.map(({s, origIdx})=>{
     let presentCount=0, absentCount=0;
@@ -494,7 +511,6 @@ function changeSortTab(el, ci, mode){
   }).join('');
 }
 
-// ===== TOGGLE CLASS =====
 function toggleClass(ci){
   const card = document.getElementById('class-'+ci);
   const isOpen = card.classList.contains('open');
@@ -502,7 +518,6 @@ function toggleClass(ci){
   if(!isOpen) card.classList.add('open');
 }
 
-// ===== ADD/EDIT CLASS =====
 function openAddClass(){
   editClassIndex=null;
   document.getElementById('classModalTitle').innerText='➕ إضافة فصل جديد';
@@ -533,7 +548,6 @@ function deleteClass(ci){
   classes.splice(ci,1); saveData(); renderAll();
 }
 
-// ===== ADD/EDIT STUDENT =====
 function openAddStudent(ci){
   currentClassIndex=ci; editStudentIndex=null;
   document.getElementById('studentModalTitle').innerText='➕ إضافة مخدوم';
@@ -553,7 +567,6 @@ function saveStudent(){
   if(editStudentIndex!==null){
     const oldName=classes[ci].students[editStudentIndex].name;
     classes[ci].students[editStudentIndex].name=name;
-    // update name in records
     (classes[ci].records||[]).forEach(rec=>{
       rec.attendance.forEach(a=>{if(a.name===oldName) a.name=name;});
     });
@@ -567,14 +580,12 @@ function deleteStudent(ci, si){
   if(!confirm(`حذف المخدوم "${s.name}"؟`))return;
   const name=s.name;
   classes[ci].students.splice(si,1);
-  // remove from records
   (classes[ci].records||[]).forEach(rec=>{
     rec.attendance=rec.attendance.filter(a=>a.name!==name);
   });
   saveData(); renderAll();
 }
 
-// ===== TAKE ATTENDANCE =====
 function openAttendance(ci){
   currentClassIndex=ci;
   const c=classes[ci];
@@ -582,7 +593,6 @@ function openAttendance(ci){
   const dateStr=now.toLocaleDateString('ar-EG',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   document.getElementById('attendanceDate').innerText='📅 '+dateStr;
 
-  // Init pending
   pendingAttendance={
     classIndex:ci,
     date:now.toLocaleDateString('ar-EG',{year:'numeric',month:'2-digit',day:'2-digit'}),
@@ -612,7 +622,6 @@ function setAtt(i, present){
 }
 
 function finishAttendance(){
-  // Check all selected
   const unset=pendingAttendance.records.filter(r=>r.present===null);
   if(unset.length){
     alert(`لم تختر حضور/غياب لـ ${unset.length} مخدوم:\n${unset.map(r=>r.name).join('، ')}`);
@@ -620,7 +629,6 @@ function finishAttendance(){
   }
   closeModal('attendanceModal');
 
-  // Build confirm preview
   const presentList=pendingAttendance.records.filter(r=>r.present);
   const absentList=pendingAttendance.records.filter(r=>!r.present);
   document.getElementById('confirmSummary').innerHTML=
@@ -645,6 +653,53 @@ function confirmSaveAttendance(){
   pendingAttendance=null;
 }
 
+// ===== PDF HELPERS (Arabic-safe using canvas rendering) =====
+
+// Reverse Arabic text for jsPDF RTL rendering
+function reverseArabic(text) {
+  if (!text) return '';
+  // Split into words, reverse order for RTL
+  return text.split(' ').reverse().join(' ');
+}
+
+// Draw Arabic text as image using canvas (100% Arabic support)
+function drawArabicText(doc, text, x, y, options = {}) {
+  const fontSize = options.fontSize || 12;
+  const color = options.color || [255, 255, 255];
+  const align = options.align || 'right';
+  const maxWidth = options.maxWidth || 180;
+
+  // Use canvas to render Arabic text correctly
+  const canvas = document.createElement('canvas');
+  const scale = 3; // High DPI for crisp text
+  canvas.width = maxWidth * scale;
+  canvas.height = (fontSize + 8) * scale;
+  const ctx = canvas.getContext('2d');
+
+  ctx.scale(scale, scale);
+  ctx.font = `${options.bold ? 'bold ' : ''}${fontSize}px Cairo, Arial`;
+  ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+  ctx.textBaseline = 'middle';
+  ctx.direction = 'rtl';
+
+  let drawX = maxWidth;
+  if (align === 'center') { ctx.textAlign = 'center'; drawX = maxWidth / 2; }
+  else if (align === 'left') { ctx.textAlign = 'left'; drawX = 0; }
+  else { ctx.textAlign = 'right'; }
+
+  ctx.fillText(text, drawX, (fontSize + 8) / 2);
+
+  const imgData = canvas.toDataURL('image/png');
+  const imgW = maxWidth;
+  const imgH = fontSize + 4;
+
+  let imgX = x - maxWidth;
+  if (align === 'center') imgX = x - maxWidth / 2;
+  else if (align === 'left') imgX = x;
+
+  doc.addImage(imgData, 'PNG', imgX, y - imgH / 2, imgW, imgH);
+}
+
 // ===== PDF: WEEKLY =====
 function downloadWeeklyPDF(){
   const ci=pendingAttendance.classIndex;
@@ -655,59 +710,71 @@ function downloadWeeklyPDF(){
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
 
-  // Add Arabic font support via embedded subset
-  doc.setFont('helvetica','bold');
-
-  // Helper: reversed Arabic text for jsPDF
-  function ar(text){ return text; }
-
+  // Dark background
   doc.setFillColor(26,5,51);
   doc.rect(0,0,210,297,'F');
 
-  // Header
+  // Header bar
   doc.setFillColor(124,58,237);
-  doc.rect(0,0,210,30,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(16);
-  doc.text('Attendance Report', 105, 12, {align:'center'});
-  doc.setFontSize(11);
-  doc.text('Church of the Virgin Mary - Sunday Service', 105, 22, {align:'center'});
+  doc.rect(0,0,210,32,'F');
 
-  doc.setTextColor(200,200,255);
-  doc.setFontSize(10);
-  doc.text('Class: '+c.name, 105, 38, {align:'center'});
-  doc.text('Date: '+date, 105, 45, {align:'center'});
+  // Title (Arabic via canvas)
+  drawArabicText(doc, 'تقرير الحضور والغياب', 105, 12, {fontSize:16, color:[255,255,255], align:'center', maxWidth:180, bold:true});
+  drawArabicText(doc, 'كنيسة السيدة العذراء مريم — خدمة الأحد', 105, 23, {fontSize:10, color:[220,200,255], align:'center', maxWidth:180});
+
+  // Class info
+  drawArabicText(doc, 'الفصل: ' + c.name, 105, 41, {fontSize:11, color:[200,200,255], align:'center', maxWidth:180});
+  drawArabicText(doc, 'التاريخ: ' + date, 105, 49, {fontSize:10, color:[180,180,220], align:'center', maxWidth:180});
 
   const present=records.filter(r=>r.present).length;
   const absent=records.filter(r=>!r.present).length;
-  doc.setTextColor(100,255,180);
-  doc.text('Present: '+present, 60, 52, {align:'center'});
-  doc.setTextColor(255,120,120);
-  doc.text('Absent: '+absent, 150, 52, {align:'center'});
 
-  // Table
-  const rows=records.map(r=>[r.name, r.present?'✓ Present':'✗ Absent']);
-  doc.autoTable({
-    startY:58,
-    head:[['Name','Status']],
-    body:rows,
-    theme:'grid',
-    headStyles:{fillColor:[124,58,237],textColor:[255,255,255],fontStyle:'bold',halign:'center'},
-    bodyStyles:{textColor:[220,220,255],fillColor:[30,15,60],halign:'center'},
-    alternateRowStyles:{fillColor:[20,8,50]},
-    columnStyles:{0:{halign:'right'},1:{halign:'center'}},
-    margin:{left:15,right:15}
+  // Stats boxes
+  doc.setFillColor(20,80,50);
+  doc.roundedRect(15,55,80,16,4,4,'F');
+  drawArabicText(doc, 'حضر: ' + present, 95, 63, {fontSize:11, color:[52,211,153], align:'right', maxWidth:80, bold:true});
+
+  doc.setFillColor(80,20,20);
+  doc.roundedRect(115,55,80,16,4,4,'F');
+  drawArabicText(doc, 'غاب: ' + absent, 195, 63, {fontSize:11, color:[248,113,113], align:'right', maxWidth:80, bold:true});
+
+  // Table header
+  let y = 80;
+  doc.setFillColor(80,40,160);
+  doc.rect(15, y, 180, 10, 'F');
+  drawArabicText(doc, 'الحالة', 80, y+5, {fontSize:10, color:[255,255,255], align:'center', maxWidth:60});
+  drawArabicText(doc, 'اسم المخدوم', 195, y+5, {fontSize:10, color:[255,255,255], align:'right', maxWidth:100});
+  y += 10;
+
+  // Table rows
+  records.forEach((r, i) => {
+    const bg = i % 2 === 0 ? [30,15,60] : [20,8,50];
+    doc.setFillColor(...bg);
+    doc.rect(15, y, 180, 10, 'F');
+
+    const statusColor = r.present ? [52,211,153] : [248,113,113];
+    const statusText = r.present ? '✓ حضر' : '✗ غاب';
+    drawArabicText(doc, statusText, 80, y+5, {fontSize:9, color:statusColor, align:'center', maxWidth:60});
+    drawArabicText(doc, r.name, 195, y+5, {fontSize:9, color:[220,220,255], align:'right', maxWidth:110});
+    y += 10;
+
+    // New page if needed
+    if(y > 270){
+      doc.addPage();
+      doc.setFillColor(26,5,51);
+      doc.rect(0,0,210,297,'F');
+      y = 20;
+    }
   });
 
   // Footer
-  const pageH=doc.internal.pageSize.height;
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   doc.setTextColor(100,100,150);
-  doc.text('Generated by Attendance Dashboard', 105, pageH-8, {align:'center'});
+  doc.text('Generated by Attendance Dashboard', 105, 290, {align:'center'});
 
-  doc.save('attendance-'+c.name+'-'+date+'.pdf');
+  doc.save('attendance-' + c.name + '-' + date + '.pdf');
 
-  // Also save the data
+  // Save data after download
   confirmSaveAttendance();
 }
 
@@ -719,62 +786,86 @@ function downloadClassPDF(ci){
 
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  doc.setFont('helvetica','bold');
 
+  // Dark background
   doc.setFillColor(26,5,51);
   doc.rect(0,0,297,210,'F');
 
   // Header
   doc.setFillColor(79,70,229);
-  doc.rect(0,0,297,28,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(15);
-  doc.text('Full Attendance Record', 148, 11, {align:'center'});
-  doc.setFontSize(10);
-  doc.text('Class: '+c.name+'    |    Total Weeks: '+records.length+'    |    Students: '+c.students.length, 148, 21, {align:'center'});
+  doc.rect(0,0,297,30,'F');
+  drawArabicText(doc, 'سجل الحضور الكامل', 148, 12, {fontSize:15, color:[255,255,255], align:'center', maxWidth:250, bold:true});
+  drawArabicText(doc, 'الفصل: ' + c.name + '    |    عدد الأسابيع: ' + records.length + '    |    عدد المخدومين: ' + c.students.length, 148, 23, {fontSize:9, color:[200,200,255], align:'center', maxWidth:280});
 
-  // Build table
-  const weeks=records.map(r=>r.date);
-  const head=[['Student Name',...weeks,'Present','Absent']];
-  const body=c.students.map(s=>{
-    const weekCols=records.map(rec=>{
-      const a=rec.attendance.find(x=>x.name===s.name);
-      if(!a) return '-';
-      return a.present?'✓':'✗';
-    });
-    const present=weekCols.filter(v=>v==='✓').length;
-    const absent=weekCols.filter(v=>v==='✗').length;
-    return [s.name,...weekCols,present,absent];
+  // Build table data
+  const weeks = records.map(r => r.date);
+  let y = 38;
+
+  // Table header
+  const colW = Math.min(25, (260 - 50) / Math.max(weeks.length, 1));
+  const nameColW = 50;
+  const summColW = 18;
+  const totalW = nameColW + (weeks.length * colW) + summColW * 2;
+  const startX = (297 - totalW) / 2;
+
+  doc.setFillColor(80,40,160);
+  doc.rect(startX, y, totalW, 10, 'F');
+
+  // Column headers
+  let hx = startX + totalW;
+  drawArabicText(doc, 'الاسم', hx, y+5, {fontSize:8, color:[255,255,255], align:'right', maxWidth:nameColW, bold:true});
+  hx -= nameColW;
+
+  weeks.forEach(w => {
+    drawArabicText(doc, w, hx, y+5, {fontSize:6, color:[200,200,255], align:'right', maxWidth:colW});
+    hx -= colW;
   });
 
-  // Sort alpha
-  body.sort((a,b)=>a[0].localeCompare(b[0],'ar'));
+  drawArabicText(doc, 'حضر', hx, y+5, {fontSize:8, color:[52,211,153], align:'center', maxWidth:summColW, bold:true});
+  hx -= summColW;
+  drawArabicText(doc, 'غاب', hx, y+5, {fontSize:8, color:[248,113,113], align:'center', maxWidth:summColW, bold:true});
+  y += 10;
 
-  doc.autoTable({
-    startY:32,
-    head,
-    body,
-    theme:'grid',
-    headStyles:{fillColor:[79,70,229],textColor:[255,255,255],fontStyle:'bold',halign:'center',fontSize:9},
-    bodyStyles:{textColor:[220,220,255],fillColor:[30,15,60],halign:'center',fontSize:9},
-    alternateRowStyles:{fillColor:[20,8,50]},
-    columnStyles:{0:{halign:'right',fontStyle:'bold'}},
-    margin:{left:10,right:10},
-    didParseCell:function(data){
-      if(data.section==='body'){
-        const val=data.cell.raw;
-        if(val==='✓'){data.cell.styles.textColor=[52,211,153];}
-        else if(val==='✗'){data.cell.styles.textColor=[248,113,113];}
-      }
+  // Rows
+  const sortedStudents = [...c.students].sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+
+  sortedStudents.forEach((s, idx) => {
+    if(y > 195){
+      doc.addPage();
+      doc.setFillColor(26,5,51);
+      doc.rect(0,0,297,210,'F');
+      y = 15;
     }
+
+    const bg = idx % 2 === 0 ? [30,15,60] : [20,8,50];
+    doc.setFillColor(...bg);
+    doc.rect(startX, y, totalW, 9, 'F');
+
+    let rx = startX + totalW;
+    drawArabicText(doc, s.name, rx, y+4.5, {fontSize:8, color:[220,220,255], align:'right', maxWidth:nameColW, bold:true});
+    rx -= nameColW;
+
+    let presentCount = 0, absentCount = 0;
+    records.forEach(rec => {
+      const a = rec.attendance.find(x=>x.name===s.name);
+      let val = '-'; let col = [150,150,150];
+      if(a){ val = a.present ? '✓' : '✗'; col = a.present ? [52,211,153] : [248,113,113]; if(a.present) presentCount++; else absentCount++; }
+      drawArabicText(doc, val, rx, y+4.5, {fontSize:9, color:col, align:'center', maxWidth:colW});
+      rx -= colW;
+    });
+
+    drawArabicText(doc, String(presentCount), rx, y+4.5, {fontSize:9, color:[52,211,153], align:'center', maxWidth:summColW, bold:true});
+    rx -= summColW;
+    drawArabicText(doc, String(absentCount), rx, y+4.5, {fontSize:9, color:[248,113,113], align:'center', maxWidth:summColW, bold:true});
+    y += 9;
   });
 
-  const pageH=doc.internal.pageSize.height;
+  // Footer
   doc.setFontSize(8);
   doc.setTextColor(100,100,150);
-  doc.text('Generated by Attendance Dashboard', 148, pageH-5, {align:'center'});
+  doc.text('Generated by Attendance Dashboard', 148, 205, {align:'center'});
 
-  doc.save('full-record-'+c.name+'.pdf');
+  doc.save('full-record-' + c.name + '.pdf');
 }
 
 // ===== MODAL HELPERS =====
