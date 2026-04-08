@@ -326,22 +326,19 @@ async function loadData(){
     classes = await res.json();
 
     if(!Array.isArray(classes)) classes = [];
-
-  }catch(e){
+  }catch{
     classes = [];
   }
 }
-
 async function saveData(){
-  try{
-    await fetch("/.netlify/functions/saveAttendance", {
-      method: "POST",
-      body: JSON.stringify(classes)
-    });
-  }catch{
-    alert("فشل الحفظ");
-  }
-}  
+  await fetch("/.netlify/functions/saveAttendance", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(classes)
+  });
+}
 
 // ===== STATS =====
 function updateStats(){
