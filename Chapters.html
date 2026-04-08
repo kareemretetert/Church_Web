@@ -148,7 +148,29 @@ button{
 }
 
 
+ .backBtn{
+position:fixed;
+top:20px;
+left:20px;
 
+padding:14px 22px; /* كان أصغر */
+border-radius:50px;
+
+text-decoration:none;
+color:white;
+font-size:16px; /* كبرنا الخط */
+
+background: linear-gradient(135deg,#43cea2,#185a9d);
+
+box-shadow:0 8px 25px rgba(0,0,0,0.35); /* shadow أقوى */
+
+z-index:999;
+transition:0.3s;
+}
+
+.backBtn:hover{
+transform:scale(1.1);
+}
  @media (max-width:600px){
 .backBtn{
 top:12px;
@@ -157,330 +179,11 @@ padding:12px 18px;
 font-size:14px;
 }
 }
-
-
-/* HEADER */
-header{
-  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-  position:sticky;
-  top:0;
-  z-index:300;
-  box-shadow:var(--shdr);
-  overflow:hidden;
-  transition:background .4s;
-}
-
-header::before{
-  content:"";
-  position:absolute;
-  top:-60px;
-  right:-60px;
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  background:rgba(255,255,255,.05);
-  pointer-events:none;
-}
-
-.hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 16px;
-  position:relative;
-}
-.back-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:9px 16px;
-  border:1.5px solid rgba(255,255,255,.45);
-  border-radius:22px;
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  font-family:'Cairo',sans-serif;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-  flex-shrink:0;
-  transition:background .2s, transform .15s;
-}
-
-.back-btn:hover{
-  background:rgba(255,255,255,.28);
-}
-
-.back-btn:active{
-  transform:scale(.95);
-}
-
-.back-btn svg{
-  width:14px;
-  height:14px;
-  fill:#fff;
-}
-/* ═══════════════════════════════════════
-   BACK BUTTON
-═══════════════════════════════════════ */
-
-/* الحاوية اللي فيها الزر */
-.hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 16px;
-  position:relative;
-}
-
-
-
-
-
-/* العنوان */
-.hdr-title{
-  flex:1;
-  text-align:center;
-  color:#fff;
-  font-size:clamp(14px,3.5vw,19px);
-  font-weight:800;
-}
-
-/* Dark Mode Toggle */
-.theme-toggle{
-  display:flex;
-  align-items:center;
-}
-
-.toggle-track{
-  width:64px;
-  height:32px;
-  border-radius:50px;
-  background:#1e293b;
-  position:relative;
-  display:flex;
-  align-items:center;
-  padding:0 5px;
-  cursor:pointer;
-}
-
-.toggle-thumb{
-  position:absolute;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:#fff;
-  right:3px;
-  transition:.3s;
-}
-
-body.dark .toggle-thumb{
-  transform:translateX(-32px);
-}
-/* ===== HEADER ===== */
-header{
-  background:linear-gradient(135deg,#7c3aed,#9333ea,#5b21b6);
-  position:sticky;
-  top:0;
-  z-index:300;
-  box-shadow:0 6px 24px rgba(109,40,217,.25);
-  overflow:hidden;
-}
-
-.hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 16px;
-}
-
-
-/* العنوان */
-.hdr-title{
-  flex:1;
-  text-align:center;
-  color:#fff;
-  font-size:18px;
-  font-weight:800;
-}
-
-/* ===== DARK MODE TOGGLE ===== */
-.theme-toggle{
-  display:flex;
-  align-items:center;
-}
-
-.toggle-track{
-  width:64px;
-  height:32px;
-  border-radius:50px;
-  background:#1e293b;
-  position:relative;
-  display:flex;
-  align-items:center;
-  padding:0 6px;
-  cursor:pointer;
-  border:1.5px solid rgba(255,255,255,.3);
-  transition:.3s;
-}
-
-.t-icon{
-  font-size:13px;
-  z-index:1;
-}
-
-.t-sun{
-  margin-left:auto;
-  color:#facc15;
-}
-
-.t-moon{
-  margin-right:auto;
-  color:#e2e8f0;
-}
-
-.toggle-thumb{
-  position:absolute;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:#fff;
-  right:4px;
-  transition:transform .3s cubic-bezier(.4,2,.6,1), background .3s;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
-}
-
-/* ===== DARK MODE ===== */
-body.dark{
-  background:#0f172a;
-  color:#eee;
-}
-
-/* حركة الزر */
-body.dark .toggle-track{
-  background:rgba(124,58,237,.6);
-}
-
-body.dark .toggle-thumb{
-  transform:translateX(-32px);
-  background:#a78bfa;
-}
-:root{
-  --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
-
-  --bg:#f4f0fb;
-  --sf:#ffffff;
-  --sf2:#f1ecfc;
-
-  --tx:#0f172a;
-  --tx2:#374151;
-  --tx3:#6b7280;
-
-  --bdr:#e2e8f0;
-
-  --sh:0 4px 20px rgba(109,40,217,.10);
-  --sh2:0 8px 32px rgba(109,40,217,.18);
-
-  --hdr1:#7c3aed;
-  --hdr2:#9333ea;
-  --hdr3:#5b21b6;
-}
-body.dark{
-  --bg:#0d0d1a;
-  --sf:#161627;
-  --sf2:#1e1e33;
-
-  --tx:#f0f0ff;
-  --tx2:#c4c4e0;
-  --tx3:#8888aa;
-
-  --bdr:#2a2a44;
-
-  --sh:0 4px 24px rgba(0,0,0,.5);
-  --sh2:0 8px 40px rgba(0,0,0,.6);
-
-  --hdr1:#0f172a;
-  --hdr2:#1e1b4b;
-  --hdr3:#020617;
-}
-body{
-  background:var(--bg);
-  color:var(--tx);
-  transition:.3s;
-}
-header{
-  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-}
-.quiz-card{
-  background:var(--sf);
-  border:1px solid var(--bdr);
-  box-shadow:var(--sh);
-}
-.quiz-card:hover{
-  box-shadow:var(--sh2);
-}
-.quiz-card h3{
-  color:var(--tx);
-}
-
-.quiz-card p{
-  color:var(--tx2);
-}
-
-.card-badge{
-  background:var(--sf2);
-  color:var(--p-dk);
-}
-.name-input{
-  background:var(--sf);
-  border:1px solid var(--bdr);
-  color:var(--tx);
-}
-.name-input:focus{
-  border-color:var(--p);
-  box-shadow:0 0 0 4px rgba(124,58,237,.2);
-}
-.start-btn{
-  background:linear-gradient(135deg,var(--p),var(--p-dk));
-}
-.footer{
-  background:var(--sf);
-  color:var(--tx2);
-  border-top:1px solid var(--bdr);
-}
-header{
-  padding:0 !important;
-  text-align: unset !important;
-}
-
-.hdr{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:13px 16px;
-}
-
- 
 </style>
 </head>
 <body>
-<header>
-  <div class="hdr">
-     <button class="back-btn" onclick="history.back()">
-    <svg viewBox="0 0 24 24">
-      <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    العودة
-  </button>
-    <div class="hdr-title" id="courseName">المسابقات</div>
-    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
-      <div class="toggle-track">
-        <span class="t-icon t-sun">☀️</span>
-        <span class="t-icon t-moon">🌙</span>
-        <div class="toggle-thumb"></div>
-      </div>
-    </div>
-  </div>
-</header>
+<h3 id="title" style="color:white;text-align:center;"></h3>
+<a href="index.html" class="backBtn">العودة ⬅</a>
 <div class="container">
 <h2>تفسير الكتاب المقدس</h2>
 
