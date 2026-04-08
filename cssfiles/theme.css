@@ -286,3 +286,14 @@ header{
   color:var(--tx2);
   border-top:1px solid var(--bdr);
 }
+header{
+  padding:0 !important;
+  text-align: unset !important;
+}
+
+.hdr{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:13px 16px;
+}
