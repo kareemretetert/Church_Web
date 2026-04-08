@@ -269,3 +269,49 @@ background:rgba(255,255,255,.25);
 .theme-icon{
 font-size:16px;
 }
+.site-header{
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color:white;
+  padding:15px 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.header-title{
+  font-size:22px;
+  font-weight:800;
+}
+
+.back-btn{
+  background:rgba(255,255,255,.15);
+  border:none;
+  color:white;
+  padding:8px 14px;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:700;
+}
+
+.back-btn:hover{
+  background:rgba(255,255,255,.25);
+}
+
+.theme-toggle{
+  background:rgba(255,255,255,.15);
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+.theme-toggle:hover{
+  background:rgba(255,255,255,.25);
+}
+
+.theme-icon{
+  font-size:18px;
+}
