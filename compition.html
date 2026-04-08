@@ -329,12 +329,24 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>صفحة المسابقات</h1>
-    <div class="nav-wrap">
-      <a class="home-link" href="index.html">الصفحة الرئيسية ⬅</a>
+<header>
+  <div class="hdr">
+     <button class="back-btn" onclick="window.location.href='courses_list.html'">
+  <svg viewBox="0 0 24 24">
+    <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  العودة
+</button>
+    <div class="hdr-title" id="courseName">جاري التحميل...</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
     </div>
-  </header>
+  </div>
+</header>
 
   <main class="main-content">
     <section class="cards-grid">
