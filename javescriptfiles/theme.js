@@ -14,3 +14,6 @@ function toggleTheme(){
   const isDark = document.body.classList.contains("dark");
   applyTheme(isDark ? "light" : "dark");
 }
+function goBack(){
+window.history.back();
+}
