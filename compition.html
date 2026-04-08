@@ -12,6 +12,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
   <title>المسابقات</title>
 
+
+<link rel="stylesheet" href="cssfiles/theme.css">
+<script src="javescriptfiles/theme.js"></script>
+<script src="javescriptfiles/particles.js"></script>  
   <style>
     :root {
       --primary: #6a1b9a;
@@ -331,11 +335,20 @@
 </head>
 <body>
   <header>
-    <h1>صفحة المسابقات</h1>
-    <div class="nav-wrap">
-      <a class="home-link" href="index.html">الصفحة الرئيسية ⬅</a>
+  <div class="hdr">
+
+    <button class="back-btn" onclick="history.back()">
+      ← رجوع
+    </button>
+
+    <div class="hdr-title">عنوان الصفحة</div>
+
+    <div onclick="toggleTheme()" class="toggle-track">
+      <div class="toggle-thumb"></div>
     </div>
-  </header>
+
+  </div>
+</header>
 
   <main class="main-content">
     <section class="cards-grid">
