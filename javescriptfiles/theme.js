@@ -1,14 +1,14 @@
-// تحميل الثيم من كل الصفحات
 (function(){
-  const saved = localStorage.getItem("site_theme");
-  if(saved === "dark"){
-    document.body.classList.add("dark");
-  }
+  const s = localStorage.getItem("cv_theme");
+  const d = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s || (d ? "dark" : "light"));
 })();
 
-function toggleTheme(){
-  document.body.classList.toggle("dark");
+function applyTheme(mode){
+  document.body.classList.toggle("dark", mode === "dark");
+  localStorage.setItem("cv_theme", mode);
+}
 
-  const isDark = document.body.classList.contains("dark");
-  localStorage.setItem("site_theme", isDark ? "dark" : "light");
+function toggleTheme(){
+  applyTheme(document.body.classList.contains("dark") ? "light" : "dark");
 }
