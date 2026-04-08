@@ -342,9 +342,6 @@ async function saveData(){
     });
     const result = await res.json();
     if(res.ok && result.success){
-      // ✅ انتظر ثانيتين عشان GitHub يحدّث الملف، ثم اعمل reload للبيانات
-      await new Promise(r => setTimeout(r, 2000));
-      await loadData();
       showSaveStatus(true);
     } else {
       throw new Error(result.error || "فشل الحفظ");
@@ -385,12 +382,6 @@ function updateStats(){
 }
 
 function renderAll(){ updateStats(); renderClasses(); }
-
-// ===== SAVE + RENDER (await safe) =====
-async function saveAndRender(){
-  await saveData();
-  renderAll();
-}
 
 // ===== RENDER CLASSES =====
 function renderClasses(){
@@ -550,11 +541,11 @@ function saveClass(){
   } else {
     classes.push({name,desc:document.getElementById('classDescInput').value.trim(),students:[],records:[]});
   }
-  closeModal('addClassModal'); saveAndRender();
+  saveData(); closeModal('addClassModal'); renderAll();
 }
 function deleteClass(ci){
   if(!confirm(`حذف فصل "${classes[ci].name}" وكل بياناته؟`))return;
-  classes.splice(ci,1); saveAndRender();
+  classes.splice(ci,1); saveData(); renderAll();
 }
 
 function openAddStudent(ci){
@@ -582,7 +573,7 @@ function saveStudent(){
   } else {
     classes[ci].students.push({name});
   }
-  closeModal('addStudentModal'); saveAndRender();
+  saveData(); closeModal('addStudentModal'); renderAll();
 }
 function deleteStudent(ci, si){
   const s=classes[ci].students[si];
@@ -592,7 +583,7 @@ function deleteStudent(ci, si){
   (classes[ci].records||[]).forEach(rec=>{
     rec.attendance=rec.attendance.filter(a=>a.name!==name);
   });
-  saveAndRender();
+  saveData(); renderAll();
 }
 
 function openAttendance(ci){
@@ -658,7 +649,7 @@ function confirmSaveAttendance(){
     dateISO:pendingAttendance.dateISO,
     attendance:pendingAttendance.records.map(r=>({name:r.name,present:r.present}))
   });
-  saveAndRender(); closeModal('confirmModal');
+  saveData(); closeModal('confirmModal'); renderAll();
   pendingAttendance=null;
 }
 
@@ -729,7 +720,7 @@ function downloadWeeklyPDF(){
 
   // Title (Arabic via canvas)
   drawArabicText(doc, 'تقرير الحضور والغياب', 105, 12, {fontSize:16, color:[255,255,255], align:'center', maxWidth:180, bold:true});
-  drawArabicText(doc, 'اجتماع ابناء البابا شنودة الثالث — مرحلة ثانوي', 105, 23, {fontSize:10, color:[220,200,255], align:'center', maxWidth:180});
+  drawArabicText(doc, 'كنيسة السيدة العذراء مريم — خدمة الأحد', 105, 23, {fontSize:10, color:[220,200,255], align:'center', maxWidth:180});
 
   // Class info
   drawArabicText(doc, 'الفصل: ' + c.name, 105, 41, {fontSize:11, color:[200,200,255], align:'center', maxWidth:180});
@@ -737,42 +728,22 @@ function downloadWeeklyPDF(){
 
   const present=records.filter(r=>r.present).length;
   const absent=records.filter(r=>!r.present).length;
-  const total = records.length;
 
-  // Stats boxes - improved layout
-  doc.setFillColor(15,60,40);
-  doc.roundedRect(15,55,55,18,5,5,'F');
-  doc.setDrawColor(52,211,153);
-  doc.setLineWidth(0.5);
-  doc.roundedRect(15,55,55,18,5,5,'S');
-  drawArabicText(doc, 'حضر', 68, 60, {fontSize:9, color:[52,211,153], align:'right', maxWidth:50});
-  drawArabicText(doc, String(present), 68, 68, {fontSize:14, color:[52,211,153], align:'right', maxWidth:50, bold:true});
+  // Stats boxes
+  doc.setFillColor(20,80,50);
+  doc.roundedRect(15,55,80,16,4,4,'F');
+  drawArabicText(doc, 'حضر: ' + present, 95, 63, {fontSize:11, color:[52,211,153], align:'right', maxWidth:80, bold:true});
 
-  doc.setFillColor(60,15,15);
-  doc.roundedRect(78,55,55,18,5,5,'F');
-  doc.setDrawColor(248,113,113);
-  doc.roundedRect(78,55,55,18,5,5,'S');
-  drawArabicText(doc, 'غاب', 131, 60, {fontSize:9, color:[248,113,113], align:'right', maxWidth:50});
-  drawArabicText(doc, String(absent), 131, 68, {fontSize:14, color:[248,113,113], align:'right', maxWidth:50, bold:true});
-
-  doc.setFillColor(20,40,80);
-  doc.roundedRect(141,55,55,18,5,5,'F');
-  doc.setDrawColor(129,140,248);
-  doc.roundedRect(141,55,55,18,5,5,'S');
-  drawArabicText(doc, 'الإجمالي', 194, 60, {fontSize:9, color:[129,140,248], align:'right', maxWidth:50});
-  drawArabicText(doc, String(total), 194, 68, {fontSize:14, color:[129,140,248], align:'right', maxWidth:50, bold:true});
-
-  // Divider line
-  doc.setDrawColor(80,50,150);
-  doc.setLineWidth(0.3);
-  doc.line(15, 76, 195, 76);
+  doc.setFillColor(80,20,20);
+  doc.roundedRect(115,55,80,16,4,4,'F');
+  drawArabicText(doc, 'غاب: ' + absent, 195, 63, {fontSize:11, color:[248,113,113], align:'right', maxWidth:80, bold:true});
 
   // Table header
-  let y = 82;
+  let y = 80;
   doc.setFillColor(80,40,160);
-  doc.roundedRect(15, y, 180, 10, 2, 2, 'F');
-  drawArabicText(doc, 'الحالة', 80, y+5, {fontSize:10, color:[220,200,255], align:'center', maxWidth:60, bold:true});
-  drawArabicText(doc, 'اسم المخدوم', 195, y+5, {fontSize:10, color:[220,200,255], align:'right', maxWidth:100, bold:true});
+  doc.rect(15, y, 180, 10, 'F');
+  drawArabicText(doc, 'الحالة', 80, y+5, {fontSize:10, color:[255,255,255], align:'center', maxWidth:60});
+  drawArabicText(doc, 'اسم المخدوم', 195, y+5, {fontSize:10, color:[255,255,255], align:'right', maxWidth:100});
   y += 10;
 
   // Table rows
@@ -797,12 +768,9 @@ function downloadWeeklyPDF(){
   });
 
   // Footer
-  doc.setDrawColor(80,50,150);
-  doc.setLineWidth(0.3);
-  doc.line(15, 284, 195, 284);
   doc.setFontSize(8);
-  doc.setTextColor(150,120,200);
-  doc.text('اجتماع ابناء البابا شنودة الثالث — مرحلة ثانوي', 105, 290, {align:'center'});
+  doc.setTextColor(100,100,150);
+  doc.text('Generated by Attendance Dashboard', 105, 290, {align:'center'});
 
   doc.save('attendance-' + c.name + '-' + date + '.pdf');
 
@@ -827,12 +795,11 @@ function downloadClassPDF(ci){
   doc.setFillColor(79,70,229);
   doc.rect(0,0,297,30,'F');
   drawArabicText(doc, 'سجل الحضور الكامل', 148, 12, {fontSize:15, color:[255,255,255], align:'center', maxWidth:250, bold:true});
-  drawArabicText(doc, 'اجتماع ابناء البابا شنودة الثالث — مرحلة ثانوي', 148, 20, {fontSize:9, color:[200,200,255], align:'center', maxWidth:280});
-  drawArabicText(doc, 'الفصل: ' + c.name + '    |    عدد الأسابيع: ' + records.length + '    |    عدد المخدومين: ' + c.students.length, 148, 27, {fontSize:9, color:[180,180,220], align:'center', maxWidth:280});
+  drawArabicText(doc, 'الفصل: ' + c.name + '    |    عدد الأسابيع: ' + records.length + '    |    عدد المخدومين: ' + c.students.length, 148, 23, {fontSize:9, color:[200,200,255], align:'center', maxWidth:280});
 
   // Build table data
   const weeks = records.map(r => r.date);
-  let y = 36;
+  let y = 38;
 
   // Table header
   const colW = Math.min(25, (260 - 50) / Math.max(weeks.length, 1));
@@ -894,12 +861,9 @@ function downloadClassPDF(ci){
   });
 
   // Footer
-  doc.setDrawColor(80,50,150);
-  doc.setLineWidth(0.3);
-  doc.line(15, 202, 282, 202);
   doc.setFontSize(8);
-  doc.setTextColor(150,120,200);
-  doc.text('اجتماع ابناء البابا شنودة الثالث — مرحلة ثانوي', 148, 207, {align:'center'});
+  doc.setTextColor(100,100,150);
+  doc.text('Generated by Attendance Dashboard', 148, 205, {align:'center'});
 
   doc.save('full-record-' + c.name + '.pdf');
 }
