@@ -88,3 +88,114 @@ header::before{
 body.dark .toggle-thumb{
   transform:translateX(-32px);
 }
+/* ===== HEADER ===== */
+header{
+  background:linear-gradient(135deg,#7c3aed,#9333ea,#5b21b6);
+  position:sticky;
+  top:0;
+  z-index:300;
+  box-shadow:0 6px 24px rgba(109,40,217,.25);
+  overflow:hidden;
+}
+
+.hdr{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:13px 16px;
+}
+
+/* زر الرجوع */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:9px 16px;
+  border:1.5px solid rgba(255,255,255,.45);
+  border-radius:22px;
+  background:rgba(255,255,255,.15);
+  color:#fff;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s ease;
+}
+
+.back-btn:hover{
+  background:rgba(255,255,255,.28);
+}
+
+.back-btn:active{
+  transform:scale(.95);
+}
+
+/* العنوان */
+.hdr-title{
+  flex:1;
+  text-align:center;
+  color:#fff;
+  font-size:18px;
+  font-weight:800;
+}
+
+/* ===== DARK MODE TOGGLE ===== */
+.theme-toggle{
+  display:flex;
+  align-items:center;
+}
+
+.toggle-track{
+  width:64px;
+  height:32px;
+  border-radius:50px;
+  background:#1e293b;
+  position:relative;
+  display:flex;
+  align-items:center;
+  padding:0 6px;
+  cursor:pointer;
+  border:1.5px solid rgba(255,255,255,.3);
+  transition:.3s;
+}
+
+.t-icon{
+  font-size:13px;
+  z-index:1;
+}
+
+.t-sun{
+  margin-left:auto;
+  color:#facc15;
+}
+
+.t-moon{
+  margin-right:auto;
+  color:#e2e8f0;
+}
+
+.toggle-thumb{
+  position:absolute;
+  width:24px;
+  height:24px;
+  border-radius:50%;
+  background:#fff;
+  right:4px;
+  transition:transform .3s cubic-bezier(.4,2,.6,1), background .3s;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+
+/* ===== DARK MODE ===== */
+body.dark{
+  background:#0f172a;
+  color:#eee;
+}
+
+/* حركة الزر */
+body.dark .toggle-track{
+  background:rgba(124,58,237,.6);
+}
+
+body.dark .toggle-thumb{
+  transform:translateX(-32px);
+  background:#a78bfa;
+}
