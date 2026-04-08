@@ -1,49 +1,77 @@
-/* TOKENS */
 :root{
-  --bg:#ece7f5;
-  --sf:#ffffffcc;
-  --sf2:#e6e0f3;
-
-  --p:#6d28d9;
-  --p-dk:#4c1d95;
-  --p-lt:#a78bfa;
-
-  --tx:#0f172a;
-  --tx2:#374151;
-  --tx3:#6b7280;
-
+  --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
+  --bg:#f4f0fb; --sf:#fff;
+  --tx:#0f172a; --tx2:#374151;
   --bdr:#e2e8f0;
-
-  --sh:0 8px 30px rgba(109,40,217,.10);
-  --sh2:0 20px 50px rgba(109,40,217,.18);
-
-  --hdr1:#7c3aed;
-  --hdr2:#9333ea;
-  --hdr3:#5b21b6;
+  --hdr1:#7c3aed; --hdr2:#9333ea; --hdr3:#5b21b6;
 }
 
-/* DARK MODE */
 body.dark{
-  --bg:#0d0d1a;
-  --sf:#161627;
-  --sf2:#1e1e33;
-
-  --tx:#f0f0ff;
-  --tx2:#c4c4e0;
-  --tx3:#8888aa;
-
+  --bg:#0d0d1a; --sf:#161627;
+  --tx:#f0f0ff; --tx2:#c4c4e0;
   --bdr:#2a2a44;
-
-  --sh:0 8px 30px rgba(0,0,0,.4);
-  --sh2:0 20px 50px rgba(0,0,0,.6);
-
-  --hdr1:#0f172a;
-  --hdr2:#1e1b4b;
-  --hdr3:#020617;
+  --hdr1:#0f172a; --hdr2:#1e1b4b; --hdr3:#020617;
 }
 
 body{
   background:var(--bg);
   color:var(--tx);
+  font-family:'Cairo',sans-serif;
   transition:.3s;
+}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
+  position:sticky;
+  top:0;
+  z-index:1000;
+}
+
+.hdr{
+  display:flex;
+  align-items:center;
+  padding:12px 16px;
+}
+
+.hdr-title{
+  flex:1;
+  text-align:center;
+  color:#fff;
+  font-weight:800;
+}
+
+/* زر الرجوع */
+.back-btn{
+  background:rgba(255,255,255,.2);
+  border:none;
+  color:#fff;
+  padding:8px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+
+/* زر الدارك مود */
+.toggle-track{
+  width:60px;
+  height:30px;
+  background:#1e293b;
+  border-radius:50px;
+  position:relative;
+  cursor:pointer;
+}
+
+.toggle-thumb{
+  width:24px;
+  height:24px;
+  background:#fff;
+  border-radius:50%;
+  position:absolute;
+  right:3px;
+  top:3px;
+  transition:.3s;
+}
+
+body.dark .toggle-thumb{
+  transform:translateX(-30px);
 }
