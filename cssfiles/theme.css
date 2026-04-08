@@ -282,3 +282,44 @@ header{
   color:var(--tx2);
   border-top:1px solid var(--bdr);
 }
+/* ===== BACK BUTTON ===== */
+.back-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  padding:9px 16px;
+
+  border:1.5px solid rgba(255,255,255,.45);
+  border-radius:22px;
+
+  background:rgba(255,255,255,.15);
+  color:#fff;
+
+  font-size:13px;
+  font-weight:700;
+  font-family:'Cairo', sans-serif;
+
+  cursor:pointer;
+  flex-shrink:0;
+
+  transition:background .2s, transform .15s;
+
+  -webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;
+}
+
+.back-btn:hover{
+  background:rgba(255,255,255,.28);
+}
+
+.back-btn:active{
+  transform:scale(.95);
+}
+
+/* أيقونة السهم */
+.back-btn svg{
+  width:14px;
+  height:14px;
+  fill:#fff;
+}
