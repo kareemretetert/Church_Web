@@ -257,10 +257,28 @@ button:active{transform:scale(.98);}
     </div>
   </div>
 </div>
+  <!-- Bulk Attendance Modal -->
+<div class="modal-bg" id="bulkModal">
+  <div class="modal">
+    <h3>تسجيل الحضور الجماعي</h3>
+
+    <label>تاريخ الجلسة</label>
+    <input id="bulkDate" type="date">
+
+    <div id="bulkList" style="margin-top:15px;"></div>
+
+    <div class="modal-actions">
+      <button class="btn-success" onclick="saveBulkAttendance()">💾 حفظ</button>
+      <button class="btn-danger" onclick="closeModal('bulkModal')">❌ إلغاء</button>
+    </div>
+  </div>
+</div>
 
 <!-- LOADER -->
 <div id="loader"><div class="spinner"></div><p>جاري التحميل...</p></div>
 
+
+  
 <script>
 /* ═══════════════════════════════════════
    DATA STRUCTURE
@@ -350,12 +368,17 @@ function buildClassCard(cls){
     <div class="class-title">📚 ${cls.name}
       <span style="font-size:13px;font-weight:600;color:rgba(255,255,255,.65);margin-right:8px;">(${members.length} مخدوم)</span>
     </div>
-    <div class="class-actions">
-      <button class="btn-success btn-small" onclick="openAddMember('${cls.id}')">➕ مخدوم</button>
-      <button class="btn-pdf btn-small" onclick="exportPDF('${cls.id}')">📄 PDF</button>
-      <button class="btn-warn btn-small" onclick="openSession('${cls.id}')">📅 جلسة</button>
-      <button class="btn-danger btn-small" onclick="deleteClass('${cls.id}')">🗑</button>
-    </div>
+   <div class="class-actions">
+  <button class="btn-success btn-small" onclick="openAddMember('${cls.id}')">➕ مخدوم</button>
+
+  <button class="btn-success btn-small" onclick="openBulkAttendance('${cls.id}')">
+    📋 تسجيل الحضور
+  </button>
+
+  <button class="btn-pdf btn-small" onclick="exportPDF('${cls.id}')">📄 PDF</button>
+  <button class="btn-warn btn-small" onclick="openSession('${cls.id}')">📅 جلسة</button>
+  <button class="btn-danger btn-small" onclick="deleteClass('${cls.id}')">🗑</button>
+</div>
   </div>
 
   <div class="sort-bar">
@@ -680,6 +703,76 @@ document.getElementById('newClassName').addEventListener('keydown',e=>{
   if(e.key==='Enter') addClass();
 });
 
+  /* ═══════════════════════════════════════
+   BULK ATTENDANCE (الحضور الجماعي)
+═══════════════════════════════════════ */
+
+let bulkClassId = null;
+
+function openBulkAttendance(cid){
+  bulkClassId = cid;
+
+  const cls = getClass(cid);
+  if(!cls) return;
+
+  const date = today();
+  document.getElementById("bulkDate").value = date;
+
+  const list = document.getElementById("bulkList");
+
+  list.innerHTML = cls.members.map(m => {
+
+    const val = (m.attendance || {})[date];
+
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;
+                  background:#f8fafc;padding:10px;border-radius:10px;margin-bottom:8px;">
+        
+        <span>${m.name}</span>
+
+        <div>
+          <label>
+            <input type="radio" name="att_${m.id}" value="P" ${val==='P'?'checked':''}> حاضر
+          </label>
+
+          <label style="margin-right:10px;">
+            <input type="radio" name="att_${m.id}" value="A" ${val==='A'?'checked':''}> غائب
+          </label>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  openModal("bulkModal");
+}
+
+function saveBulkAttendance(){
+  const date = document.getElementById("bulkDate").value;
+
+  if(!date){
+    alert("اختار التاريخ");
+    return;
+  }
+
+  const cls = getClass(bulkClassId);
+  if(!cls) return;
+
+  cls.members.forEach(m=>{
+    const selected = document.querySelector(`input[name="att_${m.id}"]:checked`);
+
+    if(!m.attendance) m.attendance = {};
+
+    if(selected){
+      m.attendance[date] = selected.value;
+    }
+  });
+
+  save();
+  closeModal("bulkModal");
+  renderAll();
+
+  alert("✅ تم حفظ الحضور بنجاح");
+}
 /* ═══════════════════════════════════════
    INIT
 ═══════════════════════════════════════ */
