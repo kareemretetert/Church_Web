@@ -183,7 +183,24 @@ font-size:14px;
 </head>
 <body>
 <h3 id="title" style="color:white;text-align:center;"></h3>
-<a href="index.html" class="backBtn">العودة ⬅</a>
+<header>
+  <div class="hdr">
+     <button class="back-btn" onclick="history.back()">
+    <svg viewBox="0 0 24 24">
+      <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    العودة
+  </button>
+    <div class="hdr-title" id="courseName">المسابقات</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
+  </div>
+</header>
 <div class="container">
 <h2>تفسير الكتاب المقدس</h2>
 
