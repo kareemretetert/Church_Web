@@ -311,8 +311,7 @@ let editStudentIndex = null;
 let currentClassIndex = null;
 let pendingAttendance = null; // {classIndex, date, records: [{name, present}]}
 
-// ===== STORAGE KEY =====
-const STORAGE_KEY = 'attendance_dashboard_v1';
+
 
 // ===== INIT =====
 window.onload = function(){
@@ -320,16 +319,29 @@ window.onload = function(){
   renderAll();
 };
 
-// ===== PERSIST =====
-function saveData(){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(classes)); }catch(e){}
-}
-function loadData(){
+
+async function loadData(){
   try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){ classes = JSON.parse(raw); if(!Array.isArray(classes)) classes=[]; }
-  }catch{ classes=[]; }
+    const res = await fetch("attendance.json");
+    classes = await res.json();
+
+    if(!Array.isArray(classes)) classes = [];
+
+  }catch(e){
+    classes = [];
+  }
 }
+
+async function saveData(){
+  try{
+    await fetch("/.netlify/functions/saveAttendance", {
+      method: "POST",
+      body: JSON.stringify(classes)
+    });
+  }catch{
+    alert("فشل الحفظ");
+  }
+}  
 
 // ===== STATS =====
 function updateStats(){
