@@ -67,16 +67,7 @@
       overflow: hidden;
     }
 
-    header::after {
-      content: "";
-      position: absolute;
-      inset: auto -10% -60px auto;
-      width: 220px;
-      height: 220px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 50%;
-      filter: blur(2px);
-    }
+  
 
     header h1 {
       margin: 0;
@@ -629,6 +620,14 @@ header{
   align-items:center;
   justify-content:space-between;
   padding:13px 16px;
+}
+    header::before,
+header::after{
+  pointer-events:none;
+}
+    .hdr{
+  position:relative;
+  z-index:2;
 }
   </style>
 </head>
