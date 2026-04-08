@@ -29,24 +29,7 @@ header::before{
   position:relative;
 }
 
-/* زر الرجوع */
-.back-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:9px 16px;
-  border:1.5px solid rgba(255,255,255,.45);
-  border-radius:22px;
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-  transition:background .2s,transform .15s;
-}
 
-.back-btn:hover{background:rgba(255,255,255,.28);}
-.back-btn:active{transform:scale(.95);}
 
 /* العنوان */
 .hdr-title{
@@ -105,29 +88,6 @@ header{
   padding:13px 16px;
 }
 
-/* زر الرجوع */
-.back-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:9px 16px;
-  border:1.5px solid rgba(255,255,255,.45);
-  border-radius:22px;
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-  transition:all .2s ease;
-}
-
-.back-btn:hover{
-  background:rgba(255,255,255,.28);
-}
-
-.back-btn:active{
-  transform:scale(.95);
-}
 
 /* العنوان */
 .hdr-title{
