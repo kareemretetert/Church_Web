@@ -344,12 +344,16 @@ async function saveData(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(classes)
     });
+
     const result = await res.json();
+
     if(res.ok && result.success){
+      await loadData(); // 🔥 مهم جدًا
       showSaveStatus(true);
     } else {
       throw new Error(result.error || "فشل الحفظ");
     }
+
   }catch(e){
     console.error("خطأ في الحفظ:", e);
     showSaveStatus(false);
