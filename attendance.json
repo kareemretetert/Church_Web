@@ -13,6 +13,25 @@
         "name": "بيتر هاني نادي"
       }
     ],
-    "records": []
+    "records": [
+      {
+        "date": "٠٩‏/٠٤‏/٢٠٢٦",
+        "dateISO": "2026-04-09",
+        "attendance": [
+          {
+            "name": "روماني عباس راضي",
+            "present": true
+          },
+          {
+            "name": "كريم حسني جابر",
+            "present": true
+          },
+          {
+            "name": "بيتر هاني نادي",
+            "present": false
+          }
+        ]
+      }
+    ]
   }
 ]
