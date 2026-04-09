@@ -7,7 +7,7 @@ exports.handler = async (event) => {
     const FILE_PATH = "attendance.json"
     const BRANCH = "main"
 
-    // 1️⃣ نجيب الملف
+    // 1️⃣ نجيب الملف الحالي (عشان نعرف الـ SHA)
     const getFile = await fetch(
       `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,
       {
@@ -29,12 +29,12 @@ exports.handler = async (event) => {
       throw new Error("فشل في قراءة الملف من GitHub")
     }
 
-    // 2️⃣ تحويل Base64
+    // 2️⃣ تحويل البيانات لـ Base64
     const content = Buffer.from(
       JSON.stringify(data, null, 2)
     ).toString("base64")
 
-    // 3️⃣ رفع التعديل
+    // 3️⃣ رفع التعديل أو إنشاء الملف
     const update = await fetch(
       `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,
       {
@@ -47,7 +47,7 @@ exports.handler = async (event) => {
           message: "Update attendance data",
           content: content,
           branch: BRANCH,
-          ...(sha && { sha })
+          ...(sha && { sha }) // لو الملف موجود نضيف sha
         })
       }
     )
