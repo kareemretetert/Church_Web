@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>لوحة إدارة الامتحانات</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body{
 font-family:Tajawal, Tahoma;
@@ -92,6 +92,47 @@ transform:scale(1.05);
 box-shadow:0 5px 20px rgba(0,0,0,0.3);
 }
 
+
+.options{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:5px;
+}
+
+.options input{
+margin-top:3px; /* بدل 6px */
+padding:10px;   /* بدل 14px */
+font-size:14px;
+}
+  @media(max-width:600px){
+.options{
+grid-template-columns:1fr 1fr;
+gap:4px;
+}
+
+
+.options input{
+padding:12px;      /* كان 8 */
+font-size:15px;    /* كان 13 */
+height:45px;       /* 👈 ده أهم حاجة */
+}
+}
+
+@media(max-width:600px){
+.options{
+grid-template-columns:1fr;
+}
+}
+
+button.reset-btn{
+background: linear-gradient(135deg,#ff416c,#ff4b2b);
+}
+  
+.options label{
+margin-top:6px;
+font-size:16px;
+}
+  
 /* زرار رفع */
 .upload-btn{
 background: linear-gradient(135deg,#43cea2,#185a9d);
@@ -112,9 +153,99 @@ transform:scale(1.05);
 font-size:13px;
 color:#ddd;
 margin-top:5px;
+margin-bottom:15px; /* 👈 ده المهم */
 text-align:center;
 }
 
+
+.modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+.modal-content{
+background:#fff;
+padding:20px;
+border-radius:15px;
+width:90%;
+max-width:400px;
+}
+
+.modal-content input,
+.modal-content select{
+margin-top:10px;
+}
+  
+  .questions-container{
+margin-top:15px;
+}
+
+.q-card{
+background:rgba(255,255,255,0.95);
+padding:15px;
+margin-top:10px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+transition:0.3s;
+}
+.q-card:hover{
+transform:scale(1.02);
+}
+
+.q-actions{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+
+select{
+background: linear-gradient(135deg,#ffffff,#f1f1f1);
+font-weight:bold;
+}
+
+select:hover{
+transform:scale(1.02);
+}
+
+
+  .modal-content{
+background: rgba(255,255,255,0.95);
+backdrop-filter: blur(10px);
+}
+
+.modal-content input{
+background:#fff;
+}
+  
+.q-actions button{
+flex:1;
+padding:8px;
+font-size:14px;
+border-radius:10px;
+}
+
+.editBtn{
+background:linear-gradient(135deg,#f7971e,#ffd200);
+}
+
+.deleteBtn{
+background:linear-gradient(135deg,#ff416c,#ff4b2b);
+}
+
+/* Animation */
+.q-card{
+animation:fade 0.4s;
+}
+  
 /* كروت الامتحانات */
 .card{
 background:rgba(255,255,255,0.9);
@@ -143,6 +274,241 @@ flex-direction:column;
 z-index:9999;
 }
 
+
+
+.q-card.dragging{
+opacity:0.5;
+transform:scale(0.95);
+}
+
+.q-card{
+transition:transform 0.2s, box-shadow 0.2s;
+}
+
+
+.answer-options{
+display:grid;
+grid-template-columns: repeat(4,1fr);
+gap:6px;
+margin-top:10px;
+}
+
+.answer-options div{
+background:#fff;
+padding:12px;
+text-align:center;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+transition:0.3s;
+border:2px solid transparent;
+}
+.answer-options div{
+padding:10px;
+font-size:14px;
+}
+  @media (max-width:600px){
+.answer-options{
+grid-template-columns: repeat(2,1fr);
+gap:6px;
+}
+}
+.answer-options div:hover{
+transform:scale(1.05);
+}
+
+.answer-options div.active{
+background:linear-gradient(135deg,#00c6ff,#0072ff);
+color:#fff;
+border-color:#0072ff;
+}
+  
+.q-card{
+transition:0.2s ease;
+cursor:default;
+}
+
+/* Hover عام للكارت */
+.q-card:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* النصوص والاختيارات */
+.q-text, .q-options li{
+cursor:text;
+}
+
+/* الصور */
+.q-img{
+cursor:zoom-in;
+transition:0.2s;
+}
+
+.q-img:hover{
+transform:scale(1.02);
+}
+
+/* الأزرار */
+.q-actions button,
+.q-header button{
+cursor:pointer;
+}
+
+/* drag handle لو موجود */
+.drag-handle{
+cursor:grab;
+}
+  .q-card{
+-webkit-tap-highlight-color: transparent;
+}
+.q-header{
+display:flex;
+justify-content:space-between;
+font-weight:bold;
+margin-bottom:10px;
+}
+
+.q-text{
+font-size:16px;
+margin-bottom:10px;
+}
+
+.q-options{
+list-style:none;
+padding:0;
+}
+
+.q-options li{
+background:#f1f1f1;
+margin:5px 0;
+padding:8px;
+border-radius:8px;
+}
+
+.q-options li.correct{
+background:#d4edda;
+color:#155724;
+font-weight:bold;
+}
+
+.q-img{
+width:100%;
+max-height:200px;
+object-fit:cover;
+border-radius:10px;
+margin:10px 0;
+}
+
+
+.q-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-weight:bold;
+background:#f1f1f1;
+padding:10px;
+border-radius:10px;
+cursor:pointer;
+}
+
+  
+.error{
+background: linear-gradient(135deg,#43cea2,#185a9d);
+color:#fff;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+display:none;
+}
+  
+select{
+width:100%;
+margin-top:6px;
+padding:14px;
+border-radius:12px;
+border:none;
+background:rgba(255,255,255,0.9);
+font-size:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+select:focus{
+transform:scale(1.02);
+box-shadow:0 0 10px rgba(255,255,255,0.5);
+outline:none;
+}
+
+
+@media(max-width:600px){
+
+.options{
+gap:4px;
+}
+
+.options label{
+margin-top:5px;
+font-size:16px;
+}
+
+.options input{
+margin-top:2px;
+padding:8px;
+}
+
+}
+
+.modal-content.big{
+width:95%;
+max-width:500px;
+max-height:90vh;
+overflow:auto;
+border-radius:20px;
+animation:fade 0.3s;
+}
+
+.modal-actions{
+display:flex;
+gap:10px;
+margin-top:15px;
+}
+
+.modal-actions button{
+flex:1;
+}
+
+  
+
+.card{
+animation:fade 1s;
+}
+
+
+  .q-card.dragging{
+opacity:0.5;
+transform:scale(0.95);
+}
+
+.q-card{
+transition:transform 0.2s, box-shadow 0.2s;
+}
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+
+
+
+
+
+.q-header span:first-child:hover{
+opacity:1;
+transform:scale(1.2);
+}
+
+  
 .spinner{
 width:60px;
 height:60px;
@@ -153,6 +519,12 @@ animation:spin 1s linear infinite;
 margin-bottom:20px;
 }
 
+.q-card{
+user-select:none;
+-webkit-user-select:none;
+touch-action: manipulation;
+}
+  
 @keyframes spin{
 to{transform:rotate(360deg);}
 }
@@ -170,6 +542,215 @@ max-width:95%;
 padding:15px;
 }
 }
+
+
+/* تكبير للكومبيوتر */
+.section{
+max-width:1000px;
+}
+
+/* موبايل */
+@media(max-width:768px){
+
+body{
+padding:10px;
+}
+
+.section{
+max-width:100%;
+padding:15px;
+border-radius:15px;
+}
+
+input, select, button{
+font-size:14px;
+padding:10px;
+}
+
+.q-header button{
+background:#fff;
+border:none;
+border-radius:8px;
+padding:6px 10px;
+font-size:18px; /* مهم جدًا */
+font-weight:bold;
+cursor:pointer;
+display:flex;
+align-items:center;
+justify-content:center;
+min-width:36px;
+min-height:36px;
+}
+@media (max-width:600px){
+.q-header button{
+font-size:20px;
+padding:8px;
+}
+  .q-header button{
+color:#000;
+}
+}
+.q-header button:hover{
+transform:scale(1.1);
+}
+  
+h2{
+font-size:18px;
+}
+
+}
+
+/* شاشات كبيرة */
+@media(min-width:1200px){
+.section{
+max-width:1100px;
+}
+}
+
+
+
+
+
+*{
+box-sizing:border-box;
+}
+
+body{
+overflow-x:hidden;
+}
+
+/* تحسين عرض الكروت */
+.q-card{
+width:100%;
+max-width:100%;
+}
+
+/* تحسين النص */
+.q-text{
+word-break:break-word;
+line-height:1.6;
+}
+
+/* الصور */
+.q-img{
+width:100%;
+height:auto;
+}
+
+/* الأزرار داخل الهيدر */
+.q-header button{
+padding:6px 10px;
+font-size:14px;
+}
+
+/* تحسين شكل الخيارات */
+.q-options li{
+word-break:break-word;
+}
+
+/* منع أي تمدد زائد */
+.section{
+overflow:hidden;
+}
+
+
+
+@media (max-width:600px){
+
+.q-header{
+flex-wrap:wrap;
+gap:8px;
+}
+
+.q-header span{
+font-size:14px;
+}
+
+.q-actions{
+flex-direction:column;
+}
+
+.q-actions button{
+width:100%;
+}
+
+.answer-options{
+grid-template-columns:repeat(2,1fr);
+}
+
+}
+.options input{
+margin-top:2px;
+padding:10px;
+}
+@media (min-width:1200px){
+.section{
+max-width:900px;
+margin:auto;
+}
+}
+button, .upload-btn, .answer-options div{
+touch-action: manipulation;
+}  
+  /* تعديل كرت تعديل السؤال */
+#editModal .modal-content {
+    background: rgba(255, 255, 255, 0.95); /* خلفية شبه شفافة */
+    backdrop-filter: blur(15px);           /* ضبابية خلفية لطيفة */
+    border-radius: 20px;                    /* حواف مستديرة */
+    padding: 20px;                          /* مسافة داخلية */
+    max-width: 500px;                        /* أقصى عرض للكرت */
+    width: 90%;                              /* عرض نسبي للشاشة */
+    max-height: 90vh;                        /* ارتفاع نسبي للشاشة */
+    overflow-y: auto;                        /* تمرير إذا المحتوى طويل */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3); /* ظل للكرت */
+    animation: fade 0.3s ease-in-out;        /* حركة ظهور ناعمة */
+}
+
+/* الزرار داخل كرت التعديل */
+#editModal .modal-content button {
+    border-radius: 12px;
+    padding: 10px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#editModal .modal-content button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* النصوص داخل كرت التعديل */
+#editModal .modal-content input,
+#editModal .modal-content select,
+#editModal .modal-content textarea {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: 0.3s;
+}
+
+#editModal .modal-content input:focus,
+#editModal .modal-content select:focus,
+#editModal .modal-content textarea:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    outline: none;
+}
+
+/* معاينة الصورة */
+#editModal #editPreview {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: block;
+}
 </style>
 </head>
 
@@ -180,10 +761,14 @@ padding:15px;
 <div class="section">
 
 <h2>إنشاء امتحان جديد</h2>
+<button onclick="resetQuiz()" style="background:linear-gradient(135deg,#ff416c,#ff4b2b)">
+🗑️ حذف الامتحان الحالي
+</button>
 
-<label>اسم الامتحان</label> <input id="quizTitle">
+  
+<label>اسم الامتحان</label> <input id="quizTitle" oninput="saveQuizInfo()">
 
-<label>وقت الامتحان (بالدقائق)</label> <input id="quizTime" type="number" value="30">
+<label>وقت الامتحان (بالدقائق)</label> <input id="quizTime" type="number" value="30" oninput="saveQuizInfo()">
 
 </div>
 
@@ -204,23 +789,46 @@ padding:15px;
 <div class="upload-text" id="imgText">
 لم يتم اختيار صورة
 </div>
+<button id="removeImgBtn" style="display:none; background:#ff416c; margin-bottom:10px;">
+حذف الصورة
+</button>
 
+  
 <input type="file" id="questionImage" accept="image/*" hidden>
 
-<label>اختيار 1</label> <input id="opt1">
+<div class="options">
 
-<label>اختيار 2</label> <input id="opt2">
+<label>اختيار 1</label>
+<input id="opt1">
 
-<label>اختيار 3 (اختياري)</label> <input id="opt3">
+<label>اختيار 2</label>
+<input id="opt2">
 
-<label>اختيار 4 (اختياري)</label> <input id="opt4">
+<label>اختيار 3 (اختياري)</label>
+<input id="opt3">
 
-<label>رقم الإجابة الصحيحة</label> <input id="answerNumber" type="number">
+<label>اختيار 4 (اختياري)</label>
+<input id="opt4">
+
+</div>
+
+<label>الإجابة الصحيحة</label>
+<div class="answer-options" id="answerNumber">
+  <div onclick="selectAnswer(1)" data-value="1">1</div>
+  <div onclick="selectAnswer(2)" data-value="2">2</div>
+  <div onclick="selectAnswer(3)" data-value="3">3</div>
+  <div onclick="selectAnswer(4)" data-value="4">4</div>
+</div>
 
 <button onclick="addQuestion()">إضافة السؤال</button>
-
+<div id="errorBox" class="error"></div>
 <p id="qCount">عدد الأسئلة: 0</p>
 
+ <button onclick="toggleQuestions()" id="toggleBtn" style="display:none;">
+إخفاء الأسئلة
+</button>
+<div id="questionsList"></div>
+  
 <button onclick="publishQuiz()">نشر الامتحان</button>
 
 </div>
@@ -237,6 +845,11 @@ padding:15px;
 
 
 <script>
+  // منع المتصفح يحفظ مكان السكروول
+history.scrollRestoration = "manual";
+
+// تفعيل السلوك الناعم للسكروول
+document.documentElement.style.scrollBehavior = "smooth";
 const password="kimo123"
 const entered=prompt("ادخل كلمة المرور")
 
@@ -247,8 +860,20 @@ throw new Error("access denied")
 
 let quizzes=[]
 let questions=[]
-
+let editIndex = null;
 // تحميل الامتحانات
+// المتغير اللي هيخزن الاختيار
+let selectedAnswer = null;
+
+// الفنكشن لتحديد الإجابة
+function selectAnswer(num){
+    selectedAnswer = num;
+
+    let all = document.querySelectorAll(".answer-options div");
+    all.forEach(el => el.classList.remove("active"));
+
+    document.querySelector(`.answer-options div[data-value="${num}"]`).classList.add("active");
+}
 async function loadQuizzes(){
 try{
 const res=await fetch("quiz.json")
@@ -258,15 +883,71 @@ renderQuiz()
 document.getElementById("quizList").innerHTML="لا يوجد امتحانات"
 }
 }
-window.onload=loadQuizzes
+window.onload = function(){
+
+loadQuizzes()
+
+// 📥 استرجاع الأسئلة
+let saved = localStorage.getItem("questionsDraft")
+if(saved){
+questions = JSON.parse(saved)
+renderQuestions()
+}
+
+// 📥 استرجاع العنوان والوقت
+document.getElementById("quizTitle").value = localStorage.getItem("quizTitle") || ""
+document.getElementById("quizTime").value = localStorage.getItem("quizTime") || 30
+
+}
 
 // 📸 رفع صورة
+async function compressImage(file){
+
+return new Promise((resolve) => {
+
+const img = new Image()
+const reader = new FileReader()
+
+reader.onload = function(e){
+img.src = e.target.result
+}
+
+img.onload = function(){
+
+const canvas = document.createElement("canvas")
+
+// 📉 تقليل الحجم
+let maxWidth = 800
+let scale = maxWidth / img.width
+
+canvas.width = maxWidth
+canvas.height = img.height * scale
+
+const ctx = canvas.getContext("2d")
+ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+// 🧠 تحويل لصورة مضغوطة
+canvas.toBlob((blob)=>{
+resolve(blob)
+}, "image/jpeg", 0.7) // الجودة 70%
+}
+
+reader.readAsDataURL(file)
+
+})
+}
+
+
+
 async function uploadImage(file){
+
+// ✨ ضغط الصورة قبل الرفع
+const compressed = await compressImage(file)
 
 const url = "https://api.cloudinary.com/v1_1/ddiegmhji/image/upload"
 
 const formData = new FormData()
-formData.append("file", file)
+formData.append("file", compressed)
 formData.append("upload_preset", "my_upload")
 
 const res = await fetch(url,{
@@ -281,6 +962,16 @@ if(!data.secure_url) throw "upload failed"
 return data.secure_url
 }
 
+
+  function showError(msg){
+let box=document.getElementById("errorBox")
+box.style.display="block"
+box.innerText=msg
+}
+
+function hideError(){
+document.getElementById("errorBox").style.display="none"
+}
 // ➕ إضافة سؤال
 async function addQuestion(){
 
@@ -301,31 +992,30 @@ if(o2) options.push(o2)
 if(o3) options.push(o3)
 if(o4) options.push(o4)
 
-const answerInput = document.getElementById("answerNumber").value
-const answer = parseInt(answerInput)
+const answer = selectedAnswer;
 
 // ❌ تحقق أقوى
-if(!answerInput){
-hideLoader()
-alert("لازم تختار رقم الإجابة الصحيحة")
-return
+if(!answer){
+    hideLoader()
+    showError("لازم تختار رقم الإجابة الصحيحة")
+    return
 }
 
 if(isNaN(answer)){
 hideLoader()
-alert("الإجابة لازم تكون رقم")
+showError("الإجابة لازم تكون رقم")
 return
 }
 
 if(answer < 1 || answer > options.length){
 hideLoader()
-alert("رقم الإجابة غير صحيح")
+showError("رقم الإجابة غير صحيح")
 return
 }
 
 if(!q || options.length < 2){
 hideLoader()
-alert("يجب إدخال سؤال واختيارين على الأقل")
+showError("يجب إدخال سؤال واختيارين على الأقل")
 return
 }
 
@@ -338,33 +1028,45 @@ try{
 imageUrl = await uploadImage(imageFile)
 }catch{
 hideLoader()
-alert("فشل رفع الصورة")
+showError("فشل رفع الصورة")
 return
 }
 }
 
+if(editIndex !== null){
+questions[editIndex] = {
+question:q,
+options:options,
+answer:answer,
+image:imageUrl
+}
+editIndex = null
+}else{
 questions.push({
 question:q,
 options:options,
 answer:answer,
 image:imageUrl
 })
+}
 
+renderQuestions()
+  
 document.getElementById("qCount").innerText="عدد الأسئلة: "+questions.length
 
 clearFields()
 
 hideLoader()
-alert("تم إضافة السؤال")
-
+showError("تم إضافة السؤال")
 }catch(e){
 hideLoader()
-alert("حصل خطأ")
+showError("حصل خطأ")
 console.log(e)
 }
 
 }
 
+  
 // حفظ على GitHub
 async function updateJSONFile(data){
 await fetch("/.netlify/functions/saveQuiz",{
@@ -374,6 +1076,27 @@ body:JSON.stringify(data)
 })
 }
 
+
+let hidden = false
+
+function toggleQuestions(){
+
+const list = document.getElementById("questionsList")
+const btn = document.getElementById("toggleBtn")
+
+hidden = !hidden
+
+if(hidden){
+list.style.display = "none"
+btn.innerText = "إظهار الأسئلة"
+}else{
+list.style.display = "block"
+btn.innerText = "إخفاء الأسئلة"
+}
+
+}
+
+  
 // نشر الامتحان
 async function publishQuiz(){
 
@@ -386,7 +1109,7 @@ const time=document.getElementById("quizTime").value
 
 if(!title || questions.length==0){
 hideLoader()
-alert("اكتب اسم الامتحان وأضف أسئلة")
+showError("اكتب اسم الامتحان وأضف أسئلة")
 return
 }
 
@@ -402,9 +1125,30 @@ await updateJSONFile(quizzes)
 
 renderQuiz()
 
-questions=[]
-document.getElementById("qCount").innerText="عدد الأسئلة: 0"
+// 🧹 مسح كل البيانات
+questions = []
 
+localStorage.removeItem("questionsDraft")
+localStorage.removeItem("quizTitle")
+localStorage.removeItem("quizTime")
+
+// 🧹 تصفير الحقول
+document.getElementById("quizTitle").value = ""
+document.getElementById("quizTime").value = 30
+
+clearFields()
+
+// 🧹 تحديث الواجهة
+renderQuestions()
+document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
+// 👇 رجّع وضع عرض الأسئلة
+hidden = false
+
+  
+document.getElementById("questionsList").style.display = "block"
+document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
+  renderQuestions()
+forceShowQuestions()
 hideLoader()
 alert("تم نشر الامتحان 🎉")
 
@@ -414,6 +1158,7 @@ alert("فشل النشر")
 console.log(e)
 }
 
+  
 }
 
 // عرض الامتحانات
@@ -460,20 +1205,69 @@ document.getElementById("opt3").value=""
 document.getElementById("opt4").value=""
 document.getElementById("answerNumber").value=""
 document.getElementById("questionImage").value=""
+
+document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
+
+  selectedAnswer = null
+document.querySelectorAll(".answer-options div").forEach(el => el.classList.remove("active"))
+}
+
+
+function resetQuiz(){
+
+if(!confirm("هل أنت متأكد أنك تريد حذف كل الأسئلة وبدء امتحان جديد؟")) return
+
+// 🧹 مسح الأسئلة من الذاكرة
+questions = []
+
+// 🧹 مسح localStorage
+localStorage.removeItem("questionsDraft")
+localStorage.removeItem("quizTitle")
+localStorage.removeItem("quizTime")
+
+// 🧹 تصفير الحقول
+document.getElementById("quizTitle").value = ""
+document.getElementById("quizTime").value = 30
+
+clearFields()
+
+// 🧹 تحديث الواجهة
+renderQuestions()
+document.getElementById("qCount").innerText = "عدد الأسئلة: 0"
+
+// 🧹 إخفاء أي رسالة خطأ
+hideError()
+
+document.getElementById("toggleBtn").style.display = "none"
+  // 👇 رجّع وضع عرض الأسئلة
+hidden = false
+
+document.getElementById("questionsList").style.display = "block"
+document.getElementById("toggleBtn").innerText = "إخفاء الأسئلة"
+renderQuestions()
+forceShowQuestions()
 }
 
 
 
+document.getElementById("questionImage").onchange = function () {
 
+let file = this.files[0]
+let text = document.getElementById("imgText")
+let btn = document.getElementById("removeImgBtn")
 
-
-questionImage.onchange = () => {
-imgText.innerText = questionImage.files.length 
-? "تم اختيار صورة" 
-: "لم يتم اختيار صورة";
+if(file){
+text.innerText = "📸 " + file.name
+btn.style.display = "block" // 👈 يظهر الزرار
+}else{
+text.innerText = "لم يتم اختيار صورة"
+btn.style.display = "none"
 }
 
-  
+}
+
+// 👇 تضيف ده تحته
+
 
   function showLoader(){
 document.getElementById("loader").style.display="flex"
@@ -482,7 +1276,346 @@ document.getElementById("loader").style.display="flex"
 function hideLoader(){
 document.getElementById("loader").style.display="none"
 }
+
+
+
+let startIndex = null; // مهم جدًا يكون خارج الدالة
+
+function renderQuestions(){
+
+const container = document.getElementById("questionsList")
+container.innerHTML = ""
+
+questions.forEach((q,i)=>{
+
+let div = document.createElement("div")
+div.className = "q-card"
+div.draggable = true
+
+div.innerHTML = `
+<div class="q-header" style="display:flex; justify-content:space-between; align-items:center;">
+    
+    <div style="display:flex; gap:10px; align-items:center;">
+        <button onclick="moveUp(${i})"title="اضغط لنقل السؤال لأعلى" ${i === 0 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬆</button>
+        <button onclick="moveDown(${i})"title="اضغط لنقل السؤال لأسفل" ${i === questions.length - 1 ? 'style="opacity:0.3;pointer-events:none;"' : ''}>⬇</button>
+
+        <span onclick="toggleQuestion(${i})" style="cursor:pointer;">
+            سؤال ${i+1}
+        </span>
+    </div>
+
+    <span onclick="toggleQuestion(${i})" style="cursor:pointer;">▼</span>
+
+</div>
+
+<div class="q-body" id="body-${i}" style="display:block;">
+    <p class="q-text">${q.question}</p>
+
+    ${q.image ? `<img src="${q.image}" class="q-img">` : ""}
+
+    <ul class="q-options">
+        ${q.options.map((opt,idx)=>`
+            <li class="${q.answer == idx+1 ? 'correct' : ''}">
+                ${idx+1}) ${opt}
+            </li>
+        `).join("")}
+    </ul>
+</div>
+
+<div class="q-actions">
+    <button class="editBtn" onclick="openEdit(${i})">تعديل</button>
+    <button class="deleteBtn" onclick="deleteQuestion(${i})">حذف</button>
+</div>
+`
+
+container.appendChild(div)
+
+})
+
+// =====================
+// 📊 تحديث العدادات والحفظ
+// =====================
+
+document.getElementById("qCount").innerText =
+"عدد الأسئلة: " + questions.length
+
+localStorage.setItem("questionsDraft", JSON.stringify(questions))
+
+let btn = document.getElementById("toggleBtn")
+
+btn.style.display = questions.length === 0 ? "none" : "block"
+
+}
+
+
+
+
+function moveUp(index){
+    if(index <= 0) return;
+
+    let temp = questions[index];
+    questions[index] = questions[index - 1];
+    questions[index - 1] = temp;
+
+    renderQuestions();
+}
+
+function moveDown(index){
+    if(index >= questions.length - 1) return;
+
+    let temp = questions[index];
+    questions[index] = questions[index + 1];
+    questions[index + 1] = temp;
+
+    renderQuestions();
+}
+
+document.getElementById("removeImgBtn").onclick = function(){
+
+document.getElementById("questionImage").value = ""
+document.getElementById("imgText").innerText = "لم يتم اختيار صورة"
+
+this.style.display = "none"
+}
+
+  
+function toggleQuestion(i){
+
+let body = document.getElementById("body-"+i)
+let arrow = document.getElementById("arrow-"+i)
+
+if(body.style.display === "none"){
+body.style.display = "block"
+arrow.innerText = "▼"
+}else{
+body.style.display = "none"
+arrow.innerText = "▶"
+}
+
+}
+
+
+  
+function saveQuizInfo(){
+localStorage.setItem("quizTitle", document.getElementById("quizTitle").value)
+localStorage.setItem("quizTime", document.getElementById("quizTime").value)
+}
+
+  
+  function editQuestion(i){
+
+let q = questions[i]
+
+document.getElementById("question").value = q.question
+document.getElementById("opt1").value = q.options[0] || ""
+document.getElementById("opt2").value = q.options[1] || ""
+document.getElementById("opt3").value = q.options[2] || ""
+document.getElementById("opt4").value = q.options[3] || ""
+document.getElementById("answerNumber").value = q.answer
+
+editIndex = i
+}
+  function deleteQuestion(i){
+questions.splice(i,1)
+renderQuestions()
+}
+
+
+
+
+
+
+  let currentEditIndex = null;
+
+function openEdit(i){
+    currentEditIndex = i
+    let q = questions[i]
+
+    document.getElementById("editModal").style.display="flex"
+
+    // نص السؤال والاختيارات
+    document.getElementById("editQuestionText").value = q.question
+    document.getElementById("editOpt1").value = q.options[0] || ""
+    document.getElementById("editOpt2").value = q.options[1] || ""
+    document.getElementById("editOpt3").value = q.options[2] || ""
+    document.getElementById("editOpt4").value = q.options[3] || ""
+
+    // ✅ اختيار الإجابة الصحيحة تلقائيًا
+    editSelectedAnswer = q.answer
+    document.querySelectorAll("#editAnswerOptions div").forEach(el => el.classList.remove("active"))
+    if(q.answer){
+        const activeDiv = document.querySelector(`#editAnswerOptions div[data-value="${q.answer}"]`)
+        if(activeDiv) activeDiv.classList.add("active")
+    }
+
+    // النص
+    document.getElementById("editImgText").innerText = q.image ? "📸 يوجد صورة حالية" : "لم يتم اختيار صورة"
+
+    // المعاينة
+    let preview = document.getElementById("editPreview")
+    if(q.image){
+        preview.src = q.image
+        preview.style.display = "block"
+    }else{
+        preview.style.display = "none"
+    }
+
+    // ربط تغيير الصورة مباشرة
+    let input = document.getElementById("editImage")
+    input.value = "" // مهم جداً
+    input.onchange = function (){
+        let file = this.files[0]
+        if(file){
+            preview.src = URL.createObjectURL(file)
+            preview.style.display = "block"
+            document.getElementById("editImgText").innerText = "📸 " + file.name
+        }else{
+            preview.style.display = "none"
+            document.getElementById("editImgText").innerText = "لم يتم اختيار صورة"
+        }
+    }
+}
+
+
+
+let editSelectedAnswer = null;
+
+function selectEditAnswer(num){
+    editSelectedAnswer = num;
+
+    let all = document.querySelectorAll("#editAnswerOptions div");
+    all.forEach(el => el.classList.remove("active"));
+
+    document.querySelector(`#editAnswerOptions div[data-value="${num}"]`).classList.add("active");
+}
+
+
+  
+async function saveEdit(){
+    showLoader()
+
+    try{
+        let q = questions[currentEditIndex]
+
+        // إذا تم اختيار صورة جديدة
+        let newImage = document.getElementById("editImage").files[0]
+        if(newImage){
+            q.image = await uploadImage(newImage)
+        }
+
+        // تحقق من اختيار الإجابة
+        if(!editSelectedAnswer){
+            hideLoader();
+            alert("اختر الإجابة الصحيحة");
+            return;
+        }
+
+        // حفظ الإجابة الصحيحة
+        q.answer = editSelectedAnswer
+
+        // حفظ الاختيارات
+        q.options = [
+            document.getElementById("editOpt1").value,
+            document.getElementById("editOpt2").value,
+            document.getElementById("editOpt3").value,
+            document.getElementById("editOpt4").value
+        ].filter(Boolean)
+
+        // تحقق من صحة السؤال والخيارات
+        if(!q.question || q.options.length < 2){
+            hideLoader()
+            alert("لازم سؤال واختيارين على الأقل")
+            return
+        }
+
+        if(q.answer < 1 || q.answer > q.options.length){
+            hideLoader()
+            alert("الإجابة غير صحيحة")
+            return
+        }
+
+        closeEdit()
+        renderQuestions()
+        hideLoader()
+
+    }catch(e){
+        hideLoader()
+        alert("فشل التعديل")
+        console.log(e)
+    }
+}
+
+
+function forceShowQuestions(){
+    hidden = false
+
+    let list = document.getElementById("questionsList")
+    let btn = document.getElementById("toggleBtn")
+
+    list.style.display = "block"
+    btn.innerText = "إخفاء الأسئلة"
+}
+  
+
+  
+function closeEdit(){
+  document.getElementById("editModal").style.display="none";
+  currentEditIndex = null;
+}
+
+  window.onclick = function(e){
+let modal = document.getElementById("editModal")
+if(e.target == modal){
+modal.style.display = "none"
+}
+}
 </script>
+
+
+
+
+
+  
+<div id="editModal" class="modal">
+
+<div class="modal-content big">
+
+<h3>✏️ تعديل السؤال</h3>
+
+<input id="editQuestionText" placeholder="اكتب السؤال">
+
+<label style="color:black;">صورة (اختياري)</label>
+<div class="upload-btn" onclick="document.getElementById('editImage').click()">اختيار صورة</div>
+<div class="upload-text" id="editImgText"style="color:black;">لم يتم اختيار صورة</div>
+  <img id="editPreview" style="width:100%; margin-top:10px; border-radius:10px; display:none;">
+<input type="file" id="editImage" accept="image/*" hidden>
+
+<div class="options">
+
+<input id="editOpt1" placeholder="اختيار 1">
+<input id="editOpt2" placeholder="اختيار 2">
+<input id="editOpt3" placeholder="اختيار 3">
+<input id="editOpt4" placeholder="اختيار 4">
+
+</div>
+
+<label>الإجابة الصحيحة</label>
+<div class="answer-options" id="editAnswerOptions">
+  <div data-value="1" onclick="selectEditAnswer(1)">1</div>
+  <div data-value="2" onclick="selectEditAnswer(2)">2</div>
+  <div data-value="3" onclick="selectEditAnswer(3)">3</div>
+  <div data-value="4" onclick="selectEditAnswer(4)">4</div>
+</div>
+
+<div class="modal-actions">
+<button onclick="saveEdit()">💾 حفظ</button>
+<button onclick="closeEdit()">❌ إلغاء</button>
+</div>
+
+</div>
+</div>
+
+
   
 <div id="loader">
   <div class="spinner"></div>
