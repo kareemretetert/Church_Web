@@ -2,7 +2,7 @@ exports.handler = async (event) => {
   try {
     const data = JSON.parse(event.body)
 
-    const GITHUB_TOKEN = process.env.GITHUB_TOKEN
+   const GITHUB_TOKEN = process.env.GITHUB_TOKEN_ATTENDANCE
     const REPO = "kareemretetert/Church_Web"
     const FILE_PATH = "attendance.json"
     const BRANCH = "main"
