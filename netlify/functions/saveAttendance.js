@@ -8,16 +8,27 @@ exports.handler = async (event) => {
     const BRANCH = "main"
 
     // 1️⃣ نجيب الملف
-   let sha = null
+    const getFile = await fetch(
+      `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,
+      {
+        headers: {
+          Authorization: `token ${GITHUB_TOKEN}`,
+          Accept: "application/vnd.github.v3+json"
+        }
+      }
+    )
 
-if (getFile.ok) {
-  const fileData = await getFile.json()
-  sha = fileData.sha
-} else if (getFile.status !== 404) {
-  const errText = await getFile.text()
-  console.log("❌ GET FILE ERROR:", errText)
-  throw new Error("فشل في قراءة الملف من GitHub")
-}
+    let sha = null
+
+    if (getFile.ok) {
+      const fileData = await getFile.json()
+      sha = fileData.sha
+    } else if (getFile.status !== 404) {
+      const errText = await getFile.text()
+      console.log("❌ GET FILE ERROR:", errText)
+      throw new Error("فشل في قراءة الملف من GitHub")
+    }
+
     // 2️⃣ تحويل Base64
     const content = Buffer.from(
       JSON.stringify(data, null, 2)
@@ -32,12 +43,12 @@ if (getFile.ok) {
           Authorization: `token ${GITHUB_TOKEN}`,
           Accept: "application/vnd.github.v3+json"
         },
-       body: JSON.stringify({
-  message: "Update attendance data",
-  content: content,
-  branch: BRANCH,
-  ...(sha && { sha })
-})
+        body: JSON.stringify({
+          message: "Update attendance data",
+          content: content,
+          branch: BRANCH,
+          ...(sha && { sha })
+        })
       }
     )
 
