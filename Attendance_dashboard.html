@@ -316,15 +316,19 @@ window.onload = async function(){
 // ===== LOAD DATA FROM GITHUB =====
 async function loadData(){
   try{
-    // يجرب يقرأ من GitHub مباشرةً (public repo) أو من Netlify function
-    const url = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE}?t=${Date.now()}`;
-    const res = await fetch(url);
-    if(res.ok){
-      const data = await res.json();
-      classes = Array.isArray(data) ? data : [];
-    } else {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`);
+
+    if(!res.ok){
       classes = [];
+      return;
     }
+
+    const data = await res.json();
+
+    // decode base64
+    const content = atob(data.content);
+    classes = JSON.parse(content);
+
   }catch(e){
     console.warn("تعذّر تحميل البيانات:", e);
     classes = [];
