@@ -23,6 +23,24 @@
             "present": true
           }
         ]
+      },
+      {
+        "date": "٠٩‏/٠٤‏/٢٠٢٦",
+        "dateISO": "2026-04-09",
+        "attendance": [
+          {
+            "name": "ÙØ±ÙÙ Ø­Ø³ÙÙ Ø¬Ø§Ø¨Ø±",
+            "present": false
+          },
+          {
+            "name": "عمك",
+            "present": false
+          },
+          {
+            "name": "kemo",
+            "present": false
+          }
+        ]
       }
     ]
   },
