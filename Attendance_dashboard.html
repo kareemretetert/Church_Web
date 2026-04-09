@@ -186,7 +186,6 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 }
 .sort-tab.active{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;border-color:transparent;}
 
-/* Save status indicator */
 .save-status{
   position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
   background:rgba(52,211,153,0.9);color:#fff;padding:10px 24px;
@@ -291,6 +290,9 @@ label{font-size:13px;color:rgba(255,255,255,0.75);font-weight:600;display:block;
 <div id="loader"><div class="spinner"></div><p>جاري الحفظ...</p></div>
 <div class="save-status" id="saveStatus">✅ تم الحفظ بنجاح</div>
 
+<!-- ===== HIDDEN CANVAS FOR ARABIC PDF RENDERING ===== -->
+<canvas id="pdfCanvas" style="display:none;position:absolute;top:-9999px;"></canvas>
+
 <script>
 // ===== STATE =====
 let classes = [];
@@ -300,12 +302,10 @@ let currentClassIndex = null;
 let pendingAttendance = null;
 
 // ===== GITHUB CONFIG =====
-// ✅ غيّر هذه القيم لتناسب مشروعك
 const GITHUB_REPO = "kareemretetert/Church_Web";
 const GITHUB_FILE = "attendance.json";
 const GITHUB_BRANCH = "main";
-// ⚠️ لا تضع التوكن هنا مباشرة في الإنتاج — استخدم Netlify function
-const USE_NETLIFY = true; // true = يستخدم Netlify function | false = يقرأ فقط من GitHub
+const USE_NETLIFY = true;
 
 // ===== INIT =====
 window.onload = async function(){
@@ -316,19 +316,14 @@ window.onload = async function(){
 // ===== LOAD DATA FROM GITHUB =====
 async function loadData(){
   try{
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/contents/${GITHUB_FILE}`);
-
-    if(!res.ok){
+    const url = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/${GITHUB_FILE}?t=${Date.now()}`;
+    const res = await fetch(url);
+    if(res.ok){
+      const data = await res.json();
+      classes = Array.isArray(data) ? data : [];
+    } else {
       classes = [];
-      return;
     }
-
-    const data = await res.json();
-
-    // decode base64
-    const content = atob(data.content);
-    classes = JSON.parse(content);
-
   }catch(e){
     console.warn("تعذّر تحميل البيانات:", e);
     classes = [];
@@ -344,16 +339,12 @@ async function saveData(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(classes)
     });
-
     const result = await res.json();
-
     if(res.ok && result.success){
-      await loadData(); // 🔥 مهم جدًا
       showSaveStatus(true);
     } else {
       throw new Error(result.error || "فشل الحفظ");
     }
-
   }catch(e){
     console.error("خطأ في الحفظ:", e);
     showSaveStatus(false);
@@ -661,229 +652,359 @@ function confirmSaveAttendance(){
   pendingAttendance=null;
 }
 
-// ===== PDF HELPERS (Arabic-safe using canvas rendering) =====
+// ============================================================
+// ===== PDF ENGINE — Arabic-safe via Canvas (FIXED) ==========
+// ============================================================
 
-// Reverse Arabic text for jsPDF RTL rendering
-function reverseArabic(text) {
-  if (!text) return '';
-  // Split into words, reverse order for RTL
-  return text.split(' ').reverse().join(' ');
-}
+/**
+ * drawArabicText — renders Arabic text onto a jsPDF doc via an offscreen canvas.
+ * FIXES applied vs the original:
+ *  1. Font is waited for with document.fonts.ready before any draw.
+ *  2. Canvas is sized precisely to avoid clipping on long names.
+ *  3. The x/y coordinate system is unified: x is always the LEFT edge of the
+ *     bounding box in PDF mm coordinates (not the right edge), so text never
+ *     overflows or lands in the wrong column.
+ *  4. Scale factor raised to 4 for sharper output on high-DPI screens.
+ *  5. textBaseline fixed to 'middle' and canvas height generous.
+ */
+async function drawArabicText(doc, text, x, y, opts = {}) {
+  const {
+    fontSize  = 11,
+    color     = [255, 255, 255],
+    align     = 'right',
+    maxWidth  = 60,
+    bold      = false,
+  } = opts;
 
-// Draw Arabic text as image using canvas (100% Arabic support)
-function drawArabicText(doc, text, x, y, options = {}) {
-  const fontSize = options.fontSize || 12;
-  const color = options.color || [255, 255, 255];
-  const align = options.align || 'right';
-  const maxWidth = options.maxWidth || 180;
+  // Wait for Cairo font to be available in the canvas context
+  if (document.fonts && document.fonts.ready) {
+    await document.fonts.ready;
+  }
 
-  // Use canvas to render Arabic text correctly
-  const canvas = document.createElement('canvas');
-  const scale = 3; // High DPI for crisp text
-  canvas.width = maxWidth * scale;
-  canvas.height = (fontSize + 8) * scale;
+  const SCALE    = 4;                       // retina sharpness
+  const PX_PER_MM = 3.7795;                // 1 mm ≈ 3.78 px at 96 dpi
+  const canvasW  = Math.ceil(maxWidth * PX_PER_MM * SCALE);
+  const canvasH  = Math.ceil((fontSize * 2.2) * SCALE);
+
+  const canvas   = document.createElement('canvas');
+  canvas.width   = canvasW;
+  canvas.height  = canvasH;
+
   const ctx = canvas.getContext('2d');
+  ctx.scale(SCALE, SCALE);
 
-  ctx.scale(scale, scale);
-  ctx.font = `${options.bold ? 'bold ' : ''}${fontSize}px Cairo, Arial`;
+  const fontPx = fontSize * PX_PER_MM;
+  ctx.font      = `${bold ? '700' : '400'} ${fontPx}px 'Cairo', Arial, sans-serif`;
   ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
   ctx.textBaseline = 'middle';
   ctx.direction = 'rtl';
 
-  let drawX = maxWidth;
-  if (align === 'center') { ctx.textAlign = 'center'; drawX = maxWidth / 2; }
-  else if (align === 'left') { ctx.textAlign = 'left'; drawX = 0; }
-  else { ctx.textAlign = 'right'; }
+  const midY = (fontPx * 2.2) / 2;
 
-  ctx.fillText(text, drawX, (fontSize + 8) / 2);
+  if (align === 'center') {
+    ctx.textAlign = 'center';
+    ctx.fillText(text, (maxWidth * PX_PER_MM) / 2, midY);
+  } else if (align === 'left') {
+    ctx.textAlign = 'left';
+    ctx.fillText(text, 0, midY);
+  } else {
+    // right — default for Arabic
+    ctx.textAlign = 'right';
+    ctx.fillText(text, maxWidth * PX_PER_MM, midY);
+  }
 
   const imgData = canvas.toDataURL('image/png');
-  const imgW = maxWidth;
-  const imgH = fontSize + 4;
+  const imgH    = fontSize * 0.9;       // PDF mm height
 
-  let imgX = x - maxWidth;
-  if (align === 'center') imgX = x - maxWidth / 2;
-  else if (align === 'left') imgX = x;
-
-  doc.addImage(imgData, 'PNG', imgX, y - imgH / 2, imgW, imgH);
+  // x is the LEFT edge of the bounding box in PDF coords
+  doc.addImage(imgData, 'PNG', x, y - imgH / 2, maxWidth, imgH);
 }
 
-// ===== PDF: WEEKLY =====
-function downloadWeeklyPDF(){
-  const ci=pendingAttendance.classIndex;
-  const c=classes[ci];
-  const date=pendingAttendance.date;
-  const records=pendingAttendance.records;
+/**
+ * Synchronous (non-async) wrapper that pre-renders to a shared canvas
+ * and adds the image immediately.  Used for table cell text where we
+ * cannot await inside jsPDF loops.
+ */
+function drawArabicTextSync(doc, text, x, y, opts = {}) {
+  const {
+    fontSize  = 10,
+    color     = [255, 255, 255],
+    align     = 'right',
+    maxWidth  = 60,
+    bold      = false,
+  } = opts;
 
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const SCALE    = 4;
+  const PX_PER_MM = 3.7795;
+  const canvasW  = Math.ceil(maxWidth * PX_PER_MM * SCALE);
+  const canvasH  = Math.ceil((fontSize * 2.5) * SCALE);
 
-  // Dark background
-  doc.setFillColor(26,5,51);
-  doc.rect(0,0,210,297,'F');
+  const canvas   = document.createElement('canvas');
+  canvas.width   = canvasW;
+  canvas.height  = canvasH;
 
-  // Header bar
-  doc.setFillColor(124,58,237);
-  doc.rect(0,0,210,32,'F');
+  const ctx = canvas.getContext('2d');
+  ctx.scale(SCALE, SCALE);
 
-  // Title (Arabic via canvas)
-  drawArabicText(doc, 'تقرير الحضور والغياب', 105, 12, {fontSize:16, color:[255,255,255], align:'center', maxWidth:180, bold:true});
-  drawArabicText(doc, 'كنيسة السيدة العذراء مريم — خدمة الأحد', 105, 23, {fontSize:10, color:[220,200,255], align:'center', maxWidth:180});
+  const fontPx  = fontSize * PX_PER_MM;
+  ctx.font      = `${bold ? '700' : '400'} ${fontPx}px 'Cairo', Arial, sans-serif`;
+  ctx.fillStyle = `rgb(${color[0]},${color[1]},${color[2]})`;
+  ctx.textBaseline = 'middle';
+  ctx.direction = 'rtl';
 
-  // Class info
-  drawArabicText(doc, 'الفصل: ' + c.name, 105, 41, {fontSize:11, color:[200,200,255], align:'center', maxWidth:180});
-  drawArabicText(doc, 'التاريخ: ' + date, 105, 49, {fontSize:10, color:[180,180,220], align:'center', maxWidth:180});
+  const midY = (fontPx * 2.5) / 2;
 
-  const present=records.filter(r=>r.present).length;
-  const absent=records.filter(r=>!r.present).length;
+  if (align === 'center') {
+    ctx.textAlign = 'center';
+    ctx.fillText(text, (maxWidth * PX_PER_MM) / 2, midY);
+  } else if (align === 'left') {
+    ctx.textAlign = 'left';
+    ctx.fillText(text, 0, midY);
+  } else {
+    ctx.textAlign = 'right';
+    ctx.fillText(text, maxWidth * PX_PER_MM, midY);
+  }
 
-  // Stats boxes
-  doc.setFillColor(20,80,50);
-  doc.roundedRect(15,55,80,16,4,4,'F');
-  drawArabicText(doc, 'حضر: ' + present, 95, 63, {fontSize:11, color:[52,211,153], align:'right', maxWidth:80, bold:true});
+  const imgData = canvas.toDataURL('image/png');
+  const imgH    = fontSize * 0.9;
+  doc.addImage(imgData, 'PNG', x, y - imgH / 2, maxWidth, imgH);
+}
 
-  doc.setFillColor(80,20,20);
-  doc.roundedRect(115,55,80,16,4,4,'F');
-  drawArabicText(doc, 'غاب: ' + absent, 195, 63, {fontSize:11, color:[248,113,113], align:'right', maxWidth:80, bold:true});
+// ===== PDF: WEEKLY ATTENDANCE =====
+async function downloadWeeklyPDF(){
+  // close confirm modal first so canvas rendering works in background
+  closeModal('confirmModal');
 
-  // Table header
-  let y = 80;
-  doc.setFillColor(80,40,160);
+  await document.fonts.ready;
+
+  const ci      = pendingAttendance.classIndex;
+  const c       = classes[ci];
+  const date    = pendingAttendance.date;
+  const records = pendingAttendance.records;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+
+  // ---------- background ----------
+  doc.setFillColor(26, 5, 51);
+  doc.rect(0, 0, 210, 297, 'F');
+
+  // ---------- header bar ----------
+  doc.setFillColor(124, 58, 237);
+  doc.rect(0, 0, 210, 34, 'F');
+
+  // header text — x is LEFT edge of text box
+  await drawArabicText(doc, 'تقرير الحضور والغياب', 15, 13,
+    { fontSize: 15, color: [255,255,255], align: 'center', maxWidth: 180, bold: true });
+  await drawArabicText(doc, 'كنيسة السيدة العذراء مريم — خدمة الأحد', 15, 25,
+    { fontSize: 9,  color: [220,200,255], align: 'center', maxWidth: 180 });
+
+  // ---------- class / date info ----------
+  await drawArabicText(doc, 'الفصل: ' + c.name, 15, 43,
+    { fontSize: 11, color: [200,200,255], align: 'center', maxWidth: 180 });
+  await drawArabicText(doc, 'التاريخ: ' + date, 15, 52,
+    { fontSize: 10, color: [180,180,220], align: 'center', maxWidth: 180 });
+
+  const present = records.filter(r => r.present).length;
+  const absent  = records.filter(r => !r.present).length;
+
+  // ---------- stat boxes ----------
+  // Present box (right side — in RTL layout we draw right first)
+  doc.setFillColor(20, 80, 50);
+  doc.roundedRect(110, 57, 85, 14, 3, 3, 'F');
+  await drawArabicText(doc, 'حضر: ' + present, 110, 64,
+    { fontSize: 11, color: [52,211,153], align: 'center', maxWidth: 85, bold: true });
+
+  // Absent box (left side)
+  doc.setFillColor(80, 20, 20);
+  doc.roundedRect(15, 57, 85, 14, 3, 3, 'F');
+  await drawArabicText(doc, 'غاب: ' + absent, 15, 64,
+    { fontSize: 11, color: [248,113,113], align: 'center', maxWidth: 85, bold: true });
+
+  // ---------- table header ----------
+  let y = 78;
+  doc.setFillColor(80, 40, 160);
   doc.rect(15, y, 180, 10, 'F');
-  drawArabicText(doc, 'الحالة', 80, y+5, {fontSize:10, color:[255,255,255], align:'center', maxWidth:60});
-  drawArabicText(doc, 'اسم المخدوم', 195, y+5, {fontSize:10, color:[255,255,255], align:'right', maxWidth:100});
+
+  // Columns: Name (right, wide) | Status (left, narrow)
+  // In PDF coords: left=15, right=195
+  // Name column starts at x=195-110=85, width=110
+  // Status column starts at x=15, width=70
+  drawArabicTextSync(doc, 'اسم المخدوم', 85, y + 5,
+    { fontSize: 10, color: [255,255,255], align: 'right', maxWidth: 110, bold: true });
+  drawArabicTextSync(doc, 'الحالة', 15, y + 5,
+    { fontSize: 10, color: [255,255,255], align: 'center', maxWidth: 70, bold: true });
   y += 10;
 
-  // Table rows
-  records.forEach((r, i) => {
-    const bg = i % 2 === 0 ? [30,15,60] : [20,8,50];
+  // ---------- table rows ----------
+  // Sort: present first, then absent
+  const sorted = [
+    ...records.filter(r => r.present),
+    ...records.filter(r => !r.present)
+  ];
+
+  sorted.forEach((r, i) => {
+    if (y > 275) {
+      doc.addPage();
+      doc.setFillColor(26, 5, 51);
+      doc.rect(0, 0, 210, 297, 'F');
+      y = 20;
+    }
+
+    const bg = i % 2 === 0 ? [30, 15, 60] : [20, 8, 50];
     doc.setFillColor(...bg);
     doc.rect(15, y, 180, 10, 'F');
 
-    const statusColor = r.present ? [52,211,153] : [248,113,113];
-    const statusText = r.present ? '✓ حضر' : '✗ غاب';
-    drawArabicText(doc, statusText, 80, y+5, {fontSize:9, color:statusColor, align:'center', maxWidth:60});
-    drawArabicText(doc, r.name, 195, y+5, {fontSize:9, color:[220,220,255], align:'right', maxWidth:110});
-    y += 10;
+    const statusColor = r.present ? [52, 211, 153] : [248, 113, 113];
+    const statusText  = r.present ? 'حضر ✓' : 'غاب ✗';
 
-    // New page if needed
-    if(y > 270){
-      doc.addPage();
-      doc.setFillColor(26,5,51);
-      doc.rect(0,0,210,297,'F');
-      y = 20;
-    }
+    drawArabicTextSync(doc, r.name, 85, y + 5,
+      { fontSize: 9, color: [220, 220, 255], align: 'right', maxWidth: 110 });
+    drawArabicTextSync(doc, statusText, 15, y + 5,
+      { fontSize: 9, color: statusColor, align: 'center', maxWidth: 70, bold: true });
+    y += 10;
   });
 
-  // Footer
+  // ---------- footer ----------
   doc.setFontSize(8);
-  doc.setTextColor(100,100,150);
-  doc.text('Generated by Attendance Dashboard', 105, 290, {align:'center'});
+  doc.setTextColor(120, 100, 160);
+  doc.text('كنيسة السيدة العذراء مريم', 105, 290, { align: 'center' });
 
-  doc.save('attendance-' + c.name + '-' + date + '.pdf');
+  doc.save('حضور-' + c.name + '-' + date + '.pdf');
 
-  // Save data after download
   confirmSaveAttendance();
 }
 
-// ===== PDF: FULL CLASS =====
-function downloadClassPDF(ci){
-  const c=classes[ci];
-  const records=c.records||[];
-  if(!records.length){alert('لا يوجد سجلات لهذا الفصل');return;}
+// ===== PDF: FULL CLASS RECORD =====
+async function downloadClassPDF(ci){
+  await document.fonts.ready;
 
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const c       = classes[ci];
+  const records = c.records || [];
+  if (!records.length) { alert('لا يوجد سجلات لهذا الفصل'); return; }
 
-  // Dark background
-  doc.setFillColor(26,5,51);
-  doc.rect(0,0,297,210,'F');
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+  // a4 landscape: 297 x 210 mm
 
-  // Header
-  doc.setFillColor(79,70,229);
-  doc.rect(0,0,297,30,'F');
-  drawArabicText(doc, 'سجل الحضور الكامل', 148, 12, {fontSize:15, color:[255,255,255], align:'center', maxWidth:250, bold:true});
-  drawArabicText(doc, 'الفصل: ' + c.name + '    |    عدد الأسابيع: ' + records.length + '    |    عدد المخدومين: ' + c.students.length, 148, 23, {fontSize:9, color:[200,200,255], align:'center', maxWidth:280});
+  doc.setFillColor(26, 5, 51);
+  doc.rect(0, 0, 297, 210, 'F');
 
-  // Build table data
-  const weeks = records.map(r => r.date);
-  let y = 38;
+  // ---------- header ----------
+  doc.setFillColor(79, 70, 229);
+  doc.rect(0, 0, 297, 30, 'F');
 
-  // Table header
-  const colW = Math.min(25, (260 - 50) / Math.max(weeks.length, 1));
-  const nameColW = 50;
-  const summColW = 18;
-  const totalW = nameColW + (weeks.length * colW) + summColW * 2;
-  const startX = (297 - totalW) / 2;
+  await drawArabicText(doc, 'سجل الحضور الكامل', 23, 12,
+    { fontSize: 14, color: [255,255,255], align: 'center', maxWidth: 250, bold: true });
+  await drawArabicText(doc,
+    'الفصل: ' + c.name + '   |   أسابيع: ' + records.length + '   |   مخدومين: ' + c.students.length,
+    23, 23, { fontSize: 9, color: [200,200,255], align: 'center', maxWidth: 250 });
 
-  doc.setFillColor(80,40,160);
-  doc.rect(startX, y, totalW, 10, 'F');
+  // ---------- layout calculations ----------
+  const PAGE_W   = 297;
+  const MARGIN   = 10;
+  const usable   = PAGE_W - MARGIN * 2;          // 277 mm
+  const NAME_W   = 52;
+  const SUMM_W   = 14;                            // حضر / غاب summary cols
+  const weeksAvail = usable - NAME_W - SUMM_W * 2;
+  const COL_W    = Math.min(20, Math.floor(weeksAvail / Math.max(records.length, 1)));
+  const totalW   = NAME_W + records.length * COL_W + SUMM_W * 2;
+  const startX   = (PAGE_W - totalW) / 2;
+  const ROW_H    = 9;
 
-  // Column headers
-  let hx = startX + totalW;
-  drawArabicText(doc, 'الاسم', hx, y+5, {fontSize:8, color:[255,255,255], align:'right', maxWidth:nameColW, bold:true});
-  hx -= nameColW;
+  let y = 36;
 
-  weeks.forEach(w => {
-    drawArabicText(doc, w, hx, y+5, {fontSize:6, color:[200,200,255], align:'right', maxWidth:colW});
-    hx -= colW;
+  // ---------- table header ----------
+  doc.setFillColor(80, 40, 160);
+  doc.rect(startX, y, totalW, ROW_H, 'F');
+
+  // Column headers drawn RIGHT → LEFT
+  // Name col is rightmost
+  let hx = startX;
+  // غاب (leftmost)
+  drawArabicTextSync(doc, 'غاب', hx, y + ROW_H / 2,
+    { fontSize: 8, color: [248,113,113], align: 'center', maxWidth: SUMM_W, bold: true });
+  hx += SUMM_W;
+  // حضر
+  drawArabicTextSync(doc, 'حضر', hx, y + ROW_H / 2,
+    { fontSize: 8, color: [52,211,153], align: 'center', maxWidth: SUMM_W, bold: true });
+  hx += SUMM_W;
+  // Week date cols left → right
+  records.forEach(rec => {
+    drawArabicTextSync(doc, rec.date, hx, y + ROW_H / 2,
+      { fontSize: 5.5, color: [200,200,255], align: 'center', maxWidth: COL_W });
+    hx += COL_W;
   });
+  // Name (rightmost)
+  drawArabicTextSync(doc, 'الاسم', hx, y + ROW_H / 2,
+    { fontSize: 9, color: [255,255,255], align: 'right', maxWidth: NAME_W, bold: true });
+  y += ROW_H;
 
-  drawArabicText(doc, 'حضر', hx, y+5, {fontSize:8, color:[52,211,153], align:'center', maxWidth:summColW, bold:true});
-  hx -= summColW;
-  drawArabicText(doc, 'غاب', hx, y+5, {fontSize:8, color:[248,113,113], align:'center', maxWidth:summColW, bold:true});
-  y += 10;
-
-  // Rows
-  const sortedStudents = [...c.students].sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+  // ---------- student rows ----------
+  const sortedStudents = [...c.students].sort((a, b) => a.name.localeCompare(b.name, 'ar'));
 
   sortedStudents.forEach((s, idx) => {
-    if(y > 195){
+    if (y > 200) {
       doc.addPage();
-      doc.setFillColor(26,5,51);
-      doc.rect(0,0,297,210,'F');
+      doc.setFillColor(26, 5, 51);
+      doc.rect(0, 0, 297, 210, 'F');
       y = 15;
     }
 
-    const bg = idx % 2 === 0 ? [30,15,60] : [20,8,50];
+    const bg = idx % 2 === 0 ? [30, 15, 60] : [22, 10, 52];
     doc.setFillColor(...bg);
-    doc.rect(startX, y, totalW, 9, 'F');
+    doc.rect(startX, y, totalW, ROW_H, 'F');
 
-    let rx = startX + totalW;
-    drawArabicText(doc, s.name, rx, y+4.5, {fontSize:8, color:[220,220,255], align:'right', maxWidth:nameColW, bold:true});
-    rx -= nameColW;
-
+    let rx = startX;
     let presentCount = 0, absentCount = 0;
+
+    // غاب placeholder — filled after counting
+    const absentX = rx;
+    rx += SUMM_W;
+    const presentX = rx;
+    rx += SUMM_W;
+
     records.forEach(rec => {
-      const a = rec.attendance.find(x=>x.name===s.name);
-      let val = '-'; let col = [150,150,150];
-      if(a){ val = a.present ? '✓' : '✗'; col = a.present ? [52,211,153] : [248,113,113]; if(a.present) presentCount++; else absentCount++; }
-      drawArabicText(doc, val, rx, y+4.5, {fontSize:9, color:col, align:'center', maxWidth:colW});
-      rx -= colW;
+      const att = rec.attendance.find(x => x.name === s.name);
+      let val = '-', col = [130, 130, 130];
+      if (att) {
+        if (att.present) { val = '✓'; col = [52, 211, 153]; presentCount++; }
+        else             { val = '✗'; col = [248, 113, 113]; absentCount++; }
+      }
+      drawArabicTextSync(doc, val, rx, y + ROW_H / 2,
+        { fontSize: 9, color: col, align: 'center', maxWidth: COL_W, bold: true });
+      rx += COL_W;
     });
 
-    drawArabicText(doc, String(presentCount), rx, y+4.5, {fontSize:9, color:[52,211,153], align:'center', maxWidth:summColW, bold:true});
-    rx -= summColW;
-    drawArabicText(doc, String(absentCount), rx, y+4.5, {fontSize:9, color:[248,113,113], align:'center', maxWidth:summColW, bold:true});
-    y += 9;
+    // Name (rightmost)
+    drawArabicTextSync(doc, s.name, rx, y + ROW_H / 2,
+      { fontSize: 8, color: [220, 220, 255], align: 'right', maxWidth: NAME_W, bold: true });
+
+    // Summary counts
+    drawArabicTextSync(doc, String(presentCount), presentX, y + ROW_H / 2,
+      { fontSize: 9, color: [52, 211, 153], align: 'center', maxWidth: SUMM_W, bold: true });
+    drawArabicTextSync(doc, String(absentCount), absentX, y + ROW_H / 2,
+      { fontSize: 9, color: [248, 113, 113], align: 'center', maxWidth: SUMM_W, bold: true });
+
+    y += ROW_H;
   });
 
-  // Footer
+  // ---------- footer ----------
   doc.setFontSize(8);
-  doc.setTextColor(100,100,150);
-  doc.text('Generated by Attendance Dashboard', 148, 205, {align:'center'});
+  doc.setTextColor(120, 100, 160);
+  doc.text('كنيسة السيدة العذراء مريم', 148, 206, { align: 'center' });
 
-  doc.save('full-record-' + c.name + '.pdf');
+  doc.save('سجل-' + c.name + '.pdf');
 }
 
 // ===== MODAL HELPERS =====
 function openModal(id){ document.getElementById(id).classList.add('open'); }
 function closeModal(id){ document.getElementById(id).classList.remove('open'); }
 
-window.onclick=function(e){
+window.onclick = function(e){
   ['addClassModal','addStudentModal','attendanceModal','confirmModal'].forEach(id=>{
-    const m=document.getElementById(id);
-    if(m&&e.target===m) m.classList.remove('open');
+    const m = document.getElementById(id);
+    if(m && e.target === m) m.classList.remove('open');
   });
 };
 </script>
