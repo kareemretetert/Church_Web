@@ -216,7 +216,13 @@
       {
         "title": "yyyyyyyyyyyyyyy",
         "topics": "gjh\ngj",
-        "lessons": [],
+        "lessons": [
+          {
+            "title": "gjhh",
+            "type": "image",
+            "imageUrl": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775732391/luzgtiivm1ieiuiwnbpt.jpg"
+          }
+        ],
         "quiz": null
       }
     ]
