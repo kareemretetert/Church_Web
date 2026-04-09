@@ -250,6 +250,15 @@ if(ent!==PW){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 
 <script>
+
+  document.documentElement.style.scrollBehavior = "smooth";
+const password="kimo123"
+const entered=prompt("ادخل كلمة المرور")
+
+if(entered!==password){
+document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>كلمة المرور غير صحيحة</h2>"
+throw new Error("access denied")
+}
 // ============================================================
 // CONSTANTS & STATE
 // ============================================================
