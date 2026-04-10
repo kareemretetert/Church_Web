@@ -1,429 +1,365 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>لعبة المتاهة الصعبة</title>
-
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<title>لعبة المتاهة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-body{
-margin:0;
-font-family:'Cairo',sans-serif;
-background:#eaf7ff;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
+/* ═══ TOKENS ═══ */
+:root{
+  --p:#7c3aed;--p-dk:#5b21b6;--p-lt:#a78bfa;
+  --bg:#f4f0fb;--sf:#fff;--sf2:#f1ecfc;
+  --tx:#0f172a;--tx2:#374151;--tx3:#6b7280;
+  --bdr:#e2e8f0;
+  --sh:0 4px 20px rgba(109,40,217,.10);
+  --sh2:0 8px 32px rgba(109,40,217,.18);
+  --shdr:0 6px 24px rgba(109,40,217,.25);
+  --hdr1:#7c3aed;--hdr2:#9333ea;--hdr3:#5b21b6;
 }
+body.dark{
+  --bg:#0d0d1a;--sf:#161627;--sf2:#1e1e33;
+  --tx:#f0f0ff;--tx2:#c4c4e0;--tx3:#8888aa;
+  --bdr:#2a2a44;
+  --sh:0 4px 24px rgba(0,0,0,.5);
+  --sh2:0 8px 40px rgba(0,0,0,.6);
+  --shdr:0 6px 24px rgba(0,0,0,.6);
+  --hdr1:#0f172a;--hdr2:#1e1b4b;--hdr3:#020617;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
 
-.game-shell{
-width:90%;
-max-width:900px;
-background:#fff;
-border-radius:24px;
-padding:20px;
-box-shadow:0 14px 35px rgba(0,64,128,0.14);
-position:relative;
-}
+/* PARTICLES */
+#particles{position:fixed;inset:0;width:100%;height:100%;z-index:-10;pointer-events:none;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(124,58,237,.12),transparent 40%),radial-gradient(circle at 80% 30%,rgba(59,130,246,.10),transparent 45%),radial-gradient(circle at 50% 80%,rgba(236,72,153,.08),transparent 50%);z-index:-20;}
 
-.top-bar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px;
-flex-wrap:wrap;
-}
+/* HEADER */
+header{background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));position:sticky;top:0;z-index:300;box-shadow:var(--shdr);overflow:hidden;transition:background .4s;}
+header::before{content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none;}
+.hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);border-radius:22px;background:rgba(255,255,255,.15);color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;text-decoration:none;transition:background .2s,transform .15s;-webkit-tap-highlight-color:transparent;}
+.back-btn:hover{background:rgba(255,255,255,.28);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.hdr-title{flex:1;text-align:center;color:#fff;font-size:clamp(14px,3.5vw,19px);font-weight:800;}
+.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
+.toggle-track{width:64px;height:32px;border-radius:50px;background:#1e293b;position:relative;display:flex;align-items:center;padding:0 5px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);transition:background .3s;-webkit-tap-highlight-color:transparent;}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+body.dark .toggle-track{background:rgba(109,40,217,.5);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
 
-.title-box h1{
-color:#004080;
-font-size:1.9rem;
-margin-bottom:4px;
-}
+/* PAGE */
+.page{max-width:700px;margin:0 auto;padding:20px 14px 70px;}
 
-.timer-box{
-position:relative;
-width:110px;
-height:110px;
-}
+/* TOP BAR */
+.top-bar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;animation:fadeUp .4s both;}
 
-.timer-box svg{
-width:100%;
-height:100%;
-transform:rotate(-90deg);
-}
+/* TIMER CIRCLE */
+.timer-wrap{display:flex;align-items:center;gap:14px;}
+.timer-circle{position:relative;width:88px;height:88px;flex-shrink:0;}
+.timer-circle svg{width:100%;height:100%;transform:rotate(-90deg);}
+.timer-track{fill:none;stroke:var(--sf2);stroke-width:9;}
+.timer-prog{fill:none;stroke:var(--p);stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s;}
+.timer-inner{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--p);}
 
-.timer-track{
-fill:none;
-stroke:#dbe8f5;
-stroke-width:10;
+/* CONTROLS */
+.game-controls{display:flex;flex-direction:column;gap:8px;flex:1;}
+.control-label{font-size:11px;font-weight:700;color:var(--tx3);}
+.replay-btn{
+  padding:11px 18px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;font-family:'Cairo',sans-serif;font-size:14px;font-weight:800;
+  cursor:pointer;box-shadow:0 4px 14px rgba(109,40,217,.25);
+  transition:transform .2s;width:fit-content;
 }
+.replay-btn:hover{transform:translateY(-2px);}
 
-.timer-progress{
-fill:none;
-stroke:#1e88e5;
-stroke-width:10;
-stroke-linecap:round;
-transition:stroke-dashoffset 1s linear,stroke 0.3s ease;
+/* D-PAD (mobile) */
+.dpad{
+  display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,48px);
+  gap:4px;justify-content:center;margin-bottom:14px;
+  animation:fadeUp .5s .1s both;
 }
+.dpad-btn{
+  display:flex;align-items:center;justify-content:center;
+  border:none;border-radius:12px;
+  background:var(--sf);border:1.5px solid var(--bdr);
+  font-size:20px;cursor:pointer;
+  box-shadow:var(--sh);transition:transform .1s,background .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.dpad-btn:active{transform:scale(.9);background:var(--sf2);}
+.dpad-btn.empty{background:transparent;border-color:transparent;box-shadow:none;pointer-events:none;}
 
-.timer-text{
-position:absolute;
-inset:0;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-font-weight:800;
-color:#1565c0;
+/* CANVAS CARD */
+.canvas-card{
+  background:var(--sf);border-radius:22px;overflow:hidden;
+  box-shadow:var(--sh);border:1px solid var(--bdr);
+  animation:fadeUp .5s .05s both;
 }
+#mazeCanvas{display:block;width:100%;height:auto;border-radius:0;}
 
-canvas{
-border:4px solid #004080;
-background:#fff;
-border-radius:14px;
-max-width:100%;
-display:block;
-margin:auto;
+/* OVERLAY MESSAGES */
+.msg-overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.75);z-index:500;
+  justify-content:center;align-items:center;
 }
+.msg-overlay.show{display:flex;}
+.msg-box{
+  background:var(--sf);border-radius:24px;padding:36px 40px;text-align:center;
+  box-shadow:var(--sh2);animation:scaleIn .35s cubic-bezier(.34,1.56,.64,1);
+  min-width:260px;
+}
+.msg-emoji{font-size:64px;margin-bottom:10px;}
+.msg-title{font-size:22px;font-weight:800;margin-bottom:8px;}
+.msg-sub{font-size:14px;color:var(--tx2);margin-bottom:20px;}
+.msg-btn{
+  padding:12px 28px;border:none;border-radius:14px;
+  color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;transition:transform .2s;
+}
+.msg-btn:hover{transform:scale(1.04);}
+#winBox .msg-title{color:#16a34a;}
+#winBox .msg-btn{background:linear-gradient(135deg,#16a34a,#15803d);}
+#loseBox .msg-title{color:#dc2626;}
+#loseBox .msg-btn{background:linear-gradient(135deg,#dc2626,#b91c1c);}
 
-/* رسائل الفوز والخسارة */
-.message{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%) scale(0.8);
-padding:22px 40px;
-border-radius:18px;
-font-size:1.4rem;
-font-weight:800;
-text-align:center;
-color:#fff;
-display:none;
-z-index:5;
-box-shadow:0 10px 30px rgba(0,0,0,0.25);
-animation:popup .35s ease forwards;
-}
-
-@keyframes popup{
-to{transform:translate(-50%,-50%) scale(1);}
-}
-
-#win-message{
-background:linear-gradient(135deg,#28a745,#1b7c31);
-}
-
-#lose-message{
-background:linear-gradient(135deg,#e53935,#b71c1c);
-}
-
-.controls{
-display:flex;
-gap:12px;
-flex-wrap:wrap;
-justify-content:center;
-margin-top:15px;
-}
-
-.action-btn{
-padding:10px 22px;
-border:none;
-border-radius:12px;
-background:linear-gradient(135deg,#1e88e5 0%,#1565c0 100%);
-color:white;
-font-family:inherit;
-font-size:1rem;
-font-weight:700;
-cursor:pointer;
-transition:0.25s ease;
-}
-
-.action-btn:hover{
-transform:translateY(-2px);
-}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{transform:scale(.75);}to{transform:scale(1);}}
 </style>
 </head>
-
 <body>
+<canvas id="particles"></canvas>
 
-<div class="game-shell">
+<header>
+  <div class="hdr">
+    <a class="back-btn" href="compition.html">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      رجوع
+    </a>
+    <div class="hdr-title">🎯 لعبة المتاهة الصعبة</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
+  </div>
+</header>
 
-<div class="top-bar">
-<div class="title-box">
-<h1>لعبة المتاهة الصعبة</h1>
+<div class="page">
+
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="timer-wrap">
+      <div class="timer-circle">
+        <svg viewBox="0 0 100 100">
+          <circle class="timer-track" cx="50" cy="50" r="42"/>
+          <circle class="timer-prog" id="timerProg" cx="50" cy="50" r="42"/>
+        </svg>
+        <div class="timer-inner" id="timerText">5:00</div>
+      </div>
+      <div>
+        <div class="control-label">الوقت المتبقي</div>
+      </div>
+    </div>
+    <button class="replay-btn" onclick="setup()">🔄 إعادة اللعب</button>
+  </div>
+
+  <!-- D-PAD (mobile) -->
+  <div class="dpad">
+    <div class="dpad-btn empty"></div>
+    <button class="dpad-btn" onclick="movePlayer(0,-1)">⬆️</button>
+    <div class="dpad-btn empty"></div>
+    <button class="dpad-btn" onclick="movePlayer(-1,0)">⬅️</button>
+    <div class="dpad-btn empty"></div>
+    <button class="dpad-btn" onclick="movePlayer(1,0)">➡️</button>
+    <div class="dpad-btn empty"></div>
+    <button class="dpad-btn" onclick="movePlayer(0,1)">⬇️</button>
+    <div class="dpad-btn empty"></div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-card">
+    <canvas id="mazeCanvas" width="560" height="560"></canvas>
+  </div>
+
 </div>
 
-<div class="timer-box">
-<svg viewBox="0 0 100 100">
-<circle class="timer-track" cx="50" cy="50" r="42"></circle>
-<circle class="timer-progress" id="timerProgress" cx="50" cy="50" r="42"></circle>
-</svg>
-<div class="timer-text">
-<span id="timerText">5:00</span>
-</div>
-</div>
-</div>
-
-<div id="win-message" class="message">🎉 برافو! وصلت للنهاية</div>
-<div id="lose-message" class="message">⏰ انتهى الوقت</div>
-
-<canvas id="mazeCanvas" width="600" height="600"></canvas>
-
-<div class="controls">
-<button class="action-btn" onclick="setup()">إعادة اللعب</button>
+<!-- WIN -->
+<div class="msg-overlay" id="winOverlay">
+  <div class="msg-box" id="winBox">
+    <div class="msg-emoji">🎉</div>
+    <div class="msg-title">برافو! وصلت للنهاية</div>
+    <div class="msg-sub">عبقري! وصلت للنهاية بنجاح 🌟</div>
+    <button class="msg-btn" onclick="document.getElementById('winOverlay').classList.remove('show');setup()">🔄 العب مرة تانية</button>
+  </div>
 </div>
 
+<!-- LOSE -->
+<div class="msg-overlay" id="loseOverlay">
+  <div class="msg-box" id="loseBox">
+    <div class="msg-emoji">⏰</div>
+    <div class="msg-title">انتهى الوقت!</div>
+    <div class="msg-sub">حاول تاني وركز أكتر في الطريق 💪</div>
+    <button class="msg-btn" onclick="document.getElementById('loseOverlay').classList.remove('show');setup()">🔄 حاول تاني</button>
+  </div>
 </div>
 
 <script>
+(function(){
+  const s=localStorage.getItem("cv_theme");
+  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s||(d?"dark":"light"));
+})();
+function applyTheme(m){document.body.classList.toggle("dark",m==="dark");localStorage.setItem("cv_theme",m);}
+function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
+
+/* ═══ MAZE ═══ */
 const canvas=document.getElementById('mazeCanvas');
 const ctx=canvas.getContext('2d');
-
-const rows=35;
-const cols=35;
+const rows=35,cols=35;
 const cellSize=canvas.width/cols;
-
-const TOTAL_TIME=300;
-let timeLeft=TOTAL_TIME;
-let timerInterval=null;
-let gameEnded=false;
-
-let grid=[];
-let player={x:0,y:0};
-let end={x:cols-1,y:rows-1};
+const TOTAL=300;
+let timeLeft=TOTAL,timerInterval=null,gameEnded=false;
+let grid=[],player={x:0,y:0},end={x:cols-1,y:rows-1};
 
 const timerText=document.getElementById('timerText');
-const timerProgress=document.getElementById('timerProgress');
-const winMessage=document.getElementById('win-message');
-const loseMessage=document.getElementById('lose-message');
-
-const radius=42;
-const circumference=2*Math.PI*radius;
-timerProgress.style.strokeDasharray=circumference;
-timerProgress.style.strokeDashoffset=0;
+const timerProg=document.getElementById('timerProg');
+const radius=42,circumference=2*Math.PI*radius;
+timerProg.style.strokeDasharray=circumference;
+timerProg.style.strokeDashoffset=0;
 
 class Cell{
-constructor(x,y){
-this.x=x;
-this.y=y;
-this.walls=[true,true,true,true];
-this.visited=false;
+  constructor(x,y){this.x=x;this.y=y;this.walls=[true,true,true,true];this.visited=false;}
+  draw(){
+    const px=this.x*cellSize,py=this.y*cellSize;
+    const isDark=document.body.classList.contains('dark');
+    ctx.strokeStyle=isDark?'#a78bfa':'#5b21b6';
+    ctx.lineWidth=1.5;
+    if(this.walls[0])line(px,py,px+cellSize,py);
+    if(this.walls[1])line(px+cellSize,py,px+cellSize,py+cellSize);
+    if(this.walls[2])line(px+cellSize,py+cellSize,px,py+cellSize);
+    if(this.walls[3])line(px,py+cellSize,px,py);
+  }
 }
-draw(){
-const px=this.x*cellSize;
-const py=this.y*cellSize;
-ctx.strokeStyle='#2d3748';
-ctx.lineWidth=2;
-
-if(this.walls[0])line(px,py,px+cellSize,py);
-if(this.walls[1])line(px+cellSize,py,px+cellSize,py+cellSize);
-if(this.walls[2])line(px+cellSize,py+cellSize,px,py+cellSize);
-if(this.walls[3])line(px,py+cellSize,px,py);
-}
-}
-
-function line(x1,y1,x2,y2){
-ctx.beginPath();
-ctx.moveTo(x1,y1);
-ctx.lineTo(x2,y2);
-ctx.stroke();
-}
-
-function getCell(x,y){
-if(x<0||y<0||x>=cols||y>=rows)return null;
-return grid[y*cols+x];
-}
-
+function line(x1,y1,x2,y2){ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();}
+function getCell(x,y){if(x<0||y<0||x>=cols||y>=rows)return null;return grid[y*cols+x];}
 function removeWalls(a,b){
-const dx=b.x-a.x;
-const dy=b.y-a.y;
-
-if(dx===1){a.walls[1]=false;b.walls[3]=false;}
-if(dx===-1){a.walls[3]=false;b.walls[1]=false;}
-if(dy===1){a.walls[2]=false;b.walls[0]=false;}
-if(dy===-1){a.walls[0]=false;b.walls[2]=false;}
+  const dx=b.x-a.x,dy=b.y-a.y;
+  if(dx===1){a.walls[1]=false;b.walls[3]=false;}
+  if(dx===-1){a.walls[3]=false;b.walls[1]=false;}
+  if(dy===1){a.walls[2]=false;b.walls[0]=false;}
+  if(dy===-1){a.walls[0]=false;b.walls[2]=false;}
 }
-
-function shuffle(a){
-for(let i=a.length-1;i>0;i--){
-const j=Math.floor(Math.random()*(i+1));
-[a[i],a[j]]=[a[j],a[i]];
-}
-return a;
-}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function generateMaze(){
-grid=[];
-for(let y=0;y<rows;y++){
-for(let x=0;x<cols;x++){
-grid.push(new Cell(x,y));
+  grid=[];
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)grid.push(new Cell(x,y));
+  let stack=[],start=getCell(0,0);start.visited=true;stack.push(start);
+  while(stack.length){
+    let cur=stack[stack.length-1],neighbors=[];
+    [getCell(cur.x,cur.y-1),getCell(cur.x+1,cur.y),getCell(cur.x,cur.y+1),getCell(cur.x-1,cur.y)].forEach(n=>{if(n&&!n.visited)neighbors.push(n);});
+    if(neighbors.length){let next=shuffle(neighbors)[0];next.visited=true;removeWalls(cur,next);stack.push(next);}
+    else stack.pop();
+  }
 }
+function addLoops(prob=.05){
+  for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){
+    let c=getCell(x,y);
+    if(Math.random()<prob){let r=getCell(x+1,y);if(r)removeWalls(c,r);}
+    if(Math.random()<prob){let b=getCell(x,y+1);if(b)removeWalls(c,b);}
+  }
 }
-
-let stack=[];
-let start=getCell(0,0);
-start.visited=true;
-stack.push(start);
-
-while(stack.length){
-let current=stack[stack.length-1];
-let neighbors=[];
-
-const dirs=[
-getCell(current.x,current.y-1),
-getCell(current.x+1,current.y),
-getCell(current.x,current.y+1),
-getCell(current.x-1,current.y)
-];
-
-dirs.forEach(n=>{if(n&&!n.visited)neighbors.push(n)});
-
-if(neighbors.length){
-let next=shuffle(neighbors)[0];
-next.visited=true;
-removeWalls(current,next);
-stack.push(next);
-}else{
-stack.pop();
-}
-}
-}
-
-/* loops قليلة */
-function addLoops(prob=0.05){
-for(let y=0;y<rows;y++){
-for(let x=0;x<cols;x++){
-let cell=getCell(x,y);
-
-if(Math.random()<prob){
-let right=getCell(x+1,y);
-if(right)removeWalls(cell,right);
-}
-
-if(Math.random()<prob){
-let bottom=getCell(x,y+1);
-if(bottom)removeWalls(cell,bottom);
-}
-}
-}
-}
-
-/* خداع قرب النهاية */
 function fakePaths(){
-for(let i=0;i<40;i++){
-let x=cols-2-Math.floor(Math.random()*6);
-let y=rows-2-Math.floor(Math.random()*6);
-let cell=getCell(x,y);
-
-let n=[
-getCell(x+1,y),
-getCell(x-1,y),
-getCell(x,y+1),
-getCell(x,y-1)
-];
-
-n.forEach(c=>{
-if(c && Math.random()<0.3){
-removeWalls(cell,c);
-}
-});
-}
+  for(let i=0;i<40;i++){
+    let x=cols-2-Math.floor(Math.random()*6),y=rows-2-Math.floor(Math.random()*6);
+    let c=getCell(x,y);
+    [getCell(x+1,y),getCell(x-1,y),getCell(x,y+1),getCell(x,y-1)].forEach(n=>{if(n&&Math.random()<.3)removeWalls(c,n);});
+  }
 }
 
 function drawMaze(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-grid.forEach(c=>c.draw());
-
-/* النهاية ⭐ */
-ctx.fillStyle='#ffca28';
-ctx.beginPath();
-ctx.arc(end.x*cellSize+cellSize/2,end.y*cellSize+cellSize/2,cellSize/3,0,Math.PI*2);
-ctx.fill();
-
-/* اللاعب */
-ctx.fillStyle='#1e88e5';
-ctx.beginPath();
-ctx.arc(player.x*cellSize+cellSize/2,player.y*cellSize+cellSize/2,cellSize/3,0,Math.PI*2);
-ctx.fill();
+  const isDark=document.body.classList.contains('dark');
+  ctx.fillStyle=isDark?'#161627':'#fff';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  grid.forEach(c=>c.draw());
+  // end star
+  ctx.fillStyle='#f59e0b';
+  ctx.beginPath();ctx.arc(end.x*cellSize+cellSize/2,end.y*cellSize+cellSize/2,cellSize/3,0,Math.PI*2);ctx.fill();
+  // player
+  ctx.fillStyle='#7c3aed';
+  ctx.beginPath();ctx.arc(player.x*cellSize+cellSize/2,player.y*cellSize+cellSize/2,cellSize/3,0,Math.PI*2);ctx.fill();
 }
 
 function movePlayer(dx,dy){
-if(gameEnded)return;
-
-const newX=player.x+dx;
-const newY=player.y+dy;
-
-if(newX<0||newY<0||newX>=cols||newY>=rows)return;
-
-const current=getCell(player.x,player.y);
-const dir=dx===1?1:dx===-1?3:dy===1?2:0;
-
-if(!current.walls[dir]){
-player.x=newX;
-player.y=newY;
-
-if(player.x===end.x && player.y===end.y){
-gameEnded=true;
-clearInterval(timerInterval);
-winMessage.style.display='block';
-}
-}
-
-drawMaze();
+  if(gameEnded)return;
+  const nx=player.x+dx,ny=player.y+dy;
+  if(nx<0||ny<0||nx>=cols||ny>=rows)return;
+  const cur=getCell(player.x,player.y);
+  const dir=dx===1?1:dx===-1?3:dy===1?2:0;
+  if(!cur.walls[dir]){
+    player.x=nx;player.y=ny;
+    if(player.x===end.x&&player.y===end.y){
+      gameEnded=true;clearInterval(timerInterval);
+      setTimeout(()=>document.getElementById('winOverlay').classList.add('show'),300);
+    }
+  }
+  drawMaze();
 }
 
 document.addEventListener('keydown',e=>{
-if(e.key==="ArrowUp")movePlayer(0,-1);
-if(e.key==="ArrowDown")movePlayer(0,1);
-if(e.key==="ArrowLeft")movePlayer(-1,0);
-if(e.key==="ArrowRight")movePlayer(1,0);
+  if(e.key==="ArrowUp"){e.preventDefault();movePlayer(0,-1);}
+  if(e.key==="ArrowDown"){e.preventDefault();movePlayer(0,1);}
+  if(e.key==="ArrowLeft"){e.preventDefault();movePlayer(-1,0);}
+  if(e.key==="ArrowRight"){e.preventDefault();movePlayer(1,0);}
 });
 
-function updateTimerUI(){
-const m=Math.floor(timeLeft/60);
-const s=timeLeft%60;
-timerText.textContent=`${m}:${String(s).padStart(2,'0')}`;
-const ratio=timeLeft/TOTAL_TIME;
-timerProgress.style.strokeDashoffset=circumference*(1-ratio);
+function updateTimer(){
+  const m=Math.floor(timeLeft/60),s=timeLeft%60;
+  timerText.textContent=(m<10?"0"+m:m)+":"+(String(s).padStart(2,"0"));
+  const ratio=timeLeft/TOTAL;
+  timerProg.style.strokeDashoffset=circumference*(1-ratio);
+  timerProg.style.stroke=timeLeft<60?"#dc2626":timeLeft<120?"#f59e0b":"var(--p)";
 }
 
 function startTimer(){
-clearInterval(timerInterval);
-timerInterval=setInterval(()=>{
-if(gameEnded)return;
-
-timeLeft--;
-if(timeLeft<0)timeLeft=0;
-
-updateTimerUI();
-
-if(timeLeft===0){
-gameEnded=true;
-loseMessage.style.display='block';
-clearInterval(timerInterval);
-}
-},1000);
+  clearInterval(timerInterval);
+  timerInterval=setInterval(()=>{
+    if(gameEnded)return;
+    timeLeft--;if(timeLeft<0)timeLeft=0;
+    updateTimer();
+    if(timeLeft===0){gameEnded=true;clearInterval(timerInterval);setTimeout(()=>document.getElementById('loseOverlay').classList.add('show'),300);}
+  },1000);
 }
 
 function setup(){
-player={x:0,y:0};
-end={x:cols-1,y:rows-1};
-timeLeft=TOTAL_TIME;
-gameEnded=false;
-
-winMessage.style.display='none';
-loseMessage.style.display='none';
-
-generateMaze();
-addLoops(0.05);
-fakePaths();
-
-updateTimerUI();
-drawMaze();
-startTimer();
+  player={x:0,y:0};end={x:cols-1,y:rows-1};
+  timeLeft=TOTAL;gameEnded=false;
+  document.getElementById('winOverlay').classList.remove('show');
+  document.getElementById('loseOverlay').classList.remove('show');
+  generateMaze();addLoops(.05);fakePaths();
+  updateTimer();drawMaze();startTimer();
 }
-
 setup();
-</script>
 
+/* BG PARTICLES */
+const bgCanvas=document.getElementById("particles");
+const bgCtx=bgCanvas.getContext("2d");
+let w,h;
+function resize(){w=bgCanvas.width=window.innerWidth;h=bgCanvas.height=window.innerHeight;}
+resize();window.addEventListener("resize",resize);
+const P=[];for(let i=0;i<80;i++)P.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*2.2+.5,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
+function animate(){bgCtx.clearRect(0,0,w,h);for(let p of P){p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;bgCtx.beginPath();bgCtx.arc(p.x,p.y,p.r,0,Math.PI*2);bgCtx.fillStyle=document.body.classList.contains("dark")?"rgba(167,139,250,.35)":"rgba(124,58,237,.25)";bgCtx.fill();}requestAnimationFrame(animate);}
+animate();
+</script>
 </body>
 </html>
