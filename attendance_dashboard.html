@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة الحضور والغياب</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Tajawal',Tahoma,sans-serif;
+  direction:rtl;
+  min-height:100vh;
+  background:linear-gradient(-45deg,#667eea,#764ba2,#43cea2,#185a9d);
+  background-size:400% 400%;
+  animation:gradientBG 10s ease infinite;
+  padding:15px;
+}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ===== SECTION ===== */
+.section{
+  max-width:800px;margin:16px auto;padding:22px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.15);
+  backdrop-filter:blur(15px);
+  box-shadow:0 10px 40px rgba(0,0,0,0.25);
+  border:1px solid rgba(255,255,255,0.25);
+  animation:fadeIn .4s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+h1{text-align:center;color:#fff;font-size:1.7rem;font-weight:900;margin-bottom:6px;}
+h2{color:#fff;font-size:1.2rem;font-weight:800;margin-bottom:14px;}
+h3{color:#fff;font-size:1.05rem;font-weight:700;margin-bottom:10px;}
+
+label{display:block;margin-top:12px;color:#eee;font-weight:700;font-size:.95rem;}
+
+input,select,textarea{
+  width:100%;margin-top:6px;padding:13px;
+  border-radius:12px;border:none;
+  background:rgba(255,255,255,0.92);
+  font-family:'Tajawal',Tahoma;font-size:15px;
+  box-sizing:border-box;transition:.3s;
+}
+input:focus,select:focus{outline:none;transform:scale(1.01);box-shadow:0 0 10px rgba(255,255,255,.5);}
+
+/* ===== BUTTONS ===== */
+.btn{
+  width:100%;margin-top:14px;padding:14px;
+  border:none;border-radius:15px;cursor:pointer;
+  font-size:16px;font-weight:800;font-family:'Tajawal',Tahoma;
+  transition:.25s;letter-spacing:.3px;
+}
+.btn:hover{transform:scale(1.04);box-shadow:0 5px 20px rgba(0,0,0,.3);}
+.btn:active{transform:scale(.97);}
+.btn-blue{background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;}
+.btn-green{background:linear-gradient(135deg,#43cea2,#185a9d);color:#fff;}
+.btn-red{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;}
+.btn-gold{background:linear-gradient(135deg,#f7971e,#ffd200);color:#fff;}
+.btn-purple{background:linear-gradient(135deg,#a18cd1,#fbc2eb);color:#fff;}
+.btn-sm{padding:8px 14px;font-size:14px;margin-top:0;border-radius:10px;width:auto;display:inline-block;}
+
+/* ===== STATS ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
+.stat-box{
+  background:rgba(255,255,255,.18);border-radius:16px;padding:16px 10px;text-align:center;
+  border:1px solid rgba(255,255,255,.25);transition:.3s;
+}
+.stat-box:hover{background:rgba(255,255,255,.28);}
+.stat-box .num{font-size:2rem;font-weight:900;color:#fff;}
+.stat-box .lbl{font-size:.85rem;color:#dde;margin-top:4px;font-weight:600;}
+
+/* ===== TABS ===== */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.tab-btn{
+  padding:10px 16px;border:none;border-radius:12px;cursor:pointer;
+  font-size:14px;font-weight:700;font-family:'Tajawal',Tahoma;
+  background:rgba(255,255,255,.2);color:#fff;transition:.25s;
+  border:1px solid rgba(255,255,255,.2);
+}
+.tab-btn:hover{background:rgba(255,255,255,.35);}
+.tab-btn.active{background:rgba(255,255,255,.95);color:#333;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* ===== CARDS ===== */
+.class-card{
+  background:rgba(255,255,255,.92);border-radius:16px;padding:16px;margin-top:12px;
+  box-shadow:0 5px 18px rgba(0,0,0,.18);transition:.25s;
+}
+.class-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.class-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.class-card-title{font-size:1.1rem;font-weight:800;color:#222;}
+.class-card-sub{font-size:.85rem;color:#666;margin-top:3px;}
+.card-actions{display:flex;gap:7px;flex-wrap:wrap;}
+
+/* ===== MEMBER LIST ===== */
+.member-item{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(255,255,255,.85);border-radius:12px;padding:11px 14px;
+  margin-top:8px;transition:.2s;border:1.5px solid transparent;
+}
+.member-item:hover{border-color:rgba(0,114,255,.3);background:#fff;}
+.member-name{font-weight:700;color:#222;font-size:.97rem;}
+.member-sub{font-size:.78rem;color:#888;margin-top:2px;}
+.badge{
+  display:inline-block;padding:3px 9px;border-radius:20px;
+  font-size:.75rem;font-weight:700;margin-right:4px;
+}
+.badge-green{background:#d4edda;color:#155724;}
+.badge-red{background:#f8d7da;color:#721c24;}
+.badge-blue{background:#d1ecf1;color:#0c5460;}
+.badge-new{background:#fff3cd;color:#856404;}
+
+/* ===== ATTENDANCE FORM ===== */
+.att-row{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(255,255,255,.9);border-radius:13px;padding:13px 15px;
+  margin-top:9px;transition:.2s;border:2px solid transparent;
+}
+.att-row.present{border-color:#28a745;background:rgba(212,237,218,.9);}
+.att-row.absent{border-color:#dc3545;background:rgba(248,215,218,.9);}
+.att-toggle{display:flex;gap:8px;}
+.att-btn{
+  padding:7px 16px;border:none;border-radius:9px;cursor:pointer;
+  font-family:'Tajawal',Tahoma;font-weight:700;font-size:14px;transition:.2s;
+}
+.att-btn.p{background:#28a745;color:#fff;}
+.att-btn.a{background:#dc3545;color:#fff;}
+.att-btn.inactive{background:#e0e0e0;color:#999;}
+.att-btn:hover{transform:scale(1.06);}
+
+/* ===== TABLE ===== */
+.tbl-wrap{overflow-x:auto;margin-top:12px;}
+table{width:100%;border-collapse:collapse;font-size:.9rem;}
+th{
+  background:rgba(255,255,255,.25);color:#fff;font-weight:800;
+  padding:11px 10px;text-align:center;font-size:.88rem;
+}
+td{background:rgba(255,255,255,.88);padding:10px;text-align:center;border-bottom:1px solid #eee;}
+tr:hover td{background:rgba(255,255,255,1);}
+.tbl-sort{cursor:pointer;user-select:none;}
+.tbl-sort:hover{text-decoration:underline;}
+
+/* ===== HISTORY CARD ===== */
+.hist-card{
+  background:rgba(255,255,255,.9);border-radius:14px;padding:15px;margin-top:10px;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);
+}
+.hist-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.hist-date{font-weight:800;color:#222;font-size:1rem;}
+.hist-class{font-size:.85rem;color:#666;}
+.hist-expand{cursor:pointer;color:#0072ff;font-size:.85rem;font-weight:700;}
+.hist-body{margin-top:10px;display:none;}
+
+/* ===== MODAL ===== */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  display:none;justify-content:center;align-items:center;z-index:9999;
+  padding:15px;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:rgba(255,255,255,.97);backdrop-filter:blur(10px);
+  border-radius:20px;padding:24px;width:100%;max-width:480px;
+  max-height:90vh;overflow-y:auto;
+  animation:fadeIn .3s ease;
+}
+.modal h3{color:#222;font-size:1.15rem;font-weight:900;margin-bottom:16px;text-align:center;}
+.modal label{color:#444;}
+.modal input,.modal select{background:#fff;}
+.modal-actions{display:flex;gap:10px;margin-top:16px;}
+.modal-actions .btn{flex:1;margin-top:0;}
+
+/* ===== LOADER ===== */
+#loader{
+  position:fixed;inset:0;background:rgba(0,0,0,.82);
+  display:none;justify-content:center;align-items:center;
+  flex-direction:column;z-index:99999;
+}
+.spinner{
+  width:52px;height:52px;border:5px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;
+  margin-bottom:16px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loader p{color:#fff;font-weight:700;text-align:center;font-size:1rem;}
+
+/* ===== SORT BAR ===== */
+.sort-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center;}
+.sort-bar span{color:#eee;font-size:.9rem;font-weight:700;}
+.sort-chip{
+  padding:6px 13px;border-radius:20px;border:none;cursor:pointer;
+  font-family:'Tajawal',Tahoma;font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.25);color:#fff;transition:.2s;
+}
+.sort-chip.active{background:rgba(255,255,255,.95);color:#333;}
+.sort-chip:hover{background:rgba(255,255,255,.4);}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;color:#dde;padding:30px;font-size:1rem;opacity:.8;}
+
+/* ===== PROGRESS BAR ===== */
+.prog-wrap{background:#e9ecef;border-radius:20px;height:10px;margin-top:4px;}
+.prog-bar{height:10px;border-radius:20px;transition:.4s;}
+
+/* ===== INFO BOX ===== */
+.info-box{
+  background:rgba(255,255,255,.15);border-radius:12px;
+  padding:12px 16px;color:#fff;font-size:.9rem;
+  border:1px solid rgba(255,255,255,.2);margin-top:10px;
+}
+.today-lbl{text-align:center;color:#dde;font-size:.93rem;margin-top:6px;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:600px){
+  body{padding:10px;}
+  .section{padding:15px;}
+  h1{font-size:1.4rem;}
+  .stats-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .stat-box .num{font-size:1.5rem;}
+  .tabs{gap:5px;}
+  .tab-btn{padding:8px 11px;font-size:13px;}
+  th,td{padding:8px 6px;font-size:.82rem;}
+}
+@media(max-width:400px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .card-actions{flex-direction:column;}
+  .card-actions .btn{width:100%;}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD SCREEN ===== -->
+<div id="pwd-screen" style="min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;">
+  <div style="background:rgba(255,255,255,0.18);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.3);border-radius:24px;padding:40px 30px;width:100%;max-width:380px;text-align:center;box-shadow:0 15px 50px rgba(0,0,0,0.3);animation:fadeIn .5s ease;">
+    <div style="font-size:3rem;margin-bottom:10px;">&#128272;</div>
+    <h2 style="color:#fff;font-size:1.4rem;font-weight:900;margin-bottom:6px;">&#1604;&#1608;&#1581;&#1577; &#1575;&#1604;&#1581;&#1590;&#1608;&#1585; &#1608;&#1575;&#1604;&#1594;&#1610;&#1575;&#1576;</h2>
+    <p style="color:#dde;font-size:.9rem;margin-bottom:24px;">&#1575;&#1604;&#1585;&#1580;&#1575;&#1569; &#1573;&#1583;&#1582;&#1575;&#1604; &#1603;&#1604;&#1605;&#1577; &#1575;&#1604;&#1605;&#1585;&#1608;&#1585;</p>
+    <input id="pwd-input" type="password" placeholder="كلمة المرور..." style="text-align:center;font-size:1.1rem;letter-spacing:4px;margin-bottom:0;">
+    <div id="pwd-error" style="display:none;color:#ff6b6b;font-size:.88rem;font-weight:700;margin-top:10px;">&#10060; كلمة المرور غلط، حاول تاني</div>
+    <button onclick="checkPassword()" style="width:100%;margin-top:16px;padding:14px;border:none;border-radius:15px;cursor:pointer;font-size:16px;font-weight:800;font-family:Tajawal,Tahoma;background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;transition:.25s;">دخول &#8592;</button>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="main-app" style="display:none;">
+
+<!-- ===== HEADER ===== -->
+<div class="section">
+  <h1>📋 لوحة الحضور والغياب</h1>
+  <p class="today-lbl" id="today-lbl"></p>
+  <div class="stats-grid" style="margin-top:16px;">
+    <div class="stat-box"><div class="num" id="st-classes">0</div><div class="lbl">الفصول</div></div>
+    <div class="stat-box"><div class="num" id="st-members">0</div><div class="lbl">المخدومين</div></div>
+    <div class="stat-box"><div class="num" id="st-rate">—</div><div class="lbl">معدل الحضور</div></div>
+  </div>
+</div>
+
+<!-- ===== TABS NAV ===== -->
+<div class="section" style="padding:14px 16px;">
+  <div class="tabs">
+    <button class="tab-btn active" onclick="goTab('t-classes',this)">🏫 الفصول</button>
+    <button class="tab-btn" onclick="goTab('t-attendance',this)">✅ أخذ الحضور</button>
+    <button class="tab-btn" onclick="goTab('t-history',this)">📅 السجلات</button>
+    <button class="tab-btn" onclick="goTab('t-reports',this)">📊 التقارير</button>
+  </div>
+</div>
+
+<!-- ===== TAB: CLASSES ===== -->
+<div id="t-classes" class="tab-content active">
+  <div class="section">
+    <h2>➕ إضافة فصل جديد</h2>
+    <label>اسم الفصل</label>
+    <input id="inp-className" placeholder="مثال: فصل الشباب، فصل الكبار...">
+    <button class="btn btn-blue" onclick="addClass()">➕ إضافة الفصل</button>
+  </div>
+  <div class="section">
+    <h2>🏫 الفصول الحالية</h2>
+    <div id="classListContainer"><p class="empty">جاري التحميل...</p></div>
+  </div>
+</div>
+
+<!-- ===== TAB: ATTENDANCE ===== -->
+<div id="t-attendance" class="tab-content">
+  <div class="section">
+    <h2>✅ أخذ الحضور</h2>
+    <p class="today-lbl">اختر الفصل لبدء جلسة الحضور</p>
+    <div id="attClassGrid" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;"></div>
+  </div>
+  <div id="attFormWrapper"></div>
+</div>
+
+<!-- ===== TAB: HISTORY ===== -->
+<div id="t-history" class="tab-content">
+  <div class="section">
+    <h2>📅 سجل الجلسات</h2>
+    <label>فلترة بالفصل</label>
+    <select id="histFilter" onchange="renderHistory()"></select>
+    <div id="histList" style="margin-top:14px;"></div>
+  </div>
+</div>
+
+<!-- ===== TAB: REPORTS ===== -->
+<div id="t-reports" class="tab-content">
+  <div class="section">
+    <h2>📊 التقارير</h2>
+    <label>اختر الفصل</label>
+    <select id="rptClassSel" onchange="renderReport()"></select>
+    <div class="sort-bar" style="margin-top:14px;">
+      <span>ترتيب:</span>
+      <button class="sort-chip active" onclick="setRptSort('alpha',this)">أبجدي</button>
+      <button class="sort-chip" onclick="setRptSort('present',this)">الأكثر حضوراً</button>
+      <button class="sort-chip" onclick="setRptSort('absent',this)">الأكثر غياباً</button>
+      <button class="sort-chip" onclick="setRptSort('rate',this)">معدل الحضور</button>
+    </div>
+    <div id="rptContent"></div>
+  </div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalBg(event)">
+  <div class="modal" id="modal-box" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- ===== LOADER ===== -->
+<div id="loader">
+  <div class="spinner"></div>
+  <p>جاري الحفظ على GitHub... ⏳<br><small>قد يستغرق الأمر لحظات</small></p>
+</div>
+
+<script>
+// ===================================================
+// CONFIG — 🔥 عدّل القيم دي فقط
+// ===================================================
+const REPO      = "kareemretetert/Church_Web";
+const FILE_PATH = "attendance.json";
+const SAVE_URL  = "/.netlify/functions/saveAttendance";
+const APP_PASSWORD = "1234"; // 🔑 غيّر كلمة المرور هنا
+
+// ===================================================
+// PASSWORD GATE
+// ===================================================
+function checkPassword(){
+  const val = document.getElementById("pwd-input").value.trim();
+  if(val === APP_PASSWORD){
+    document.getElementById("pwd-screen").style.display = "none";
+    document.getElementById("main-app").style.display   = "block";
+    loadFromGitHub();
+  } else {
+    document.getElementById("pwd-error").style.display = "block";
+    document.getElementById("pwd-input").value = "";
+    document.getElementById("pwd-input").focus();
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("pwd-input").addEventListener("keydown", e => {
+    if(e.key === "Enter") checkPassword();
+  });
+});
+
+// ===================================================
+// STATE
+// ===================================================
+let db = { classes: [], sessions: [] };
+let rptSort = "alpha";
+
+// ===================================================
+// LOAD — raw GitHub (بدون توكن)
+// ===================================================
+async function loadFromGitHub(){
+  try{
+    const url = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?t=${Date.now()}`;
+    const r = await fetch(url);
+    if(!r.ok) throw new Error("not found");
+    db = await r.json();
+  }catch(e){
+    db = {classes:[], sessions:[]};
+  }
+  renderAll();
+}
+
+// ===================================================
+// SAVE — عبر Netlify Function (التوكن على السيرفر)
+// ===================================================
+async function saveToGitHub(){
+  showLoader();
+  try{
+    const res = await fetch(SAVE_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(db)
+    });
+    // نقرأ الـ response كـ text أولاً عشان نتجنب JSON parse error
+    const text = await res.text();
+    let result;
+    try{ result = JSON.parse(text); }
+    catch(e){ throw new Error("الـ Function رجعت رد غير متوقع: " + text.substring(0,100)); }
+    if(!res.ok) throw new Error(result.error || "save failed ("+res.status+")");
+    hideLoader();
+    toast("✅ تم الحفظ بنجاح");
+  }catch(e){
+    hideLoader();
+    toast("❌ فشل الحفظ: " + e.message);
+    console.error("Save error:", e);
+  }
+}
+
+// ===================================================
+// HELPERS
+// ===================================================
+const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+function fmtDate(iso){ const d=new Date(iso); return d.toLocaleDateString("ar-EG"); }
+function fmtDay(iso){ const d=new Date(iso); return DAYS[d.getDay()]; }
+function todayISO(){ return new Date().toISOString().split("T")[0]; }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+function toast(msg){
+  let t=document.createElement("div");
+  t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:12px 22px;border-radius:14px;font-family:Tajawal,Tahoma;font-size:15px;font-weight:700;z-index:99999;animation:fadeIn .3s ease;white-space:nowrap;";
+  t.innerText=msg; document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+function showLoader(){document.getElementById("loader").style.display="flex";}
+function hideLoader(){document.getElementById("loader").style.display="none";}
+
+function openModal(html){ 
+  document.getElementById("modal-box").innerHTML=html;
+  document.getElementById("modal-bg").classList.add("open");
+}
+function closeModal(){ document.getElementById("modal-bg").classList.remove("open"); }
+function closeModalBg(e){ if(e.target===document.getElementById("modal-bg")) closeModal(); }
+
+function goTab(id,btn){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+  if(id==="t-attendance") renderAttGrid();
+  if(id==="t-history") renderHistory();
+  if(id==="t-reports") renderReport();
+}
+
+// ===================================================
+// STATS
+// ===================================================
+function updateStats(){
+  const d=new Date();
+  document.getElementById("today-lbl").innerText=
+    `اليوم: ${DAYS[d.getDay()]} ${d.toLocaleDateString("ar-EG")}`;
+  document.getElementById("st-classes").innerText=db.classes.length;
+  const total=db.classes.reduce((s,c)=>s+c.members.length,0);
+  document.getElementById("st-members").innerText=total;
+  // overall rate
+  let pSum=0,pCount=0;
+  db.classes.forEach(c=>{
+    c.members.forEach(m=>{
+      const {p}=getMemberStats(m.id,c.id);
+      if(p+getMemberStats(m.id,c.id).a>0){pSum+=p/(p+getMemberStats(m.id,c.id).a)*100;pCount++;}
+    });
+  });
+  document.getElementById("st-rate").innerText=pCount?Math.round(pSum/pCount)+"%":"—";
+}
+
+function getMemberStats(memberId,classId){
+  const sessions=db.sessions.filter(s=>s.classId===classId);
+  let p=0,a=0,pDates=[],aDates=[];
+  sessions.forEach(s=>{
+    const rec=s.records.find(r=>r.memberId===memberId);
+    if(!rec){return;}
+    if(rec.status==="present"){p++;pDates.push({date:s.date,day:fmtDay(s.date)});}
+    else if(rec.status==="absent"){a++;aDates.push({date:s.date,day:fmtDay(s.date)});}
+  });
+  return{p,a,pDates,aDates};
+}
+
+// ===================================================
+// CLASSES TAB
+// ===================================================
+function renderClasses(){
+  const el=document.getElementById("classListContainer");
+  if(!db.classes.length){el.innerHTML='<p class="empty">لا توجد فصول بعد. أضف فصلاً جديداً! 👆</p>';return;}
+  el.innerHTML=db.classes.map(c=>{
+    const total=c.members.length;
+    const sessions=db.sessions.filter(s=>s.classId===c.id).length;
+    return`<div class="class-card">
+      <div class="class-card-header">
+        <div>
+          <div class="class-card-title">🏫 ${c.name}</div>
+          <div class="class-card-sub">${total} مخدوم &nbsp;•&nbsp; ${sessions} جلسة</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-blue btn-sm" onclick="openAddMember('${c.id}')">➕ مخدوم</button>
+          <button class="btn btn-gold btn-sm" onclick="openClassView('${c.id}')">👁 عرض</button>
+          <button class="btn btn-red btn-sm" onclick="deleteClass('${c.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function addClass(){
+  const name=document.getElementById("inp-className").value.trim();
+  if(!name){toast("❗ أدخل اسم الفصل");return;}
+  db.classes.push({id:uid(),name,members:[]});
+  document.getElementById("inp-className").value="";
+  renderAll(); saveToGitHub();
+}
+
+function deleteClass(id){
+  if(!confirm("هل تريد حذف هذا الفصل وجميع بياناته؟")) return;
+  db.classes=db.classes.filter(c=>c.id!==id);
+  db.sessions=db.sessions.filter(s=>s.classId!==id);
+  renderAll(); saveToGitHub();
+}
+
+function openClassView(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c) return;
+  const rows=c.members.map(m=>{
+    const {p,a,pDates,aDates}=getMemberStats(m.id,classId);
+    const total=p+a;
+    const rate=total?Math.round(p/total*100):null;
+    const rateStr=rate!==null?`${rate}%`:"—";
+    const barColor=rate===null?"#ccc":rate>=75?"#28a745":rate>=50?"#ffc107":"#dc3545";
+    return`<tr>
+      <td style="font-weight:700;text-align:right;">${m.name}</td>
+      <td><span class="badge badge-green">✅ ${p}</span></td>
+      <td><span class="badge badge-red">❌ ${a}</span></td>
+      <td>
+        <div style="font-weight:700;color:${barColor}">${rateStr}</div>
+        <div class="prog-wrap"><div class="prog-bar" style="width:${rate||0}%;background:${barColor}"></div></div>
+      </td>
+    </tr>`;
+  }).join("");
+  openModal(`
+    <h3>🏫 ${c.name}</h3>
+    <p style="text-align:center;color:#666;font-size:.9rem;">${c.members.length} مخدوم</p>
+    <div class="tbl-wrap"><table>
+      <tr><th style="text-align:right;">الاسم</th><th>حضور</th><th>غياب</th><th>المعدل</th></tr>
+      ${rows||'<tr><td colspan="4" style="color:#999;padding:20px;">لا يوجد مخدومون</td></tr>'}
+    </table></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn btn-green" style="margin-top:0;" onclick="downloadClassPDF('${classId}')">📄 تنزيل PDF</button>
+      <button class="btn btn-red" style="margin-top:0;" onclick="closeModal()">إغلاق</button>
+    </div>
+  `);
+}
+
+function openAddMember(classId){
+  openModal(`
+    <h3>➕ إضافة مخدوم</h3>
+    <label>الاسم</label>
+    <input id="m-inp" placeholder="اسم المخدوم الكامل...">
+    <div class="modal-actions">
+      <button class="btn btn-blue" onclick="addMember('${classId}')">إضافة</button>
+      <button class="btn btn-red" onclick="closeModal()">إلغاء</button>
+    </div>
+  `);
+}
+
+function addMember(classId){
+  const name=document.getElementById("m-inp").value.trim();
+  if(!name){toast("❗ أدخل الاسم");return;}
+  const c=db.classes.find(x=>x.id===classId);
+  c.members.push({id:uid(),name,addedAt:todayISO()});
+  closeModal(); renderAll(); saveToGitHub();
+}
+
+// ===================================================
+// ATTENDANCE TAB
+// ===================================================
+function renderAttGrid(){
+  const el=document.getElementById("attClassGrid");
+  if(!db.classes.length){el.innerHTML='<p class="empty" style="color:#dde;">لا توجد فصول بعد</p>';return;}
+  el.innerHTML=db.classes.map(c=>`
+    <button class="btn btn-green" style="margin-top:0;" onclick="openAttForm('${c.id}')">
+      🏫 ${c.name}<br><small style="font-weight:400;">${c.members.length} مخدوم</small>
+    </button>`).join("");
+}
+
+let attState = {}; // memberId -> "present"|"absent"|null
+
+function openAttForm(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c){return;}
+  if(!c.members.length){toast("❗ لا يوجد مخدومون في هذا الفصل");return;}
+
+  // check if session today already exists
+  const today=todayISO();
+  const exists=db.sessions.find(s=>s.classId===classId&&s.date===today);
+  if(exists){
+    if(!confirm("يوجد جلسة لهذا الفصل اليوم. هل تريد تعديلها؟")) return;
+  }
+
+  attState={};
+  c.members.forEach(m=>attState[m.id]=null);
+
+  renderAttForm(c);
+}
+
+function renderAttForm(c){
+  const rows=c.members.map(m=>{
+    const st=attState[m.id];
+    return`<div class="att-row${st==='present'?' present':st==='absent'?' absent':''}" id="ar-${m.id}">
+      <div>
+        <div class="member-name">${m.name}</div>
+      </div>
+      <div class="att-toggle">
+        <button class="att-btn p${st==='present'?'':' inactive'}" onclick="setAtt('${c.id}','${m.id}','present')">✅ حضر</button>
+        <button class="att-btn a${st==='absent'?'':' inactive'}" onclick="setAtt('${c.id}','${m.id}','absent')">❌ غاب</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  const allDone=Object.values(attState).every(v=>v!==null);
+
+  document.getElementById("attFormWrapper").innerHTML=`
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin-bottom:0;">🏫 ${c.name}</h2>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-green btn-sm" onclick="markAll('${c.id}','present')">✅ كل حضر</button>
+          <button class="btn btn-red btn-sm" onclick="markAll('${c.id}','absent')">❌ كل غاب</button>
+        </div>
+      </div>
+      <p class="today-lbl" style="margin-bottom:12px;">${DAYS[new Date().getDay()]} — ${new Date().toLocaleDateString("ar-EG")}</p>
+      <div id="att-rows">${rows}</div>
+      <div id="att-summary" style="margin-top:12px;"></div>
+      <button class="btn btn-blue" onclick="saveSession('${c.id}')" id="btn-save-att"
+        ${allDone?'':'style="opacity:.6;"'}>
+        💾 حفظ الحضور
+      </button>
+    </div>`;
+  updateAttSummary(c);
+}
+
+function setAtt(classId,memberId,status){
+  attState[memberId]=status;
+  const c=db.classes.find(x=>x.id===classId);
+  renderAttForm(c);
+}
+
+function markAll(classId,status){
+  const c=db.classes.find(x=>x.id===classId);
+  c.members.forEach(m=>attState[m.id]=status);
+  renderAttForm(c);
+}
+
+function updateAttSummary(c){
+  const vals=Object.values(attState);
+  const p=vals.filter(v=>v==="present").length;
+  const a=vals.filter(v=>v==="absent").length;
+  const total=c.members.length;
+  const pending=vals.filter(v=>v===null).length;
+  const el=document.getElementById("att-summary");
+  if(!el) return;
+  el.innerHTML=`<div class="info-box" style="color:#fff;">
+    ✅ حضر: <b>${p}</b> &nbsp;|&nbsp; ❌ غاب: <b>${a}</b> &nbsp;|&nbsp; ⏳ لم يُحدَّد: <b>${pending}</b>
+    <div class="prog-wrap" style="margin-top:8px;"><div class="prog-bar" style="width:${total?Math.round((p+a)/total*100):0}%;background:#00c6ff"></div></div>
+  </div>`;
+}
+
+function saveSession(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  const pending=Object.values(attState).filter(v=>v===null);
+  if(pending.length>0){
+    if(!confirm(`لم يتم تحديد ${pending.length} مخدوم. هل تريد الحفظ؟`)) return;
+  }
+  const today=todayISO();
+  // remove existing session for today
+  db.sessions=db.sessions.filter(s=>!(s.classId===classId&&s.date===today));
+  db.sessions.push({
+    id:uid(),
+    classId,
+    date:today,
+    day:DAYS[new Date().getDay()],
+    records:c.members.map(m=>({memberId:m.id,memberName:m.name,status:attState[m.id]||"absent"}))
+  });
+  renderAll();
+  saveToGitHub();
+  // offer weekly sheet download
+  setTimeout(()=>{
+    if(confirm("✅ تم الحفظ! هل تريد تنزيل جدول هذا الأسبوع؟")){
+      downloadWeeklySheet(classId);
+    }
+  },400);
+  document.getElementById("attFormWrapper").innerHTML="";
+}
+
+// ===================================================
+// HISTORY TAB
+// ===================================================
+function renderHistory(){
+  const sel=document.getElementById("histFilter");
+  // populate
+  sel.innerHTML='<option value="">كل الفصول</option>'+
+    db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+
+  const filter=sel.value;
+  let sessions=[...db.sessions];
+  if(filter) sessions=sessions.filter(s=>s.classId===filter);
+  sessions.sort((a,b)=>b.date.localeCompare(a.date));
+
+  const el=document.getElementById("histList");
+  if(!sessions.length){el.innerHTML='<p class="empty">لا توجد جلسات مسجلة</p>';return;}
+
+  el.innerHTML=sessions.map(s=>{
+    const c=db.classes.find(x=>x.id===s.classId);
+    const p=s.records.filter(r=>r.status==="present").length;
+    const a=s.records.filter(r=>r.status==="absent").length;
+    const allMembers=c?c.members:[];
+    const rows=s.records.map(r=>{
+      const isNew=c&&c.members.find(m=>m.id===r.memberId&&m.addedAt>s.date);
+      return`<div class="member-item" style="margin-top:6px;">
+        <div>
+          <div class="member-name">${r.memberName}${isNew?' <span class="badge badge-new">جديد ★</span>':''}</div>
+        </div>
+        <span class="badge ${r.status==="present"?"badge-green":"badge-red"}">
+          ${r.status==="present"?"✅ حضر":"❌ غاب"}
+        </span>
+      </div>`;
+    }).join("");
+    // members added after this session
+    const newMembers=c?c.members.filter(m=>m.addedAt>s.date):[];
+    const newRows=newMembers.map(m=>`
+      <div class="member-item" style="opacity:.7;margin-top:6px;">
+        <div class="member-name">${m.name} <span class="badge badge-new">لم يكن موجوداً ★</span></div>
+      </div>`).join("");
+    return`<div class="hist-card">
+      <div class="hist-header">
+        <div>
+          <div class="hist-date">📅 ${fmtDay(s.date)} — ${fmtDate(s.date)}</div>
+          <div class="hist-class">🏫 ${c?c.name:"محذوف"} &nbsp;•&nbsp; ✅${p} ❌${a}</div>
+        </div>
+        <span class="hist-expand" onclick="toggleHist('${s.id}')">عرض التفاصيل ▼</span>
+      </div>
+      <div class="hist-body" id="hb-${s.id}">
+        ${rows}
+        ${newRows?`<div style="margin-top:10px;padding-top:8px;border-top:1px dashed #ccc;"><small style="color:#888;">⭐ مخدومون أُضيفوا بعد هذه الجلسة:</small>${newRows}</div>`:""}
+        <button class="btn btn-purple" style="margin-top:12px;" onclick="downloadSessionPDF('${s.id}')">📄 تنزيل PDF</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleHist(id){
+  const el=document.getElementById("hb-"+id);
+  el.style.display=el.style.display==="block"?"none":"block";
+}
+
+// ===================================================
+// REPORTS TAB
+// ===================================================
+function setRptSort(val,btn){
+  rptSort=val;
+  document.querySelectorAll(".sort-chip").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderReport();
+}
+
+function renderReport(){
+  const sel=document.getElementById("rptClassSel");
+  sel.innerHTML='<option value="">اختر فصلاً</option>'+
+    db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  const classId=sel.value;
+  const el=document.getElementById("rptContent");
+  if(!classId){el.innerHTML='<p class="empty">اختر فصلاً لعرض التقرير</p>';return;}
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c){return;}
+
+  let members=[...c.members];
+  members=members.map(m=>({...m,...getMemberStats(m.id,classId)}));
+  members=members.map(m=>({...m,total:m.p+m.a,rate:m.p+m.a?Math.round(m.p/(m.p+m.a)*100):null}));
+
+  if(rptSort==="alpha") members.sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+  if(rptSort==="present") members.sort((a,b)=>b.p-a.p);
+  if(rptSort==="absent") members.sort((a,b)=>b.a-a.a);
+  if(rptSort==="rate") members.sort((a,b)=>(b.rate||0)-(a.rate||0));
+
+  const rows=members.map((m,i)=>{
+    const barColor=m.rate===null?"#ccc":m.rate>=75?"#28a745":m.rate>=50?"#ffc107":"#dc3545";
+    const pList=m.pDates.map(d=>`<span class="badge badge-green" style="font-size:.75rem;">${d.day} ${fmtDate(d.date)}</span>`).join(" ");
+    const aList=m.aDates.map(d=>`<span class="badge badge-red" style="font-size:.75rem;">${d.day} ${fmtDate(d.date)}</span>`).join(" ");
+    return`<div class="class-card" style="padding:14px;margin-top:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div class="class-card-title">${i+1}. ${m.name}</div>
+          <div style="margin-top:6px;">
+            <span class="badge badge-green">✅ حضر ${m.p} مرة</span>
+            <span class="badge badge-red">❌ غاب ${m.a} مرة</span>
+            <span class="badge badge-blue">📊 ${m.rate!==null?m.rate+"%":"لا يوجد"}</span>
+          </div>
+          <div class="prog-wrap" style="margin-top:8px;width:200px;max-width:100%;">
+            <div class="prog-bar" style="width:${m.rate||0}%;background:${barColor}"></div>
+          </div>
+        </div>
+      </div>
+      ${m.pDates.length?`<div style="margin-top:10px;"><small style="color:#555;font-weight:700;">✅ أيام الحضور:</small><div style="margin-top:4px;">${pList}</div></div>`:""}
+      ${m.aDates.length?`<div style="margin-top:8px;"><small style="color:#555;font-weight:700;">❌ أيام الغياب:</small><div style="margin-top:4px;">${aList}</div></div>`:""}
+    </div>`;
+  }).join("");
+
+  const totalSessions=db.sessions.filter(s=>s.classId===classId).length;
+  const avgRate=members.length?Math.round(members.reduce((s,m)=>s+(m.rate||0),0)/members.length):0;
+
+  el.innerHTML=`
+    <div class="info-box" style="color:#fff;margin-top:12px;">
+      👥 إجمالي المخدومين: <b>${members.length}</b> &nbsp;|&nbsp;
+      📅 إجمالي الجلسات: <b>${totalSessions}</b> &nbsp;|&nbsp;
+      📊 متوسط الحضور: <b>${avgRate}%</b>
+    </div>
+    ${rows||'<p class="empty">لا يوجد مخدومون</p>'}
+    <button class="btn btn-green" onclick="downloadClassPDF('${classId}')">📄 تنزيل تقرير PDF كامل</button>
+  `;
+}
+
+// ===================================================
+// PDF EXPORT
+// ===================================================
+function downloadClassPDF(classId){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"p",unit:"mm",format:"a4"});
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c) return;
+
+  // Title
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(18);
+  doc.text(`Attendance Report - ${c.name}`,105,20,{align:"center"});
+  doc.setFontSize(11);
+  doc.setFont("helvetica","normal");
+  doc.text(`Generated: ${new Date().toLocaleDateString("en-US")} | Total members: ${c.members.length}`,105,28,{align:"center"});
+
+  let yOffset=36;
+  const sessions=db.sessions.filter(s=>s.classId===classId).sort((a,b)=>a.date.localeCompare(b.date));
+
+  // Summary table
+  const sumRows=c.members.map(m=>{
+    const{p,a}=getMemberStats(m.id,classId);
+    const rate=p+a?Math.round(p/(p+a)*100)+"%" :"—";
+    return[m.name,p,a,p+a,rate];
+  });
+  doc.autoTable({
+    startY:yOffset,
+    head:[["Name","Present","Absent","Total Sessions","Rate %"]],
+    body:sumRows,
+    styles:{font:"helvetica",fontSize:10,halign:"center"},
+    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
+    alternateRowStyles:{fillColor:[245,245,255]},
+    columnStyles:{0:{halign:"left"}},
+  });
+  yOffset=doc.lastAutoTable.finalY+12;
+
+  // Per-session attendance
+  if(sessions.length){
+    if(yOffset>240){doc.addPage();yOffset=20;}
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(13);
+    doc.text("Session Details",14,yOffset);
+    yOffset+=6;
+
+    sessions.forEach(s=>{
+      if(yOffset>250){doc.addPage();yOffset=20;}
+      const rows=s.records.map(r=>[r.memberName,r.status==="present"?"Present":"Absent"]);
+      doc.autoTable({
+        startY:yOffset,
+        head:[[`${s.day} — ${fmtDate(s.date)}  |  Present: ${s.records.filter(r=>r.status==="present").length}  Absent: ${s.records.filter(r=>r.status==="absent").length}`,"Status"]],
+        body:rows,
+        styles:{font:"helvetica",fontSize:9,halign:"center"},
+        headStyles:{fillColor:[67,206,162],textColor:255,fontStyle:"bold"},
+        columnStyles:{0:{halign:"left"}},
+        margin:{left:14,right:14},
+      });
+      yOffset=doc.lastAutoTable.finalY+8;
+    });
+  }
+
+  doc.save(`${c.name}_attendance.pdf`);
+  toast("📄 تم تنزيل PDF");
+}
+
+function downloadSessionPDF(sessionId){
+  const s=db.sessions.find(x=>x.id===sessionId);
+  if(!s) return;
+  const c=db.classes.find(x=>x.id===s.classId);
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"p",unit:"mm",format:"a4"});
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(16);
+  doc.text(`Attendance Sheet - ${c?c.name:"Class"}`,105,18,{align:"center"});
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(11);
+  doc.text(`${s.day} — ${fmtDate(s.date)}  |  Present: ${s.records.filter(r=>r.status==="present").length}  Absent: ${s.records.filter(r=>r.status==="absent").length}`,105,26,{align:"center"});
+  doc.autoTable({
+    startY:32,
+    head:[["#","Name","Status"]],
+    body:s.records.map((r,i)=>[i+1,r.memberName,r.status==="present"?"Present ✓":"Absent ✗"]),
+    styles:{font:"helvetica",fontSize:11,halign:"center"},
+    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
+    alternateRowStyles:{fillColor:[245,245,255]},
+    columnStyles:{0:{cellWidth:15},1:{halign:"left"},2:{halign:"center"}},
+    didDrawCell:(data)=>{
+      if(data.section==="body"&&data.column.index===2){
+        const txt=data.cell.raw;
+        data.cell.styles.textColor=txt.includes("Present")?[21,87,36]:[114,28,36];
+      }
+    }
+  });
+  doc.save(`session_${fmtDate(s.date)}.pdf`);
+  toast("📄 تم تنزيل PDF");
+}
+
+function downloadWeeklySheet(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c) return;
+  // get sessions from this week
+  const now=new Date();
+  const weekStart=new Date(now);
+  weekStart.setDate(now.getDate()-now.getDay());
+  const weekSessions=db.sessions.filter(s=>{
+    const d=new Date(s.date);
+    return s.classId===classId && d>=weekStart && d<=now;
+  }).sort((a,b)=>a.date.localeCompare(b.date));
+
+  if(!weekSessions.length){ toast("لا توجد جلسات هذا الأسبوع"); return; }
+
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"l",unit:"mm",format:"a4"});
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(15);
+  doc.text(`Weekly Sheet - ${c.name}`,148,14,{align:"center"});
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(10);
+  doc.text(`Week of ${weekStart.toLocaleDateString("en-US")}`,148,21,{align:"center"});
+
+  const head=[["#","Name",...weekSessions.map(s=>`${s.day}\n${fmtDate(s.date)}`)]];
+  const body=c.members.map((m,i)=>{
+    const cols=weekSessions.map(s=>{
+      const r=s.records.find(r=>r.memberId===m.id);
+      return r?(r.status==="present"?"✓":"✗"):"—";
+    });
+    return[i+1,m.name,...cols];
+  });
+  doc.autoTable({
+    startY:26,
+    head,body,
+    styles:{font:"helvetica",fontSize:10,halign:"center"},
+    headStyles:{fillColor:[118,75,162],textColor:255,fontStyle:"bold"},
+    alternateRowStyles:{fillColor:[245,245,255]},
+    columnStyles:{1:{halign:"left"}},
+  });
+  doc.save(`weekly_${c.name}.pdf`);
+  toast("📄 تم تنزيل جدول الأسبوع");
+}
+
+// ===================================================
+// RENDER ALL
+// ===================================================
+function renderAll(){
+  updateStats();
+  renderClasses();
+  renderAttGrid();
+  // update dropdowns if visible
+  renderHistory();
+  renderReport();
+}
+
+// ===================================================
+// INIT
+// ===================================================
+// loadFromGitHub() يُستدعى بعد كلمة المرور
+</script>
+</div><!-- end main-app -->
+</body>
+</html>
