@@ -267,32 +267,103 @@ document.getElementById("today-lbl").textContent =
   TODAY.toLocaleDateString("ar-EG",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
 
 // ============================================================
-// LOAD / SAVE
+// LOAD / SAVE  (localStorage cache + GitHub API source of truth)
 // ============================================================
-async function loadDB(){
+const LS_KEY = "attendance_db_cache"
+const LS_TS  = "attendance_db_ts"
+
+function lsSave(){
   try{
-    const r=await fetch("attendance.json?t="+Date.now())
-    if(!r.ok) throw 0
-    db=await r.json()
-    if(!db.classes)  db.classes=[]
-    if(!db.sessions) db.sessions=[]
-  }catch{
-    db={classes:[],sessions:[]}
+    localStorage.setItem(LS_KEY, JSON.stringify(db))
+    localStorage.setItem(LS_TS,  Date.now().toString())
+  }catch(e){ console.warn("localStorage write failed",e) }
+}
+
+function lsLoad(){
+  try{
+    const raw = localStorage.getItem(LS_KEY)
+    if(!raw) return null
+    const parsed = JSON.parse(raw)
+    if(!parsed.classes || !parsed.sessions) return null
+    return parsed
+  }catch{ return null }
+}
+
+function showSaveStatus(msg, color="#43cea2"){
+  let el = document.getElementById("save-status")
+  if(!el){
+    el = document.createElement("div")
+    el.id = "save-status"
+    el.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);"+
+      "padding:10px 24px;border-radius:30px;font-size:14px;font-weight:bold;"+
+      "color:#fff;z-index:9998;transition:opacity .5s;box-shadow:0 4px 15px rgba(0,0,0,.3);"+
+      "font-family:Tajawal,Tahoma;"
+    document.body.appendChild(el)
   }
-  refreshAll()
+  el.textContent = msg
+  el.style.background = color
+  el.style.opacity = "1"
+  clearTimeout(el._t)
+  el._t = setTimeout(()=>{ el.style.opacity="0" }, 3000)
+}
+
+async function loadDB(){
+  // 1) load from localStorage immediately so UI is instant
+  const cached = lsLoad()
+  if(cached){
+    db = cached
+    refreshAll()
+  }
+
+  // 2) fetch latest from GitHub API (bypasses Netlify CDN cache)
+  try{
+    const REPO      = "kareemretetert/Church_Web"
+    const FILE_PATH = "attendance.json"
+    const url = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`
+    const r = await fetch(url, {
+      headers:{ Accept:"application/vnd.github.v3+json" },
+      cache:"no-store"
+    })
+    if(!r.ok) throw new Error("GitHub API status: "+r.status)
+    const meta    = await r.json()
+    const content = atob(meta.content.replace(/\n/g,""))
+    const remote  = JSON.parse(content)
+    if(!remote.classes)  remote.classes  = []
+    if(!remote.sessions) remote.sessions = []
+
+    // use remote if it has more sessions than cache (source of truth)
+    const localSessions  = (cached?.sessions||[]).length
+    const remoteSessions = remote.sessions.length
+    if(remoteSessions >= localSessions){
+      db = remote
+      lsSave()
+      refreshAll()
+    }
+  }catch(e){
+    console.warn("GitHub fetch failed, using localStorage cache:", e)
+    if(!cached){
+      db = {classes:[], sessions:[]}
+      refreshAll()
+    }
+  }
 }
 
 async function saveDB(){
+  // save to localStorage first (instant, never fails)
+  lsSave()
+  showSaveStatus("⏳ جاري الحفظ على السيرفر...")
   showLoader()
   try{
-    const r=await fetch("/.netlify/functions/saveAttendance",{
+    const r = await fetch("/.netlify/functions/saveAttendance",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify(db)
     })
     if(!r.ok) throw await r.text()
+    showSaveStatus("✅ تم الحفظ بنجاح")
   }catch(e){
-    alert("❌ فشل الحفظ\n"+e)
+    showSaveStatus("⚠️ حُفظ محلياً — فشل السيرفر", "#f7971e")
+    console.error("saveDB error:", e)
   }
   hideLoader()
 }
