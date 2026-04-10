@@ -1,260 +1,438 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8" />
+<meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
 <title>ملخص الاجتماع</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-
 <style>
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  font-family: "Segoe UI", Tahoma;
-  direction: rtl;
-  background: #f0f8ff;
-  padding: 20px;
+/* ═══════════════════════════════════════
+   TOKENS — نفس متغيرات صفحة الكورس
+═══════════════════════════════════════ */
+:root{
+  --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
+  --bg:#f4f0fb; --sf:#fff; --sf2:#f1ecfc;
+  --tx:#0f172a; --tx2:#374151; --tx3:#6b7280;
+  --bdr:#e2e8f0;
+  --sh:0 4px 20px rgba(109,40,217,.10);
+  --sh2:0 8px 32px rgba(109,40,217,.18);
+  --shdr:0 6px 24px rgba(109,40,217,.25);
+  --hdr1:#7c3aed; --hdr2:#9333ea; --hdr3:#5b21b6;
+  --iv-bg:#dbeafe; --iv-c:#1d4ed8;
+  --if-bg:#ffedd5; --if-c:#c2410c;
+}
+body.dark{
+  --bg:#0d0d1a; --sf:#161627; --sf2:#1e1e33;
+  --tx:#f0f0ff; --tx2:#c4c4e0; --tx3:#8888aa;
+  --bdr:#2a2a44;
+  --sh:0 4px 24px rgba(0,0,0,.5);
+  --sh2:0 8px 40px rgba(0,0,0,.6);
+  --shdr:0 6px 24px rgba(0,0,0,.6);
+  --hdr1:#0f172a; --hdr2:#1e1b4b; --hdr3:#020617;
+  --iv-bg:#1e3a5f; --iv-c:#93c5fd;
+  --if-bg:#431407; --if-c:#fdba74;
 }
 
-.back-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);color:var(--tx);
+  min-height:100vh;overflow-x:hidden;
+  transition:background .3s,color .3s;
 }
 
-.btn {
-  background-image: linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196));
-  color: white;
-  padding: 10px 20px;
-  border-radius: 30px;
-  font-weight: bold;
-  text-decoration: none;
-  border: 2px solid #38373a;
+/* ═══════════════════════════════════════
+   PARTICLES + GLOW BACKGROUND
+═══════════════════════════════════════ */
+#particles{
+  position:fixed;inset:0;
+  width:100%;height:100%;
+  z-index:-10;pointer-events:none;
+}
+body::before{
+  content:"";position:fixed;inset:0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(124,58,237,0.12), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(59,130,246,0.10), transparent 45%),
+    radial-gradient(circle at 50% 80%, rgba(236,72,153,0.08), transparent 50%);
+  z-index:-20;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 25px;
+/* ═══════════════════════════════════════
+   HEADER — نفس الهيدر بالظبط
+═══════════════════════════════════════ */
+header{
+  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
+  position:sticky;top:0;z-index:300;
+  box-shadow:var(--shdr);overflow:hidden;
+  transition:background .4s;
+}
+header::before{
+  content:"";position:absolute;top:-60px;right:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(255,255,255,.05);pointer-events:none;
+}
+.hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
+.back-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);
+  border-radius:22px;background:rgba(255,255,255,.15);
+  color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;flex-shrink:0;text-decoration:none;
+  transition:background .2s,transform .15s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.back-btn:hover{background:rgba(255,255,255,.28);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.hdr-title{flex:1;text-align:center;color:#fff;font-size:clamp(14px,3.5vw,19px);font-weight:800;line-height:1.3;}
+
+/* THEME TOGGLE */
+.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
+.toggle-track{
+  width:64px;height:32px;border-radius:50px;
+  background:#1e293b;position:relative;
+  display:flex;align-items:center;padding:0 5px;cursor:pointer;
+  border:1.5px solid rgba(255,255,255,.3);transition:background .3s;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.toggle-track:active{transform:scale(.95);}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{
+  position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;
+  transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;
+  box-shadow:0 2px 8px rgba(0,0,0,.25);
+}
+body.dark .toggle-track{background:rgba(109,40,217,.5);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
+
+/* ═══════════════════════════════════════
+   PAGE
+═══════════════════════════════════════ */
+.page{max-width:860px;margin:0 auto;padding:20px 14px 70px;}
+
+/* ═══════════════════════════════════════
+   MEETING CARD (بطاقة معلومات الاجتماع)
+═══════════════════════════════════════ */
+.meeting-card{
+  background:var(--sf);border-radius:22px;overflow:hidden;
+  box-shadow:var(--sh);margin-bottom:24px;border:1px solid var(--bdr);
+  animation:fadeUp .5s both;
+}
+.meeting-card-hdr{
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  padding:20px 22px;
+  display:flex;flex-direction:column;gap:6px;
+}
+.meeting-title{font-size:20px;font-weight:800;color:#fff;line-height:1.4;}
+.meeting-date{font-size:13px;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:5px;}
+.meeting-body{padding:18px 22px;}
+
+/* ═══════════════════════════════════════
+   CONTENT SECTIONS
+═══════════════════════════════════════ */
+.section-label{
+  font-size:12px;font-weight:700;color:var(--p);
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.section-label::after{content:"";flex:1;height:1px;background:var(--bdr);}
+
+/* IMAGES */
+.images-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:10px;margin-bottom:20px;
+}
+.images-grid img{
+  width:100%;border-radius:12px;cursor:zoom-in;
+  transition:transform .2s,box-shadow .2s;
+  border:1px solid var(--bdr);
+}
+.images-grid img:hover{transform:scale(1.03);box-shadow:var(--sh2);}
+
+/* VIDEO */
+.video-wrap{
+  border-radius:14px;overflow:hidden;margin-bottom:20px;
+  box-shadow:var(--sh);
+}
+.video-wrap .plyr{border-radius:14px;overflow:hidden;}
+
+/* FILES */
+.file-item{
+  background:var(--sf2);border-radius:14px;padding:14px 18px;
+  margin-bottom:10px;border:1px solid var(--bdr);
+  display:flex;align-items:center;gap:14px;
+  transition:box-shadow .2s,transform .2s;
+}
+.file-item:hover{box-shadow:var(--sh);transform:translateY(-1px);}
+.file-ico{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  background:var(--if-bg);color:var(--if-c);
+}
+.file-info{flex:1;min-width:0;}
+.file-name{font-size:14px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.file-type{font-size:12px;color:var(--tx3);margin-top:2px;}
+.file-open-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:8px 16px;border-radius:20px;
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  text-decoration:none;flex-shrink:0;
+  transition:opacity .2s,transform .15s;
+}
+.file-open-btn:hover{opacity:.9;transform:scale(1.04);}
+
+/* PDF PREVIEW */
+.pdf-preview{
+  width:100%;height:400px;border-radius:12px;margin-top:10px;
+  border:none;background:var(--sf);
 }
 
-.content {
-  max-width: 850px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* TEXT CONTENT */
+.txt-box{
+  background:var(--sf2);border-radius:14px;padding:20px 22px;
+  font-size:15px;line-height:1.9;color:var(--tx);white-space:pre-wrap;
+  border:1px solid var(--bdr);
 }
 
-.content img {
-  max-width: 100%;
-  margin: 15px auto;
-  border-radius: 8px;
-  cursor: pointer;
+/* ═══════════════════════════════════════
+   LIGHTBOX
+═══════════════════════════════════════ */
+#imgZoom{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.92);z-index:9999;
+  justify-content:center;align-items:center;cursor:zoom-out;
 }
+#imgZoom.show{display:flex;}
+#imgZoom img{max-width:96%;max-height:96%;border-radius:12px;animation:scaleIn .25s cubic-bezier(.34,1.56,.64,1);}
 
-video {
-  max-width: 100%;
-  margin: 20px auto;
-  border-radius: 10px;
-}
+/* ═══════════════════════════════════════
+   SPINNER
+═══════════════════════════════════════ */
+.spin-wrap{text-align:center;padding:60px 20px;}
+.spin{display:inline-block;width:46px;height:46px;border:5px solid var(--sf2);border-top:5px solid var(--p);border-radius:50%;animation:spin .85s linear infinite;}
 
-.file-box{
-  background:#fafafa;
-  border-radius:10px;
-  padding:15px;
-  margin-top:15px;
-  text-align:center;
-}
+/* ═══════════════════════════════════════
+   KEYFRAMES
+═══════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{transform:scale(.78);}to{transform:scale(1);}}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-.file-name{
-  font-weight:bold;
-  margin-bottom:10px;
-}
-
-.view-btn, .download-btn{
-  display:inline-block;
-  margin:8px;
-  padding:8px 15px;
-  border-radius:20px;
-  text-decoration:none;
-  color:white;
-  font-weight:bold;
-}
-
-.view-btn{ background:#1976d2; }
-.download-btn{ background:#2e7d32; }
-
-iframe{
-  width:100%;
-  height:400px;
-  margin-top:10px;
-  border-radius:10px;
-}
-
-.lightbox {
-  position: fixed;
-  top:0; left:0;
-  width:100%; height:100%;
-  background: rgba(0,0,0,0.85);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:999;
-}
-
-  .plyr {
-  margin-top: 20px;
-  border-radius: 12px;
-  overflow: hidden;
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:600px){
+  .page{padding:14px 10px 70px;}
+  .meeting-card-hdr{padding:16px;}
+  .meeting-body{padding:14px 16px;}
+  .images-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));}
 }
 </style>
 </head>
 
 <body>
+<canvas id="particles"></canvas>
 
-<div class="back-buttons">
-  <a class="btn" href="index.html">الصفحة الرئيسية ⬅</a>
-  <a class="btn" href="archive-final.html">الأرشيف</a>
+<!-- HEADER -->
+<header>
+  <div class="hdr">
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      الرئيسية
+    </a>
+    <div class="hdr-title">ملخص الاجتماع</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- PAGE -->
+<div class="page">
+  <div id="meetingContent"><div class="spin-wrap"><div class="spin"></div></div></div>
 </div>
 
-<div class="header">
-  <h1 id="title">تحميل...</h1>
-  <p id="date"></p>
-</div>
-
-<div class="content"></div>
+<!-- LIGHTBOX -->
+<div id="imgZoom" onclick="this.classList.remove('show')"><img id="imgZoomSrc"></div>
 
 <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
 <script>
+/* ═══════════════════════════════════════
+   THEME
+═══════════════════════════════════════ */
+(function(){
+  const s = localStorage.getItem("cv_theme");
+  const d = window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s || (d ? "dark" : "light"));
+})();
+function applyTheme(m){
+  document.body.classList.toggle("dark", m === "dark");
+  localStorage.setItem("cv_theme", m);
+}
+function toggleTheme(){ applyTheme(document.body.classList.contains("dark") ? "light" : "dark"); }
+
+/* ═══════════════════════════════════════
+   PARTICLES
+═══════════════════════════════════════ */
+const canvas = document.getElementById("particles");
+const ctx = canvas.getContext("2d");
+let w, h;
+function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener("resize", resize);
+const particles = [];
+for(let i = 0; i < 80; i++){
+  particles.push({ x:Math.random()*window.innerWidth, y:Math.random()*window.innerHeight,
+    r:Math.random()*2.2+0.5, dx:(Math.random()-.5)*.6, dy:(Math.random()-.5)*.6 });
+}
+function animate(){
+  ctx.clearRect(0,0,w,h);
+  for(let p of particles){
+    p.x+=p.dx; p.y+=p.dy;
+    if(p.x>w) p.x=0; if(p.x<0) p.x=w;
+    if(p.y>h) p.y=0; if(p.y<0) p.y=h;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle = document.body.classList.contains("dark")
+      ? "rgba(167,139,250,0.35)" : "rgba(124,58,237,0.25)";
+    ctx.fill();
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ═══════════════════════════════════════
+   LOAD & RENDER
+═══════════════════════════════════════ */
+function zoomImg(src){
+  document.getElementById("imgZoomSrc").src = src;
+  document.getElementById("imgZoom").classList.add("show");
+}
+
+function getFileType(f){
+  const ext = f.split('.').pop().toLowerCase();
+  if(ext === "pdf") return { icon:"📕", label:"PDF" };
+  if(ext === "doc" || ext === "docx") return { icon:"📝", label:"Word" };
+  if(ext === "ppt" || ext === "pptx") return { icon:"📊", label:"PowerPoint" };
+  return { icon:"📄", label:"ملف" };
+}
+
 fetch("summaries.json")
-.then(res => res.json())
-.then(list => {
+  .then(res => res.json())
+  .then(list => {
+    const wrapper = document.getElementById("meetingContent");
+    if(!list.length){
+      wrapper.innerHTML = `<p style="text-align:center;color:var(--tx3);padding:40px">لا توجد تلخيصات</p>`;
+      return;
+    }
 
-if(!list.length){
-document.getElementById("title").innerText = "لا يوجد تلخيصات"
-return
-}
+    const a = list[0];
+    let html = `
+      <div class="meeting-card">
+        <div class="meeting-card-hdr">
+          <div class="meeting-title">${a.title}</div>
+          ${a.date ? `<div class="meeting-date">📅 ${a.date}</div>` : ""}
+        </div>
+        <div class="meeting-body">`;
 
-const a = list[0]
+    // صور
+    if(a.images && a.images.length){
+      html += `<div class="section-label">🖼 الصور</div>
+        <div class="images-grid" id="imgGrid"></div>`;
+    }
 
-document.getElementById("title").innerText = a.title
-document.getElementById("date").innerText = "📅 " + a.date
+    // فيديوهات
+    if(a.videos && a.videos.length){
+      html += `<div class="section-label">🎬 الفيديوهات</div>
+        <div id="videoSection"></div>`;
+    }
 
-const contentDiv = document.querySelector(".content")
+    // ملفات
+    if(a.files && a.files.length){
+      html += `<div class="section-label">📎 الملفات</div>
+        <div id="filesSection"></div>`;
+    }
 
-// صور
-if(a.images){
-a.images.forEach(img=>{
-const image=document.createElement("img")
-image.src=img
+    // نص
+    if(a.content){
+      html += `<div class="section-label" style="margin-top:16px">📝 ملخص الاجتماع</div>
+        <div class="txt-box">${a.content}</div>`;
+    }
 
-image.onclick = ()=>{
-const lightbox = document.createElement("div")
-lightbox.className="lightbox"
+    html += `</div></div>`;
+    wrapper.innerHTML = html;
 
-const bigImg=document.createElement("img")
-bigImg.src=img
+    // إضافة الصور
+    if(a.images && a.images.length){
+      const grid = document.getElementById("imgGrid");
+      a.images.forEach(src => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.onclick = () => zoomImg(src);
+        grid.appendChild(img);
+      });
+    }
 
-lightbox.appendChild(bigImg)
-lightbox.onclick = ()=> lightbox.remove()
+    // إضافة الفيديوهات
+    if(a.videos && a.videos.length){
+      const sec = document.getElementById("videoSection");
+      a.videos.forEach(v => {
+        const wrap = document.createElement("div");
+        wrap.className = "video-wrap";
+        const video = document.createElement("video");
+        video.controls = true;
+        video.className = "plyr-video";
+        video.src = v;
+        wrap.appendChild(video);
+        sec.appendChild(wrap);
+      });
+      setTimeout(() => {
+        Plyr.setup('.plyr-video', {
+          controls:['play-large','rewind','play','fast-forward','progress',
+            'current-time','duration','mute','volume','settings','download','fullscreen'],
+          seekTime:10
+        });
+      }, 300);
+    }
 
-document.body.appendChild(lightbox)
-}
+    // إضافة الملفات
+    if(a.files && a.files.length){
+      const sec = document.getElementById("filesSection");
+      a.files.forEach(f => {
+        const { icon, label } = getFileType(f);
+        const name = decodeURIComponent(f.split('/').pop());
+        const ext = f.split('.').pop().toLowerCase();
 
-contentDiv.appendChild(image)
-})
-}
-
-// فيديو
-if(a.videos){
-a.videos.forEach(v=>{
-const video=document.createElement("video")
-video.controls=true
-video.className="plyr-video"
-video.src=v
-contentDiv.appendChild(video)
-})
-}
-
-// 📄 ملفات (نسخة مظبوطة)
-if(a.files){
-a.files.forEach(f=>{
-
-const ext = f.split('.').pop().toLowerCase()
-
-let fileType = "📄 ملف"
-if(ext === "pdf") fileType = "📕 PDF"
-else if(ext === "doc" || ext === "docx") fileType = "📝 Word"
-else if(ext === "ppt" || ext === "pptx") fileType = "📊 PowerPoint"
-
-const fileName = decodeURIComponent(f.split('/').pop())
-
-const box = document.createElement("div")
-box.className = "file-box"
-
-const name = document.createElement("div")
-name.className = "file-name"
-name.innerText = fileType + " - " + fileName
-
-// 👁 عرض فقط
-const viewBtn = document.createElement("a")
-viewBtn.href = f
-viewBtn.innerText = "فتح 📄"
-viewBtn.target = "_blank"
-viewBtn.className = "view-btn"
-
-// إضافة
-box.appendChild(name)
-box.appendChild(viewBtn)
-
-// preview PDF
-if(ext === "pdf"){
-const iframe = document.createElement("iframe")
-iframe.src = f
-box.appendChild(iframe)
-}
-
-contentDiv.appendChild(box)
-
-})
-}
-
-// نص
-const text=document.createElement("p")
-text.innerText = a.content
-contentDiv.appendChild(text)
-
-setTimeout(()=>{
-
-  Plyr.setup('.plyr-video', {
-    controls: [
-      'play-large',
-      'rewind',        // ⏪ ترجيع 10 ثواني
-      'play',
-      'fast-forward',  // ⏩ تقديم 10 ثواني
-      'progress',
-      'current-time',
-      'duration',
-      'mute',
-      'volume',
-      'settings',
-      'download',      // ⬇️ زر التحميل
-      'fullscreen'
-    ],
-    seekTime: 10 // مدة التقديم/الترجيع
+        const item = document.createElement("div");
+        item.innerHTML = `
+          <div class="file-item">
+            <div class="file-ico">${icon}</div>
+            <div class="file-info">
+              <div class="file-name">${name}</div>
+              <div class="file-type">${label}</div>
+            </div>
+            <a class="file-open-btn" href="${f}" target="_blank">فتح 📄</a>
+          </div>
+          ${ext === "pdf" ? `<iframe class="pdf-preview" src="${f}"></iframe>` : ""}
+        `;
+        sec.appendChild(item);
+      });
+    }
+  })
+  .catch(() => {
+    document.getElementById("meetingContent").innerHTML =
+      `<p style="text-align:center;color:var(--tx3);padding:40px">⚠️ تعذر تحميل البيانات</p>`;
   });
-
-},300)
-
-})
 </script>
-
 </body>
 </html>
