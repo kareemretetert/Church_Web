@@ -235,6 +235,21 @@ tr:hover td{background:rgba(255,255,255,1);}
 </head>
 <body>
 
+<!-- ===== PASSWORD SCREEN ===== -->
+<div id="pwd-screen" style="min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;">
+  <div style="background:rgba(255,255,255,0.18);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.3);border-radius:24px;padding:40px 30px;width:100%;max-width:380px;text-align:center;box-shadow:0 15px 50px rgba(0,0,0,0.3);animation:fadeIn .5s ease;">
+    <div style="font-size:3rem;margin-bottom:10px;">🔐</div>
+    <h2 style="color:#fff;font-size:1.4rem;font-weight:900;margin-bottom:6px;">لوحة الحضور والغياب</h2>
+    <p style="color:#dde;font-size:.9rem;margin-bottom:24px;">أدخل كلمة المرور للدخول</p>
+    <input id="pwd-input" type="password" placeholder="كلمة المرور..." style="text-align:center;font-size:1.1rem;letter-spacing:4px;margin-bottom:0;">
+    <div id="pwd-error" style="display:none;color:#ff6b6b;font-size:.88rem;font-weight:700;margin-top:10px;">❌ كلمة المرور غلط، حاول تاني</div>
+    <button onclick="checkPassword()" style="width:100%;margin-top:16px;padding:14px;border:none;border-radius:15px;cursor:pointer;font-size:16px;font-weight:800;font-family:Tajawal,Tahoma;background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;transition:.25s;">دخول ←</button>
+  </div>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="main-app" style="display:none;">
+
 <!-- ===== HEADER ===== -->
 <div class="section">
   <h1>📋 لوحة الحضور والغياب</h1>
@@ -320,12 +335,37 @@ tr:hover td{background:rgba(255,255,255,1);}
 
 <script>
 // ===================================================
-// CONFIG
+// CONFIG — 🔥 عدّل القيم دي فقط
 // ===================================================
-const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN_HERE"; // 🔥 ضع التوكن هنا
-const REPO         = "kareemretetert/Church_Web";
-const FILE_PATH    = "attendance.json";
-const BRANCH       = "main";
+const REPO      = "kareemretetert/Church_Web";
+const FILE_PATH = "attendance.json";
+// رابط Netlify Function بتاعتك — عدّله لو اختلف
+const SAVE_URL  = "/.netlify/functions/saveAttendance";
+// كلمة المرور للدخول للوحة
+const APP_PASSWORD = "1234";  // 🔑 غيّرها لأي كلمة تريدها
+
+// ===================================================
+// PASSWORD GATE
+// ===================================================
+function checkPassword(){
+  const val = document.getElementById("pwd-input").value.trim();
+  if(val === APP_PASSWORD){
+    document.getElementById("pwd-screen").style.display = "none";
+    document.getElementById("main-app").style.display   = "block";
+    loadFromGitHub();
+  } else {
+    document.getElementById("pwd-error").style.display = "block";
+    document.getElementById("pwd-input").value = "";
+    document.getElementById("pwd-input").focus();
+  }
+}
+
+// السماح بالضغط على Enter في حقل كلمة المرور
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("pwd-input").addEventListener("keydown", e => {
+    if(e.key === "Enter") checkPassword();
+  });
+});
 
 // ===================================================
 // STATE
@@ -334,48 +374,39 @@ let db = { classes: [], sessions: [] };
 let rptSort = "alpha";
 
 // ===================================================
-// GITHUB API
+// GITHUB — تحميل عبر raw (بدون توكن، للقراءة فقط)
 // ===================================================
 async function loadFromGitHub(){
   try{
-    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,{
-      headers:{Authorization:`token ${GITHUB_TOKEN}`,Accept:"application/vnd.github.v3+json"}
-    });
+    // raw.githubusercontent لا يحتاج توكن للـ repos العامة
+    const url = `https://raw.githubusercontent.com/${REPO}/main/${FILE_PATH}?t=${Date.now()}`;
+    const r = await fetch(url);
     if(!r.ok) throw new Error("not found");
-    const d = await r.json();
-    const json = JSON.parse(atob(d.content.replace(/\n/g,"")));
-    db = json;
+    db = await r.json();
   }catch(e){
-    // file doesn't exist yet, start fresh
-    db = {classes:[],sessions:[]};
+    db = {classes:[], sessions:[]};
   }
   renderAll();
 }
 
+// ===================================================
+// NETLIFY FUNCTION — حفظ (التوكن محمي على السيرفر)
+// ===================================================
 async function saveToGitHub(){
   showLoader();
   try{
-    let sha = null;
-    const get = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,{
-      headers:{Authorization:`token ${GITHUB_TOKEN}`,Accept:"application/vnd.github.v3+json"}
+    const res = await fetch(SAVE_URL, {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify(db)
     });
-    if(get.ok){ const d = await get.json(); sha = d.sha; }
-
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(db,null,2))));
-    const body = {message:"Update attendance data",content,branch:BRANCH};
-    if(sha) body.sha = sha;
-
-    const put = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,{
-      method:"PUT",
-      headers:{Authorization:`token ${GITHUB_TOKEN}`,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},
-      body:JSON.stringify(body)
-    });
-    if(!put.ok) throw new Error(await put.text());
+    const result = await res.json();
+    if(!res.ok) throw new Error(result.error || "save failed");
     hideLoader();
-    toast("✅ تم الحفظ على GitHub");
+    toast("✅ تم الحفظ بنجاح");
   }catch(e){
     hideLoader();
-    toast("❌ فشل الحفظ: "+e.message);
+    toast("❌ فشل الحفظ: " + e.message);
   }
 }
 
@@ -942,7 +973,8 @@ function renderAll(){
 // ===================================================
 // INIT
 // ===================================================
-loadFromGitHub();
+// loadFromGitHub() — يُستدعى تلقائياً بعد كلمة المرور
 </script>
+</div><!-- end main-app -->
 </body>
 </html>
