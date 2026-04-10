@@ -56,6 +56,19 @@
           "status": "absent"
         }
       ]
+    },
+    {
+      "id": "mntfocwi16nb",
+      "classId": "mntflxjtf8sv",
+      "date": "2026-04-10",
+      "day": "الجمعة",
+      "records": [
+        {
+          "memberId": "mntfm6y1k3zn",
+          "memberName": "fhgfhgfhfh",
+          "status": "present"
+        }
+      ]
     }
   ]
 }
