@@ -1,571 +1,304 @@
 <!DOCTYPE html>
-
-<html dir="rtl" lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="Kareem Hosny" name="author"/>
-<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
-<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="author" content="Kareem Hosny"/>
 <link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
 <title>تاريخ عقيدتنا</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  body{
-    background-color: #f0f8ff;
-    color: #333;
-  }
-    .about-section {
-      max-width:1050px;
-      margin: auto;
-      background-color: #e0f0fd;
-  color: #333;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      line-height: 1.8;
-     
-    }
-    .bout-section {
-      display: inline-block;
-      position: relative;
-      right: 200px;
-      max-width: 900px;
-      margin: auto;
-      background: #eeeeee;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      line-height: 1.8;
-      
-    }
+/* ═══ TOKENS ═══ */
+:root{
+  --p:#7c3aed;--p-dk:#5b21b6;--p-lt:#a78bfa;
+  --bg:#f4f0fb;--sf:#fff;--sf2:#f1ecfc;
+  --tx:#0f172a;--tx2:#374151;--tx3:#6b7280;
+  --bdr:#e2e8f0;
+  --sh:0 4px 20px rgba(109,40,217,.10);
+  --sh2:0 8px 32px rgba(109,40,217,.18);
+  --shdr:0 6px 24px rgba(109,40,217,.25);
+  --hdr1:#7c3aed;--hdr2:#9333ea;--hdr3:#5b21b6;
+}
+body.dark{
+  --bg:#0d0d1a;--sf:#161627;--sf2:#1e1e33;
+  --tx:#f0f0ff;--tx2:#c4c4e0;--tx3:#8888aa;
+  --bdr:#2a2a44;
+  --sh:0 4px 24px rgba(0,0,0,.5);
+  --sh2:0 8px 40px rgba(0,0,0,.6);
+  --shdr:0 6px 24px rgba(0,0,0,.6);
+  --hdr1:#0f172a;--hdr2:#1e1b4b;--hdr3:#020617;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
 
-    .about-section h2 {
-      color: #4a148c;
-      margin-bottom: 1rem;
-    }
+/* ═══ PARTICLES ═══ */
+#particles{position:fixed;inset:0;width:100%;height:100%;z-index:-10;pointer-events:none;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(124,58,237,.12),transparent 40%),radial-gradient(circle at 80% 30%,rgba(59,130,246,.10),transparent 45%),radial-gradient(circle at 50% 80%,rgba(236,72,153,.08),transparent 50%);z-index:-20;}
 
-    .about-section p {
-      font-size: 1.1rem;
-    }
-    .back-button {
-  position: absolute;
-  top: 20px;
-  left: 35px;
-  background-image:linear-gradient(to left,#cf98d6d2,rgb(181, 70, 196)) ;
-  color: white;
-  padding: 8px 18px;
-  border-radius: 25px;
-  font-size: 14px;
-  font-weight: bold;
-  text-decoration: none;
-  border: 2px solid #38373a;
-  transition: background-color 0.3s initial, transform 0.2s initial;
-  z-index: 1000;
-  transform: scale(1.25);
+/* ═══ HEADER ═══ */
+header{background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));position:sticky;top:0;z-index:300;box-shadow:var(--shdr);overflow:hidden;transition:background .4s;}
+header::before{content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none;}
+.hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);border-radius:22px;background:rgba(255,255,255,.15);color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;text-decoration:none;transition:background .2s,transform .15s;-webkit-tap-highlight-color:transparent;}
+.back-btn:hover{background:rgba(255,255,255,.28);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.hdr-title{flex:1;text-align:center;color:#fff;font-size:clamp(14px,3.5vw,19px);font-weight:800;line-height:1.3;}
+.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
+.toggle-track{width:64px;height:32px;border-radius:50px;background:#1e293b;position:relative;display:flex;align-items:center;padding:0 5px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);transition:background .3s;-webkit-tap-highlight-color:transparent;}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+body.dark .toggle-track{background:rgba(109,40,217,.5);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
+
+/* ═══ PAGE ═══ */
+.page{max-width:900px;margin:0 auto;padding:24px 14px 70px;}
+
+/* ═══ CONTENT CARD ═══ */
+.content-card{
+  background:var(--sf);border-radius:22px;overflow:hidden;
+  box-shadow:var(--sh);margin-bottom:24px;border:1px solid var(--bdr);
+  animation:fadeUp .5s both;
+  transition:box-shadow .25s;
+}
+.content-card:hover{box-shadow:var(--sh2);}
+.content-card-body{padding:24px 26px;}
+
+.content-card h1{font-size:clamp(17px,4vw,22px);font-weight:800;color:var(--p);margin-bottom:14px;line-height:1.45;}
+.content-card h2{font-size:clamp(15px,3.5vw,18px);font-weight:700;color:#00695c;margin:20px 0 10px;line-height:1.4;}
+body.dark .content-card h2{color:#34d399;}
+.content-card h3{font-size:15px;font-weight:700;color:var(--p);margin:16px 0 8px;}
+.content-card p{font-size:14.5px;line-height:1.85;color:var(--tx2);margin-bottom:10px;}
+.content-card ul,.content-card ol{padding-right:22px;margin-bottom:10px;}
+.content-card li{font-size:14px;line-height:1.85;color:var(--tx2);margin-bottom:6px;}
+.content-card b{color:var(--p-dk);}
+body.dark .content-card b{color:var(--p-lt);}
+
+blockquote{
+  background:var(--sf2);border-right:4px solid var(--p);
+  border-radius:0 12px 12px 0;
+  padding:14px 18px;margin:16px 0;
+  font-size:14px;line-height:1.8;color:var(--tx2);
 }
 
-.back-button:hover {
-  background-color: #696969;
-  
-}
-  
-@media (max-width: 768px) {
-  .about-section, .bout-section {
-    padding: 1rem;
-    margin: 1rem;
-    width: 90% !important;
-    right: 0 !important;
-  }
-  .about-section h1, .about-section h2, .about-section h3 {
-    font-size: 1.2rem;
-  }
-  .about-section p {
-    font-size: 1rem;
-  }
-  .back-button {
-    left: 10px !important;
-    top: 10px !important;
-    transform: scale(1);
-    font-size: 12px;
-    padding: 6px 14px;
-  }
-  table {
-    font-size: 0.9rem;
-  }
+/* TABLE */
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px;}
+thead tr{background:var(--sf2);}
+th,td{padding:10px 12px;border:1px solid var(--bdr);color:var(--tx2);text-align:center;}
+th{font-weight:800;color:var(--p-dk);}
+body.dark th{color:var(--p-lt);}
+tr:nth-child(even){background:var(--sf2);}
+
+/* ═══ KEYFRAMES ═══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+
+@media(max-width:600px){
+  .page{padding:14px 10px 70px;}
+  .content-card-body{padding:16px;}
+  table{font-size:11px;}
+  th,td{padding:7px 6px;}
 }
 </style>
 </head>
 <body>
-<header><a class="back-button" href="index.html">الصفحة الرئيسية ⬅</a></header>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<canvas id="particles"></canvas>
 
-<div class="about-section">
-  <h1 style="color:#4a148c;">ألوهية المسيح وقيامته وصلبه – حقائق إيمانية وتاريخية</h1>
-  <p>
-    إيماننا بألوهية المسيح وصلبه وقيامته مش مبني على مشاعر أو تراث بس، لكن على حقائق كتابية وتاريخية واضحة. 
-    خلينا نبدأ من الأول: <b style="color:#ff0000;">مين هو يسوع؟</b>
-  </p>
-  
-  <h2 style="color:#00695c;">1. ألوهية المسيح</h2>
-  <p>
-    الكتاب المقدس أعلن بوضوح إن يسوع مش مجرد نبي أو معلم، لكنه <b style="color:#4a148c;">الله الظاهر في الجسد</b>:
-  </p>
-  <ul>
-    <li>في يوحنا 1:1: <b>"في البدء كان الكلمة، والكلمة كان عند الله، وكان الكلمة الله"</b>.</li>
-    <li>وفي يوحنا 20:28: توما قال له: <b>"ربي وإلهي"</b>، ويسوع ما نهرهوش، بل قبِل اعترافه.</li>
-    <li>كولوسي 2:9: <b>"فإنه فيه يحل كل ملء اللاهوت جسديًا"</b>.</li>
-  </ul>
-  
-  <p>
-    حتى الأعمال اللي عملها يسوع بتشهد بألوهيته:
-  </p>
-  <ul>
-    <li>غفر الخطايا (مرقس 2:5–7).</li>
-    <li>قبل السجود (متى 14:33).</li>
-    <li>له سلطان على الطبيعة، الأرواح، والموت.</li>
-  </ul>
-
-  <h2 style="color:#00695c;">2. صلب المسيح</h2>
-  <p>
-    الصليب مش هزيمة، ده قمة الحب والفداء. المسيح مات بإرادته علشان يفدينا:
-  </p>
-  <ul>
-    <li>يوحنا 10:18: <b>"ليس أحد يأخذها مني، بل أضعها أنا من ذاتي"</b>.</li>
-    <li>إشعياء 53 تنبأ بتفاصيل الصلب قبلها بقرون.</li>
-  </ul>
-  
-  <h3>أدلة تاريخية على الصلب:</h3>
-  <p>
-    حتى خارج الكتاب المقدس، في شهود من القرن الأول والثاني أكدوا حادثة الصلب:
-  </p>
-  <ul>
-    <li><b>تاسيتوس</b> (مؤرخ روماني): كتب أن المسيح "أُعدم على يد بيلاطس البنطي في عهد طيباريوس".</li>
-    <li><b>يوسيفوس</b> (مؤرخ يهودي): أشار إلى موت يسوع وصلبه وأتباعه اللي ما بطلوش يتبعوه بعد كده.</li>
-  </ul>
-
-  <h2 style="color:#00695c;">3. قيامة المسيح</h2>
-  <p>
-    القيامة هي عمود الإيمان المسيحي. من غيرها، ماكانش هيبقى فيه بشارة ولا خلاص:
-  </p>
-  <ul>
-    <li>1 كورنثوس 15:14: <b>"وإن لم يكن المسيح قد قام، فباطل كرازتنا وباطل أيضًا إيمانكم"</b>.</li>
-    <li>المسيح ظهر لأكثر من 500 شخص بعد قيامته (1 كورنثوس 15:6).</li>
-  </ul>
-
-  <h3>شهادات منطقية وتاريخية:</h3>
-  <ul>
-    <li>القبر الفارغ: حتى أعداؤه ماقدروش يلاقوا جسده.</li>
-    <li>تغيير التلاميذ من الخوف إلى الجرأة، وماتوا شهداء على القيامة.</li>
-    <li>نشأة الكنيسة الأولى وانتشارها السريع دليل على حدث ضخم زي القيامة.</li>
-  </ul>
-  
-  <h2 style="color:#4a148c;">الخلاصة</h2>
-  <p>
-    المسيح هو الله المتجسد، مات على الصليب حبًا فينا، وقام من بين الأموات ليعطينا حياة أبدية. الإيمان ده مش وهم… ده مبني على أدلة كتابية وتاريخية وعقلية.
-  </p>
-  <blockquote style="background:#f9f9f9;padding:10px;border-right:4px solid #4a148c;">
-    "أنا هو القيامة والحياة، من آمن بي ولو مات فسيحيا" (يوحنا 11:25)
-  </blockquote>
-</div>
-
-<br>
-<br>
-<br>
-
-<div class="about-section">
-  <h1 style="color:#4a148c;">الثالوث القدوس – سر الوحدة في الجوهر</h1>
-  <p>
-    الإيمان المسيحي بيعلم إن الله واحد في الجوهر، مثلث في الأقانيم: الآب، الابن، والروح القدس. مش 3 آلهة، لكن <b style="color:#ff0000;">إله واحد</b> بثلاثة أقانيم مميزين لكن متحدين.
-  </p>
-
-  <h2 style="color:#00695c;">1. آيات بتؤكد وحدانية الله</h2>
-  <ul>
-    <li>تثنية 6:4: <b>"الرب إلهنا رب واحد"</b>.</li>
-    <li>إشعياء 45:5: <b>"أنا الرب وليس آخر، لا إله سواي"</b>.</li>
-  </ul>
-
-  <h2 style="color:#00695c;">2. الآب، الابن، والروح القدس في الكتاب</h2>
-  <ul>
-    <li>متى 28:19: <b>"عمدوهم باسم الآب والابن والروح القدس"</b> – اسم (مفرد) مش أسماء (جمع)!</li>
-    <li>2 كورنثوس 13:14: <b>"نعمة ربنا يسوع... ومحبة الله... وشركة الروح القدس"</b>.</li>
-  </ul>
-
-  <h2 style="color:#00695c;">3. أعمال كل أقنوم</h2>
-  <ul>
-    <li><b style="color:#4a148c;">الآب:</b> الخالق، المصدر.</li>
-    <li><b style="color:#4a148c;">الابن:</b> الفادي، المُعلن للآب.</li>
-    <li><b style="color:#4a148c;">الروح القدس:</b> المُحيي، المُقدِّس.</li>
-  </ul>
-
-  <h2 style="color:#00695c;">4. إزاي الله يكون واحد وفيه أقانيم؟</h2>
-  <p>
-    زي الشمس: قرص الشمس (الآب)، النور (الابن)، والحرارة (الروح). 3 مظاهر، لكن من مصدر واحد.
-  </p>
-  <p>
-    الله محبة (1 يوحنا 4:8). والمحبة ما تكونش إلا في علاقة. الثالوث مش فكرة فلسفية… ده إعلان عن محبة الله الداخلية.
-  </p>
-
-  <h2 style="color:#4a148c;">الخلاصة</h2>
-  <p>
-    إيماننا بالثالوث هو أساس العلاقة مع الله. الله مش فكرة بعيدة، لكنه علاقة حب دائمة بين الآب والابن والروح… والجميل إنه دعانا نعيش في العلاقة دي.
-  </p>
-  <blockquote style="background:#f9f9f9;padding:10px;border-right:4px solid #4a148c;">
-    "الله محبة، ومن يثبت في المحبة يثبت في الله والله فيه" (1 يوحنا 4:16)
-  </blockquote>
-</div>
-<br>
-<br>
-<br>
-
-<br/><br/>
-
-
-
-
-<div class="about-section">
-  <h2>الأسرار المقدسة في المسيحية</h2>
-  <p>
-      الأسرار المقدسة مش مجرد طقوس شكلية، لكن دي وسائل النعمة اللي المسيح نفسه أسسها وسلمها للكنيسة، علشان من خلالها نعيش اتحاد حقيقي بيه، ونتغذى روحياً ونتقدس.
-  </p>
-  <h3 style="color: blue;">1. سر المعمودية – ولادة جديدة في المسيح</h3>
-  <p>
-  المعمودية مش بس بداية عضويتي في الكنيسة، دي ولادة جديدة من فوق. في لحظة المعمودية، بدفن الإنسان العتيق وأقوم في حياة جديدة.
-  </p>
-  <p>
-  قال بولس: <b>"مدفونين معه في المعمودية... لتسلكوا في جدة الحياة" (رومية 6:4)</b><br/>
-  والمسيح قال: <b>"إن كان أحد لا يولد من الماء والروح لا يقدر أن يدخل ملكوت الله" (يوحنا 3:5)</b>
-  </p>
-  <h3 style="color: blue;">2. سر الميرون – حلول الروح القدس</h3>
-  <p>
-  بعد المعمودية، بسر الميرون بننال ختم الروح القدس. ده استعلان للروح القدس فيّ، وتثبيت للنعمة.
-  </p>
-  <p>
-  قال بولس: <b>"الذي فيه أيضًا إذ آمنتم ختمتم بروح الموعد القدوس" (أفسس 1:13)</b>
-  </p>
-  <h3 style="color: blue;">3. سر التناول – اتحاد حقيقي بالمسيح</h3>
-  <p>
-  التناول مش رمز، ده جسد الرب ودمه الحقيقي، طعام روحي حي يعطيني حياة أبدية.
-  </p>
-  <p>
-  قال يسوع: <b>"من يأكل جسدي ويشرب دمي يثبت فيّ وأنا فيه" (يوحنا 6:56)</b><br/>
-  وقال بولس: <b>"كلما أكلتم هذا الخبز وشربتم هذه الكأس تخبرون بموت الرب" (1 كورنثوس 11:26)</b>
-  </p>
-  <h3 style="color: blue;">4. سر التوبة والاعتراف – تجديد العهد</h3>
-  <p>
-  لما بأعترف، بأرجع أحضن النعمة اللي حصلت عليها في المعمودية. التوبة مش لحظة ندم بس، دي رجوع حقيقي لبيت الآب.
-  </p>
-  <p>
-  قال يسوع للرسل: <b>"من غفرتم خطاياه تُغفر له، ومن أمسكتموها أُمسكت" (يوحنا 20:23)</b>
-  </p>
-  <h3 style="color: blue;">5. سر الزيجة – اتحاد مقدس</h3>
-  <p>
-  الزواج في المسيحية مش عقد قانوني، لكنه سر مقدس بيجمع بين الزوجين في المسيح، وبيجعل بيتهم كنيسة صغيرة.
-  </p>
-  <p>
-  قال بولس: <b>"الاثنان يكونان جسدًا واحدًا... هذا السر عظيم" (أفسس 5:31-32)</b>
-  </p>
-  <h3 style="color: blue;">6. سر الكهنوت – خدمة المذبح والشعب</h3>
-  <p>
-  الكهنوت مش منصب اجتماعي، لكنه دعوة من الله لخدمة كلمته وأسراره. الكاهن وكيل المسيح.
-  </p>
-  <p>
-  قال بولس: <b>"هكذا فليحسبنا الإنسان كخدام للمسيح ووكلاء سرائر الله" (1 كورنثوس 4:1)</b>
-  </p>
-  <h3 style="color: blue;">7. سر مسحة المرضى – شفاء الروح والجسد</h3>
-  <p>
-  وقت المرض، الكنيسة بتيجي تصلي للمريض وتدهنه بالزيت، مش بس لشفاء الجسد، لكن للراحة والسلام والتقديس.
-  </p>
-  <p>
-  قال يعقوب: <b>"أمريض أحد بينكم؟ فليدع شيوخ الكنيسة فيصلوا عليه ويدهنوه بزيت باسم الرب" (يعقوب 5:14)</b>
-  </p>
-  <h2>ليه بنؤمن بالأسرار؟</h2>
-  <ul>
-  <li>أسسها المسيح نفسه.</li>
-  <li>نقلها الرسل وعلّم بها الآباء.</li>
-  <li>وسائل فعلية للنعمة والاتحاد بالله.</li>
-  </ul>
-  <p>
-  الإيمان مش كلام، لكنه حياة… والأسرار هي أوعية النعمة اللي بنعيش بيها في المسيح كل يوم.
-  </p>
-  <blockquote style="background:#f9f9f9;padding:10px;border-right:4px solid #4a148c;">
-    "اثبتوا في ما تعلمتموه وأُيقنتم به، عالمين ممن تعلمتم" (2 تيموثاوس 3:14)
-    </blockquote>
+<header>
+  <div class="hdr">
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      الرئيسية
+    </a>
+    <div class="hdr-title">تاريخ عقيدتنا</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
   </div>
-  <br/>
-  <br/>
-  <br/>
+</header>
 
+<div class="page">
 
-
-  <div class="about-section">
-    <h1 style="color:#4a148c;">اللاهوت المقارن – فهم عميق لاختلافات الإيمان المسيحي</h1>
-    <p>
-      اللاهوت المقارن هو فرع من فروع الدراسات اللاهوتية بيركز على مقارنة العقائد والممارسات بين الطوائف المسيحية المختلفة، علشان نوصل لفهم أعمق وجسر للحوار والمحبة.
-    </p>
-  
-    <h2 style="color:#00695c;">1. تعريف اللاهوت المقارن</h2>
-    <p>
-      اللاهوت المقارن بيحلل أوجه التشابه والاختلاف بين الكاثوليك، الأرثوذكس، والبروتستانت، من ناحية العقائد، الأسرار، السلطة الكنسية، والتقاليد.
-    </p>
-  
-    <h2 style="color:#00695c;">2. موضوعات رئيسية بيغطيها</h2>
-    <ul>
-      <li><b style="color:#ff0000;">السلطة:</b> الكتاب المقدس وحده (Sola Scriptura) عند البروتستانت، مقابل الكتاب والتقليد عند الكاثوليك والأرثوذكس.</li>
-      <li><b style="color:#ff0000;">الطبيعة البشرية بعد السقوط:</b> النظرة البروتستانتية بتقول إنها فسدت بالكامل، الأرثوذكس بيقولوا إنها مجروحة بس، الكاثوليك في النص.</li>
-      <li><b style="color:#ff0000;">الأسرار:</b> 7 أسرار عند الكاثوليك والأرثوذكس، بينما البروتستانت يعترفون بـ2 بس.</li>
-      <li><b style="color:#ff0000;">الخلاص:</b> بالإيمان فقط عند البروتستانت، وبالإيمان والأعمال في الأرثوذكسية والكاثوليكية.</li>
-      <li><b style="color:#ff0000;">القديسين:</b> شفاعة وتكريم عند الكاثوليك والأرثوذكس، واحترام رمزي فقط عند البروتستانت.</li>
-    </ul>
-  
-    <h2 style="color:#4a148c;">ليه مهم ندرس اللاهوت المقارن؟</h2>
-    <ul>
-      <li>علشان نفهم الخلفيات المختلفة لإخوتنا ونكسر الجهل.</li>
-      <li>نثبت في إيماننا ونفهم جذورنا المسيحية بعمق.</li>
-      <li>نبني جسر حوار ومحبة مبني على المعرفة.</li>
-    </ul>
-  
-    <h2 style="color:#4a148c;">الخلاصة</h2>
-    <p>
-      دراسة اللاهوت المقارن مش علشان نحكم على غيرنا، بل علشان نفهم أكتر، ونثبت في إيماننا بعقل ومحبة.
-    </p>
-    <blockquote style="background:#f9f9f9;padding:10px;border-right:4px solid #4a148c;">
-      "ليكن فيكم هذا الفكر الذي في المسيح يسوع أيضًا" (فيلبي 2:5)
-    </blockquote>
+  <!-- بطاقة 1 -->
+  <div class="content-card">
+    <div class="content-card-body">
+      <h1>ألوهية المسيح وقيامته وصلبه – حقائق إيمانية وتاريخية</h1>
+      <p>إيماننا بألوهية المسيح وصلبه وقيامته مش مبني على مشاعر أو تراث بس، لكن على حقائق كتابية وتاريخية واضحة. خلينا نبدأ من الأول: <b>مين هو يسوع؟</b></p>
+      <h2>1. ألوهية المسيح</h2>
+      <p>الكتاب المقدس أعلن بوضوح إن يسوع مش مجرد نبي أو معلم، لكنه <b>الله الظاهر في الجسد</b>:</p>
+      <ul>
+        <li>في يوحنا 1:1: <b>"في البدء كان الكلمة، والكلمة كان عند الله، وكان الكلمة الله"</b>.</li>
+        <li>وفي يوحنا 20:28: توما قال له: <b>"ربي وإلهي"</b>، ويسوع ما نهره، بل قبِل اعترافه.</li>
+        <li>كولوسي 2:9: <b>"فإنه فيه يحل كل ملء اللاهوت جسديًا"</b>.</li>
+      </ul>
+      <p>حتى الأعمال اللي عملها يسوع بتشهد بألوهيته:</p>
+      <ul>
+        <li>غفر الخطايا (مرقس 2:5–7).</li>
+        <li>قبل السجود (متى 14:33).</li>
+        <li>له سلطان على الطبيعة، الأرواح، والموت.</li>
+      </ul>
+      <h2>2. صلب المسيح</h2>
+      <p>الصليب مش هزيمة، ده قمة الحب والفداء. المسيح مات بإرادته علشان يفدينا:</p>
+      <ul>
+        <li>يوحنا 10:18: <b>"ليس أحد يأخذها مني، بل أضعها أنا من ذاتي"</b>.</li>
+        <li>إشعياء 53 تنبأ بتفاصيل الصلب قبلها بقرون.</li>
+      </ul>
+      <h3>أدلة تاريخية على الصلب:</h3>
+      <ul>
+        <li><b>تاسيتوس</b> (مؤرخ روماني): كتب أن المسيح "أُعدم على يد بيلاطس البنطي في عهد طيباريوس".</li>
+        <li><b>يوسيفوس</b> (مؤرخ يهودي): أشار إلى موت يسوع وصلبه.</li>
+      </ul>
+      <h2>3. قيامة المسيح</h2>
+      <p>القيامة هي عمود الإيمان المسيحي. من غيرها، ماكانش هيبقى فيه بشارة ولا خلاص:</p>
+      <ul>
+        <li>1 كورنثوس 15:14: <b>"وإن لم يكن المسيح قد قام، فباطل كرازتنا وباطل أيضًا إيمانكم"</b>.</li>
+        <li>المسيح ظهر لأكثر من 500 شخص بعد قيامته (1 كورنثوس 15:6).</li>
+      </ul>
+      <h3>شهادات منطقية وتاريخية:</h3>
+      <ul>
+        <li>القبر الفارغ: حتى أعداؤه ماقدروش يلاقوا جسده.</li>
+        <li>تغيير التلاميذ من الخوف إلى الجرأة، وماتوا شهداء على القيامة.</li>
+        <li>نشأة الكنيسة الأولى وانتشارها السريع دليل على القيامة.</li>
+      </ul>
+      <h2 style="color:var(--p);">الخلاصة</h2>
+      <blockquote>"أنا هو القيامة والحياة، من آمن بي ولو مات فسيحيا" (يوحنا 11:25)</blockquote>
+    </div>
   </div>
-  
-  <br/><br/>
 
-
-
-<div class="about-section">
-  <h1 style="color:#4a148c;">
-        تأسست أول كنيسة في اورشليم في عيد الخمسين اليهودي، واللي بيجي بعد 50 يوم من الفصح  (عيد القيامة). 
-      </h1>
-  <p>الكنيسة فضلت متحدة لحد ما حصل <b style="color:  #ff0000; word-spacing: 4px; letter-spacing: 0.8px;">انشقاق طائفي.</b> </p>
-  <h2>طيب ليه حصل انشقاق في المسيحية؟ و ايه الفرق بين كل طائفة؟ ومين اللي صح؟</h2>
-  <p>
-      بدأت المسيحية ككنيسة واحدة، لكن عبر التاريخ ظهرت خلافات في الفهم اللاهوتي والسلطة الكنسية أدّت إلى انقسامات كبيرة.
-      </p>
-  <h3>1. الانقسام بين الكاثوليك والأرثوذكس (1054م)</h3>
-  <p>
-      حصل خلاف على مسألة انبثاق الروح القدس وسلطة بابا روما. فرفضت الكنائس الشرقية تدخل البابا، مما أدى لانفصال الأرثوذكس (الشرقيين) عن الكاثوليك (الغربيين).
-      </p>
-  <h3>2. الإصلاح البروتستانتي (1517م)</h3>
-  <p>
-      مارتن لوثر اعترض على ممارسات خاطئة في الكنيسة الكاثوليكية، ورفض سلطة البابا، وأكد أن الخلاص بالإيمان فقط. فظهرت طوائف جديدة مثل اللوثرية، المعمدانية، والخمسينية.
-      </p>
-  <h2>الطوائف المسيحية الكبرى</h2>
-  <ul>
-  <li><b>الكاثوليك:</b> أكبر طائفة، يرأسها بابا روما، وتؤمن بالأسرار السبعة.</li>
-  <li><b>الأرثوذكس:</b> تلتزم بالتقليد الرسولي، والعبادة الطقسية الغنية بالألحان والبخور.</li>
-  <li><b>البروتستانت:</b> طوائف متنوعة، تركز على الكتاب المقدس، وتبسط الطقوس والعبادة.</li>
-  </ul>
-  <h2>الاختلافات بينهم</h2>
-  <table border="1" cellpadding="8" style="border-collapse: collapse; width: 100%;">
-  <thead>
-  <tr style="background-color:#f2f2f2;">
-  <th>الجانب</th>
-  <th>الكاثوليك</th>
-  <th>الأرثوذكس</th>
-  <th>البروتستانت</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-  <td>السلطة العليا</td>
-  <td>بابا روما</td>
-  <td>مجمع البطاركة</td>
-  <td>الكتاب المقدس فقط</td>
-  </tr>
-  <tr>
-  <td>عدد الأسفار</td>
-  <td>73 سفر</td>
-  <td>76 سفر</td>
-  <td>66 سفر</td>
-  </tr>
-  <tr>
-  <td>الأسرار</td>
-  <td>7 أسرار</td>
-  <td>7 أسرار</td>
-  <td>2 فقط (معمودية وتناول)</td>
-  </tr>
-  <tr>
-  <td>العبادة</td>
-  <td>رسمية وطقسية</td>
-  <td>طقسية وألحان</td>
-  <td>تسبيح وعظة وبساطة</td>
-  </tr>
-  <tr>
-  <td>القديسين</td>
-  <td>شفاعة وتكريم</td>
-  <td>شفاعة قوية وتكريم واسع</td>
-  <td>لا توجد شفاعة - احترام فقط</td>
-  </tr>
-  </tbody>
-  </table>
-  <h2>خاتمة</h2>
-  <p>
-      رغم اختلاف الطوائف، المسيح هو محور الإيمان المشترك. وعلينا كمسيحيين أن نبحث عن ما يوحّدنا في المحبة، لا ما يفرّقنا، ونفهم تاريخنا علشان نثبت في إيماننا عن وعي.
-      </p>
+  <!-- بطاقة 2 -->
+  <div class="content-card" style="animation-delay:.1s">
+    <div class="content-card-body">
+      <h1>الثالوث القدوس – سر الوحدة في الجوهر</h1>
+      <p>الإيمان المسيحي بيعلم إن الله واحد في الجوهر، مثلث في الأقانيم: الآب، الابن، والروح القدس. مش 3 آلهة، لكن <b>إله واحد</b> بثلاثة أقانيم متحدين.</p>
+      <h2>1. آيات بتؤكد وحدانية الله</h2>
+      <ul>
+        <li>تثنية 6:4: <b>"الرب إلهنا رب واحد"</b>.</li>
+        <li>إشعياء 45:5: <b>"أنا الرب وليس آخر، لا إله سواي"</b>.</li>
+      </ul>
+      <h2>2. الآب، الابن، والروح القدس في الكتاب</h2>
+      <ul>
+        <li>متى 28:19: <b>"عمدوهم باسم الآب والابن والروح القدس"</b> – اسم (مفرد) مش أسماء (جمع)!</li>
+        <li>2 كورنثوس 13:14: <b>"نعمة ربنا يسوع... ومحبة الله... وشركة الروح القدس"</b>.</li>
+      </ul>
+      <h2>3. أعمال كل أقنوم</h2>
+      <ul>
+        <li><b>الآب:</b> الخالق، المصدر.</li>
+        <li><b>الابن:</b> الفادي، المُعلن للآب.</li>
+        <li><b>الروح القدس:</b> المُحيي، المُقدِّس.</li>
+      </ul>
+      <h2>4. إزاي الله يكون واحد وفيه أقانيم؟</h2>
+      <p>زي الشمس: قرص الشمس (الآب)، النور (الابن)، والحرارة (الروح). 3 مظاهر، لكن من مصدر واحد.</p>
+      <h2 style="color:var(--p);">الخلاصة</h2>
+      <blockquote>"الله محبة، ومن يثبت في المحبة يثبت في الله والله فيه" (1 يوحنا 4:16)</blockquote>
+    </div>
   </div>
-  <br/>
-  <br/>
-  <br/>
-  
-  <div class="about-section">
-    <h2>طقس أسبوع الآلام</h2>
-    <p>
-      أسبوع الآلام هو أقدس أسبوع في السنة عندنا كمسيحيين، وبنعتبره أهم وقت بنتأمل فيه في محبة المسيح وآلامه عشان فدانا.
-      الأسبوع ده بيبدأ من <b>حد الزعف (أحد الشعانين)</b> وبيخلص بـ <b>سبت النور</b> اللي قبله على طول <b>عيد القيامة المجيد</b>.
-    </p>
-  
-    <h3 style="color: blue;">1. جو روحي خاص في الكنيسة</h3>
-    <p>
-      في الأسبوع ده الكنيسة بتعيش جو مختلف تمامًا:
+
+  <!-- بطاقة 3 -->
+  <div class="content-card" style="animation-delay:.15s">
+    <div class="content-card-body">
+      <h1>الأسرار المقدسة في المسيحية</h1>
+      <p>الأسرار المقدسة مش مجرد طقوس شكلية، لكن دي وسائل النعمة اللي المسيح نفسه أسسها وسلمها للكنيسة.</p>
+      <h3 style="color:#1976d2;">1. سر المعمودية – ولادة جديدة في المسيح</h3>
+      <p>المعمودية مش بس بداية عضويتي في الكنيسة، دي ولادة جديدة من فوق. قال بولس: <b>"مدفونين معه في المعمودية... لتسلكوا في جدة الحياة" (رومية 6:4)</b></p>
+      <h3 style="color:#1976d2;">2. سر التناول – اتحاد بجسد المسيح ودمه</h3>
+      <p>في آخر عشاء أسس المسيح سر التناول قائلاً: <b>"خذوا كلوا، هذا هو جسدي" (متى 26:26)</b></p>
+      <h3 style="color:#1976d2;">3. سر الاعتراف – توبة وغفران</h3>
+      <p>نفخ يسوع على التلاميذ قائلاً: <b>"مَن غفرتم خطاياه تُغفر له" (يوحنا 20:22-23)</b></p>
+    </div>
+  </div>
+
+  <!-- بطاقة 4 – اللاهوت المقارن -->
+  <div class="content-card" style="animation-delay:.2s">
+    <div class="content-card-body">
+      <h1>تأسست أول كنيسة في أورشليم في عيد الخمسين</h1>
+      <p>الكنيسة فضلت متحدة لحد ما حصل <b>انشقاق طائفي</b>. طيب ليه حصل الانشقاق؟</p>
+      <h2>طوائف المسيحية الكبرى</h2>
+      <ul>
+        <li><b>الكاثوليك:</b> أكبر طائفة، يرأسها بابا روما، وتؤمن بالأسرار السبعة.</li>
+        <li><b>الأرثوذكس:</b> تلتزم بالتقليد الرسولي، والعبادة الطقسية الغنية.</li>
+        <li><b>البروتستانت:</b> طوائف متنوعة، تركز على الكتاب المقدس.</li>
+      </ul>
+      <h2>الاختلافات بين الطوائف</h2>
+      <table>
+        <thead><tr><th>الجانب</th><th>الكاثوليك</th><th>الأرثوذكس</th><th>البروتستانت</th></tr></thead>
+        <tbody>
+          <tr><td>السلطة</td><td>بابا روما</td><td>مجمع البطاركة</td><td>الكتاب المقدس فقط</td></tr>
+          <tr><td>عدد الأسفار</td><td>73</td><td>76</td><td>66</td></tr>
+          <tr><td>الأسرار</td><td>7 أسرار</td><td>7 أسرار</td><td>2 فقط</td></tr>
+          <tr><td>العبادة</td><td>رسمية وطقسية</td><td>طقسية وألحان</td><td>تسبيح وبساطة</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- بطاقة 5 – أسبوع الآلام -->
+  <div class="content-card" style="animation-delay:.25s">
+    <div class="content-card-body">
+      <h1>طقس أسبوع الآلام</h1>
+      <p>أسبوع الآلام هو أقدس أسبوع في السنة، بيبدأ من <b>حد الزعف</b> وبيخلص بـ <b>سبت النور</b>.</p>
+      <h3 style="color:#1976d2;">1. جو روحي خاص في الكنيسة</h3>
       <ul>
         <li>الملابس الكهنوتية باللون الأسود.</li>
         <li>الستارة تتحول للون الأسود.</li>
-        <li>تُقام صلوات "البصخة المقدسة" مرتين يوميًا (صباحًا ومساءً).</li>
+        <li>تُقام صلوات "البصخة المقدسة" مرتين يوميًا.</li>
       </ul>
-    </p>
-  
-    <h3 style="color: blue;">2. أحداث متدرجة مع المسيح</h3>
-    <p>
-      كل يوم بنعيش مع المسيح خطوة بخطوة:
-      <ul>
-        <li>من دخوله أورشليم.</li>
-        <li>حتى الصلب، الموت، والدفن.</li>
-        <li>القراءات مأخوذة من الأربع أناجيل وتركز على أحداث الفداء.</li>
-      </ul>
-    </p>
-  
-    <h3 style="color: blue;">3. لحن البصخة وتأمل الآلام</h3>
-    <p>
-      الكنيسة تستخدم لحن خاص حزين فيه تأمل وخشوع، يساعدنا نحس بجد بآلام المسيح ونعيشها بعمق.
-    </p>
-  
-    <h3 style="color: blue;">4. خميس العهد وجمعة الصلبوت وسبت النور</h3>
-    <p>
-      <b>خميس العهد:</b> نفتكر فيه تأسيس سر التناول.<br>
-      <b>جمعة الصلبوت:</b> الكنيسة تقضي اليوم في تأمل بالصليب حتى بعد الساعة 6 مساءً.<br>
-      <b>سبت النور:</b> نقضي الليل في الصلاة استعدادًا لعيد القيامة المجيد.
-    </p>
-  
-    <h3 style="color: blue;">5. أسبوع للتوبة والتجديد الروحي</h3>
-    <p>
-      أسبوع الآلام مش مجرد أحداث نفتكرها، لكنه فرصة نعيش فيها مع المسيح، نجدد توبتنا، ونقرب منه بقلب نقي.
-    </p>
-  
-    <blockquote style="background:#f9f9f9;padding:10px;border-right:4px solid #4a148c;">
-      "وهو مجروح لأجل معاصينا، مسحوق لأجل آثامنا. تأديب سلامنا عليه، وبجُرحه شفينا" (إشعياء ٥٣:٥)
-    </blockquote>
+      <h3 style="color:#1976d2;">2. خميس العهد وجمعة الصلبوت وسبت النور</h3>
+      <p><b>خميس العهد:</b> نفتكر فيه تأسيس سر التناول.<br><b>جمعة الصلبوت:</b> تأمل بالصليب حتى بعد الساعة 6 مساءً.<br><b>سبت النور:</b> نقضي الليل في الصلاة استعدادًا للقيامة.</p>
+      <blockquote>"وهو مجروح لأجل معاصينا، مسحوق لأجل آثامنا. تأديب سلامنا عليه، وبجُرحه شفينا" (إشعياء 53:5)</blockquote>
+    </div>
   </div>
-  
-  
-  <br>
-  <br>
-  <br>
 
-<div class="about-section">
-<h2>البدع والهرطقات في تاريخ المسيحية</h2>
-<p>
-        منذ القرن الأول، واجهت الكنيسة بدعًا شوهت فهم الإيمان الحقيقي، ووقفت الكنيسة بكل قوتها للدفاع عن العقيدة التي تسلمتها من الرسل، مستخدمة الكتاب المقدس، والتقليد، وتعاليم الآباء.
-        </p>
-<h3>ما هي الهرطقة؟</h3>
-<p>
-        الهرطقة هي انحراف متعمد عن تعليم رسولي سليم. مش مجرد اختلاف في الرأي، لكن تعليم يُفسد الإيمان ويشوّه صورة المسيح أو الثالوث أو الخلاص.
-        </p>
-<h2>أشهر الهرطقات وردود الكنيسة عليها</h2>
-<table border="1" cellpadding="8" style="border-collapse: collapse; width: 100%;">
-<thead>
-<tr style="background-color:#f2f2f2;">
-<th>الهرطقة</th>
-<th>الفكرة الخاطئة</th>
-<th>الرد اللاهوتي</th>
-<th>الآيات المستخدمة</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>الأريوسية</td>
-<td>المسيح مخلوق، أقل من الآب</td>
-<td>
-                المسيح هو "الابن الأزلي" من ذات جوهر الآب، مش مخلوق بل مولود منذ الأزل.
-              </td>
-<td>
-<b>يوحنا 1:1</b> – "في البدء كان الكلمة، والكلمة كان عند الله، وكان الكلمة الله"<br/>
-<b>يوحنا 10:30</b> – "أنا والآب واحد"<br/>
-<b>عبرانيين 1:3</b> – "الذي هو بهاء مجده ورسم جوهره"
-              </td>
-</tr>
-<tr>
-<td>النسطورية</td>
-<td>المسيح شخصين: إله وإنسان منفصلين، ومريم ولدت الإنسان فقط</td>
-<td>
-                المسيح طبيعة واحدة متحدة (إلهية وإنسانية) في شخص واحد. مريم ولدت "الإله المتجسد".
-              </td>
-<td>
-<b>لوقا 1:43</b> – "من أين لي هذا أن تأتي أم ربي إليّ؟"<br/>
-<b>يوحنا 1:14</b> – "والكلمة صار جسدًا وحلّ بيننا"
-              </td>
-</tr>
-<tr>
-<td>الأوطاخية</td>
-<td>الطبيعة الإلهية ابتلعت البشرية، فصارت طبيعة واحدة فقط</td>
-<td>
-                المسيح له طبيعتان (إلهية وبشرية) متحدتان بدون اختلاط أو امتزاج أو تغيير، كما علّم الآباء.
-              </td>
-<td>
-<b>فيلبي 2:6-7</b> – "أخلى نفسه آخذًا صورة عبد، صائرًا في شبه الناس"<br/>
-<b>عبرانيين 4:15</b> – "بل مجرّب في كل شيء مثلنا بلا خطية"
-              </td>
-</tr>
-<tr>
-<td>السابيلية (التبديليّة)</td>
-<td>الثالوث مش 3 أقانيم، لكن "أدوار" مختلفة لإله واحد</td>
-<td>
-                الله واحد في الجوهر، لكن له 3 أقانيم متمايزين: الآب، والابن، والروح القدس. ليسوا مجرد مظاهر.
-              </td>
-<td>
-<b>متى 3:16-17</b> – معمودية المسيح: الآب يتكلم، الابن في الماء، الروح في شكل حمامة<br/>
-<b>متى 28:19</b> – "عمدوهم باسم الآب والابن والروح القدس"
-              </td>
-</tr>
-<tr>
-<td>الغنوسية</td>
-<td>المادة شر، والجسد فاسد، والخلاص بالمعرفة السرية</td>
-<td>
-                الله خلق المادة وقال إنها "حسنة جدًا"، والتجسد الإلهي يكرّم الجسد. الخلاص بالإيمان، مش معرفة غامضة.
-              </td>
-<td>
-<b>تكوين 1:31</b> – "ورأى الله كل ما عمله فإذا هو حسن جدًا"<br/>
-<b>يوحنا 3:16</b> – "هكذا أحب الله العالم حتى بذل ابنه الوحيد"
-              </td>
-</tr>
-</tbody>
-</table>
-<h2>كيف ردت الكنيسة؟</h2>
-<ul>
-<li><b>المجامع المسكونية:</b> زي مجمع نيقية (325م) – أفسس (431م) – خلقيدونية (451م)، للرد على كل بدعة رسميًا.</li>
-<li><b>قانون الإيمان:</b> اتكتب في نيقية ووضح أن المسيح "إله حق من إله حق، مولود غير مخلوق".</li>
-<li><b>آباء الكنيسة:</b> زي القديس أثناسيوس الرسولي (ضد الأريوسيين)، والقديس كيرلس الكبير (ضد نسطور).</li>
-<li><b>الكتاب المقدس:</b> استخدمته الكنيسة دائمًا كمرجع أول وأساس لكل رد.</li>
-</ul>
-<h2>لماذا يجب علينا أن نعرف هذه الأمور؟</h2>
-<p>
-        معرفة تاريخ البدع والرد عليها مهم جدًا لأنه بيقوّي إيماننا، وبيخلينا نميّز التعليم الصحيح من الزائف، ونثبت على الحق اللي سلّمه الرسل للكنيسة. كما قال بولس:
-        </p>
-<blockquote style="background:#f9f9f9;padding:10px;border-right:4px solid #4a148c;">
-        "لأَنَّهُ سَيَأْتِي وَقْتٌ لاَ يَحْتَمِلُونَ فِيهِ التَّعْلِيمَ الصَّحِيحَ، بَلْ حَسَبَ شَهَوَاتِهِمُ الْخَاصَّةِ يَجْمَعُونَ لَهُمْ مُعَلِّمِينَ مُسْتَحْكِي الأَذَانِ."  
-        <br/><b>(2 تيموثاوس 4: 3)</b>
-</blockquote>
-</div>
-<br/>
-<br/>
+  <!-- بطاقة 6 – الهرطقات -->
+  <div class="content-card" style="animation-delay:.3s">
+    <div class="content-card-body">
+      <h1>البدع والهرطقات في تاريخ المسيحية</h1>
+      <p>منذ القرن الأول، واجهت الكنيسة بدعًا شوهت فهم الإيمان، ووقفت بكل قوتها للدفاع عن العقيدة.</p>
+      <h2>أشهر الهرطقات</h2>
+      <table>
+        <thead><tr><th>الهرطقة</th><th>الفكرة الخاطئة</th><th>الرد اللاهوتي</th></tr></thead>
+        <tbody>
+          <tr><td>الأريوسية</td><td>المسيح مخلوق، أقل من الآب</td><td>المسيح هو الابن الأزلي من ذات جوهر الآب (يوحنا 1:1)</td></tr>
+          <tr><td>النسطورية</td><td>المسيح شخصين منفصلين</td><td>طبيعة إلهية وإنسانية في شخص واحد (يوحنا 1:14)</td></tr>
+          <tr><td>الأوطاخية</td><td>الطبيعة الإلهية ابتلعت البشرية</td><td>طبيعتان متحدتان بدون اختلاط (فيلبي 2:6)</td></tr>
+          <tr><td>السابيلية</td><td>الثالوث مجرد "أدوار" لإله واحد</td><td>3 أقانيم متمايزين في جوهر واحد (متى 3:16)</td></tr>
+          <tr><td>الغنوسية</td><td>المادة شر والخلاص بالمعرفة السرية</td><td>الله خلق المادة وقال إنها "حسنة جدًا" (تكوين 1:31)</td></tr>
+        </tbody>
+      </table>
+      <h2>كيف ردت الكنيسة؟</h2>
+      <ul>
+        <li><b>المجامع المسكونية:</b> نيقية (325م) – أفسس (431م) – خلقيدونية (451م).</li>
+        <li><b>قانون الإيمان:</b> "إله حق من إله حق، مولود غير مخلوق".</li>
+        <li><b>آباء الكنيسة:</b> القديس أثناسيوس الرسولي، القديس كيرلس الكبير.</li>
+      </ul>
+      <blockquote>"لأَنَّهُ سَيَأْتِي وَقْتٌ لاَ يَحْتَمِلُونَ فِيهِ التَّعْلِيمَ الصَّحِيحَ" (2 تيموثاوس 4:3)</blockquote>
+    </div>
+  </div>
 
+</div><!-- /page -->
+
+<script>
+(function(){
+  const s=localStorage.getItem("cv_theme");
+  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s||(d?"dark":"light"));
+})();
+function applyTheme(m){document.body.classList.toggle("dark",m==="dark");localStorage.setItem("cv_theme",m);}
+function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
+
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let w,h;
+function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+resize();window.addEventListener("resize",resize);
+const P=[];for(let i=0;i<80;i++)P.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*2.2+.5,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
+function animate(){ctx.clearRect(0,0,w,h);for(let p of P){p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=document.body.classList.contains("dark")?"rgba(167,139,250,.35)":"rgba(124,58,237,.25)";ctx.fill();}requestAnimationFrame(animate);}
+animate();
+</script>
 </body>
 </html>
