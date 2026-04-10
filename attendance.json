@@ -33,5 +33,29 @@
       ]
     }
   ],
-  "sessions": []
+  "sessions": [
+    {
+      "id": "mntfmyp6q10d",
+      "classId": "mntflmex8w6j",
+      "date": "2026-04-10",
+      "day": "الجمعة",
+      "records": [
+        {
+          "memberId": "mntfm369i9gt",
+          "memberName": "fghgfh",
+          "status": "present"
+        },
+        {
+          "memberId": "mntfmexde6a9",
+          "memberName": "fghfghfgh",
+          "status": "present"
+        },
+        {
+          "memberId": "mntfmiiqjgf3",
+          "memberName": "fghfghfgh",
+          "status": "absent"
+        }
+      ]
+    }
+  ]
 }
