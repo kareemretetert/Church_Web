@@ -1,646 +1,150 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="author" content="Kareem Hosny" />
-  <meta name="keywords" content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" />
-  <meta name="description" content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" />
-  <link href="imgsfile/icon.png" rel="icon" type="image/x-icon" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <title>المسابقات</title>
-
-  <style>
-    :root {
-      --primary: #6a1b9a;
-      --primary-dark: #4a148c;
-      --bg: #f0f8ff;
-      --surface: #ffffff;
-      --surface-alt: #f7f3fb;
-      --text: #2f2f39;
-      --muted: #6b7280;
-      --border: rgba(106, 27, 154, 0.14);
-      --shadow: 0 14px 35px rgba(74, 20, 140, 0.12);
-      --shadow-hover: 0 18px 40px rgba(74, 20, 140, 0.18);
-      --radius: 24px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    ::selection {
-      background-color: rgba(212, 212, 212, 0.85);
-      color: #001cbdcc;
-    }
-
-
-
-
-
-
-    
-    html, body {
-      min-height: 100%;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Cairo', sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(106, 27, 154, 0.08), transparent 24%),
-        linear-gradient(180deg, #f6fbff 0%, var(--bg) 100%);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    header {
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-     
-      border-bottom: 5px solid var(--primary-dark);
-      position: relative;
-      overflow: hidden;
-    }
-
-  
-
-    header h1 {
-      margin: 0;
-      font-size: clamp(1.9rem, 2.8vw, 2.7rem);
-      font-weight: 800;
-      position: relative;
-      z-index: 1;
-    }
-
-    .nav-wrap {
-      margin-top: 1.1rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .home-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: #f3ecff;
-      border: 2px solid rgba(255,255,255,0.45);
-      padding: 0.75rem 1.2rem;
-      border-radius: 999px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      transition: 0.25s ease;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(6px);
-    }
-
-    .home-link:hover {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,0.16);
-    }
-
-    .main-content {
-      width: min(1150px, calc(100% - 32px));
-      margin: 38px auto 50px;
-      position: relative;
-      z-index: 2;
-      flex: 1;
-    }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.4rem;
-      align-items: stretch;
-    }
-
-    .quiz-card {
-      background: linear-gradient(180deg, #ffffff 0%, var(--surface-alt) 100%);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      box-shadow: var(--shadow);
-      text-align: right;
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(32px) scale(0.98);
-      animation: fadeUp 0.7s ease forwards;
-      display: flex;
-      flex-direction: column;
-      min-height: 100%;
-      transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .quiz-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .quiz-card:nth-child(1) { animation-delay: 0.08s; }
-    .quiz-card:nth-child(2) { animation-delay: 0.18s; }
-    .quiz-card:nth-child(3) { animation-delay: 0.28s; }
-
-    .quiz-card::before {
-      content: "";
-      position: absolute;
-      top: -45px;
-      left: -45px;
-      width: 120px;
-      height: 120px;
-      background: rgba(106, 27, 154, 0.08);
-      border-radius: 50%;
-    }
-
-    .card-badge {
-      display: inline-block;
-      margin-bottom: 0.85rem;
-      padding: 0.35rem 0.8rem;
-      background: rgba(106, 27, 154, 0.11);
-      color: var(--primary-dark);
-      border-radius: 999px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      position: relative;
-      z-index: 1;
-      width: fit-content;
-    }
-
-    .quiz-card h3 {
-      margin: 0 0 0.7rem;
-      font-size: 1.35rem;
-      color: #2d1d40;
-      position: relative;
-      z-index: 1;
-    }
-
-    .quiz-card p {
-      margin: 0 0 1.2rem;
-      color: var(--muted);
-      line-height: 1.9;
-      position: relative;
-      z-index: 1;
-      flex-grow: 1;
-    }
-
-    .input-label {
-      display: block;
-      font-size: 0.95rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--primary-dark);
-      position: relative;
-      z-index: 1;
-    }
-
-    .name-input {
-      width: 100%;
-      border: 1.8px solid rgba(106, 27, 154, 0.18);
-      border-radius: 16px;
-      padding: 0.9rem 1rem;
-      font-family: inherit;
-      font-size: 1rem;
-      outline: none;
-      background: #fff;
-      transition: 0.2s ease;
-      margin-bottom: 1rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .name-input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(106, 27, 154, 0.1);
-    }
-
-    .start-btn {
-      width: 100%;
-      border: none;
-      border-radius: 16px;
-      padding: 0.95rem 1rem;
-      font-family: inherit;
-      font-size: 1rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-      color: white;
-      cursor: pointer;
-      transition: 0.25s ease;
-      box-shadow: 0 10px 18px rgba(74, 20, 140, 0.18);
-      margin-top: auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .start-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 24px rgba(74, 20, 140, 0.24);
-    }
-
-    .footer {
-      width: 100%;
-      margin-top: auto;
-      padding: 18px 12px;
-      background: #ffffff;
-      color: var(--muted);
-      text-align: center;
-      border-top: 1px solid rgba(106, 27, 154, 0.12);
-      box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.04);
-    }
-
-    .footer h2 {
-      margin: 0;
-      font-size: 1.3rem;
-      font-weight: 750;
-      color: var(--primary-dark);
-    }
-
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    @media (max-width: 992px) {
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .main-content {
-        width: min(100% - 20px, 760px);
-        margin: 28px auto 40px;
-      }
-
-      .quiz-card {
-        padding: 1.25rem;
-      }
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 1.2rem 0.8rem 1.8rem;
-      }
-
-      header h1 {
-        font-size: 1.7rem;
-      }
-
-      .main-content {
-        width: calc(100% - 16px);
-        margin: 22px auto 30px;
-      }
-
-      .quiz-card {
-        border-radius: 18px;
-        padding: 1.1rem;
-      }
-
-      .home-link {
-        font-size: 0.88rem;
-        padding: 0.65rem 1rem;
-      }
-
-      .quiz-card h3 {
-        font-size: 1.2rem;
-      }
-
-      .name-input,
-      .start-btn {
-        font-size: 0.95rem;
-      }
-
-      .footer {
-        padding: 16px 10px;
-      }
-
-      .footer h2 {
-        font-size: 1.3rem;
-      }
-    }
-    /* HEADER */
-header{
-  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-  position:sticky;
-  top:0;
-  z-index:300;
-  box-shadow:var(--shdr);
-  overflow:hidden;
-  transition:background .4s;
-}
-
-header::before{
-  content:"";
-  position:absolute;
-  top:-60px;
-  right:-60px;
-  width:220px;
-  height:220px;
-  border-radius:50%;
-  background:rgba(255,255,255,.05);
-  pointer-events:none;
-}
-
-.hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 16px;
-  position:relative;
-}
-.back-btn{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  padding:9px 16px;
-  border:1.5px solid rgba(255,255,255,.45);
-  border-radius:22px;
-  background:rgba(255,255,255,.15);
-  color:#fff;
-  font-family:'Cairo',sans-serif;
-  font-size:13px;
-  font-weight:700;
-  cursor:pointer;
-  flex-shrink:0;
-  transition:background .2s, transform .15s;
-}
-
-.back-btn:hover{
-  background:rgba(255,255,255,.28);
-}
-
-.back-btn:active{
-  transform:scale(.95);
-}
-
-.back-btn svg{
-  width:14px;
-  height:14px;
-  fill:#fff;
-}
-/* ═══════════════════════════════════════
-   BACK BUTTON
-═══════════════════════════════════════ */
-
-/* الحاوية اللي فيها الزر */
-.hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 16px;
-  position:relative;
-}
-
-
-
-
-
-/* العنوان */
-.hdr-title{
-  flex:1;
-  text-align:center;
-  color:#fff;
-  font-size:clamp(14px,3.5vw,19px);
-  font-weight:800;
-}
-
-/* Dark Mode Toggle */
-.theme-toggle{
-  display:flex;
-  align-items:center;
-}
-
-.toggle-track{
-  width:64px;
-  height:32px;
-  border-radius:50px;
-  background:#1e293b;
-  position:relative;
-  display:flex;
-  align-items:center;
-  padding:0 5px;
-  cursor:pointer;
-}
-
-.toggle-thumb{
-  position:absolute;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:#fff;
-  right:3px;
-  transition:.3s;
-}
-
-body.dark .toggle-thumb{
-  transform:translateX(-32px);
-}
-/* ===== HEADER ===== */
-header{
-  background:linear-gradient(135deg,#7c3aed,#9333ea,#5b21b6);
-  position:sticky;
-  top:0;
-  z-index:300;
-  box-shadow:0 6px 24px rgba(109,40,217,.25);
-  overflow:hidden;
-}
-
-.hdr{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:13px 16px;
-}
-
-
-/* العنوان */
-.hdr-title{
-  flex:1;
-  text-align:center;
-  color:#fff;
-  font-size:18px;
-  font-weight:800;
-}
-
-/* ===== DARK MODE TOGGLE ===== */
-.theme-toggle{
-  display:flex;
-  align-items:center;
-}
-
-.toggle-track{
-  width:64px;
-  height:32px;
-  border-radius:50px;
-  background:#1e293b;
-  position:relative;
-  display:flex;
-  align-items:center;
-  padding:0 6px;
-  cursor:pointer;
-  border:1.5px solid rgba(255,255,255,.3);
-  transition:.3s;
-}
-
-.t-icon{
-  font-size:13px;
-  z-index:1;
-}
-
-.t-sun{
-  margin-left:auto;
-  color:#facc15;
-}
-
-.t-moon{
-  margin-right:auto;
-  color:#e2e8f0;
-}
-
-.toggle-thumb{
-  position:absolute;
-  width:24px;
-  height:24px;
-  border-radius:50%;
-  background:#fff;
-  right:4px;
-  transition:transform .3s cubic-bezier(.4,2,.6,1), background .3s;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
-}
-
-/* ===== DARK MODE ===== */
-body.dark{
-  background:#0f172a;
-  color:#eee;
-}
-
-/* حركة الزر */
-body.dark .toggle-track{
-  background:rgba(124,58,237,.6);
-}
-
-body.dark .toggle-thumb{
-  transform:translateX(-32px);
-  background:#a78bfa;
-}
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="author" content="Kareem Hosny"/>
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<title>المسابقات</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ═══ TOKENS ═══ */
 :root{
-  --p:#7c3aed; --p-dk:#5b21b6; --p-lt:#a78bfa;
-
-  --bg:#f4f0fb;
-  --sf:#ffffff;
-  --sf2:#f1ecfc;
-
-  --tx:#0f172a;
-  --tx2:#374151;
-  --tx3:#6b7280;
-
+  --p:#7c3aed;--p-dk:#5b21b6;--p-lt:#a78bfa;
+  --bg:#f4f0fb;--sf:#fff;--sf2:#f1ecfc;
+  --tx:#0f172a;--tx2:#374151;--tx3:#6b7280;
   --bdr:#e2e8f0;
-
   --sh:0 4px 20px rgba(109,40,217,.10);
   --sh2:0 8px 32px rgba(109,40,217,.18);
-
-  --hdr1:#7c3aed;
-  --hdr2:#9333ea;
-  --hdr3:#5b21b6;
+  --shdr:0 6px 24px rgba(109,40,217,.25);
+  --hdr1:#7c3aed;--hdr2:#9333ea;--hdr3:#5b21b6;
 }
 body.dark{
-  --bg:#0d0d1a;
-  --sf:#161627;
-  --sf2:#1e1e33;
-
-  --tx:#f0f0ff;
-  --tx2:#c4c4e0;
-  --tx3:#8888aa;
-
+  --bg:#0d0d1a;--sf:#161627;--sf2:#1e1e33;
+  --tx:#f0f0ff;--tx2:#c4c4e0;--tx3:#8888aa;
   --bdr:#2a2a44;
-
   --sh:0 4px 24px rgba(0,0,0,.5);
   --sh2:0 8px 40px rgba(0,0,0,.6);
+  --shdr:0 6px 24px rgba(0,0,0,.6);
+  --hdr1:#0f172a;--hdr2:#1e1b4b;--hdr3:#020617;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;display:flex;flex-direction:column;}
 
-  --hdr1:#0f172a;
-  --hdr2:#1e1b4b;
-  --hdr3:#020617;
+/* PARTICLES */
+#particles{position:fixed;inset:0;width:100%;height:100%;z-index:-10;pointer-events:none;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(124,58,237,.12),transparent 40%),radial-gradient(circle at 80% 30%,rgba(59,130,246,.10),transparent 45%),radial-gradient(circle at 50% 80%,rgba(236,72,153,.08),transparent 50%);z-index:-20;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));position:sticky;top:0;z-index:300;box-shadow:var(--shdr);overflow:hidden;transition:background .4s;}
+header::before{content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none;}
+.hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);border-radius:22px;background:rgba(255,255,255,.15);color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;text-decoration:none;transition:background .2s,transform .15s;-webkit-tap-highlight-color:transparent;border:1.5px solid rgba(255,255,255,.45);}
+.back-btn:hover{background:rgba(255,255,255,.28);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.hdr-title{flex:1;text-align:center;color:#fff;font-size:clamp(14px,3.5vw,19px);font-weight:800;}
+.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
+.toggle-track{width:64px;height:32px;border-radius:50px;background:#1e293b;position:relative;display:flex;align-items:center;padding:0 5px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);transition:background .3s;-webkit-tap-highlight-color:transparent;}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+body.dark .toggle-track{background:rgba(109,40,217,.5);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
+
+/* PAGE */
+.page{max-width:1100px;margin:0 auto;padding:30px 14px 70px;flex:1;width:100%;}
+
+/* CARDS GRID */
+.cards-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
 }
-body{
-  background:var(--bg);
-  color:var(--tx);
-  transition:.3s;
-}
-header{
-  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-}
+
+/* QUIZ CARD */
 .quiz-card{
-  background:var(--sf);
-  border:1px solid var(--bdr);
-  box-shadow:var(--sh);
+  background:var(--sf);border-radius:22px;
+  border:1px solid var(--bdr);box-shadow:var(--sh);
+  padding:22px;display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  opacity:0;transform:translateY(28px) scale(.98);
+  animation:fadeUp .6s ease forwards;
+  transition:transform .25s,box-shadow .25s;
 }
-.quiz-card:hover{
-  box-shadow:var(--sh2);
-}
-.quiz-card h3{
-  color:var(--tx);
-}
+.quiz-card:hover{transform:translateY(-5px);box-shadow:var(--sh2);}
+.quiz-card:nth-child(1){animation-delay:.08s;}
+.quiz-card:nth-child(2){animation-delay:.18s;}
+.quiz-card:nth-child(3){animation-delay:.28s;}
 
-.quiz-card p{
-  color:var(--tx2);
-}
+/* card decorative circle */
+.quiz-card::before{content:"";position:absolute;top:-40px;left:-40px;width:110px;height:110px;border-radius:50%;background:rgba(124,58,237,.07);pointer-events:none;}
 
 .card-badge{
-  background:var(--sf2);
-  color:var(--p-dk);
+  display:inline-block;padding:5px 13px;border-radius:20px;
+  font-size:12px;font-weight:700;margin-bottom:12px;width:fit-content;
+  background:var(--sf2);color:var(--p-dk);
 }
+body.dark .card-badge{color:var(--p-lt);}
+
+.quiz-card h3{font-size:18px;font-weight:800;color:var(--tx);margin-bottom:10px;position:relative;z-index:1;}
+.quiz-card p{font-size:14px;color:var(--tx2);line-height:1.8;flex-grow:1;margin-bottom:14px;position:relative;z-index:1;}
+
+.input-label{display:block;font-size:13px;font-weight:700;color:var(--p-dk);margin-bottom:6px;position:relative;z-index:1;}
+body.dark .input-label{color:var(--p-lt);}
+
 .name-input{
-  background:var(--sf);
-  border:1px solid var(--bdr);
-  color:var(--tx);
+  width:100%;padding:11px 14px;border-radius:14px;
+  border:1.5px solid var(--bdr);
+  background:var(--sf);color:var(--tx);
+  font-family:'Cairo',sans-serif;font-size:14px;
+  outline:none;transition:border-color .2s,box-shadow .2s;
+  margin-bottom:12px;position:relative;z-index:1;
 }
-.name-input:focus{
-  border-color:var(--p);
-  box-shadow:0 0 0 4px rgba(124,58,237,.2);
-}
+.name-input:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(124,58,237,.15);}
+.name-input::placeholder{color:var(--tx3);}
+
 .start-btn{
+  width:100%;padding:13px;border:none;border-radius:14px;
   background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;margin-top:auto;
+  box-shadow:0 8px 18px rgba(109,40,217,.22);
+  transition:transform .2s,box-shadow .2s;
+  position:relative;z-index:1;
 }
-.footer{
-  background:var(--sf);
-  color:var(--tx2);
-  border-top:1px solid var(--bdr);
-}
-header{
-  padding:0 !important;
-  text-align: unset !important;
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px rgba(109,40,217,.3);}
+.start-btn:active{transform:scale(.97);}
+
+/* FOOTER */
+.page-footer{
+  text-align:center;padding:16px;
+  background:var(--sf);color:var(--tx3);
+  border-top:1px solid var(--bdr);font-size:13px;
 }
 
-.hdr{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:13px 16px;
+/* KEYFRAMES */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px) scale(.98);}to{opacity:1;transform:translateY(0) scale(1);}}
+
+@media(max-width:600px){
+  .page{padding:18px 10px 70px;}
+  .quiz-card{padding:18px;}
+  .cards-grid{grid-template-columns:1fr;}
 }
-    header::before,
-header::after{
-  pointer-events:none;
-}
-    .hdr{
-  position:relative;
-  z-index:2;
-}
-  </style>
+</style>
 </head>
 <body>
+<canvas id="particles"></canvas>
+
 <header>
   <div class="hdr">
-     <button class="back-btn" onclick="location.href='index.html'">
-    <svg viewBox="0 0 24 24">
-      <path d="M15 18l-6-6 6-6" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    العودة
-  </button>
-    <div class="hdr-title" id="courseName">المسابقات</div>
+    <a class="back-btn" href="index.html">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      الرئيسية
+    </a>
+    <div class="hdr-title">🏆 المسابقات</div>
     <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
       <div class="toggle-track">
         <span class="t-icon t-sun">☀️</span>
@@ -651,70 +155,65 @@ header::after{
   </div>
 </header>
 
-  <main class="main-content">
-    <section class="cards-grid">
+<div class="page">
+  <div class="cards-grid">
 
+    <article class="quiz-card">
+      <span class="card-badge">امتحانات</span>
+      <h3>امتحانات الاجتماع</h3>
+      <p>كل امتحانات الاجتماع هتكون هنا، ادخل وجرّب نفسك!</p>
+      <button class="start-btn" onclick="window.location.href='quiz_list.html'">الدخول للامتحانات 📝</button>
+    </article>
 
- <article class="quiz-card">
-        <span class="card-badge">امتحانات</span>
-        <h3>امتحانات الاجتماع</h3>
-        <p>كل امتحانات الاجتماع هتكون هنا</p>
-        <button class="start-btn" onclick="startQuiz()">الدخول للامتحانات</button>
-      </article>
-    
+    <article class="quiz-card">
+      <span class="card-badge">لعبة ذهنية</span>
+      <h3>تحدي الذاكرة</h3>
+      <p>هل ذاكرتك قوية؟ جرّب اللعبة وشوف هتقدر تفتكر وتكمل التحدي لحد فين.</p>
+      <label class="input-label" for="username2">اكتب اسمك للمشاركة</label>
+      <input class="name-input" id="username2" type="text" placeholder="اكتب اسمك هنا"/>
+      <button class="start-btn" onclick="startQuiz2()">ابدأ التحدي 🃏</button>
+    </article>
 
-      <article class="quiz-card">
-        <span class="card-badge">لعبة ذهنية</span>
-        <h3>تحدي الذاكرة</h3>
-        <p>هل ذاكرتك قوية؟ جرّب اللعبة وشوف هتقدر تفتكر وتكمل التحدي لحد فين.</p>
-        <label class="input-label" for="username2">اكتب اسمك للمشاركة</label>
-        <input class="name-input" id="username2" type="text" placeholder="اكتب اسمك هنا" />
-        <button class="start-btn" onclick="startQuiz2()">ابدأ التحدي</button>
-      </article>
+    <article class="quiz-card">
+      <span class="card-badge">لعبة حركة</span>
+      <h3>لعبة المتاهة</h3>
+      <p>حاول توصل للنهاية بأسرع وقت، وركز كويس علشان تختار الطريق الصح من أول مرة.</p>
+      <label class="input-label" for="username3">اكتب اسمك للمشاركة</label>
+      <input class="name-input" id="username3" type="text" placeholder="اكتب اسمك هنا"/>
+      <button class="start-btn" onclick="startQuiz3()">ابدأ اللعبة 🎯</button>
+    </article>
 
-      <article class="quiz-card">
-        <span class="card-badge">لعبة حركة</span>
-        <h3>لعبة المتاهة</h3>
-        <p>حاول توصل للنهاية بأسرع وقت، وركز كويس علشان تختار الطريق الصح من أول مرة.</p>
-        <label class="input-label" for="username3">اكتب اسمك للمشاركة</label>
-        <input class="name-input" id="username3" type="text" placeholder="اكتب اسمك هنا" />
-        <button class="start-btn" onclick="startQuiz3()">ابدأ اللعبة</button>
-      </article>
-    </section>
-  </main>
+  </div>
+</div>
 
-  <footer class="footer">
-    <h2 class="kj">Created by: Kareem</h2>
-  </footer>
+<footer class="page-footer">Created by: Kareem ❤️</footer>
 
-  <script>
-    function validateAndSave(inputId) {
-      const name = document.getElementById(inputId).value.trim();
-      if (!name) {
-        alert('من فضلك اكتب اسمك');
-        return null;
-      }
-      localStorage.setItem('quiz_username', name);
-      return name;
-    }
+<script>
+(function(){
+  const s=localStorage.getItem("cv_theme");
+  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s||(d?"dark":"light"));
+})();
+function applyTheme(m){document.body.classList.toggle("dark",m==="dark");localStorage.setItem("cv_theme",m);}
+function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
 
-    function startQuiz() {  
-      window.location.href = 'quiz_list.html';
-    }
+function validateAndSave(inputId){
+  const name=document.getElementById(inputId).value.trim();
+  if(!name){alert('من فضلك اكتب اسمك');return null;}
+  localStorage.setItem('quiz_username',name);
+  return name;
+}
+function startQuiz2(){if(validateAndSave('username2'))window.location.href='quiz2.html';}
+function startQuiz3(){if(validateAndSave('username3'))window.location.href='qiaz3.html';}
 
-    function startQuiz2() {
-      const valid = validateAndSave('username2');
-      if (!valid) return;
-      window.location.href = 'quiz2.html';
-    }
-
-    function startQuiz3() {
-      const valid = validateAndSave('username3');
-      if (!valid) return;
-      window.location.href = 'qiaz3.html';
-    }
-  </script>
-  
-<script src="javescriptfiles/theme.js"></script>
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let w,h;
+function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+resize();window.addEventListener("resize",resize);
+const P=[];for(let i=0;i<80;i++)P.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*2.2+.5,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
+function animate(){ctx.clearRect(0,0,w,h);for(let p of P){p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=document.body.classList.contains("dark")?"rgba(167,139,250,.35)":"rgba(124,58,237,.25)";ctx.fill();}requestAnimationFrame(animate);}
+animate();
+</script>
 </body>
 </html>
