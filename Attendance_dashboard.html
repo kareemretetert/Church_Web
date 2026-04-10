@@ -1,179 +1,253 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>لوحة الحضور والغياب</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 <style>
-*{ box-sizing:border-box; margin:0; padding:0; }
+*{box-sizing:border-box;margin:0;padding:0;}
 body{
-  font-family:Tajawal,Tahoma,sans-serif;
+  font-family:'Tajawal',Tahoma,sans-serif;
   direction:rtl;
-  padding:20px;
+  min-height:100vh;
   background:linear-gradient(-45deg,#667eea,#764ba2,#43cea2,#185a9d);
   background-size:400% 400%;
-  animation:gradBG 10s ease infinite;
-  min-height:100vh;
+  animation:gradientBG 10s ease infinite;
+  padding:15px;
 }
-@keyframes gradBG{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
+@keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+/* ===== SECTION ===== */
 .section{
-  max-width:800px; margin:18px auto; padding:22px;
+  max-width:800px;margin:16px auto;padding:22px;
   border-radius:20px;
   background:rgba(255,255,255,0.15);
   backdrop-filter:blur(15px);
-  box-shadow:0 10px 40px rgba(0,0,0,0.3);
+  box-shadow:0 10px 40px rgba(0,0,0,0.25);
   border:1px solid rgba(255,255,255,0.25);
+  animation:fadeIn .4s ease;
 }
-.white-card{
-  background:rgba(255,255,255,0.93); padding:15px;
-  margin-top:13px; border-radius:15px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.15); color:#333;
-}
-h1{text-align:center;color:#fff;font-size:22px;margin-bottom:6px;text-shadow:0 2px 8px rgba(0,0,0,.25);}
-h2{text-align:center;color:#fff;font-size:18px;margin-bottom:12px;text-shadow:0 2px 8px rgba(0,0,0,.2);}
-label{display:block;color:#eee;font-weight:bold;margin-top:12px;font-size:14px;}
-p.info{color:#ddd;text-align:center;font-size:13px;margin-top:8px;}
-input,select{
-  width:100%;margin-top:6px;padding:13px 14px;
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+h1{text-align:center;color:#fff;font-size:1.7rem;font-weight:900;margin-bottom:6px;}
+h2{color:#fff;font-size:1.2rem;font-weight:800;margin-bottom:14px;}
+h3{color:#fff;font-size:1.05rem;font-weight:700;margin-bottom:10px;}
+
+label{display:block;margin-top:12px;color:#eee;font-weight:700;font-size:.95rem;}
+
+input,select,textarea{
+  width:100%;margin-top:6px;padding:13px;
   border-radius:12px;border:none;
   background:rgba(255,255,255,0.92);
-  font-size:15px;font-family:Tajawal,Tahoma;
-  transition:.3s;color:#333;
+  font-family:'Tajawal',Tahoma;font-size:15px;
+  box-sizing:border-box;transition:.3s;
 }
-input:focus,select:focus{transform:scale(1.01);box-shadow:0 0 10px rgba(255,255,255,.5);outline:none;}
+input:focus,select:focus{outline:none;transform:scale(1.01);box-shadow:0 0 10px rgba(255,255,255,.5);}
 
-/* BUTTONS */
+/* ===== BUTTONS ===== */
 .btn{
-  display:block;width:100%;margin-top:13px;padding:13px;
-  border:none;border-radius:14px;cursor:pointer;
-  font-size:15px;font-weight:bold;font-family:Tajawal,Tahoma;
-  color:#fff;transition:.3s;
+  width:100%;margin-top:14px;padding:14px;
+  border:none;border-radius:15px;cursor:pointer;
+  font-size:16px;font-weight:800;font-family:'Tajawal',Tahoma;
+  transition:.25s;letter-spacing:.3px;
 }
 .btn:hover{transform:scale(1.04);box-shadow:0 5px 20px rgba(0,0,0,.3);}
-.btn-blue{background:linear-gradient(135deg,#00c6ff,#0072ff);}
-.btn-green{background:linear-gradient(135deg,#43cea2,#185a9d);}
-.btn-red{background:linear-gradient(135deg,#ff416c,#ff4b2b);}
-.btn-orange{background:linear-gradient(135deg,#f7971e,#ffd200);color:#333;}
-.btn-purple{background:linear-gradient(135deg,#a18cd1,#fbc2eb);color:#333;}
-.btn-inline{display:inline-block;width:auto;padding:8px 16px;margin-top:6px;font-size:13px;border-radius:10px;}
+.btn:active{transform:scale(.97);}
+.btn-blue{background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;}
+.btn-green{background:linear-gradient(135deg,#43cea2,#185a9d);color:#fff;}
+.btn-red{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;}
+.btn-gold{background:linear-gradient(135deg,#f7971e,#ffd200);color:#fff;}
+.btn-purple{background:linear-gradient(135deg,#a18cd1,#fbc2eb);color:#fff;}
+.btn-sm{padding:8px 14px;font-size:14px;margin-top:0;border-radius:10px;width:auto;display:inline-block;}
 
-/* STATS */
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px;}
-.stat-box{background:rgba(255,255,255,0.2);border-radius:15px;padding:14px;text-align:center;border:1px solid rgba(255,255,255,.3);}
-.stat-box .num{font-size:26px;font-weight:bold;color:#fff;}
-.stat-box .lbl{font-size:12px;color:#ddd;margin-top:3px;}
+/* ===== STATS ===== */
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px;}
+.stat-box{
+  background:rgba(255,255,255,.18);border-radius:16px;padding:16px 10px;text-align:center;
+  border:1px solid rgba(255,255,255,.25);transition:.3s;
+}
+.stat-box:hover{background:rgba(255,255,255,.28);}
+.stat-box .num{font-size:2rem;font-weight:900;color:#fff;}
+.stat-box .lbl{font-size:.85rem;color:#dde;margin-top:4px;font-weight:600;}
 
-/* TABS */
+/* ===== TABS ===== */
 .tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
 .tab-btn{
-  padding:9px 18px;border-radius:25px;
-  border:2px solid rgba(255,255,255,.4);
-  background:rgba(255,255,255,.12);
-  color:#fff;font-size:14px;font-weight:bold;
-  cursor:pointer;transition:.2s;font-family:Tajawal,Tahoma;
+  padding:10px 16px;border:none;border-radius:12px;cursor:pointer;
+  font-size:14px;font-weight:700;font-family:'Tajawal',Tahoma;
+  background:rgba(255,255,255,.2);color:#fff;transition:.25s;
+  border:1px solid rgba(255,255,255,.2);
 }
-.tab-btn.active{background:rgba(255,255,255,.35);border-color:#fff;}
+.tab-btn:hover{background:rgba(255,255,255,.35);}
+.tab-btn.active{background:rgba(255,255,255,.95);color:#333;}
 .tab-content{display:none;}
 .tab-content.active{display:block;}
 
-/* CLASS GRID */
-.class-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:10px;}
-.class-select-btn{
-  padding:14px;border-radius:15px;
-  border:2px solid rgba(255,255,255,.3);
-  background:rgba(255,255,255,.15);
-  color:#fff;font-size:15px;font-weight:bold;
-  cursor:pointer;transition:.2s;font-family:Tajawal,Tahoma;
-  text-align:center;
+/* ===== CARDS ===== */
+.class-card{
+  background:rgba(255,255,255,.92);border-radius:16px;padding:16px;margin-top:12px;
+  box-shadow:0 5px 18px rgba(0,0,0,.18);transition:.25s;
 }
-.class-select-btn:hover,.class-select-btn.sel{background:rgba(255,255,255,.3);border-color:#fff;transform:scale(1.03);}
+.class-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.25);}
+.class-card-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+.class-card-title{font-size:1.1rem;font-weight:800;color:#222;}
+.class-card-sub{font-size:.85rem;color:#666;margin-top:3px;}
+.card-actions{display:flex;gap:7px;flex-wrap:wrap;}
 
-/* TABLE */
-.mtable{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px;}
-.mtable th{background:rgba(102,126,234,0.15);padding:9px 10px;text-align:right;color:#444;border-bottom:2px solid rgba(0,0,0,.1);font-size:12px;}
-.mtable td{padding:9px 10px;border-bottom:1px solid rgba(0,0,0,.06);color:#333;}
-.mtable tr:last-child td{border-bottom:none;}
-.mtable tr:hover td{background:rgba(102,126,234,.05);}
+/* ===== MEMBER LIST ===== */
+.member-item{
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(255,255,255,.85);border-radius:12px;padding:11px 14px;
+  margin-top:8px;transition:.2s;border:1.5px solid transparent;
+}
+.member-item:hover{border-color:rgba(0,114,255,.3);background:#fff;}
+.member-name{font-weight:700;color:#222;font-size:.97rem;}
+.member-sub{font-size:.78rem;color:#888;margin-top:2px;}
+.badge{
+  display:inline-block;padding:3px 9px;border-radius:20px;
+  font-size:.75rem;font-weight:700;margin-right:4px;
+}
+.badge-green{background:#d4edda;color:#155724;}
+.badge-red{background:#f8d7da;color:#721c24;}
+.badge-blue{background:#d1ecf1;color:#0c5460;}
+.badge-new{background:#fff3cd;color:#856404;}
 
-/* BADGES */
-.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:bold;}
-.badge-g{background:#d1fae5;color:#065f46;}
-.badge-r{background:#fee2e2;color:#991b1b;}
-.badge-b{background:#dbeafe;color:#1e40af;}
-.badge-gr{background:#f3f4f6;color:#6b7280;}
-
-/* PROGRESS */
-.prog-wrap{background:rgba(0,0,0,.08);border-radius:10px;height:7px;overflow:hidden;margin-top:5px;}
-.prog-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,#43cea2,#185a9d);transition:.5s;}
-
-/* ATTENDANCE */
+/* ===== ATTENDANCE FORM ===== */
 .att-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:11px 14px;margin-top:8px;
-  background:rgba(255,255,255,.12);border-radius:13px;
-  border:1px solid rgba(255,255,255,.2);
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(255,255,255,.9);border-radius:13px;padding:13px 15px;
+  margin-top:9px;transition:.2s;border:2px solid transparent;
 }
-.att-name{color:#fff;font-size:15px;font-weight:bold;}
-.tog-wrap{display:flex;gap:7px;}
-.tog{padding:7px 16px;border-radius:20px;border:none;cursor:pointer;font-size:13px;font-weight:bold;font-family:Tajawal,Tahoma;transition:.2s;}
-.tog-p{background:rgba(67,206,162,.25);color:#cfffee;border:2px solid rgba(67,206,162,.4);}
-.tog-p.on{background:linear-gradient(135deg,#43cea2,#185a9d);color:#fff;border-color:#43cea2;transform:scale(1.07);}
-.tog-a{background:rgba(255,65,108,.25);color:#ffd0d0;border:2px solid rgba(255,65,108,.4);}
-.tog-a.on{background:linear-gradient(135deg,#ff416c,#ff4b2b);color:#fff;border-color:#ff416c;transform:scale(1.07);}
+.att-row.present{border-color:#28a745;background:rgba(212,237,218,.9);}
+.att-row.absent{border-color:#dc3545;background:rgba(248,215,218,.9);}
+.att-toggle{display:flex;gap:8px;}
+.att-btn{
+  padding:7px 16px;border:none;border-radius:9px;cursor:pointer;
+  font-family:'Tajawal',Tahoma;font-weight:700;font-size:14px;transition:.2s;
+}
+.att-btn.p{background:#28a745;color:#fff;}
+.att-btn.a{background:#dc3545;color:#fff;}
+.att-btn.inactive{background:#e0e0e0;color:#999;}
+.att-btn:hover{transform:scale(1.06);}
 
-/* SORT */
-.sort-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px;}
-.sort-bar span{color:#ddd;font-size:13px;}
-.sort-opt{padding:6px 13px;border-radius:20px;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.1);color:#fff;font-size:12px;cursor:pointer;font-family:Tajawal,Tahoma;transition:.2s;}
-.sort-opt.active{background:rgba(255,255,255,.3);border-color:#fff;}
+/* ===== TABLE ===== */
+.tbl-wrap{overflow-x:auto;margin-top:12px;}
+table{width:100%;border-collapse:collapse;font-size:.9rem;}
+th{
+  background:rgba(255,255,255,.25);color:#fff;font-weight:800;
+  padding:11px 10px;text-align:center;font-size:.88rem;
+}
+td{background:rgba(255,255,255,.88);padding:10px;text-align:center;border-bottom:1px solid #eee;}
+tr:hover td{background:rgba(255,255,255,1);}
+.tbl-sort{cursor:pointer;user-select:none;}
+.tbl-sort:hover{text-decoration:underline;}
 
-/* SESSION CARD */
-.session-card{background:rgba(255,255,255,.93);padding:13px 15px;margin-top:9px;border-radius:12px;cursor:pointer;transition:.2s;color:#333;}
-.session-card:hover{transform:scale(1.01);box-shadow:0 5px 15px rgba(0,0,0,.25);}
+/* ===== HISTORY CARD ===== */
+.hist-card{
+  background:rgba(255,255,255,.9);border-radius:14px;padding:15px;margin-top:10px;
+  box-shadow:0 4px 14px rgba(0,0,0,.14);
+}
+.hist-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+.hist-date{font-weight:800;color:#222;font-size:1rem;}
+.hist-class{font-size:.85rem;color:#666;}
+.hist-expand{cursor:pointer;color:#0072ff;font-size:.85rem;font-weight:700;}
+.hist-body{margin-top:10px;display:none;}
 
-/* MODAL */
-.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000;padding:15px;}
-.modal{background:#fff;border-radius:20px;padding:22px;width:100%;max-width:420px;max-height:85vh;overflow-y:auto;font-family:Tajawal,Tahoma;}
-.modal h3{color:#333;font-size:16px;margin-bottom:14px;text-align:center;}
-.mbtn{display:block;width:100%;padding:12px;margin-top:10px;border:none;border-radius:12px;cursor:pointer;font-size:15px;font-weight:bold;font-family:Tajawal,Tahoma;color:#fff;transition:.3s;}
-.mbtn:hover{transform:scale(1.03);}
-.mbtn-g{background:linear-gradient(135deg,#43cea2,#185a9d);}
-.mbtn-o{background:linear-gradient(135deg,#f7971e,#ffd200);color:#333;}
-.mbtn-r{background:linear-gradient(135deg,#ff416c,#ff4b2b);}
-.mbtn-gray{background:#e5e7eb;color:#374151;}
+/* ===== MODAL ===== */
+.modal-bg{
+  position:fixed;inset:0;background:rgba(0,0,0,.7);
+  display:none;justify-content:center;align-items:center;z-index:9999;
+  padding:15px;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:rgba(255,255,255,.97);backdrop-filter:blur(10px);
+  border-radius:20px;padding:24px;width:100%;max-width:480px;
+  max-height:90vh;overflow-y:auto;
+  animation:fadeIn .3s ease;
+}
+.modal h3{color:#222;font-size:1.15rem;font-weight:900;margin-bottom:16px;text-align:center;}
+.modal label{color:#444;}
+.modal input,.modal select{background:#fff;}
+.modal-actions{display:flex;gap:10px;margin-top:16px;}
+.modal-actions .btn{flex:1;margin-top:0;}
 
-/* LOADER */
-#loader{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:9999;}
-.spinner{width:60px;height:60px;border:6px solid #eee;border-top-color:#00c6ff;border-radius:50%;animation:spin 1s linear infinite;margin-bottom:20px;}
-@keyframes spin{to{transform:rotate(360deg);}}
-#loader p{color:#fff;font-size:18px;text-align:center;}
+/* ===== LOADER ===== */
+#loader{
+  position:fixed;inset:0;background:rgba(0,0,0,.82);
+  display:none;justify-content:center;align-items:center;
+  flex-direction:column;z-index:99999;
+}
+.spinner{
+  width:52px;height:52px;border:5px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite;
+  margin-bottom:16px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loader p{color:#fff;font-weight:700;text-align:center;font-size:1rem;}
 
+/* ===== SORT BAR ===== */
+.sort-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center;}
+.sort-bar span{color:#eee;font-size:.9rem;font-weight:700;}
+.sort-chip{
+  padding:6px 13px;border-radius:20px;border:none;cursor:pointer;
+  font-family:'Tajawal',Tahoma;font-size:13px;font-weight:700;
+  background:rgba(255,255,255,.25);color:#fff;transition:.2s;
+}
+.sort-chip.active{background:rgba(255,255,255,.95);color:#333;}
+.sort-chip:hover{background:rgba(255,255,255,.4);}
+
+/* ===== EMPTY STATE ===== */
+.empty{text-align:center;color:#dde;padding:30px;font-size:1rem;opacity:.8;}
+
+/* ===== PROGRESS BAR ===== */
+.prog-wrap{background:#e9ecef;border-radius:20px;height:10px;margin-top:4px;}
+.prog-bar{height:10px;border-radius:20px;transition:.4s;}
+
+/* ===== INFO BOX ===== */
+.info-box{
+  background:rgba(255,255,255,.15);border-radius:12px;
+  padding:12px 16px;color:#fff;font-size:.9rem;
+  border:1px solid rgba(255,255,255,.2);margin-top:10px;
+}
+.today-lbl{text-align:center;color:#dde;font-size:.93rem;margin-top:6px;}
+
+/* ===== RESPONSIVE ===== */
 @media(max-width:600px){
+  body{padding:10px;}
   .section{padding:15px;}
+  h1{font-size:1.4rem;}
+  .stats-grid{grid-template-columns:repeat(3,1fr);gap:8px;}
+  .stat-box .num{font-size:1.5rem;}
+  .tabs{gap:5px;}
+  .tab-btn{padding:8px 11px;font-size:13px;}
+  th,td{padding:8px 6px;font-size:.82rem;}
+}
+@media(max-width:400px){
   .stats-grid{grid-template-columns:repeat(2,1fr);}
-  .class-grid{grid-template-columns:1fr;}
+  .card-actions{flex-direction:column;}
+  .card-actions .btn{width:100%;}
 }
 </style>
 </head>
 <body>
 
-<!-- HEADER -->
+<!-- ===== HEADER ===== -->
 <div class="section">
   <h1>📋 لوحة الحضور والغياب</h1>
-  <p class="info" id="today-lbl"></p>
-  <div class="stats-grid">
+  <p class="today-lbl" id="today-lbl"></p>
+  <div class="stats-grid" style="margin-top:16px;">
     <div class="stat-box"><div class="num" id="st-classes">0</div><div class="lbl">الفصول</div></div>
     <div class="stat-box"><div class="num" id="st-members">0</div><div class="lbl">المخدومين</div></div>
-    <div class="stat-box"><div class="num" id="st-rate">—</div><div class="lbl">معدل الحضور الكلي</div></div>
+    <div class="stat-box"><div class="num" id="st-rate">—</div><div class="lbl">معدل الحضور</div></div>
   </div>
 </div>
 
-<!-- TABS NAV -->
-<div class="section" style="padding:15px">
+<!-- ===== TABS NAV ===== -->
+<div class="section" style="padding:14px 16px;">
   <div class="tabs">
     <button class="tab-btn active" onclick="goTab('t-classes',this)">🏫 الفصول</button>
     <button class="tab-btn" onclick="goTab('t-attendance',this)">✅ أخذ الحضور</button>
@@ -182,850 +256,693 @@ input:focus,select:focus{transform:scale(1.01);box-shadow:0 0 10px rgba(255,255,
   </div>
 </div>
 
-<!-- TAB: CLASSES -->
+<!-- ===== TAB: CLASSES ===== -->
 <div id="t-classes" class="tab-content active">
   <div class="section">
     <h2>➕ إضافة فصل جديد</h2>
     <label>اسم الفصل</label>
-    <input id="inp-className" placeholder="مثال: فصل الكبار، فصل الشباب...">
-    <button class="btn btn-blue" id="btn-addClass">إضافة الفصل</button>
+    <input id="inp-className" placeholder="مثال: فصل الشباب، فصل الكبار...">
+    <button class="btn btn-blue" onclick="addClass()">➕ إضافة الفصل</button>
   </div>
   <div class="section">
     <h2>🏫 الفصول الحالية</h2>
-    <div id="classListContainer"><p class="info">جاري التحميل...</p></div>
+    <div id="classListContainer"><p class="empty">جاري التحميل...</p></div>
   </div>
 </div>
 
-<!-- TAB: ATTENDANCE -->
+<!-- ===== TAB: ATTENDANCE ===== -->
 <div id="t-attendance" class="tab-content">
   <div class="section">
     <h2>✅ أخذ الحضور</h2>
-    <p class="info">اختر الفصل لبدء أخذ الحضور</p>
-    <div class="class-grid" id="attClassGrid"></div>
+    <p class="today-lbl">اختر الفصل لبدء جلسة الحضور</p>
+    <div id="attClassGrid" style="margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;"></div>
   </div>
   <div id="attFormWrapper"></div>
 </div>
 
-<!-- TAB: HISTORY -->
+<!-- ===== TAB: HISTORY ===== -->
 <div id="t-history" class="tab-content">
   <div class="section">
-    <h2>📅 سجل جلسات الحضور</h2>
+    <h2>📅 سجل الجلسات</h2>
     <label>فلترة بالفصل</label>
     <select id="histFilter" onchange="renderHistory()"></select>
-    <div id="histList"></div>
+    <div id="histList" style="margin-top:14px;"></div>
   </div>
 </div>
 
-<!-- TAB: REPORTS -->
+<!-- ===== TAB: REPORTS ===== -->
 <div id="t-reports" class="tab-content">
   <div class="section">
-    <h2>📊 تقارير الحضور</h2>
+    <h2>📊 التقارير</h2>
     <label>اختر الفصل</label>
     <select id="rptClassSel" onchange="renderReport()"></select>
+    <div class="sort-bar" style="margin-top:14px;">
+      <span>ترتيب:</span>
+      <button class="sort-chip active" onclick="setRptSort('alpha',this)">أبجدي</button>
+      <button class="sort-chip" onclick="setRptSort('present',this)">الأكثر حضوراً</button>
+      <button class="sort-chip" onclick="setRptSort('absent',this)">الأكثر غياباً</button>
+      <button class="sort-chip" onclick="setRptSort('rate',this)">معدل الحضور</button>
+    </div>
     <div id="rptContent"></div>
   </div>
 </div>
 
-<!-- MODAL -->
-<div class="modal-bg" id="modal-bg" style="display:none" onclick="closeModalBg(event)">
+<!-- ===== MODAL ===== -->
+<div class="modal-bg" id="modal-bg" onclick="closeModalBg(event)">
   <div class="modal" id="modal-box" onclick="event.stopPropagation()"></div>
 </div>
 
-<!-- LOADER -->
+<!-- ===== LOADER ===== -->
 <div id="loader">
   <div class="spinner"></div>
-  <p>جاري الحفظ... ⏳<br>قد يستغرق الأمر بعض الوقت</p>
+  <p>جاري الحفظ على GitHub... ⏳<br><small>قد يستغرق الأمر لحظات</small></p>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-
 <script>
+// ===================================================
+// CONFIG
+// ===================================================
+const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN_HERE"; // 🔥 ضع التوكن هنا
+const REPO         = "kareemretetert/Church_Web";
+const FILE_PATH    = "attendance.json";
+const BRANCH       = "main";
 
-  document.documentElement.style.scrollBehavior = "smooth";
-const password="kimo123"
-const entered=prompt("ادخل كلمة المرور")
+// ===================================================
+// STATE
+// ===================================================
+let db = { classes: [], sessions: [] };
+let rptSort = "alpha";
 
-if(entered!==password){
-document.body.innerHTML="<h2 style='text-align:center;margin-top:100px'>كلمة المرور غير صحيحة</h2>"
-throw new Error("access denied")
-}
-// ============================================================
-// CONSTANTS & STATE
-// ============================================================
-const CHURCH  = "كنيسة السيدة العذراء مريم"
-const MEETING = "اجتماع أبناء البابا شنودة الثالث"
-
-let db          = {classes:[],sessions:[]}
-let currentSort = "alpha"
-let attSession  = {classId:null, statuses:{}}
-
-const TODAY    = new Date()
-const todayStr = fmtDate(TODAY)
-
-document.getElementById("today-lbl").textContent =
-  TODAY.toLocaleDateString("ar-EG",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
-
-// ============================================================
-// LOAD / SAVE  (localStorage cache + GitHub API source of truth)
-// ============================================================
-const LS_KEY = "attendance_db_cache"
-const LS_TS  = "attendance_db_ts"
-
-function lsSave(){
+// ===================================================
+// GITHUB API
+// ===================================================
+async function loadFromGitHub(){
   try{
-    localStorage.setItem(LS_KEY, JSON.stringify(db))
-    localStorage.setItem(LS_TS,  Date.now().toString())
-  }catch(e){ console.warn("localStorage write failed",e) }
-}
-
-function lsLoad(){
-  try{
-    const raw = localStorage.getItem(LS_KEY)
-    if(!raw) return null
-    const parsed = JSON.parse(raw)
-    if(!parsed.classes || !parsed.sessions) return null
-    return parsed
-  }catch{ return null }
-}
-
-function showSaveStatus(msg, color="#43cea2"){
-  let el = document.getElementById("save-status")
-  if(!el){
-    el = document.createElement("div")
-    el.id = "save-status"
-    el.style.cssText = "position:fixed;bottom:20px;left:50%;transform:translateX(-50%);"+
-      "padding:10px 24px;border-radius:30px;font-size:14px;font-weight:bold;"+
-      "color:#fff;z-index:9998;transition:opacity .5s;box-shadow:0 4px 15px rgba(0,0,0,.3);"+
-      "font-family:Tajawal,Tahoma;"
-    document.body.appendChild(el)
-  }
-  el.textContent = msg
-  el.style.background = color
-  el.style.opacity = "1"
-  clearTimeout(el._t)
-  el._t = setTimeout(()=>{ el.style.opacity="0" }, 3000)
-}
-
-async function loadDB(){
-  // 1) load from localStorage immediately so UI is instant
-  const cached = lsLoad()
-  if(cached){
-    db = cached
-    refreshAll()
-  }
-
-  // 2) fetch latest from GitHub API (bypasses Netlify CDN cache)
-  try{
-    const REPO      = "kareemretetert/Church_Web"
-    const FILE_PATH = "attendance.json"
-    const url = `https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`
-    const r = await fetch(url, {
-      headers:{ Accept:"application/vnd.github.v3+json" },
-      cache:"no-store"
-    })
-    if(!r.ok) throw new Error("GitHub API status: "+r.status)
-    const meta    = await r.json()
-    const content = atob(meta.content.replace(/\n/g,""))
-    const remote  = JSON.parse(content)
-    if(!remote.classes)  remote.classes  = []
-    if(!remote.sessions) remote.sessions = []
-
-    // use remote if it has more sessions than cache (source of truth)
-    const localSessions  = (cached?.sessions||[]).length
-    const remoteSessions = remote.sessions.length
-    if(remoteSessions >= localSessions){
-      db = remote
-      lsSave()
-      refreshAll()
-    }
+    const r = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,{
+      headers:{Authorization:`token ${GITHUB_TOKEN}`,Accept:"application/vnd.github.v3+json"}
+    });
+    if(!r.ok) throw new Error("not found");
+    const d = await r.json();
+    const json = JSON.parse(atob(d.content.replace(/\n/g,"")));
+    db = json;
   }catch(e){
-    console.warn("GitHub fetch failed, using localStorage cache:", e)
-    if(!cached){
-      db = {classes:[], sessions:[]}
-      refreshAll()
-    }
+    // file doesn't exist yet, start fresh
+    db = {classes:[],sessions:[]};
   }
+  renderAll();
 }
 
-async function saveDB(){
-  // save to localStorage first (instant, never fails)
-  lsSave()
-  showSaveStatus("⏳ جاري الحفظ على السيرفر...")
-  showLoader()
+async function saveToGitHub(){
+  showLoader();
   try{
-    const r = await fetch("/.netlify/functions/saveAttendance",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify(db)
-    })
-    if(!r.ok) throw await r.text()
-    showSaveStatus("✅ تم الحفظ بنجاح")
+    let sha = null;
+    const get = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,{
+      headers:{Authorization:`token ${GITHUB_TOKEN}`,Accept:"application/vnd.github.v3+json"}
+    });
+    if(get.ok){ const d = await get.json(); sha = d.sha; }
+
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(db,null,2))));
+    const body = {message:"Update attendance data",content,branch:BRANCH};
+    if(sha) body.sha = sha;
+
+    const put = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`,{
+      method:"PUT",
+      headers:{Authorization:`token ${GITHUB_TOKEN}`,Accept:"application/vnd.github.v3+json","Content-Type":"application/json"},
+      body:JSON.stringify(body)
+    });
+    if(!put.ok) throw new Error(await put.text());
+    hideLoader();
+    toast("✅ تم الحفظ على GitHub");
   }catch(e){
-    showSaveStatus("⚠️ حُفظ محلياً — فشل السيرفر", "#f7971e")
-    console.error("saveDB error:", e)
+    hideLoader();
+    toast("❌ فشل الحفظ: "+e.message);
   }
-  hideLoader()
 }
 
-// ============================================================
-// TABS
-// ============================================================
-function goTab(id,btn){
-  document.querySelectorAll(".tab-content").forEach(el=>el.classList.remove("active"))
-  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"))
-  document.getElementById(id).classList.add("active")
-  btn.classList.add("active")
-  if(id==="t-history")    renderHistory()
-  if(id==="t-reports")    renderReport()
-  if(id==="t-attendance") renderAttClassGrid()
-}
-
-// ============================================================
-// STATS
-// ============================================================
-function updateStats(){
-  const total=db.classes.reduce((s,c)=>s+c.members.length,0)
-  const allRec=db.sessions.flatMap(s=>s.records)
-  const pct=allRec.length?Math.round(allRec.filter(r=>r.status==="present").length/allRec.length*100):null
-  document.getElementById("st-classes").textContent=db.classes.length
-  document.getElementById("st-members").textContent=total
-  document.getElementById("st-rate").textContent=pct!==null?pct+"%":"—"
-}
-
-function refreshAll(){
-  updateStats()
-  renderClassList()
-  renderAttClassGrid()
-  populateSel("histFilter",true)
-  populateSel("rptClassSel",false)
-}
-
-// ============================================================
-// ADD CLASS  ← uses addEventListener, no inline onclick
-// ============================================================
-document.getElementById("btn-addClass").addEventListener("click", async function(){
-  const inp=document.getElementById("inp-className")
-  const name=inp.value.trim()
-  if(!name){ alert("ادخل اسم الفصل أولاً"); return }
-  if(db.classes.find(c=>c.name===name)){ alert("يوجد فصل بنفس الاسم بالفعل"); return }
-  db.classes.push({id:uid(),name,members:[]})
-  inp.value=""
-  await saveDB()
-  refreshAll()
-  alert("✅ تم إضافة الفصل: "+name)
-})
-
-// ============================================================
-// RENDER CLASS LIST
-// ============================================================
-function renderClassList(){
-  const con=document.getElementById("classListContainer")
-  if(!db.classes.length){
-    con.innerHTML='<p class="info">لا يوجد فصول بعد. أضف فصلاً من الأعلى.</p>'
-    return
-  }
-  con.innerHTML=`
-    <div class="sort-bar">
-      <span>ترتيب المخدومين:</span>
-      <button class="sort-opt ${currentSort==="alpha"?"active":""}" onclick="setSort('alpha')">أبجدي</button>
-      <button class="sort-opt ${currentSort==="rate"?"active":""}"  onclick="setSort('rate')">الأكثر حضوراً</button>
-    </div>
-  `+db.classes.map(c=>{
-    const sessions=db.sessions.filter(s=>s.classId===c.id)
-    const rate=classRate(c.id)
-    const sorted=sortMembers(c.members,c.id,currentSort)
-    return `
-    <div class="white-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
-        <div>
-          <b style="font-size:16px">🏫 ${c.name}</b>
-          <span class="badge badge-b" style="margin-right:8px">${c.members.length} مخدوم</span>
-          <span class="badge badge-gr">${sessions.length} جلسة</span>
-        </div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap">
-          <button class="btn btn-green btn-inline" onclick="openAddMember('${c.id}')">+ مخدوم</button>
-          <button class="btn btn-orange btn-inline" onclick="openAttTab('${c.id}')">أخذ الحضور</button>
-          <button class="btn btn-purple btn-inline" onclick="downloadPDF('${c.id}')">PDF ⬇️</button>
-          <button class="btn btn-red btn-inline" onclick="deleteClass('${c.id}')">حذف</button>
-        </div>
-      </div>
-      <div class="prog-wrap"><div class="prog-fill" style="width:${rate}%"></div></div>
-      <small style="color:#888;font-size:12px">معدل الحضور: ${rate}%</small>
-      ${sorted.length?`
-      <table class="mtable" style="margin-top:12px">
-        <thead><tr>
-          <th>#</th><th>الاسم</th><th>حضر</th><th>غاب</th>
-          <th>المعدل</th><th>آخر حضور</th><th>آخر غياب</th><th></th>
-        </tr></thead>
-        <tbody>
-          ${sorted.map((m,i)=>{
-            const st=memberStats(c.id,m.id)
-            return `<tr>
-              <td style="color:#999">${i+1}</td>
-              <td><b>${m.name}</b></td>
-              <td><span class="badge badge-g">${st.present}</span></td>
-              <td><span class="badge badge-r">${st.absent}</span></td>
-              <td style="font-weight:bold;color:${st.rate>=75?"#059669":"#dc2626"}">${st.rate}%</td>
-              <td style="font-size:11px;color:#888">${st.lastPresent||"—"}</td>
-              <td style="font-size:11px;color:#888">${st.lastAbsent||"—"}</td>
-              <td><button onclick="deleteMember('${c.id}','${m.id}')" style="background:none;border:none;cursor:pointer;color:#ef4444;font-size:17px">✕</button></td>
-            </tr>`
-          }).join("")}
-        </tbody>
-      </table>`
-      :'<p style="color:#888;font-size:13px;margin-top:10px;text-align:center">لا يوجد مخدومين بعد — اضغط "+ مخدوم"</p>'}
-    </div>`
-  }).join("")
-}
-
-function setSort(val){
-  currentSort=val
-  document.querySelectorAll(".sort-opt").forEach(b=>{
-    b.classList.toggle("active",
-      (val==="alpha"&&b.textContent.includes("أبجدي"))||(val==="rate"&&b.textContent.includes("الأكثر"))
-    )
-  })
-  renderClassList()
-}
-
-function sortMembers(members,cid,mode){
-  const arr=[...members]
-  if(mode==="alpha") return arr.sort((a,b)=>a.name.localeCompare(b.name,"ar"))
-  return arr.sort((a,b)=>memberStats(cid,b.id).rate-memberStats(cid,a.id).rate)
-}
-
-function openAttTab(cid){
-  // switch to attendance tab then start
-  const btn=document.querySelectorAll(".tab-btn")[1]
-  goTab("t-attendance",btn)
-  setTimeout(()=>startAttendance(cid),80)
-}
-
-// ============================================================
-// DELETE CLASS / MEMBER
-// ============================================================
-function deleteClass(cid){
-  const c=db.classes.find(x=>x.id===cid)
-  if(!confirm(`هل تريد حذف فصل "${c.name}" وكل بياناته نهائياً؟`)) return
-  db.classes=db.classes.filter(x=>x.id!==cid)
-  db.sessions=db.sessions.filter(s=>s.classId!==cid)
-  saveDB().then(()=>refreshAll())
-}
-
-function deleteMember(cid,mid){
-  const c=db.classes.find(x=>x.id===cid)
-  const m=c.members.find(x=>x.id===mid)
-  if(!confirm(`حذف "${m.name}" من الفصل؟`)) return
-  c.members=c.members.filter(x=>x.id!==mid)
-  db.sessions.forEach(s=>{s.records=s.records.filter(r=>r.memberId!==mid)})
-  saveDB().then(()=>refreshAll())
-}
-
-// ============================================================
-// ADD MEMBER (modal)
-// ============================================================
-function openAddMember(cid){
-  const c=db.classes.find(x=>x.id===cid)
-  openModal(`
-    <h3>➕ إضافة مخدوم — ${c.name}</h3>
-    <label style="color:#555;font-size:13px;display:block;margin-top:10px">اسم المخدوم</label>
-    <input id="m-mname" placeholder="الاسم الكامل"
-      style="margin-top:6px;padding:12px;border-radius:10px;border:1px solid #ddd;width:100%;font-size:15px;font-family:Tajawal,Tahoma;direction:rtl">
-    <button class="mbtn mbtn-g" onclick="submitAddMember('${cid}')">إضافة</button>
-    <button class="mbtn mbtn-gray" onclick="closeModal()">إلغاء</button>
-  `)
-  setTimeout(()=>{const el=document.getElementById("m-mname");if(el)el.focus()},120)
-}
-
-async function submitAddMember(cid){
-  const inp=document.getElementById("m-mname")
-  if(!inp) return
-  const name=inp.value.trim()
-  if(!name){alert("ادخل الاسم");return}
-  const c=db.classes.find(x=>x.id===cid)
-  if(c.members.find(m=>m.name===name)){alert("هذا الاسم موجود بالفعل");return}
-  c.members.push({id:uid(),name})
-  closeModal()
-  await saveDB()
-  refreshAll()
-}
-
-// ============================================================
-// ATTENDANCE GRID
-// ============================================================
-function renderAttClassGrid(){
-  const el=document.getElementById("attClassGrid")
-  if(!db.classes.length){
-    el.innerHTML='<p class="info" style="grid-column:span 2">أضف فصلاً أولاً من تبويب الفصول</p>'
-    return
-  }
-  el.innerHTML=db.classes.map(c=>`
-    <button class="class-select-btn" id="cbtn-${c.id}" onclick="startAttendance('${c.id}')">
-      ${c.name}<br>
-      <small style="font-weight:normal;opacity:.75">${c.members.length} مخدوم</small>
-    </button>
-  `).join("")
-}
-
-// ============================================================
-// ATTENDANCE FORM
-// ============================================================
-function startAttendance(cid){
-  document.querySelectorAll(".class-select-btn").forEach(b=>b.classList.remove("sel"))
-  const btn=document.getElementById("cbtn-"+cid)
-  if(btn)btn.classList.add("sel")
-
-  const c=db.classes.find(x=>x.id===cid)
-  attSession={classId:cid,statuses:{}}
-  c.members.forEach(m=>{attSession.statuses[m.id]="present"})
-
-  buildAttForm(c)
-  setTimeout(()=>{document.getElementById("attFormWrapper").scrollIntoView({behavior:"smooth"})},80)
-}
-
-function buildAttForm(c){
-  const wrap=document.getElementById("attFormWrapper")
-  // check if today already saved
-  const existing=db.sessions.find(s=>s.classId===c.id&&s.date===todayStr)
-  if(existing){
-    existing.records.forEach(r=>{attSession.statuses[r.memberId]=r.status})
-  }
-  const sorted=sortMembers(c.members,c.id,"alpha")
-  wrap.innerHTML=`
-  <div class="section">
-    <h2>✅ ${c.name}</h2>
-    <p class="info">التاريخ: ${todayStr}${existing?" — ⚠️ يوجد جلسة محفوظة لهذا اليوم، يمكنك التعديل":""}</p>
-    <div style="display:flex;gap:8px;margin:10px 0 5px">
-      <button class="btn btn-green" style="flex:1;padding:10px;font-size:14px" onclick="setAll('present')">تحضير الكل ✅</button>
-      <button class="btn btn-red"   style="flex:1;padding:10px;font-size:14px" onclick="setAll('absent')">تغيب الكل ❌</button>
-    </div>
-    ${sorted.length===0
-      ?'<p class="info">لا يوجد مخدومين في هذا الفصل</p>'
-      :sorted.map(m=>{
-        const cur=attSession.statuses[m.id]||"present"
-        return `
-        <div class="att-row" id="ar-${m.id}">
-          <span class="att-name">👤 ${m.name}</span>
-          <div class="tog-wrap">
-            <button class="tog tog-p ${cur==="present"?"on":""}" id="tp-${m.id}" onclick="toggleAtt('${m.id}','present')">حاضر</button>
-            <button class="tog tog-a ${cur==="absent"?"on":""}"  id="ta-${m.id}" onclick="toggleAtt('${m.id}','absent')">غائب</button>
-          </div>
-        </div>`}).join("")
-    }
-    ${sorted.length?`<button class="btn btn-blue" style="margin-top:16px" onclick="confirmSave()">💾 حفظ الحضور</button>`:""}
-  </div>`
-}
-
-function toggleAtt(mid,status){
-  attSession.statuses[mid]=status
-  const tp=document.getElementById("tp-"+mid)
-  const ta=document.getElementById("ta-"+mid)
-  if(!tp||!ta)return
-  tp.className="tog tog-p"+(status==="present"?" on":"")
-  ta.className="tog tog-a"+(status==="absent"?" on":"")
-}
-
-function setAll(status){
-  Object.keys(attSession.statuses).forEach(mid=>toggleAtt(mid,status))
-}
-
-// ============================================================
-// CONFIRM SAVE MODAL
-// ============================================================
-function confirmSave(){
-  openModal(`
-    <h3>💾 حفظ الحضور</h3>
-    <p style="text-align:center;color:#555;font-size:14px;margin-bottom:15px">اختر طريقة الحفظ</p>
-    <button class="mbtn mbtn-g"    onclick="doSave(true)">💾 حفظ + تنزيل ملف CSV</button>
-    <button class="mbtn mbtn-o"    onclick="doSave(false)">💾 حفظ فقط</button>
-    <button class="mbtn mbtn-gray" onclick="closeModal()">❌ إلغاء</button>
-  `)
-}
-
-async function doSave(withDownload){
-  closeModal()
-  if(!attSession.classId)return
-  const c=db.classes.find(x=>x.id===attSession.classId)
-  const records=c.members.map(m=>({
-    memberId:m.id, name:m.name,
-    status:attSession.statuses[m.id]||"absent"
-  }))
-  const session={id:uid(),classId:attSession.classId,date:todayStr,records}
-  const idx=db.sessions.findIndex(s=>s.classId===attSession.classId&&s.date===todayStr)
-  if(idx>=0) db.sessions[idx]=session
-  else db.sessions.push(session)
-
-  await saveDB()
-  if(withDownload) downloadSessionCSV(session,c)
-  updateStats()
-
-  const p=records.filter(r=>r.status==="present").length
-  alert(`✅ تم الحفظ بنجاح\nحضر: ${p}  |  غاب: ${records.length-p}`)
-  buildAttForm(c)
-  refreshAll()
-}
-
-// ============================================================
-// HISTORY
-// ============================================================
-function renderHistory(){
-  populateSel("histFilter",true)
-  const fv=document.getElementById("histFilter").value
-  const el=document.getElementById("histList")
-  let sessions=[...db.sessions].sort((a,b)=>b.date.localeCompare(a.date))
-  if(fv!=="all") sessions=sessions.filter(s=>s.classId===fv)
-  if(!sessions.length){el.innerHTML='<p class="info">لا يوجد سجلات بعد</p>';return}
-  el.innerHTML=sessions.map(s=>{
-    const c=db.classes.find(x=>x.id===s.classId)
-    const p=s.records.filter(r=>r.status==="present").length
-    const rate=s.records.length?Math.round(p/s.records.length*100):0
-    return `
-    <div class="session-card" onclick="toggleDetail('det-${s.id}')">
-      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        <div>
-          <b>${c?c.name:"؟"}</b>
-          <div style="font-size:12px;color:#888;margin-top:2px">📅 ${s.date}</div>
-        </div>
-        <div>
-          <span class="badge badge-g">${p} حضر</span>&nbsp;
-          <span class="badge badge-r">${s.records.length-p} غاب</span>
-        </div>
-      </div>
-      <div class="prog-wrap"><div class="prog-fill" style="width:${rate}%"></div></div>
-      <div id="det-${s.id}" style="display:none;margin-top:10px">
-        ${s.records.map(r=>`
-          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #eee">
-            <span style="font-size:13px">${r.name}</span>
-            <span class="badge ${r.status==="present"?"badge-g":"badge-r"}">${r.status==="present"?"حاضر":"غائب"}</span>
-          </div>`).join("")}
-        <button class="btn btn-orange" style="margin-top:10px;padding:9px;font-size:13px"
-          onclick="event.stopPropagation();downloadSessionCSV_byId('${s.id}')">⬇️ تنزيل هذه الجلسة</button>
-      </div>
-    </div>`
-  }).join("")
-}
-
-function toggleDetail(id){
-  const el=document.getElementById(id)
-  if(el)el.style.display=el.style.display==="none"?"block":"none"
-}
-
-// ============================================================
-// REPORTS
-// ============================================================
-function renderReport(){
-  populateSel("rptClassSel",false)
-  const cid=document.getElementById("rptClassSel").value
-  const el=document.getElementById("rptContent")
-  if(!cid){el.innerHTML="";return}
-  const c=db.classes.find(x=>x.id===cid)
-  const sessions=db.sessions.filter(s=>s.classId===cid).sort((a,b)=>a.date.localeCompare(b.date))
-  if(!sessions.length){el.innerHTML='<p class="info" style="color:#555">لا يوجد جلسات لهذا الفصل بعد</p>';return}
-  const sorted=sortMembers(c.members,cid,currentSort)
-  el.innerHTML=`
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
-      <button class="btn btn-orange btn-inline" onclick="downloadPDF('${cid}')">⬇️ تنزيل PDF كامل</button>
-      <button class="btn btn-blue btn-inline"   onclick="downloadFullCSV('${cid}')">⬇️ تنزيل CSV كامل</button>
-    </div>
-    <div style="overflow-x:auto">
-    <table class="mtable">
-      <thead><tr>
-        <th>المخدوم</th>
-        ${sessions.map(s=>`<th style="white-space:nowrap;font-size:11px">${s.date.slice(5)}</th>`).join("")}
-        <th>حضر</th><th>غاب</th><th>المعدل</th>
-      </tr></thead>
-      <tbody>
-        ${sorted.map(m=>{
-          let p=0
-          const cells=sessions.map(s=>{
-            const r=s.records.find(r=>r.memberId===m.id)
-            const ok=r&&r.status==="present"
-            if(ok)p++
-            return `<td style="text-align:center">${r?(ok?'<span class="badge badge-g">ح</span>':'<span class="badge badge-r">غ</span>'):'—'}</td>`
-          }).join("")
-          const rate=Math.round(p/sessions.length*100)
-          return `<tr>
-            <td style="font-weight:bold;white-space:nowrap">${m.name}</td>
-            ${cells}
-            <td><span class="badge badge-g">${p}</span></td>
-            <td><span class="badge badge-r">${sessions.length-p}</span></td>
-            <td style="font-weight:bold;color:${rate>=75?"#059669":"#dc2626"}">${rate}%</td>
-          </tr>`
-        }).join("")}
-      </tbody>
-    </table>
-    </div>
-  `
-}
-
-// ============================================================
-// DOWNLOAD CSV
-// ============================================================
-function downloadSessionCSV(session,c){
-  let csv="\uFEFF"+"الاسم,الحالة\n"
-  session.records.forEach(r=>{csv+=`${r.name},${r.status==="present"?"حاضر":"غائب"}\n`})
-  dlFile(csv,"text/csv",`${c.name}_${session.date}.csv`)
-}
-
-function downloadSessionCSV_byId(sid){
-  const s=db.sessions.find(x=>x.id===sid)
-  const c=db.classes.find(x=>x.id===s.classId)
-  downloadSessionCSV(s,c)
-}
-
-function downloadFullCSV(cid){
-  const c=db.classes.find(x=>x.id===cid)
-  const sessions=db.sessions.filter(s=>s.classId===cid).sort((a,b)=>a.date.localeCompare(b.date))
-  if(!sessions.length){alert("لا يوجد جلسات");return}
-  let csv="\uFEFF"+"الاسم,"+sessions.map(s=>s.date).join(",")+",نسبة الحضور\n"
-  c.members.forEach(m=>{
-    let p=0; const row=[m.name]
-    sessions.forEach(s=>{
-      const r=s.records.find(r=>r.memberId===m.id)
-      const ok=r&&r.status==="present"
-      if(ok)p++; row.push(ok?"حاضر":"غائب")
-    })
-    row.push(Math.round(p/sessions.length*100)+"%")
-    csv+=row.join(",")+"\n"
-  })
-  dlFile(csv,"text/csv",`${c.name}_الجدول_الكامل.csv`)
-}
-
-// ============================================================
-// DOWNLOAD PDF
-// ============================================================
-async function downloadPDF(cid){
-  const c=db.classes.find(x=>x.id===cid)
-  const sessions=db.sessions.filter(s=>s.classId===cid).sort((a,b)=>a.date.localeCompare(b.date))
-  if(!sessions.length){alert("لا يوجد جلسات لهذا الفصل");return}
-
-  if(!window.jspdf){alert("جاري تحميل مكتبة PDF، انتظر لحظة وحاول مرة أخرى");return}
-  const {jsPDF}=window.jspdf
-  const doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"})
-  const W=doc.internal.pageSize.getWidth()
-  const H=doc.internal.pageSize.getHeight()
-
-  // ---- draw Arabic text using canvas ----
-  function arImg(text,size=11){
-    const scale=3
-    const canvas=document.createElement("canvas")
-    const ctx=canvas.getContext("2d")
-    ctx.font=`${size*scale*1.3}px Tajawal,Tahoma,Arial`
-    const tw=ctx.measureText(text).width+20
-    canvas.width=tw; canvas.height=size*scale*2.4
-    ctx.font=`${size*scale*1.3}px Tajawal,Tahoma,Arial`
-    ctx.direction="rtl"; ctx.textBaseline="middle"; ctx.textAlign="right"
-    return {canvas,ctx,tw,th:canvas.height}
-  }
-
-  function putAr(text,x,y,size,color=[0,0,0],align="right"){
-    const {canvas,ctx,tw,th}=arImg(text,size)
-    ctx.fillStyle=`rgb(${color.join(",")})`
-    ctx.fillText(text,tw-5,th/2)
-    const wm=tw/3.78, hm=th/3.78
-    let xp = align==="right"?x-wm : align==="center"?x-wm/2 : x
-    doc.addImage(canvas.toDataURL("image/png"),"PNG",xp,y-hm/2,wm,hm)
-  }
-
-  function pageHeader(n){
-    doc.setFillColor(102,126,234); doc.rect(0,0,W,17,"F")
-    doc.setFillColor(67,206,162);  doc.rect(0,13,W,4,"F")
-    putAr(CHURCH, W-6, 8.5, 12,[255,255,255],"right")
-    putAr(MEETING, W/2, 8.5, 10,[255,255,255],"center")
-    putAr("صفحة "+n, 14, 8.5, 9,[255,255,255],"left")
-    putAr("فصل: "+c.name, W-6, 23, 10,[50,50,160],"right")
-    putAr("تاريخ الطباعة: "+todayStr, 8, 23, 9,[100,100,100],"left")
-  }
-
-  // ---- PAGE 1: SUMMARY ----
-  pageHeader(1)
-  putAr("تقرير الحضور والغياب الكامل", W/2, 33, 14,[40,40,120],"center")
-
-  const totalRec=sessions.flatMap(s=>s.records)
-  const overallRate=totalRec.length?Math.round(totalRec.filter(r=>r.status==="present").length/totalRec.length*100):0
-  const statBoxes=[
-    {l:"عدد المخدومين", v:""+c.members.length},
-    {l:"عدد الجلسات",   v:""+sessions.length},
-    {l:"معدل الحضور",   v:overallRate+"%"},
-  ]
-  statBoxes.forEach((b,i)=>{
-    const bx=20+i*85, by=40, bw=77, bh=22
-    doc.setFillColor(235,238,255); doc.roundedRect(bx,by,bw,bh,4,4,"F")
-    putAr(b.v, bx+bw/2+bw*0.1, by+8,  15,[50,50,180],"center")
-    putAr(b.l, bx+bw/2+bw*0.1, by+17, 8, [100,100,100],"center")
-  })
-
-  const sorted=sortMembers(c.members,cid,"alpha")
-  const tHead=[["#","اسم المخدوم","الحضور","الغياب","المعدل","آخر حضور","آخر غياب"]]
-  const tBody=sorted.map((m,i)=>{
-    const st=memberStats(cid,m.id)
-    return [(i+1)+"",m.name,st.present+"",st.absent+"",st.rate+"%",st.lastPresent||"—",st.lastAbsent||"—"]
-  })
-
-  doc.autoTable({
-    startY:66, head:tHead, body:tBody,
-    styles:{font:"helvetica",fontSize:9,halign:"right",cellPadding:2.8},
-    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
-    alternateRowStyles:{fillColor:[245,247,255]},
-    columnStyles:{
-      0:{cellWidth:10,halign:"center"},
-      1:{cellWidth:55},
-      2:{cellWidth:22,halign:"center"},
-      3:{cellWidth:22,halign:"center"},
-      4:{cellWidth:25,halign:"center"},
-      5:{cellWidth:30,halign:"center"},
-      6:{cellWidth:30,halign:"center"},
-    },
-    didParseCell(d){
-      if(d.column.index===4&&d.section==="body"){
-        d.cell.styles.textColor=parseInt(d.cell.raw)>=75?[5,150,105]:[220,38,38]
-        d.cell.styles.fontStyle="bold"
-      }
-    },
-    margin:{top:20,right:5,bottom:10,left:5},
-    theme:"grid",
-    didDrawPage(d){
-      doc.setFontSize(7);doc.setTextColor(150)
-      doc.text(CHURCH+" — "+MEETING,W/2,H-4,{align:"center"})
-    }
-  })
-
-  // ---- PAGES: one per session ----
-  sessions.forEach((s,si)=>{
-    doc.addPage(); pageHeader(si+2)
-    putAr("كشف الحضور — "+s.date, W/2, 29, 13,[40,40,120],"center")
-    const sp=s.records.filter(r=>r.status==="present").length
-    const sr=s.records.length?Math.round(sp/s.records.length*100):0
-    putAr("حضر: "+sp+"   |   غاب: "+(s.records.length-sp)+"   |   المعدل: "+sr+"%", W/2,37,10,[80,80,80],"center")
-
-    const sorted2=sortMembers(s.records.map(r=>({id:r.memberId,name:r.name})),cid,"alpha")
-    const half=Math.ceil(sorted2.length/2)
-    const makeCol=(rows,xStart)=>{
-      doc.autoTable({
-        startY:43, head:[["#","الاسم","الحالة"]],
-        body:rows.map((m,i)=>{
-          const rec=s.records.find(r=>r.memberId===m.id)
-          return [(sorted2.indexOf(m)+1)+"",m.name,rec&&rec.status==="present"?"حاضر":"غائب"]
-        }),
-        styles:{font:"helvetica",fontSize:9,halign:"right",cellPadding:2.5},
-        headStyles:{fillColor:[67,206,162],textColor:255,fontStyle:"bold"},
-        alternateRowStyles:{fillColor:[240,255,250]},
-        columnStyles:{0:{cellWidth:10,halign:"center"},1:{cellWidth:60},2:{cellWidth:22,halign:"center"}},
-        didParseCell(d){
-          if(d.column.index===2&&d.section==="body"){
-            d.cell.styles.textColor=d.cell.raw==="حاضر"?[5,150,105]:[220,38,38]
-            d.cell.styles.fontStyle="bold"
-          }
-        },
-        margin:{top:0,right:xStart,bottom:10,left:0},
-        tableWidth:95, theme:"grid",
-        didDrawPage(d){
-          doc.setFontSize(7);doc.setTextColor(150)
-          doc.text(CHURCH+" — "+MEETING,W/2,H-4,{align:"center"})
-        }
-      })
-    }
-    makeCol(sorted2.slice(0,half), W/2+4)
-    makeCol(sorted2.slice(half), 4)
-  })
-
-  // ---- PAGES: one per member ----
-  sorted.forEach((m,mi)=>{
-    doc.addPage(); pageHeader(sessions.length+2+mi)
-    putAr("بطاقة المخدوم", W/2, 27, 12,[40,40,120],"center")
-    putAr(m.name, W/2, 36, 16,[30,30,150],"center")
-
-    const st=memberStats(cid,m.id)
-    const ib=[
-      {l:"مرات الحضور",v:""+st.present},
-      {l:"مرات الغياب", v:""+st.absent},
-      {l:"المعدل",       v:st.rate+"%"},
-      {l:"آخر حضور",    v:st.lastPresent||"—"},
-    ]
-    ib.forEach((b,i)=>{
-      const bx=8+i*72,by=42,bw=65,bh=20
-      doc.setFillColor(235,238,255); doc.roundedRect(bx,by,bw,bh,3,3,"F")
-      putAr(b.v, bx+bw/2+bw*0.12, by+7,  13,st.rate>=75?[5,150,105]:[50,50,200],"center")
-      putAr(b.l, bx+bw/2+bw*0.12, by+15, 8, [120,120,120],"center")
-    })
-
-    doc.autoTable({
-      startY:66,
-      head:[["التاريخ","الحالة"]],
-      body:sessions.map(s=>{
-        const r=s.records.find(r=>r.memberId===m.id)
-        return [s.date,r&&r.status==="present"?"حاضر":"غائب"]
-      }),
-      styles:{font:"helvetica",fontSize:10,halign:"center"},
-      headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
-      alternateRowStyles:{fillColor:[245,247,255]},
-      columnStyles:{0:{cellWidth:50},1:{cellWidth:40}},
-      didParseCell(d){
-        if(d.column.index===1&&d.section==="body"){
-          d.cell.styles.textColor=d.cell.raw==="حاضر"?[5,150,105]:[220,38,38]
-          d.cell.styles.fontStyle="bold"
-        }
-      },
-      margin:{top:0,right:(W-95)/2,bottom:10,left:0},
-      tableWidth:95, theme:"grid",
-      didDrawPage(){
-        doc.setFontSize(7);doc.setTextColor(150)
-        doc.text(CHURCH+" — "+MEETING,W/2,H-4,{align:"center"})
-      }
-    })
-  })
-
-  doc.save(`${c.name}_تقرير_الحضور.pdf`)
-}
-
-// ============================================================
+// ===================================================
 // HELPERS
-// ============================================================
-function classRate(cid){
-  const ss=db.sessions.filter(s=>s.classId===cid)
-  if(!ss.length)return 0
-  const p=ss.flatMap(s=>s.records.filter(r=>r.status==="present")).length
-  const t=ss.flatMap(s=>s.records).length
-  return t?Math.round(p/t*100):0
+// ===================================================
+const DAYS = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+function fmtDate(iso){ const d=new Date(iso); return d.toLocaleDateString("ar-EG"); }
+function fmtDay(iso){ const d=new Date(iso); return DAYS[d.getDay()]; }
+function todayISO(){ return new Date().toISOString().split("T")[0]; }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+function toast(msg){
+  let t=document.createElement("div");
+  t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.85);color:#fff;padding:12px 22px;border-radius:14px;font-family:Tajawal,Tahoma;font-size:15px;font-weight:700;z-index:99999;animation:fadeIn .3s ease;white-space:nowrap;";
+  t.innerText=msg; document.body.appendChild(t);
+  setTimeout(()=>t.remove(),2500);
+}
+function showLoader(){document.getElementById("loader").style.display="flex";}
+function hideLoader(){document.getElementById("loader").style.display="none";}
+
+function openModal(html){ 
+  document.getElementById("modal-box").innerHTML=html;
+  document.getElementById("modal-bg").classList.add("open");
+}
+function closeModal(){ document.getElementById("modal-bg").classList.remove("open"); }
+function closeModalBg(e){ if(e.target===document.getElementById("modal-bg")) closeModal(); }
+
+function goTab(id,btn){
+  document.querySelectorAll(".tab-content").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  btn.classList.add("active");
+  if(id==="t-attendance") renderAttGrid();
+  if(id==="t-history") renderHistory();
+  if(id==="t-reports") renderReport();
 }
 
-function memberStats(cid,mid){
-  const ss=db.sessions.filter(s=>s.classId===cid)
-  const recs=ss.map(s=>s.records.find(r=>r.memberId===mid)).filter(Boolean)
-  const p=recs.filter(r=>r.status==="present").length
-  const a=recs.length-p
-  const rate=ss.length?Math.round(p/ss.length*100):0
-  const pressDates=ss.filter(s=>s.records.find(r=>r.memberId===mid&&r.status==="present")).map(s=>s.date).sort()
-  const absDates  =ss.filter(s=>s.records.find(r=>r.memberId===mid&&r.status==="absent")).map(s=>s.date).sort()
-  return{present:p,absent:a,rate,lastPresent:pressDates.at(-1)||"",lastAbsent:absDates.at(-1)||""}
+// ===================================================
+// STATS
+// ===================================================
+function updateStats(){
+  const d=new Date();
+  document.getElementById("today-lbl").innerText=
+    `اليوم: ${DAYS[d.getDay()]} ${d.toLocaleDateString("ar-EG")}`;
+  document.getElementById("st-classes").innerText=db.classes.length;
+  const total=db.classes.reduce((s,c)=>s+c.members.length,0);
+  document.getElementById("st-members").innerText=total;
+  // overall rate
+  let pSum=0,pCount=0;
+  db.classes.forEach(c=>{
+    c.members.forEach(m=>{
+      const {p}=getMemberStats(m.id,c.id);
+      if(p+getMemberStats(m.id,c.id).a>0){pSum+=p/(p+getMemberStats(m.id,c.id).a)*100;pCount++;}
+    });
+  });
+  document.getElementById("st-rate").innerText=pCount?Math.round(pSum/pCount)+"%":"—";
 }
 
-function populateSel(id,withAll){
-  const el=document.getElementById(id);if(!el)return
-  const cur=el.value
-  el.innerHTML=(withAll?'<option value="all">كل الفصول</option>':"")+
-    db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("")
-  if(cur)el.value=cur
+function getMemberStats(memberId,classId){
+  const sessions=db.sessions.filter(s=>s.classId===classId);
+  let p=0,a=0,pDates=[],aDates=[];
+  sessions.forEach(s=>{
+    const rec=s.records.find(r=>r.memberId===memberId);
+    if(!rec){return;}
+    if(rec.status==="present"){p++;pDates.push({date:s.date,day:fmtDay(s.date)});}
+    else if(rec.status==="absent"){a++;aDates.push({date:s.date,day:fmtDay(s.date)});}
+  });
+  return{p,a,pDates,aDates};
 }
 
-function uid(){return Math.random().toString(36).slice(2)+Date.now().toString(36)}
-function fmtDate(d){return d.toISOString().slice(0,10)}
-function dlFile(content,type,name){
-  const blob=new Blob([content],{type})
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click()
+// ===================================================
+// CLASSES TAB
+// ===================================================
+function renderClasses(){
+  const el=document.getElementById("classListContainer");
+  if(!db.classes.length){el.innerHTML='<p class="empty">لا توجد فصول بعد. أضف فصلاً جديداً! 👆</p>';return;}
+  el.innerHTML=db.classes.map(c=>{
+    const total=c.members.length;
+    const sessions=db.sessions.filter(s=>s.classId===c.id).length;
+    return`<div class="class-card">
+      <div class="class-card-header">
+        <div>
+          <div class="class-card-title">🏫 ${c.name}</div>
+          <div class="class-card-sub">${total} مخدوم &nbsp;•&nbsp; ${sessions} جلسة</div>
+        </div>
+        <div class="card-actions">
+          <button class="btn btn-blue btn-sm" onclick="openAddMember('${c.id}')">➕ مخدوم</button>
+          <button class="btn btn-gold btn-sm" onclick="openClassView('${c.id}')">👁 عرض</button>
+          <button class="btn btn-red btn-sm" onclick="deleteClass('${c.id}')">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
 }
 
-function openModal(html){
-  document.getElementById("modal-box").innerHTML=html
-  document.getElementById("modal-bg").style.display="flex"
+function addClass(){
+  const name=document.getElementById("inp-className").value.trim();
+  if(!name){toast("❗ أدخل اسم الفصل");return;}
+  db.classes.push({id:uid(),name,members:[]});
+  document.getElementById("inp-className").value="";
+  renderAll(); saveToGitHub();
 }
-function closeModal(){document.getElementById("modal-bg").style.display="none"}
-function closeModalBg(e){if(e.target===document.getElementById("modal-bg"))closeModal()}
-function showLoader(){document.getElementById("loader").style.display="flex"}
-function hideLoader(){document.getElementById("loader").style.display="none"}
 
-window.onload=loadDB
+function deleteClass(id){
+  if(!confirm("هل تريد حذف هذا الفصل وجميع بياناته؟")) return;
+  db.classes=db.classes.filter(c=>c.id!==id);
+  db.sessions=db.sessions.filter(s=>s.classId!==id);
+  renderAll(); saveToGitHub();
+}
+
+function openClassView(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c) return;
+  const rows=c.members.map(m=>{
+    const {p,a,pDates,aDates}=getMemberStats(m.id,classId);
+    const total=p+a;
+    const rate=total?Math.round(p/total*100):null;
+    const rateStr=rate!==null?`${rate}%`:"—";
+    const barColor=rate===null?"#ccc":rate>=75?"#28a745":rate>=50?"#ffc107":"#dc3545";
+    return`<tr>
+      <td style="font-weight:700;text-align:right;">${m.name}</td>
+      <td><span class="badge badge-green">✅ ${p}</span></td>
+      <td><span class="badge badge-red">❌ ${a}</span></td>
+      <td>
+        <div style="font-weight:700;color:${barColor}">${rateStr}</div>
+        <div class="prog-wrap"><div class="prog-bar" style="width:${rate||0}%;background:${barColor}"></div></div>
+      </td>
+    </tr>`;
+  }).join("");
+  openModal(`
+    <h3>🏫 ${c.name}</h3>
+    <p style="text-align:center;color:#666;font-size:.9rem;">${c.members.length} مخدوم</p>
+    <div class="tbl-wrap"><table>
+      <tr><th style="text-align:right;">الاسم</th><th>حضور</th><th>غياب</th><th>المعدل</th></tr>
+      ${rows||'<tr><td colspan="4" style="color:#999;padding:20px;">لا يوجد مخدومون</td></tr>'}
+    </table></div>
+    <div style="display:flex;gap:8px;margin-top:14px;">
+      <button class="btn btn-green" style="margin-top:0;" onclick="downloadClassPDF('${classId}')">📄 تنزيل PDF</button>
+      <button class="btn btn-red" style="margin-top:0;" onclick="closeModal()">إغلاق</button>
+    </div>
+  `);
+}
+
+function openAddMember(classId){
+  openModal(`
+    <h3>➕ إضافة مخدوم</h3>
+    <label>الاسم</label>
+    <input id="m-inp" placeholder="اسم المخدوم الكامل...">
+    <div class="modal-actions">
+      <button class="btn btn-blue" onclick="addMember('${classId}')">إضافة</button>
+      <button class="btn btn-red" onclick="closeModal()">إلغاء</button>
+    </div>
+  `);
+}
+
+function addMember(classId){
+  const name=document.getElementById("m-inp").value.trim();
+  if(!name){toast("❗ أدخل الاسم");return;}
+  const c=db.classes.find(x=>x.id===classId);
+  c.members.push({id:uid(),name,addedAt:todayISO()});
+  closeModal(); renderAll(); saveToGitHub();
+}
+
+// ===================================================
+// ATTENDANCE TAB
+// ===================================================
+function renderAttGrid(){
+  const el=document.getElementById("attClassGrid");
+  if(!db.classes.length){el.innerHTML='<p class="empty" style="color:#dde;">لا توجد فصول بعد</p>';return;}
+  el.innerHTML=db.classes.map(c=>`
+    <button class="btn btn-green" style="margin-top:0;" onclick="openAttForm('${c.id}')">
+      🏫 ${c.name}<br><small style="font-weight:400;">${c.members.length} مخدوم</small>
+    </button>`).join("");
+}
+
+let attState = {}; // memberId -> "present"|"absent"|null
+
+function openAttForm(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c){return;}
+  if(!c.members.length){toast("❗ لا يوجد مخدومون في هذا الفصل");return;}
+
+  // check if session today already exists
+  const today=todayISO();
+  const exists=db.sessions.find(s=>s.classId===classId&&s.date===today);
+  if(exists){
+    if(!confirm("يوجد جلسة لهذا الفصل اليوم. هل تريد تعديلها؟")) return;
+  }
+
+  attState={};
+  c.members.forEach(m=>attState[m.id]=null);
+
+  renderAttForm(c);
+}
+
+function renderAttForm(c){
+  const rows=c.members.map(m=>{
+    const st=attState[m.id];
+    return`<div class="att-row${st==='present'?' present':st==='absent'?' absent':''}" id="ar-${m.id}">
+      <div>
+        <div class="member-name">${m.name}</div>
+      </div>
+      <div class="att-toggle">
+        <button class="att-btn p${st==='present'?'':' inactive'}" onclick="setAtt('${c.id}','${m.id}','present')">✅ حضر</button>
+        <button class="att-btn a${st==='absent'?'':' inactive'}" onclick="setAtt('${c.id}','${m.id}','absent')">❌ غاب</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  const allDone=Object.values(attState).every(v=>v!==null);
+
+  document.getElementById("attFormWrapper").innerHTML=`
+    <div class="section">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+        <h2 style="margin-bottom:0;">🏫 ${c.name}</h2>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-green btn-sm" onclick="markAll('${c.id}','present')">✅ كل حضر</button>
+          <button class="btn btn-red btn-sm" onclick="markAll('${c.id}','absent')">❌ كل غاب</button>
+        </div>
+      </div>
+      <p class="today-lbl" style="margin-bottom:12px;">${DAYS[new Date().getDay()]} — ${new Date().toLocaleDateString("ar-EG")}</p>
+      <div id="att-rows">${rows}</div>
+      <div id="att-summary" style="margin-top:12px;"></div>
+      <button class="btn btn-blue" onclick="saveSession('${c.id}')" id="btn-save-att"
+        ${allDone?'':'style="opacity:.6;"'}>
+        💾 حفظ الحضور
+      </button>
+    </div>`;
+  updateAttSummary(c);
+}
+
+function setAtt(classId,memberId,status){
+  attState[memberId]=status;
+  const c=db.classes.find(x=>x.id===classId);
+  renderAttForm(c);
+}
+
+function markAll(classId,status){
+  const c=db.classes.find(x=>x.id===classId);
+  c.members.forEach(m=>attState[m.id]=status);
+  renderAttForm(c);
+}
+
+function updateAttSummary(c){
+  const vals=Object.values(attState);
+  const p=vals.filter(v=>v==="present").length;
+  const a=vals.filter(v=>v==="absent").length;
+  const total=c.members.length;
+  const pending=vals.filter(v=>v===null).length;
+  const el=document.getElementById("att-summary");
+  if(!el) return;
+  el.innerHTML=`<div class="info-box" style="color:#fff;">
+    ✅ حضر: <b>${p}</b> &nbsp;|&nbsp; ❌ غاب: <b>${a}</b> &nbsp;|&nbsp; ⏳ لم يُحدَّد: <b>${pending}</b>
+    <div class="prog-wrap" style="margin-top:8px;"><div class="prog-bar" style="width:${total?Math.round((p+a)/total*100):0}%;background:#00c6ff"></div></div>
+  </div>`;
+}
+
+function saveSession(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  const pending=Object.values(attState).filter(v=>v===null);
+  if(pending.length>0){
+    if(!confirm(`لم يتم تحديد ${pending.length} مخدوم. هل تريد الحفظ؟`)) return;
+  }
+  const today=todayISO();
+  // remove existing session for today
+  db.sessions=db.sessions.filter(s=>!(s.classId===classId&&s.date===today));
+  db.sessions.push({
+    id:uid(),
+    classId,
+    date:today,
+    day:DAYS[new Date().getDay()],
+    records:c.members.map(m=>({memberId:m.id,memberName:m.name,status:attState[m.id]||"absent"}))
+  });
+  renderAll();
+  saveToGitHub();
+  // offer weekly sheet download
+  setTimeout(()=>{
+    if(confirm("✅ تم الحفظ! هل تريد تنزيل جدول هذا الأسبوع؟")){
+      downloadWeeklySheet(classId);
+    }
+  },400);
+  document.getElementById("attFormWrapper").innerHTML="";
+}
+
+// ===================================================
+// HISTORY TAB
+// ===================================================
+function renderHistory(){
+  const sel=document.getElementById("histFilter");
+  // populate
+  sel.innerHTML='<option value="">كل الفصول</option>'+
+    db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+
+  const filter=sel.value;
+  let sessions=[...db.sessions];
+  if(filter) sessions=sessions.filter(s=>s.classId===filter);
+  sessions.sort((a,b)=>b.date.localeCompare(a.date));
+
+  const el=document.getElementById("histList");
+  if(!sessions.length){el.innerHTML='<p class="empty">لا توجد جلسات مسجلة</p>';return;}
+
+  el.innerHTML=sessions.map(s=>{
+    const c=db.classes.find(x=>x.id===s.classId);
+    const p=s.records.filter(r=>r.status==="present").length;
+    const a=s.records.filter(r=>r.status==="absent").length;
+    const allMembers=c?c.members:[];
+    const rows=s.records.map(r=>{
+      const isNew=c&&c.members.find(m=>m.id===r.memberId&&m.addedAt>s.date);
+      return`<div class="member-item" style="margin-top:6px;">
+        <div>
+          <div class="member-name">${r.memberName}${isNew?' <span class="badge badge-new">جديد ★</span>':''}</div>
+        </div>
+        <span class="badge ${r.status==="present"?"badge-green":"badge-red"}">
+          ${r.status==="present"?"✅ حضر":"❌ غاب"}
+        </span>
+      </div>`;
+    }).join("");
+    // members added after this session
+    const newMembers=c?c.members.filter(m=>m.addedAt>s.date):[];
+    const newRows=newMembers.map(m=>`
+      <div class="member-item" style="opacity:.7;margin-top:6px;">
+        <div class="member-name">${m.name} <span class="badge badge-new">لم يكن موجوداً ★</span></div>
+      </div>`).join("");
+    return`<div class="hist-card">
+      <div class="hist-header">
+        <div>
+          <div class="hist-date">📅 ${fmtDay(s.date)} — ${fmtDate(s.date)}</div>
+          <div class="hist-class">🏫 ${c?c.name:"محذوف"} &nbsp;•&nbsp; ✅${p} ❌${a}</div>
+        </div>
+        <span class="hist-expand" onclick="toggleHist('${s.id}')">عرض التفاصيل ▼</span>
+      </div>
+      <div class="hist-body" id="hb-${s.id}">
+        ${rows}
+        ${newRows?`<div style="margin-top:10px;padding-top:8px;border-top:1px dashed #ccc;"><small style="color:#888;">⭐ مخدومون أُضيفوا بعد هذه الجلسة:</small>${newRows}</div>`:""}
+        <button class="btn btn-purple" style="margin-top:12px;" onclick="downloadSessionPDF('${s.id}')">📄 تنزيل PDF</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function toggleHist(id){
+  const el=document.getElementById("hb-"+id);
+  el.style.display=el.style.display==="block"?"none":"block";
+}
+
+// ===================================================
+// REPORTS TAB
+// ===================================================
+function setRptSort(val,btn){
+  rptSort=val;
+  document.querySelectorAll(".sort-chip").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  renderReport();
+}
+
+function renderReport(){
+  const sel=document.getElementById("rptClassSel");
+  sel.innerHTML='<option value="">اختر فصلاً</option>'+
+    db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  const classId=sel.value;
+  const el=document.getElementById("rptContent");
+  if(!classId){el.innerHTML='<p class="empty">اختر فصلاً لعرض التقرير</p>';return;}
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c){return;}
+
+  let members=[...c.members];
+  members=members.map(m=>({...m,...getMemberStats(m.id,classId)}));
+  members=members.map(m=>({...m,total:m.p+m.a,rate:m.p+m.a?Math.round(m.p/(m.p+m.a)*100):null}));
+
+  if(rptSort==="alpha") members.sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+  if(rptSort==="present") members.sort((a,b)=>b.p-a.p);
+  if(rptSort==="absent") members.sort((a,b)=>b.a-a.a);
+  if(rptSort==="rate") members.sort((a,b)=>(b.rate||0)-(a.rate||0));
+
+  const rows=members.map((m,i)=>{
+    const barColor=m.rate===null?"#ccc":m.rate>=75?"#28a745":m.rate>=50?"#ffc107":"#dc3545";
+    const pList=m.pDates.map(d=>`<span class="badge badge-green" style="font-size:.75rem;">${d.day} ${fmtDate(d.date)}</span>`).join(" ");
+    const aList=m.aDates.map(d=>`<span class="badge badge-red" style="font-size:.75rem;">${d.day} ${fmtDate(d.date)}</span>`).join(" ");
+    return`<div class="class-card" style="padding:14px;margin-top:10px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;">
+        <div>
+          <div class="class-card-title">${i+1}. ${m.name}</div>
+          <div style="margin-top:6px;">
+            <span class="badge badge-green">✅ حضر ${m.p} مرة</span>
+            <span class="badge badge-red">❌ غاب ${m.a} مرة</span>
+            <span class="badge badge-blue">📊 ${m.rate!==null?m.rate+"%":"لا يوجد"}</span>
+          </div>
+          <div class="prog-wrap" style="margin-top:8px;width:200px;max-width:100%;">
+            <div class="prog-bar" style="width:${m.rate||0}%;background:${barColor}"></div>
+          </div>
+        </div>
+      </div>
+      ${m.pDates.length?`<div style="margin-top:10px;"><small style="color:#555;font-weight:700;">✅ أيام الحضور:</small><div style="margin-top:4px;">${pList}</div></div>`:""}
+      ${m.aDates.length?`<div style="margin-top:8px;"><small style="color:#555;font-weight:700;">❌ أيام الغياب:</small><div style="margin-top:4px;">${aList}</div></div>`:""}
+    </div>`;
+  }).join("");
+
+  const totalSessions=db.sessions.filter(s=>s.classId===classId).length;
+  const avgRate=members.length?Math.round(members.reduce((s,m)=>s+(m.rate||0),0)/members.length):0;
+
+  el.innerHTML=`
+    <div class="info-box" style="color:#fff;margin-top:12px;">
+      👥 إجمالي المخدومين: <b>${members.length}</b> &nbsp;|&nbsp;
+      📅 إجمالي الجلسات: <b>${totalSessions}</b> &nbsp;|&nbsp;
+      📊 متوسط الحضور: <b>${avgRate}%</b>
+    </div>
+    ${rows||'<p class="empty">لا يوجد مخدومون</p>'}
+    <button class="btn btn-green" onclick="downloadClassPDF('${classId}')">📄 تنزيل تقرير PDF كامل</button>
+  `;
+}
+
+// ===================================================
+// PDF EXPORT
+// ===================================================
+function downloadClassPDF(classId){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"p",unit:"mm",format:"a4"});
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c) return;
+
+  // Title
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(18);
+  doc.text(`Attendance Report - ${c.name}`,105,20,{align:"center"});
+  doc.setFontSize(11);
+  doc.setFont("helvetica","normal");
+  doc.text(`Generated: ${new Date().toLocaleDateString("en-US")} | Total members: ${c.members.length}`,105,28,{align:"center"});
+
+  let yOffset=36;
+  const sessions=db.sessions.filter(s=>s.classId===classId).sort((a,b)=>a.date.localeCompare(b.date));
+
+  // Summary table
+  const sumRows=c.members.map(m=>{
+    const{p,a}=getMemberStats(m.id,classId);
+    const rate=p+a?Math.round(p/(p+a)*100)+"%" :"—";
+    return[m.name,p,a,p+a,rate];
+  });
+  doc.autoTable({
+    startY:yOffset,
+    head:[["Name","Present","Absent","Total Sessions","Rate %"]],
+    body:sumRows,
+    styles:{font:"helvetica",fontSize:10,halign:"center"},
+    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
+    alternateRowStyles:{fillColor:[245,245,255]},
+    columnStyles:{0:{halign:"left"}},
+  });
+  yOffset=doc.lastAutoTable.finalY+12;
+
+  // Per-session attendance
+  if(sessions.length){
+    if(yOffset>240){doc.addPage();yOffset=20;}
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(13);
+    doc.text("Session Details",14,yOffset);
+    yOffset+=6;
+
+    sessions.forEach(s=>{
+      if(yOffset>250){doc.addPage();yOffset=20;}
+      const rows=s.records.map(r=>[r.memberName,r.status==="present"?"Present":"Absent"]);
+      doc.autoTable({
+        startY:yOffset,
+        head:[[`${s.day} — ${fmtDate(s.date)}  |  Present: ${s.records.filter(r=>r.status==="present").length}  Absent: ${s.records.filter(r=>r.status==="absent").length}`,"Status"]],
+        body:rows,
+        styles:{font:"helvetica",fontSize:9,halign:"center"},
+        headStyles:{fillColor:[67,206,162],textColor:255,fontStyle:"bold"},
+        columnStyles:{0:{halign:"left"}},
+        margin:{left:14,right:14},
+      });
+      yOffset=doc.lastAutoTable.finalY+8;
+    });
+  }
+
+  doc.save(`${c.name}_attendance.pdf`);
+  toast("📄 تم تنزيل PDF");
+}
+
+function downloadSessionPDF(sessionId){
+  const s=db.sessions.find(x=>x.id===sessionId);
+  if(!s) return;
+  const c=db.classes.find(x=>x.id===s.classId);
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"p",unit:"mm",format:"a4"});
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(16);
+  doc.text(`Attendance Sheet - ${c?c.name:"Class"}`,105,18,{align:"center"});
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(11);
+  doc.text(`${s.day} — ${fmtDate(s.date)}  |  Present: ${s.records.filter(r=>r.status==="present").length}  Absent: ${s.records.filter(r=>r.status==="absent").length}`,105,26,{align:"center"});
+  doc.autoTable({
+    startY:32,
+    head:[["#","Name","Status"]],
+    body:s.records.map((r,i)=>[i+1,r.memberName,r.status==="present"?"Present ✓":"Absent ✗"]),
+    styles:{font:"helvetica",fontSize:11,halign:"center"},
+    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
+    alternateRowStyles:{fillColor:[245,245,255]},
+    columnStyles:{0:{cellWidth:15},1:{halign:"left"},2:{halign:"center"}},
+    didDrawCell:(data)=>{
+      if(data.section==="body"&&data.column.index===2){
+        const txt=data.cell.raw;
+        data.cell.styles.textColor=txt.includes("Present")?[21,87,36]:[114,28,36];
+      }
+    }
+  });
+  doc.save(`session_${fmtDate(s.date)}.pdf`);
+  toast("📄 تم تنزيل PDF");
+}
+
+function downloadWeeklySheet(classId){
+  const c=db.classes.find(x=>x.id===classId);
+  if(!c) return;
+  // get sessions from this week
+  const now=new Date();
+  const weekStart=new Date(now);
+  weekStart.setDate(now.getDate()-now.getDay());
+  const weekSessions=db.sessions.filter(s=>{
+    const d=new Date(s.date);
+    return s.classId===classId && d>=weekStart && d<=now;
+  }).sort((a,b)=>a.date.localeCompare(b.date));
+
+  if(!weekSessions.length){ toast("لا توجد جلسات هذا الأسبوع"); return; }
+
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({orientation:"l",unit:"mm",format:"a4"});
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(15);
+  doc.text(`Weekly Sheet - ${c.name}`,148,14,{align:"center"});
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(10);
+  doc.text(`Week of ${weekStart.toLocaleDateString("en-US")}`,148,21,{align:"center"});
+
+  const head=[["#","Name",...weekSessions.map(s=>`${s.day}\n${fmtDate(s.date)}`)]];
+  const body=c.members.map((m,i)=>{
+    const cols=weekSessions.map(s=>{
+      const r=s.records.find(r=>r.memberId===m.id);
+      return r?(r.status==="present"?"✓":"✗"):"—";
+    });
+    return[i+1,m.name,...cols];
+  });
+  doc.autoTable({
+    startY:26,
+    head,body,
+    styles:{font:"helvetica",fontSize:10,halign:"center"},
+    headStyles:{fillColor:[118,75,162],textColor:255,fontStyle:"bold"},
+    alternateRowStyles:{fillColor:[245,245,255]},
+    columnStyles:{1:{halign:"left"}},
+  });
+  doc.save(`weekly_${c.name}.pdf`);
+  toast("📄 تم تنزيل جدول الأسبوع");
+}
+
+// ===================================================
+// RENDER ALL
+// ===================================================
+function renderAll(){
+  updateStats();
+  renderClasses();
+  renderAttGrid();
+  // update dropdowns if visible
+  renderHistory();
+  renderReport();
+}
+
+// ===================================================
+// INIT
+// ===================================================
+loadFromGitHub();
 </script>
 </body>
 </html>
