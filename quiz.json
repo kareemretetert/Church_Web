@@ -1,1 +1,41 @@
-[]
+[
+  {
+    "title": "اسئلة شخصية",
+    "time": "30",
+    "questions": [
+      {
+        "question": "ما اسمي",
+        "options": [
+          "بيتر",
+          "مايكل",
+          "كريم",
+          "روماني"
+        ],
+        "answer": 3,
+        "image": ""
+      },
+      {
+        "question": "كم عمري",
+        "options": [
+          "15",
+          "16",
+          "18",
+          "20"
+        ],
+        "answer": 2,
+        "image": ""
+      },
+      {
+        "question": "من هذا الشخص",
+        "options": [
+          "البابا شنودة الثالث",
+          "البابا كيرلس السادس",
+          "البابا اثناسيوس",
+          "الانبا انطونيس"
+        ],
+        "answer": 1,
+        "image": "https://res.cloudinary.com/ddiegmhji/image/upload/v1775860395/vwfcxkr5zejfir4vdmwb.jpg"
+      }
+    ]
+  }
+]
