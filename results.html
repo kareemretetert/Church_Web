@@ -3,255 +3,252 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>النتيجة</title>
-
+<link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<title>نتيجة الامتحان</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ═══ TOKENS ═══ */
 :root{
---primary:#6a3ab2;
---bg:#f4f6fb;
---card:#ffffff;
---text:#222;
+  --p:#7c3aed;--p-dk:#5b21b6;--p-lt:#a78bfa;
+  --bg:#f4f0fb;--sf:#fff;--sf2:#f1ecfc;
+  --tx:#0f172a;--tx2:#374151;--tx3:#6b7280;
+  --bdr:#e2e8f0;
+  --sh:0 4px 20px rgba(109,40,217,.10);
+  --sh2:0 8px 32px rgba(109,40,217,.18);
+  --shdr:0 6px 24px rgba(109,40,217,.25);
+  --hdr1:#7c3aed;--hdr2:#9333ea;--hdr3:#5b21b6;
+  --ok:#16a34a;--ok-bg:#dcfce7;
+  --no:#dc2626;--no-bg:#fee2e2;
 }
-
+body.dark{
+  --bg:#0d0d1a;--sf:#161627;--sf2:#1e1e33;
+  --tx:#f0f0ff;--tx2:#c4c4e0;--tx3:#8888aa;
+  --bdr:#2a2a44;
+  --sh:0 4px 24px rgba(0,0,0,.5);
+  --sh2:0 8px 40px rgba(0,0,0,.6);
+  --shdr:0 6px 24px rgba(0,0,0,.6);
+  --hdr1:#0f172a;--hdr2:#1e1b4b;--hdr3:#020617;
+  --ok-bg:#14432a;--no-bg:#450a0a;
+}
 *{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
 
-body{
-font-family:Tahoma, sans-serif;
-background:var(--bg);
-padding:10px;
-text-align:center;
+/* PARTICLES */
+#particles{position:fixed;inset:0;width:100%;height:100%;z-index:-10;pointer-events:none;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 20% 20%,rgba(124,58,237,.12),transparent 40%),radial-gradient(circle at 80% 30%,rgba(59,130,246,.10),transparent 45%),radial-gradient(circle at 50% 80%,rgba(236,72,153,.08),transparent 50%);z-index:-20;}
+
+/* HEADER */
+header{background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));position:sticky;top:0;z-index:300;box-shadow:var(--shdr);overflow:hidden;transition:background .4s;}
+header::before{content:"";position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.05);pointer-events:none;}
+.hdr{display:flex;align-items:center;gap:10px;padding:13px 16px;position:relative;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border:1.5px solid rgba(255,255,255,.45);border-radius:22px;background:rgba(255,255,255,.15);color:#fff;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;text-decoration:none;transition:background .2s,transform .15s;-webkit-tap-highlight-color:transparent;}
+.back-btn:hover{background:rgba(255,255,255,.28);}
+.back-btn:active{transform:scale(.95);}
+.back-btn svg{width:14px;height:14px;fill:none;stroke:#fff;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.hdr-title{flex:1;text-align:center;color:#fff;font-size:clamp(14px,3.5vw,19px);font-weight:800;}
+.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
+.toggle-track{width:64px;height:32px;border-radius:50px;background:#1e293b;position:relative;display:flex;align-items:center;padding:0 5px;cursor:pointer;border:1.5px solid rgba(255,255,255,.3);transition:background .3s;-webkit-tap-highlight-color:transparent;}
+.t-icon{font-size:14px;z-index:1;line-height:1;}
+.t-sun{color:#facc15;margin-left:auto;}
+.t-moon{color:#e2e8f0;margin-right:auto;}
+.toggle-thumb{position:absolute;width:24px;height:24px;border-radius:50%;background:#fff;right:3px;transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;box-shadow:0 2px 8px rgba(0,0,0,.25);}
+body.dark .toggle-track{background:rgba(109,40,217,.5);}
+body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
+
+/* PAGE */
+.page{max-width:860px;margin:0 auto;padding:20px 14px 70px;}
+
+/* SCORE CARD */
+.score-card{
+  background:var(--sf);border-radius:22px;
+  box-shadow:var(--sh);border:1px solid var(--bdr);
+  padding:28px 24px;text-align:center;margin-bottom:22px;
+  animation:fadeUp .5s both;
+}
+.score-emoji{font-size:64px;margin-bottom:10px;line-height:1;}
+.score-num{font-size:56px;font-weight:800;line-height:1;margin-bottom:4px;}
+.score-pct{font-size:22px;font-weight:700;margin-bottom:8px;}
+.score-msg{font-size:15px;color:var(--tx2);margin-bottom:18px;}
+
+.score-meta{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:20px;
+}
+.score-meta-item{
+  background:var(--sf2);border:1px solid var(--bdr);
+  border-radius:20px;padding:7px 16px;
+  font-size:13px;font-weight:600;color:var(--tx2);
 }
 
-h2{margin:10px 0;color:var(--primary);}
+/* PROGRESS BAR */
+.score-bar-wrap{height:12px;background:var(--sf2);border-radius:10px;overflow:hidden;margin-bottom:20px;}
+.score-bar{height:100%;border-radius:10px;transition:width 1s cubic-bezier(.22,1,.36,1);}
 
-p{margin:6px 0;}
-
-.card{
-background:#fff;
-padding:15px;
-margin:12px auto;
-border-radius:12px;
-max-width:900px;
+.back-quiz-btn{
+  padding:13px 30px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,var(--p),var(--p-dk));
+  color:#fff;font-family:'Cairo',sans-serif;font-size:15px;font-weight:800;
+  cursor:pointer;box-shadow:0 6px 18px rgba(109,40,217,.25);
+  transition:transform .2s,box-shadow .2s;
 }
+.back-quiz-btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(109,40,217,.35);}
 
-.question-box{
-display:flex;
-gap:12px;
-align-items:flex-start;
+/* ANSWERS SECTION */
+.answers-title{
+  font-size:15px;font-weight:800;color:var(--p);margin-bottom:14px;
+  display:flex;align-items:center;gap:6px;
 }
+.answers-title::after{content:"";flex:1;height:1px;background:var(--bdr);}
 
-.question-text{
-flex:2;
-text-align:right;
-font-size:15px;
+/* ANSWER CARD */
+.ans-card{
+  border-radius:18px;padding:16px 18px;margin-bottom:12px;
+  border:1.5px solid;
+  animation:fadeUp .4s both;
+  transition:box-shadow .2s;
 }
+.ans-card:hover{box-shadow:var(--sh);}
+.ans-card.correct{background:var(--ok-bg);border-color:rgba(22,163,74,.3);}
+.ans-card.wrong{background:var(--no-bg);border-color:rgba(220,38,38,.3);}
 
-.img-container{
-flex:1;
-position:relative;
+.ans-header{display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
+.ans-num{
+  width:30px;height:30px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:800;color:#fff;
 }
+.ans-card.correct .ans-num{background:var(--ok);}
+.ans-card.wrong .ans-num{background:var(--no);}
+.ans-q{font-size:14px;font-weight:700;color:var(--tx);flex:1;line-height:1.5;}
 
-.question-img{
-width:100%;
-border-radius:10px;
-cursor:pointer;
+.ans-img{width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin-bottom:10px;cursor:zoom-in;}
+
+.ans-row{font-size:13px;margin-bottom:5px;color:var(--tx2);}
+.ans-row b{font-weight:700;}
+.ans-row.ok{color:var(--ok);}
+.ans-row.no{color:var(--no);}
+.ans-verdict{font-size:13px;font-weight:800;margin-top:6px;}
+.ans-verdict.ok{color:var(--ok);}
+.ans-verdict.no{color:var(--no);}
+
+/* LIGHTBOX */
+#imgZoom{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;justify-content:center;align-items:center;cursor:zoom-out;}
+#imgZoom.show{display:flex;}
+#imgZoom img{max-width:96%;max-height:96%;border-radius:12px;animation:scaleIn .25s cubic-bezier(.34,1.56,.64,1);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{transform:scale(.78);}to{transform:scale(1);}}
+
+@media(max-width:600px){
+  .page{padding:14px 10px 70px;}
+  .score-card{padding:22px 16px;}
+  .score-num{font-size:44px;}
+  .ans-card{padding:13px 14px;}
 }
-
-.fullscreen-icon{
-position:absolute;
-bottom:10px;
-left:50%;
-transform:translateX(-50%);
-background:rgba(0,0,0,0.6);
-color:#fff;
-border-radius:10px;
-width:32px;
-height:32px;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-}
-
-.fullscreen-icon::before{content:"⛶";}
-
-.correct{color:green;}
-.wrong{color:red;}
-
-button{
-margin-top:20px;
-padding:12px;
-border:none;
-border-radius:10px;
-background:var(--primary);
-color:#fff;
-font-size:15px;
-cursor:pointer;
-width:100%;
-max-width:300px;
-}
-
-#imageModal{
-display:none;
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.85);
-justify-content:center;
-align-items:center;
-}
-
-#imageModal img{
-max-width:90%;
-max-height:90%;
-}
-
-/* ✅ Responsive */
-@media (max-width:768px){
-
-.question-box{
-flex-direction:column;
-}
-
-.question-text{
-font-size:14px;
-}
-
-}
-
-@media (max-width:480px){
-
-body{padding:5px;}
-
-.card{padding:10px;}
-
-}
-
 </style>
 </head>
-
 <body>
+<canvas id="particles"></canvas>
 
-<h2>نتيجة الامتحان</h2>
+<header>
+  <div class="hdr">
+    <a class="back-btn" href="quiz_list.html">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+      الامتحانات
+    </a>
+    <div class="hdr-title">📊 نتيجة الامتحان</div>
+    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
+      <div class="toggle-track">
+        <span class="t-icon t-sun">☀️</span>
+        <span class="t-icon t-moon">🌙</span>
+        <div class="toggle-thumb"></div>
+      </div>
+    </div>
+  </div>
+</header>
 
-<p id="name"></p>
-<p id="quizName"></p>
-<p id="score"></p>
-
-<div id="answers"></div>
-
-<button onclick="goBack()">العودة للامتحانات</button>
-
-<div id="imageModal" onclick="closeImage()">
-<img id="modalImg">
+<div class="page">
+  <div id="scoreCard"></div>
+  <div class="answers-title">📋 مراجعة الإجابات</div>
+  <div id="answersContainer"></div>
 </div>
+
+<div id="imgZoom" onclick="this.classList.remove('show')"><img id="zoomImg"></div>
 
 <script>
-// 🟢 البيانات
-const name=localStorage.getItem("quiz_username")
-const score=localStorage.getItem("quiz_score")
-const total=localStorage.getItem("quiz_total")
-const quizTitle=localStorage.getItem("quiz_title")
+(function(){
+  const s=localStorage.getItem("cv_theme");
+  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
+  applyTheme(s||(d?"dark":"light"));
+})();
+function applyTheme(m){document.body.classList.toggle("dark",m==="dark");localStorage.setItem("cv_theme",m);}
+function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
 
-document.getElementById("name").innerText="👤 الاسم: "+name
-document.getElementById("quizName").innerText="📝 الامتحان: "+quizTitle
-document.getElementById("score").innerText="📊 الدرجة: "+score+" / "+total
+function zoomImg(src){document.getElementById("zoomImg").src=src;document.getElementById("imgZoom").classList.add("show");}
 
-let percent = Math.round((score / total) * 100)
+const name=localStorage.getItem("quiz_username")||"—";
+const score=parseInt(localStorage.getItem("quiz_score")||0);
+const total=parseInt(localStorage.getItem("quiz_total")||1);
+const quizTitle=localStorage.getItem("quiz_title")||"امتحان";
+const pct=Math.round((score/total)*100);
 
-let message=""
+// emoji & message
+const emoji=pct>=90?"🏆":pct>=75?"🎉":pct>=50?"👍":"📚";
+const msg=pct>=90?"ممتاز! نتيجة رائعة 🌟":pct>=75?"عاش! نتيجة جيدة جداً 🔥":pct>=50?"مقبول، يمكنك التحسين 💪":"راجع المادة وحاول مجدداً 📖";
+const scoreColor=pct>=75?"#16a34a":pct>=50?"#f59e0b":"#dc2626";
+const barColor=pct>=75?"#16a34a":pct>=50?"#f59e0b":"#dc2626";
 
-if(percent >= 90){
-message="ممتاز 👏"
-}else if(percent >= 75){
-message="عاش 🔥"
-}else if(percent >= 50){
-message="مقبول 👍"
-}else{
-message="اعمل أفضل المرة القادمة 💪"
-}
+// SCORE CARD
+document.getElementById("scoreCard").innerHTML=`
+  <div class="score-card">
+    <div class="score-emoji">${emoji}</div>
+    <div class="score-num" style="color:${scoreColor}">${score}/${total}</div>
+    <div class="score-pct" style="color:${scoreColor}">${pct}%</div>
+    <div class="score-msg">${msg}</div>
+    <div class="score-meta">
+      <span class="score-meta-item">👤 ${name}</span>
+      <span class="score-meta-item">📝 ${quizTitle}</span>
+    </div>
+    <div class="score-bar-wrap">
+      <div class="score-bar" id="scoreBar" style="width:0%;background:${barColor}"></div>
+    </div>
+    <button class="back-quiz-btn" onclick="window.location='quiz_list.html'">العودة للامتحانات ⬅</button>
+  </div>`;
 
-const percentBox=document.createElement("p")
-percentBox.innerText="📈 النسبة: "+percent+"% - "+message
-document.body.appendChild(percentBox)
+// animate bar
+setTimeout(()=>{document.getElementById("scoreBar").style.width=pct+"%";},100);
 
-const doneBox = document.createElement("p")
-doneBox.innerText = "✅ تم إنهاء الامتحان"
-doneBox.style.color = "green"
-document.body.appendChild(doneBox)
-
-// الإجابات
-const answers=JSON.parse(localStorage.getItem("quiz_answers"))
-
-const container=document.getElementById("answers")
-
+// ANSWERS
+const answers=JSON.parse(localStorage.getItem("quiz_answers")||"[]");
+const container=document.getElementById("answersContainer");
 answers.forEach((a,i)=>{
+  const chosen=a.chosen?a.options[a.chosen-1]:"لم يتم الاختيار";
+  const correct=a.options[a.correct-1];
+  const isOk=(a.chosen==a.correct);
+  const card=document.createElement("div");
+  card.className="ans-card "+(isOk?"correct":"wrong");
+  card.style.animationDelay=`${i*0.04}s`;
+  card.innerHTML=`
+    <div class="ans-header">
+      <div class="ans-num">${i+1}</div>
+      <div class="ans-q">${a.question}</div>
+    </div>
+    ${a.image?`<img src="${a.image}" class="ans-img" onclick="zoomImg('${a.image}')">`:""}
+    <div class="ans-row no"><b>اختيارك:</b> ${a.chosen?"#"+a.chosen+" - "+chosen:"—"}</div>
+    <div class="ans-row ok"><b>الإجابة الصحيحة:</b> #${a.correct} - ${correct}</div>
+    <div class="ans-verdict ${isOk?"ok":"no"}">${isOk?"✅ إجابة صحيحة":"❌ إجابة خاطئة"}</div>`;
+  container.appendChild(card);
+});
 
-let chosenText = a.chosen ? a.options[a.chosen-1] : "لم يتم اختيار"
-let correctText = a.options[a.correct-1]
-let isCorrect = a.chosen == a.correct
-
-let html=`
-<div class="card">
-
-<div class="question-box">
-
-<div class="question-text">
-<b>س${i+1}:</b> ${a.question}
-</div>
-`
-
-// 📸 صورة (لو موجودة)
-if(a.image){
-html+=`
-<div class="img-container">
-<img src="${a.image}" class="question-img" onclick="openImage('${a.image}')">
-<div class="fullscreen-icon" onclick="openImage('${a.image}')"></div>
-</div>
-`
-}
-
-html+=`</div>
-
-<p class="${isCorrect ? 'correct' : 'wrong'}">
-اختيارك: ${a.chosen ? a.chosen : "—"} (${chosenText})
-</p>
-
-<p class="correct">
-الإجابة الصحيحة: ${a.correct} (${correctText})
-</p>
-
-<p>
-${isCorrect ? "✔ إجابة صحيحة" : "❌ إجابة خاطئة"}
-</p>
-
-</div>
-`
-
-container.innerHTML+=html
-
-})
-
-// 🔍 فتح الصورة
-function openImage(src){
-const modal=document.getElementById("imageModal")
-const img=document.getElementById("modalImg")
-
-img.src=src
-modal.style.display="flex"
-}
-
-// ❌ غلق
-function closeImage(){
-document.getElementById("imageModal").style.display="none"
-}
-
-function goBack(){
-window.location="quiz_list.html"
-}</script>
-
+/* PARTICLES */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let w,h;
+function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
+resize();window.addEventListener("resize",resize);
+const P=[];for(let i=0;i<80;i++)P.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*2.2+.5,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
+function animate(){ctx.clearRect(0,0,w,h);for(let p of P){p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=document.body.classList.contains("dark")?"rgba(167,139,250,.35)":"rgba(124,58,237,.25)";ctx.fill();}requestAnimationFrame(animate);}
+animate();
+</script>
 </body>
 </html>
-
