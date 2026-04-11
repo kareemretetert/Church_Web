@@ -2,15 +2,349 @@
 <html dir="rtl" lang="ar">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="author" content="Kareem Hosny"/>
-<meta name="keywords" content="كريم حسني, كنيسة, العزية, اجتماع ثانوي"/>
-<meta name="description" content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="Kareem Hosny" name="author"/>
+<meta content="كريم حسني, كنيسة, العزية, اجتماع ثانوي" name="keywords"/>
+<meta content="الموقع معمول بكل حب لمساعدة وخدمة الكنيسة بواسطة كريم حسني" name="description"/>
 <title>كنيسة السيدة العذراء مريم بالعزية</title>
 <link href="imgsfile/icon.png" rel="icon" type="image/x-icon"/>
+<link href="https://cdn.plyr.io/3.7.8/plyr.css" rel="stylesheet"/>
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#7c3aed">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  :root {
+    --primary: #5b21b6;
+    --primary-dark: #3b0764;
+    --primary-mid: #7c3aed;
+    --primary-light: #ede9fe;
+    --primary-lighter: #f5f3ff;
+    --gold: #d97706;
+    --gold-light: #fef3c7;
+    --text-dark: #1e1b4b;
+    --text-mid: #4c1d95;
+    --text-muted: #6b7280;
+    --white: #ffffff;
+    --surface: #f9f7ff;
+    --border: rgba(124, 58, 237, 0.15);
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Cairo', sans-serif;
+    background-color: var(--surface);
+    color: var(--text-dark);
+    direction: rtl;
+    display: flex;
+    flex-direction: column;
+  }
+
+  ::selection {
+    background-color: #c4b5fd;
+    color: var(--primary-dark);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 60%, var(--primary-mid) 100%);
+    color: var(--white);
+    padding: 40px 24px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .header-inner {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .header-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #e9d5ff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 5px 16px;
+    border-radius: 100px;
+    margin-bottom: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .main-title {
+    font-size: clamp(1.8rem, 5vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 12px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+
+  .intro-text {
+    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    color: #ddd6fe;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  /* ── NAV ── */
+  .nav-bar {
+    background: var(--primary-dark);
+    padding: 0 16px;
+    border-bottom: 2px solid var(--gold);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+
+  .nav-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 8px 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .nav-list li a {
+    color: #e9d5ff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 8px;
+    display: block;
+    transition: background 0.2s, color 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-list li a:hover {
+    background: var(--primary-mid);
+    color: var(--white);
+  }
+
+  /* ── MAIN ── */
+  .main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 20px 56px;
+    gap: 36px;
+  }
+
+  /* ── VERSE BOX ── */
+  .verse-container {
+    width: 100%;
+    max-width: 640px;
+  }
+
+  .verse-box {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px 28px;
+    text-align: center;
+    box-shadow: 0 4px 24px rgba(91, 33, 182, 0.08);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .verse-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-mid), var(--gold));
+    border-radius: 20px 20px 0 0;
+  }
+
+  .verse-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--primary-lighter);
+    color: var(--primary-mid);
+    font-size: 13px;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: 100px;
+    margin-bottom: 18px;
+    border: 1px solid rgba(124, 58, 237, 0.2);
+  }
+
+  .verse-label::before {
+    content: '✦';
+    font-size: 10px;
+  }
+
+  #versePreview {
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--text-dark);
+    line-height: 1.9;
+    font-weight: 600;
+  }
+
+  /* ── CHURCH IMAGE ── */
+  .church-image-wrapper {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .church-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    display: block;
+    box-shadow: 0 8px 32px rgba(91, 33, 182, 0.12);
+    border: 3px solid var(--white);
+    outline: 1px solid var(--border);
+  }
+
+  /* ── QUICK LINKS GRID ── */
+  .quick-links {
+    width: 100%;
+    max-width: 720px;
+  }
+
+  .quick-links-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 16px;
+  }
+
+  .links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+  }
+
+  .link-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-dark);
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.4;
+  }
+
+  .link-card:hover {
+    background: var(--primary-lighter);
+    border-color: var(--primary-mid);
+    transform: translateY(-2px);
+    color: var(--primary-dark);
+  }
+
+  .link-card .icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--primary-lighter);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .link-card:hover .icon {
+    background: rgba(124,58,237,0.15);
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--primary-dark);
+    color: #c4b5fd;
+    text-align: center;
+    padding: 20px 16px;
+    font-size: 14px;
+    border-top: 2px solid var(--gold);
+  }
+
+  .kareem {
+    color: var(--gold-light);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .kareem:hover {
+    color: var(--white);
+  }
+
+  /* ── ANIMATIONS ── */
+  .tip-animation {
+    opacity: 0;
+    transform: translateY(-24px);
+    animation: boxFadeDown 0.7s ease forwards;
+  }
+
+  @keyframes boxFadeDown {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .typing-cursor::after {
+    content: "|";
+    animation: blink 1s infinite;
+    margin-right: 3px;
+    color: var(--primary-mid);
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .nav-list li a {
+      font-size: 13px;
+      padding: 6px 10px;
+    }
+
+    .verse-box {
+      padding: 24px 18px;
+    }
+
+    .links-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+
 <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 <script>
   window.OneSignalDeferred = window.OneSignalDeferred || [];
@@ -18,345 +352,169 @@
     await OneSignal.init({ appId: "58df6100-50a7-4bf8-905e-0bdc8bb80470" });
   });
 </script>
-<style>
-/* ═══ TOKENS ═══ */
-:root{
-  --p:#7c3aed;--p-dk:#5b21b6;--p-lt:#a78bfa;
-  --bg:#f4f0fb;--sf:#fff;--sf2:#f1ecfc;
-  --tx:#0f172a;--tx2:#374151;--tx3:#6b7280;
-  --bdr:#e2e8f0;
-  --sh:0 4px 20px rgba(109,40,217,.10);
-  --sh2:0 8px 32px rgba(109,40,217,.18);
-  --shdr:0 6px 24px rgba(109,40,217,.25);
-  --hdr1:#7c3aed;--hdr2:#9333ea;--hdr3:#5b21b6;
-}
-body.dark{
-  --bg:#0d0d1a;--sf:#161627;--sf2:#1e1e33;
-  --tx:#f0f0ff;--tx2:#c4c4e0;--tx3:#8888aa;
-  --bdr:#2a2a44;
-  --sh:0 4px 24px rgba(0,0,0,.5);
-  --sh2:0 8px 40px rgba(0,0,0,.6);
-  --shdr:0 6px 24px rgba(0,0,0,.6);
-  --hdr1:#0f172a;--hdr2:#1e1b4b;--hdr3:#020617;
-}
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:'Cairo',sans-serif;
-  background:var(--bg);color:var(--tx);
-  min-height:100vh;overflow-x:hidden;
-  transition:background .3s,color .3s;
-  display:flex;flex-direction:column;
-}
-::selection{background:rgba(124,58,237,.2);color:var(--tx);}
-
-/* PARTICLES */
-#particles{position:fixed;inset:0;width:100%;height:100%;z-index:-10;pointer-events:none;}
-body::before{
-  content:"";position:fixed;inset:0;
-  background:
-    radial-gradient(circle at 20% 20%,rgba(124,58,237,.12),transparent 40%),
-    radial-gradient(circle at 80% 30%,rgba(59,130,246,.10),transparent 45%),
-    radial-gradient(circle at 50% 80%,rgba(236,72,153,.08),transparent 50%);
-  z-index:-20;
-}
-
-/* ═══ HEADER ═══ */
-header{
-  background:linear-gradient(135deg,var(--hdr1),var(--hdr2),var(--hdr3));
-  position:sticky;top:0;z-index:300;
-  box-shadow:var(--shdr);overflow:hidden;transition:background .4s;
-}
-header::before{
-  content:"";position:absolute;top:-60px;right:-60px;
-  width:220px;height:220px;border-radius:50%;
-  background:rgba(255,255,255,.05);pointer-events:none;
-}
-.hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;position:relative;}
-.site-title{
-  flex:1;text-align:center;color:#fff;
-  font-size:clamp(15px,3.8vw,22px);font-weight:800;line-height:1.3;
-}
-.site-subtitle{
-  font-size:clamp(11px,2.2vw,13px);
-  font-weight:400;opacity:.8;margin-top:2px;
-}
-.theme-toggle{display:flex;align-items:center;flex-shrink:0;}
-.toggle-track{
-  width:64px;height:32px;border-radius:50px;background:#1e293b;
-  position:relative;display:flex;align-items:center;padding:0 5px;cursor:pointer;
-  border:1.5px solid rgba(255,255,255,.3);transition:background .3s;
-  -webkit-tap-highlight-color:transparent;
-}
-.t-icon{font-size:14px;z-index:1;line-height:1;}
-.t-sun{color:#facc15;margin-left:auto;}
-.t-moon{color:#e2e8f0;margin-right:auto;}
-.toggle-thumb{
-  position:absolute;width:24px;height:24px;border-radius:50%;
-  background:#fff;right:3px;
-  transition:transform .3s cubic-bezier(.4,2,.6,1),background .3s;
-  box-shadow:0 2px 8px rgba(0,0,0,.25);
-}
-body.dark .toggle-track{background:rgba(109,40,217,.5);}
-body.dark .toggle-thumb{transform:translateX(-32px);background:var(--p-lt);}
-
-/* ═══ NAV ═══ */
-nav{
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(255,255,255,.12);
-  position:sticky;top:62px;z-index:200;
-}
-.nav-list{
-  display:flex;flex-wrap:wrap;justify-content:center;
-  gap:6px;padding:10px 12px;list-style:none;
-  max-width:1200px;margin:0 auto;
-}
-.nav-list li a{
-  display:block;padding:7px 14px;border-radius:20px;
-  color:#fff;text-decoration:none;font-size:13px;font-weight:700;
-  background:rgba(255,255,255,.12);
-  border:1px solid rgba(255,255,255,.18);
-  transition:background .2s,transform .15s;
-  -webkit-tap-highlight-color:transparent;
-}
-.nav-list li a:hover{background:rgba(255,255,255,.25);transform:translateY(-1px);}
-.nav-list li a:active{transform:scale(.95);}
-
-/* ═══ MAIN ═══ */
-main{flex:1;max-width:820px;width:100%;margin:0 auto;padding:28px 14px 60px;}
-
-/* VERSE BOX */
-.verse-card{
-  background:var(--sf);border-radius:22px;
-  box-shadow:var(--sh);border:1px solid var(--bdr);
-  padding:24px 28px;margin-bottom:24px;text-align:center;
-  animation:fadeDown .7s cubic-bezier(.22,1,.36,1) both;
-}
-.verse-card h2{
-  font-size:14px;font-weight:800;color:var(--p);
-  margin-bottom:14px;letter-spacing:.5px;
-}
-.verse-text{
-  font-size:clamp(15px,3vw,20px);
-  line-height:1.8;color:var(--tx);
-  min-height:48px;
-}
-.typing-cursor::after{content:"|";animation:blink 1s infinite;margin-right:3px;}
-
-/* CHURCH IMAGE */
-.church-img-wrap{text-align:center;margin-bottom:24px;animation:fadeUp .7s .15s both;}
-.church-img{
-  width:min(340px,80vw);border-radius:18px;
-  box-shadow:var(--sh2);border:1px solid var(--bdr);
-  transition:transform .3s,box-shadow .3s;
-}
-.church-img:hover{transform:scale(1.02);box-shadow:var(--sh2);}
-
-/* QUICK LINKS GRID */
-.quick-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
-  gap:12px;animation:fadeUp .6s .2s both;
-}
-.quick-card{
-  background:var(--sf);border-radius:18px;
-  border:1px solid var(--bdr);box-shadow:var(--sh);
-  padding:18px 12px;text-align:center;text-decoration:none;
-  transition:transform .2s,box-shadow .2s;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-}
-.quick-card:hover{transform:translateY(-4px);box-shadow:var(--sh2);}
-.quick-card:active{transform:scale(.96);}
-.quick-ico{font-size:28px;line-height:1;}
-.quick-lbl{font-size:13px;font-weight:700;color:var(--tx);}
-
-/* FOOTER */
-footer{
-  background:var(--sf);border-top:1px solid var(--bdr);
-  text-align:center;padding:16px;
-  font-size:17px;color:var(--tx3);
-}
-footer a{color:var(--p);text-decoration:none;font-weight:700;}
-footer a:hover{text-decoration:underline;}
-
-/* KEYFRAMES */
-@keyframes fadeDown{from{opacity:0;transform:translateY(-22px);}to{opacity:1;transform:translateY(0);}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
-@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
-
-@media(max-width:600px){
-  main{padding:18px 10px 60px;}
-  .nav-list li a{font-size:12px;padding:6px 11px;}
-  .verse-card{padding:18px 16px;}
-  nav{top:58px;}
-}
-</style>
 </head>
 <body>
-<canvas id="particles"></canvas>
 
-<!-- HEADER -->
-<header>
-  <div class="hdr">
-    <div style="width:64px"></div><!-- spacer -->
-    <div class="site-title">
-      كنيسة السيدة العذراء مريم
-      <div class="site-subtitle">الكنيسة دايمًا بتساعد أبناءها ✝️</div>
-    </div>
-    <div class="theme-toggle" onclick="toggleTheme()" title="تبديل الوضع">
-      <div class="toggle-track">
-        <span class="t-icon t-sun">☀️</span>
-        <span class="t-icon t-moon">🌙</span>
-        <div class="toggle-thumb"></div>
-      </div>
-    </div>
+<header class="header">
+  <div class="header-inner">
+    <div class="header-badge">⛪ كنيسة السيدة العذراء مريم بالعزية</div>
+    <h1 class="main-title">أهلاً بكم في بيت الله</h1>
+    <p class="intro-text">
+      الكنيسة دايمًا بتساعد أبناءها، وعشان كده عملنا الموقع ده يساعد في نشر تعاليمها وخدمة شبابها.
+    </p>
   </div>
 </header>
 
-<!-- NAV -->
-<nav>
+<nav class="nav-bar">
   <ul class="nav-list">
     <li><a href="compition.html">🏆 المسابقات</a></li>
     <li><a href="Chapters.html">📖 تفسير الكتاب المقدس</a></li>
-    <li><a href="versescom.html">✝️ آية وتفسير</a></li>
-    <li><a href="musicandword.html">🎵 ترانيم موسيقة وكلمات</a></li>
-    <li><a href="meatingSummrise.html">📋 درس الاجتماع</a></li>
+    <li><a href="versescom.html">✨ آية وتفسير</a></li>
+    <li><a href="musicandword.html">🎵 ترانيم</a></li>
+    <li><a href="meatingSummrise.html">📝 درس الاجتماع</a></li>
     <li><a href="courses_list.html">🎓 الكورسات</a></li>
-    <li><a href="Notices.html">📢 تنبيهات</a></li>
+    <li><a href="Notices.html">🔔 تنبيهات</a></li>
     <li><a href="about.html">🕊️ تاريخ عقيدتنا</a></li>
     <li><a href="defance.html">🛡️ الرد على الشبهات</a></li>
     <li><a href="https://whatsapp.com/channel/0029Vaeyeu58Pgs8cnA0Ki1V" target="_blank">💬 قناة الواتساب</a></li>
   </ul>
 </nav>
 
-<!-- MAIN -->
-<main>
+<main class="main-content">
 
-  <!-- آية اليوم -->
-  <div class="verse-card">
-    <h2>📖 آية اليوم</h2>
-    <div class="verse-text" id="versePreview">جاري التحميل...</div>
+  <div class="verse-container">
+    <div class="verse-box tip-animation">
+      <div class="verse-label">آية اليوم</div>
+      <p id="versePreview">جاري التحميل...</p>
+    </div>
   </div>
 
-  <!-- صورة الكنيسة -->
-  <div class="church-img-wrap">
-    <img class="church-img" src="imgsfile/ke.png" alt="صورة الكنيسة"/>
+  <div class="church-image-wrapper">
+    <img alt="صورة الكنيسة" class="church-image" src="imgsfile/ke.png"/>
   </div>
 
-  <!-- روابط سريعة -->
-  <div class="quick-grid">
-    <a class="quick-card" href="compition.html">
-      <div class="quick-ico">🏆</div>
-      <div class="quick-lbl">المسابقات</div>
-    </a>
-    <a class="quick-card" href="Chapters.html">
-      <div class="quick-ico">📖</div>
-      <div class="quick-lbl">تفسير الكتاب المقدس</div>
-    </a>
-    <a class="quick-card" href="versescom.html">
-      <div class="quick-ico">✝️</div>
-      <div class="quick-lbl">آية وتفسير</div>
-    </a>
-    <a class="quick-card" href="musicandword.html">
-      <div class="quick-ico">🎵</div>
-      <div class="quick-lbl">ترانيم</div>
-    </a>
-    <a class="quick-card" href="meatingSummrise.html">
-      <div class="quick-ico">📋</div>
-      <div class="quick-lbl">درس الاجتماع</div>
-    </a>
-    <a class="quick-card" href="courses_list.html">
-      <div class="quick-ico">🎓</div>
-      <div class="quick-lbl">الكورسات</div>
-    </a>
-    <a class="quick-card" href="Notices.html">
-      <div class="quick-ico">📢</div>
-      <div class="quick-lbl">الإعلانات</div>
-    </a>
-    <a class="quick-card" href="about.html">
-      <div class="quick-ico">🕊️</div>
-      <div class="quick-lbl">تاريخ عقيدتنا</div>
-    </a>
+  <div class="quick-links">
+    <h2 class="quick-links-title">روابط سريعة</h2>
+    <div class="links-grid">
+      <a href="compition.html" class="link-card"><span class="icon">🏆</span>المسابقات</a>
+      <a href="Chapters.html" class="link-card"><span class="icon">📖</span>تفسير الكتاب</a>
+      <a href="versescom.html" class="link-card"><span class="icon">✨</span>آية وتفسير</a>
+      <a href="musicandword.html" class="link-card"><span class="icon">🎵</span>الترانيم</a>
+      <a href="meatingSummrise.html" class="link-card"><span class="icon">📝</span>درس الاجتماع</a>
+      <a href="courses_list.html" class="link-card"><span class="icon">🎓</span>الكورسات</a>
+      <a href="Notices.html" class="link-card"><span class="icon">🔔</span>التنبيهات</a>
+      <a href="about.html" class="link-card"><span class="icon">🕊️</span>تاريخ عقيدتنا</a>
+      <a href="defance.html" class="link-card"><span class="icon">🛡️</span>الرد على الشبهات</a>
+      <a href="https://whatsapp.com/channel/0029Vaeyeu58Pgs8cnA0Ki1V" target="_blank" class="link-card"><span class="icon">💬</span>قناة الواتساب</a>
+    </div>
   </div>
 
 </main>
 
-<footer>
-  <p>Created by:<a href="https://www.facebook.com/profile.php?id=100069476530913&locale=ar_AR" target="_blank">Kareem Hosny</a> ❤️</p>
+<footer class="footer">
+  <p>تم الإنشاء بواسطة: <a class="kareem" href="https://www.facebook.com/profile.php?id=100069476530913&locale=ar_AR" target="_blank">Kareem Hosny</a> — بكل حب لخدمة الكنيسة 🤍</p>
 </footer>
 
+<script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
 <script>
-/* ═══ THEME ═══ */
-(function(){
-  const s=localStorage.getItem("cv_theme");
-  const d=window.matchMedia("(prefers-color-scheme:dark)").matches;
-  applyTheme(s||(d?"dark":"light"));
-})();
-function applyTheme(m){document.body.classList.toggle("dark",m==="dark");localStorage.setItem("cv_theme",m);}
-function toggleTheme(){applyTheme(document.body.classList.contains("dark")?"light":"dark");}
+  const verses = [
+    "الرَّبُّ نُورِي وَخَلاَصِي، مِمَّنْ أَخَافُ؟ (مزمور 27:1)",
+    "الله مَحَبَّة، وَمَنْ يَثْبُتْ فِي الْمَحَبَّةِ، يَثْبُتْ فِي اللهِ، وَاللهُ فِيهِ. (1 يوحنا 4:16)",
+    "أَلقِ عَلَى الرَّبِّ هَمَّكَ، وَهُوَ يَعُولُكَ. (مزمور 55:22)",
+    "طُوبَى لِلرُّحَمَاءِ، لأَنَّهُمْ يُرْحَمُونَ. (متى 5:7)",
+    "كُلَّمَا خِفْتُ، فَإِنِّي عَلَيْكَ أَتَّكِلُ. (مزمور 56:3)",
+    "مَا أَجْمَلَ عَلَى الْجِبَالِ قَدَمَيْ الْمُبَشِّرِ بِالسَّلاَمِ. (إشعياء 52:7)",
+    "طُوبَى لِصَانِعِي السَّلاَمِ، لأَنَّهُمْ يُدْعَوْنَ أَبْنَاءَ اللهِ. (متى 5:9)",
+    "فِي الْهُدُوءِ وَالطُّمَأْنِينَةِ تَكُونُ قُوَّتُكُمْ. (إشعياء 30:15)",
+    "كُونُوا لُطَفَاءَ بَعْضُكُمْ نَحْوَ بَعْضٍ، شَفُوقِينَ، مُتَسَامِحِينَ. (أفسس 4:32)",
+    "الْمَحَبَّةُ تَسْتُرُ كَثِيرًا مِنَ الْخَطَايَا. (أمثال 10:12)",
+    "الرَّبُّ قَرِيبٌ لِكُلِّ مَنْ يَدْعُوهُ. (مزمور 145:18)",
+    "كَلِمَتُكَ سِرَاجٌ لِرِجْلِي وَنُورٌ لِسَبِيلِي. (مزمور 119:105)",
+    "اِفْرَحُوا فِي الرَّبِّ كُلَّ حِينٍ. (فيلبي 4:4)",
+    "اِسْهَرُوا وَصَلُّوا لِئَلَّا تَدْخُلُوا فِي تَجْرِبَةٍ. (متى 26:41)",
+    "ثِقُوا: أَنَا قَدْ غَلَبْتُ الْعَالَمَ. (يوحنا 16:33)",
+    "الْرَبُّ رَاعِيَّ فَلَا يُعْوِزُنِي شَيْءٌ. (مزمور 23:1)",
+    "مَنْ يَسْتَمِعْ لِي يَسْكُنْ آمِنًا وَيَسْتَرِيحُ مِنْ خَوْفِ الشَّرِّ. (أمثال 1:33)",
+    "الْمُحْتَمِي بِالرَّبِّ هُوَ مِثْلُ جَبَلِ صِهْيَوْنَ. (مزمور 125:1)",
+    "الرَّبُّ صِرَاخِي سَيَسْمَعُ. (مزمور 5:3)",
+    "الرَّبُّ قُوَّتِي وَتَرْنِيمَتِي. (مزمور 118:14)",
+    "لَا تُغْلَبْ مِنَ الشَّرِّ، بَلِ اغْلِبِ الشَّرَّ بِالْخَيْرِ. (رومية 12:21)",
+    "مَحَبَّةٌ أَبَدِيَّةٌ أَحْبَبْتُكِ، مِنْ أَجْلِ ذَلِكَ أَدَمْتُ لَكِ الرَّحْمَةَ. (إرميا 31:3)",
+    "فَإِنَّ اللهَ لَمْ يُعْطِنَا رُوحَ الْفَشَلِ، بَلْ رُوحَ الْقُوَّةِ وَالْمَحَبَّةِ وَالنُّصْحِ. (2 تيموثاوس 1:7)",
+    "مَنْ يَثْبُتْ إِلَى الْمُنْتَهَى فَهذَا يَخْلُصُ. (متى 24:13)",
+    "الرَّبُّ صَالِحٌ، مَلْجَأٌ فِي يَوْمِ الضِّيقِ. (ناحوم 1:7)",
+    "الْقَائِلُ: لَا أَهْمِلُكَ وَلَا أَتْرُكُكَ. (عبرانيين 13:5)",
+    "طُوبَى لِلْبَاكِينَ، لِأَنَّهُمْ يَتَعَزَّوْنَ. (متى 5:4)",
+    "الرَّبُّ حَنَّانٌ وَرَحِيمٌ، طَوِيلُ الرُّوحِ وَكَثِيرُ الرَّحْمَةِ. (مزمور 145:8)",
+    "لأَنَّهُ يُنَجِّيكَ مِنْ فَخِّ الصَّيَّادِ، وَمِنَ الْوَبَإِ الْخَطِرِ. (مزمور 91:3)",
+    "يَسُوعُ الْمَسِيحُ هُوَ هُوَ أَمْسًا وَالْيَوْمَ وَإِلَى الْأَبَدِ. (عبرانيين 13:8)",
+    "الْمَحَبَّةُ لَا تَسْقُطُ أَبَدًا. (1 كورنثوس 13:8)",
+    "كَمَا رَحِمَكُمُ الرَّبُّ، افْعَلُوا أَنْتُمْ أَيْضًا هكَذَا. (كولوسي 3:13)",
+    "بِالرَّأْفَاتِ وَالْمَرَاحِمِ أَرْجِعُكِ. (إرميا 31:20)",
+    "وَالرَّبُّ يُنْقِذُنِي مِنْ كُلِّ عَمَلٍ شِرِّيرٍ. (2 تيموثاوس 4:18)",
+    "لأَنَّ الرَّبَّ يُعْطِي حِكْمَةً، وَمِنْ فَمِهِ الْمَعْرِفَةُ وَالْفَهْمُ. (أمثال 2:6)",
+    "الرَّبُّ قَرِيبٌ لِمُنْكَسِرِي الْقَلْبِ. (مزمور 34:18)",
+    "الَّذِي يَسْكُنُ فِي سِتْرِ الْعَلِيِّ، فِي ظِلِّ الْقَدِيرِ يَبِيتُ. (مزمور 91:1)",
+    "تَشَدَّدْ وَتَشَجَّعْ، لِأَنَّ الرَّبَّ إِلهَكَ مَعَكَ أَيْنَمَا تَذْهَبُ. (يشوع 1:9)",
+    "الرَّبُّ عَاضِدٌ لِكُلِّ السَّاقِطِينَ، وَمُقِيمٌ كُلَّ الْمُنْحَنِينَ. (مزمور 145:14)",
+    "الرَّبُّ صَالِحٌ لِلْكُلِّ، وَمَرَاحِمُهُ عَلَى كُلِّ أَعْمَالِهِ. (مزمور 145:9)",
+    "طُوبَى لِلْجِيَاعِ وَالْعِطَاشِ إِلَى الْبِرِّ، لِأَنَّهُمْ يُشْبَعُونَ. (متى 5:6)",
+    "بِمَحَبَّةٍ أَبَدِيَّةٍ أَحْبَبْتُكِ. (إرميا 31:3)"
+  ];
 
-/* ═══ VERSE OF THE DAY ═══ */
-const verses=[
-  "الرَّبُّ نُورِي وَخَلاَصِي، مِمَّنْ أَخَافُ؟ (مزمور 27:1)",
-  "الله مَحَبَّة، وَمَنْ يَثْبُتْ فِي الْمَحَبَّةِ، يَثْبُتْ فِي اللهِ، وَاللهُ فِيهِ. (1 يوحنا 4:16)",
-  "أَلقِ عَلَى الرَّبِّ هَمَّكَ، وَهُوَ يَعُولُكَ. (مزمور 55:22)",
-  "طُوبَى لِلرُّحَمَاءِ، لأَنَّهُمْ يُرْحَمُونَ. (متى 5:7)",
-  "كُلَّمَا خِفْتُ، فَإِنِّي عَلَيْكَ أَتَّكِلُ. (مزمور 56:3)",
-  "طُوبَى لِصَانِعِي السَّلاَمِ، لأَنَّهُمْ يُدْعَوْنَ أَبْنَاءَ اللهِ. (متى 5:9)",
-  "فِي الْهُدُوءِ وَالطُّمَأْنِينَةِ تَكُونُ قُوَّتُكُمْ. (إشعياء 30:15)",
-  "كُونُوا لُطَفَاءَ بَعْضُكُمْ نَحْوَ بَعْضٍ، شَفُوقِينَ، مُتَسَامِحِينَ. (أفسس 4:32)",
-  "الْمَحَبَّةُ تَسْتُرُ كَثِيرًا مِنَ الْخَطَايَا. (أمثال 10:12)",
-  "الرَّبُّ قَرِيبٌ لِكُلِّ مَنْ يَدْعُوهُ. (مزمور 145:18)",
-  "كَلِمَتُكَ سِرَاجٌ لِرِجْلِي وَنُورٌ لِسَبِيلِي. (مزمور 119:105)",
-  "اِفْرَحُوا فِي الرَّبِّ كُلَّ حِينٍ. (فيلبي 4:4)",
-  "اِسْهَرُوا وَصَلُّوا لِئَلَّا تَدْخُلُوا فِي تَجْرِبَةٍ. (متى 26:41)",
-  "ثِقُوا: أَنَا قَدْ غَلَبْتُ الْعَالَمَ. (يوحنا 16:33)",
-  "الْرَبُّ رَاعِيَّ فَلَا يُعْوِزُنِي شَيْءٌ. (مزمور 23:1)",
-  "تَشَدَّدْ وَتَشَجَّعْ. لَا تَرْهَبْ وَلَا تَرْتَعِبْ، لِأَنَّ الرَّبَّ إِلهَكَ مَعَكَ. (يشوع 1:9)",
-  "لَا تُغْلَبْ مِنَ الشَّرِّ، بَلِ اغْلِبِ الشَّرَّ بِالْخَيْرِ. (رومية 12:21)",
-  "فَإِنَّ اللهَ لَمْ يُعْطِنَا رُوحَ الْفَشَلِ، بَلْ رُوحَ الْقُوَّةِ وَالْمَحَبَّةِ وَالنُّصْحِ. (2 تيموثاوس 1:7)",
-  "مَنْ يَثْبُتْ إِلَى الْمُنْتَهَى فَهذَا يَخْلُصُ. (متى 24:13)",
-  "الرَّبُّ قَرِيبٌ لِمُنْكَسِرِي الْقَلْبِ، وَيُخَلِّصُ الْمُنْسَحِقِي الرُّوحِ. (مزمور 34:18)",
-  "يَسُوعُ الْمَسِيحُ هُوَ هُوَ أَمْسًا وَالْيَوْمَ وَإِلَى الْأَبَدِ. (عبرانيين 13:8)",
-  "الْمَحَبَّةُ لَا تَسْقُطُ أَبَدًا. (1 كورنثوس 13:8)",
-  "الرَّبُّ صَالِحٌ لِلْكُلِّ، وَمَرَاحِمُهُ عَلَى كُلِّ أَعْمَالِهِ. (مزمور 145:9)",
-  "بِمَحَبَّةٍ أَبَدِيَّةٍ أَحْبَبْتُكِ. (إرميا 31:3)",
-  "الَّذِي يَسْكُنُ فِي سِتْرِ الْعَلِيِّ، فِي ظِلِّ الْقَدِيرِ يَبِيتُ. (مزمور 91:1)",
-  "الرَّبُّ صَالِحٌ، مَلْجَأٌ فِي يَوْمِ الضِّيقِ. (ناحوم 1:7)",
-  "الرَّبُّ عَاضِدٌ لِكُلِّ السَّاقِطِينَ، وَمُقِيمٌ كُلَّ الْمُنْحَنِينَ. (مزمور 145:14)",
-  "لأَنَّ الرَّبَّ يُعْطِي حِكْمَةً، وَمِنْ فَمِهِ الْمَعْرِفَةُ وَالْفَهْمُ. (أمثال 2:6)",
-];
+  function getShuffledIndexes(seed, length) {
+    const random = mulberry32(seed);
+    const arr = Array.from({ length }, (_, i) => i);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
 
-function mulberry32(a){return function(){var t=(a+=0x6d2b79f5);t=Math.imul(t^(t>>>15),t|1);t^=t+Math.imul(t^(t>>>7),t|61);return((t^(t>>>14))>>>0)/4294967296;};}
-function getShuffledIndexes(seed,length){const random=mulberry32(seed);const arr=Array.from({length},(_,i)=>i);for(let i=arr.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+  function mulberry32(a) {
+    return function () {
+      var t = (a += 0x6d2b79f5);
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
 
-function displayVerse(){
-  const now=new Date(),start=new Date("2024-01-01");
-  const days=Math.floor((now-start)/(1000*60*60*24));
-  const round=Math.floor(days/verses.length),dayIdx=days%verses.length;
-  const shuffled=getShuffledIndexes(round,verses.length);
-  const verse=verses[shuffled[dayIdx]];
-  const el=document.getElementById("versePreview");
-  el.classList.add("typing-cursor");el.textContent="";
-  let i=0;
-  function type(){if(i<verse.length){el.textContent+=verse[i++];setTimeout(type,28);}else{el.classList.remove("typing-cursor");}}
-  type();
-}
-displayVerse();
+  function displayVersePreview() {
+    const now = new Date();
+    const startDate = new Date("2024-01-01");
+    const daysPassed = Math.floor((now - startDate) / (1000 * 60 * 60 * 24));
+    const round = Math.floor(daysPassed / verses.length);
+    const dayIndex = daysPassed % verses.length;
+    const shuffledIndexes = getShuffledIndexes(round, verses.length);
+    const verse = verses[shuffledIndexes[dayIndex]];
 
-/* ═══ PARTICLES ═══ */
-const canvas=document.getElementById("particles");
-const ctx=canvas.getContext("2d");
-let w,h;
-function resize(){w=canvas.width=window.innerWidth;h=canvas.height=window.innerHeight;}
-resize();window.addEventListener("resize",resize);
-const P=[];for(let i=0;i<80;i++)P.push({x:Math.random()*window.innerWidth,y:Math.random()*window.innerHeight,r:Math.random()*2.2+.5,dx:(Math.random()-.5)*.6,dy:(Math.random()-.5)*.6});
-function animate(){ctx.clearRect(0,0,w,h);for(let p of P){p.x+=p.dx;p.y+=p.dy;if(p.x>w)p.x=0;if(p.x<0)p.x=w;if(p.y>h)p.y=0;if(p.y<0)p.y=h;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=document.body.classList.contains("dark")?"rgba(167,139,250,.35)":"rgba(124,58,237,.25)";ctx.fill();}requestAnimationFrame(animate);}
-animate();
+    const element = document.getElementById("versePreview");
+    element.classList.add("typing-cursor");
+    element.innerText = "";
 
-/* SERVICE WORKER */
-if("serviceWorker" in navigator){navigator.serviceWorker.register("/sw.js").then(()=>console.log("SW Registered"));}
+    let i = 0;
+    function typeWriter() {
+      if (i < verse.length) {
+        element.textContent += verse[i];
+        i++;
+        setTimeout(typeWriter, 30);
+      } else {
+        element.classList.remove("typing-cursor");
+      }
+    }
+    typeWriter();
+  }
+
+  displayVersePreview();
+</script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js")
+      .then(() => console.log("Service Worker Registered"));
+  }
 </script>
 </body>
 </html>
