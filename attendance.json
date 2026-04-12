@@ -92,6 +92,19 @@
           "status": "absent"
         }
       ]
+    },
+    {
+      "id": "mnvhck4i0ee7",
+      "classId": "mntflxjtf8sv",
+      "date": "2026-04-12",
+      "day": "الأحد",
+      "records": [
+        {
+          "memberId": "mntfm6y1k3zn",
+          "memberName": "fhgfhgfhfh",
+          "status": "present"
+        }
+      ]
     }
   ]
 }
