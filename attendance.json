@@ -71,7 +71,20 @@
       ]
     },
     {
-      "id": "mnvhbi177qm6",
+      "id": "mnvhck4i0ee7",
+      "classId": "mntflxjtf8sv",
+      "date": "2026-04-12",
+      "day": "الأحد",
+      "records": [
+        {
+          "memberId": "mntfm6y1k3zn",
+          "memberName": "fhgfhgfhfh",
+          "status": "present"
+        }
+      ]
+    },
+    {
+      "id": "mnvn8c8qstw4",
       "classId": "mntflmex8w6j",
       "date": "2026-04-12",
       "day": "الأحد",
@@ -84,25 +97,12 @@
         {
           "memberId": "mntfmexde6a9",
           "memberName": "fghfghfgh",
-          "status": "absent"
+          "status": "present"
         },
         {
           "memberId": "mntfmiiqjgf3",
           "memberName": "fghfghfgh",
           "status": "absent"
-        }
-      ]
-    },
-    {
-      "id": "mnvhck4i0ee7",
-      "classId": "mntflxjtf8sv",
-      "date": "2026-04-12",
-      "day": "الأحد",
-      "records": [
-        {
-          "memberId": "mntfm6y1k3zn",
-          "memberName": "fhgfhgfhfh",
-          "status": "present"
         }
       ]
     }
