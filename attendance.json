@@ -69,6 +69,29 @@
           "status": "present"
         }
       ]
+    },
+    {
+      "id": "mnvhbi177qm6",
+      "classId": "mntflmex8w6j",
+      "date": "2026-04-12",
+      "day": "الأحد",
+      "records": [
+        {
+          "memberId": "mntfm369i9gt",
+          "memberName": "fghgfh",
+          "status": "present"
+        },
+        {
+          "memberId": "mntfmexde6a9",
+          "memberName": "fghfghfgh",
+          "status": "absent"
+        },
+        {
+          "memberId": "mntfmiiqjgf3",
+          "memberName": "fghfghfgh",
+          "status": "absent"
+        }
+      ]
     }
   ]
 }
