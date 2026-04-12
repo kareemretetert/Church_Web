@@ -7,6 +7,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<script>
+// Arabic text reshaper/bidi for jsPDF
+function fixAr(text){
+  if(!text) return "";
+  // Reverse words for RTL rendering in PDF
+  return text.split(" ").reverse().join(" ");
+}
+</script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
@@ -241,7 +249,7 @@ tr:hover td{background:rgba(255,255,255,1);}
     <div style="font-size:3rem;margin-bottom:10px;">&#128272;</div>
     <h2 style="color:#fff;font-size:1.4rem;font-weight:900;margin-bottom:6px;">&#1604;&#1608;&#1581;&#1577; &#1575;&#1604;&#1581;&#1590;&#1608;&#1585; &#1608;&#1575;&#1604;&#1594;&#1610;&#1575;&#1576;</h2>
     <p style="color:#dde;font-size:.9rem;margin-bottom:24px;">&#1575;&#1604;&#1585;&#1580;&#1575;&#1569; &#1573;&#1583;&#1582;&#1575;&#1604; &#1603;&#1604;&#1605;&#1577; &#1575;&#1604;&#1605;&#1585;&#1608;&#1585;</p>
-    <input id="pwd-input" type="password" placeholder="كلمة المرور..." style="text-align:center;font-size:1.1rem;letter-spacing:4px;margin-bottom:0;">
+    <input id="pwd-input" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="كلمة المرور..." style="text-align:center;font-size:1.1rem;letter-spacing:4px;margin-bottom:0;-webkit-text-security:disc;">
     <div id="pwd-error" style="display:none;color:#ff6b6b;font-size:.88rem;font-weight:700;margin-top:10px;">&#10060; كلمة المرور غلط، حاول تاني</div>
     <button onclick="checkPassword()" style="width:100%;margin-top:16px;padding:14px;border:none;border-radius:15px;cursor:pointer;font-size:16px;font-weight:800;font-family:Tajawal,Tahoma;background:linear-gradient(135deg,#00c6ff,#0072ff);color:#fff;transition:.25s;">دخول &#8592;</button>
   </div>
@@ -697,9 +705,11 @@ function saveSession(classId){
 // ===================================================
 function renderHistory(){
   const sel=document.getElementById("histFilter");
+  const prevVal = sel.value;
   // populate
   sel.innerHTML='<option value="">كل الفصول</option>'+
     db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  if(prevVal) sel.value = prevVal;
 
   const filter=sel.value;
   let sessions=[...db.sessions];
@@ -765,8 +775,11 @@ function setRptSort(val,btn){
 
 function renderReport(){
   const sel=document.getElementById("rptClassSel");
+  const prevVal = sel.value; // preserve current selection
   sel.innerHTML='<option value="">اختر فصلاً</option>'+
     db.classes.map(c=>`<option value="${c.id}">${c.name}</option>`).join("");
+  // restore previous selection
+  if(prevVal) sel.value = prevVal;
   const classId=sel.value;
   const el=document.getElementById("rptContent");
   if(!classId){el.innerHTML='<p class="empty">اختر فصلاً لعرض التقرير</p>';return;}
@@ -820,63 +833,148 @@ function renderReport(){
 }
 
 // ===================================================
-// PDF EXPORT
+// PDF EXPORT — Arabic Support via Canvas rendering
 // ===================================================
+
+// Render Arabic text to canvas then embed as image in PDF
+function buildPdfWithArabic(orientation, callback) {
+  const {jsPDF} = window.jspdf;
+  const doc = new jsPDF({orientation, unit:"mm", format:"a4"});
+  return doc;
+}
+
+// Draw Arabic text properly using a hidden canvas
+function addArabicText(doc, text, x, y, options={}) {
+  // Use canvas to render Arabic text and add as image
+  const canvas = document.createElement("canvas");
+  const fontSize = options.fontSize || 12;
+  const scale = 3; // retina quality
+  canvas.height = Math.ceil(fontSize * scale * 1.4);
+  const ctx = canvas.getContext("2d");
+  ctx.font = `${options.bold?"bold ":""}${fontSize*scale}px Tajawal, Arial`;
+  const metrics = ctx.measureText(text);
+  canvas.width = Math.ceil(metrics.width) + 10;
+  // redraw after resize
+  ctx.font = `${options.bold?"bold ":""}${fontSize*scale}px Tajawal, Arial`;
+  ctx.fillStyle = options.color || "#000000";
+  ctx.textBaseline = "top";
+  ctx.direction = "rtl";
+  ctx.fillText(text, canvas.width - 5, 4);
+  const imgData = canvas.toDataURL("image/png");
+  const widthMm = canvas.width / scale / (96/25.4);
+  const heightMm = canvas.height / scale / (96/25.4);
+  const align = options.align || "left";
+  let drawX = x;
+  if(align === "center") drawX = x - widthMm/2;
+  else if(align === "right") drawX = x - widthMm;
+  doc.addImage(imgData, "PNG", drawX, y - heightMm*0.75, widthMm, heightMm);
+}
+
+// Build autoTable with Arabic names rendered via canvas cells
+function arAutoTable(doc, {startY, head, body, headStyles, alternateRowStyles, columnStyles, margin, colWidths}) {
+  const pageW = doc.internal.pageSize.getWidth();
+  const ml = (margin&&margin.left)||14;
+  const mr = (margin&&margin.right)||14;
+  const tableW = pageW - ml - mr;
+  const cols = head[0].length;
+  
+  // compute column widths
+  let cw = [];
+  if(colWidths) {
+    cw = colWidths;
+  } else {
+    // first col wider if 3+ cols
+    if(cols === 3) cw = [tableW*0.5, tableW*0.25, tableW*0.25];
+    else if(cols === 5) cw = [tableW*0.35, tableW*0.15, tableW*0.15, tableW*0.2, tableW*0.15];
+    else { const w = tableW/cols; cw = Array(cols).fill(w); }
+  }
+  
+  const rowH = 9;
+  const headerH = 10;
+  let y = startY;
+
+  function drawRow(cells, isHeader, rowIndex) {
+    if(y + rowH > doc.internal.pageSize.getHeight() - 15) {
+      doc.addPage();
+      y = 20;
+    }
+    const bg = isHeader ? (headStyles&&headStyles.fillColor||[102,126,234])
+                       : (rowIndex%2===1 && alternateRowStyles ? (alternateRowStyles.fillColor||[245,245,255]) : [255,255,255]);
+    const textColor = isHeader ? "#ffffff" : "#111111";
+    const h = isHeader ? headerH : rowH;
+    
+    let x = ml;
+    cells.forEach((cell,i) => {
+      doc.setFillColor(bg[0],bg[1],bg[2]);
+      doc.rect(x, y, cw[i], h, "F");
+      doc.setDrawColor(200,200,200);
+      doc.rect(x, y, cw[i], h, "S");
+      const cellText = String(cell==null?"":cell);
+      const cx = x + cw[i]/2; // center x
+      addArabicText(doc, cellText, cx, y + h*0.62, {
+        fontSize: isHeader ? 10 : 9,
+        bold: isHeader,
+        color: textColor,
+        align: "center"
+      });
+      x += cw[i];
+    });
+    y += h;
+  }
+
+  head.forEach(row => drawRow(row, true, 0));
+  body.forEach((row,i) => drawRow(row, false, i));
+  
+  doc.lastAutoTable = {finalY: y};
+}
+
 function downloadClassPDF(classId){
-  const {jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:"p",unit:"mm",format:"a4"});
-  const c=db.classes.find(x=>x.id===classId);
+  const doc = buildPdfWithArabic("p");
+  const c = db.classes.find(x=>x.id===classId);
   if(!c) return;
 
   // Title
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(18);
-  doc.text(`Attendance Report - ${c.name}`,105,20,{align:"center"});
-  doc.setFontSize(11);
-  doc.setFont("helvetica","normal");
-  doc.text(`Generated: ${new Date().toLocaleDateString("en-US")} | Total members: ${c.members.length}`,105,28,{align:"center"});
+  addArabicText(doc, `تقرير الحضور والغياب - ${c.name}`, 105, 18, {fontSize:16, bold:true, align:"center"});
+  addArabicText(doc, `تاريخ الإنشاء: ${new Date().toLocaleDateString("ar-EG")} | إجمالي المخدومين: ${c.members.length}`, 105, 26, {fontSize:10, align:"center", color:"#555555"});
 
-  let yOffset=36;
-  const sessions=db.sessions.filter(s=>s.classId===classId).sort((a,b)=>a.date.localeCompare(b.date));
+  let yOffset = 33;
+  const sessions = db.sessions.filter(s=>s.classId===classId).sort((a,b)=>a.date.localeCompare(b.date));
 
   // Summary table
-  const sumRows=c.members.map(m=>{
-    const{p,a}=getMemberStats(m.id,classId);
-    const rate=p+a?Math.round(p/(p+a)*100)+"%" :"—";
-    return[m.name,p,a,p+a,rate];
+  const sumRows = c.members.map(m=>{
+    const{p,a} = getMemberStats(m.id,classId);
+    const rate = p+a ? Math.round(p/(p+a)*100)+"%" : "—";
+    return[m.name, p, a, p+a, rate];
   });
-  doc.autoTable({
-    startY:yOffset,
-    head:[["Name","Present","Absent","Total Sessions","Rate %"]],
-    body:sumRows,
-    styles:{font:"helvetica",fontSize:10,halign:"center"},
-    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
-    alternateRowStyles:{fillColor:[245,245,255]},
-    columnStyles:{0:{halign:"left"}},
+  arAutoTable(doc, {
+    startY: yOffset,
+    head: [["الاسم","حضور","غياب","إجمالي","النسبة"]],
+    body: sumRows,
+    headStyles: {fillColor:[102,126,234]},
+    alternateRowStyles: {fillColor:[245,245,255]},
   });
-  yOffset=doc.lastAutoTable.finalY+12;
+  yOffset = doc.lastAutoTable.finalY + 12;
 
-  // Per-session attendance
+  // Per-session details
   if(sessions.length){
     if(yOffset>240){doc.addPage();yOffset=20;}
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(13);
-    doc.text("Session Details",14,yOffset);
-    yOffset+=6;
+    addArabicText(doc, "تفاصيل الجلسات", 14, yOffset, {fontSize:13, bold:true});
+    yOffset += 6;
 
     sessions.forEach(s=>{
       if(yOffset>250){doc.addPage();yOffset=20;}
-      const rows=s.records.map(r=>[r.memberName,r.status==="present"?"Present":"Absent"]);
-      doc.autoTable({
-        startY:yOffset,
-        head:[[`${s.day} — ${fmtDate(s.date)}  |  Present: ${s.records.filter(r=>r.status==="present").length}  Absent: ${s.records.filter(r=>r.status==="absent").length}`,"Status"]],
-        body:rows,
-        styles:{font:"helvetica",fontSize:9,halign:"center"},
-        headStyles:{fillColor:[67,206,162],textColor:255,fontStyle:"bold"},
-        columnStyles:{0:{halign:"left"}},
-        margin:{left:14,right:14},
+      const pCount = s.records.filter(r=>r.status==="present").length;
+      const aCount = s.records.filter(r=>r.status==="absent").length;
+      const rows = s.records.map(r=>[r.memberName, r.status==="present"?"حضر ✓":"غاب ✗"]);
+      arAutoTable(doc, {
+        startY: yOffset,
+        head: [[`${s.day} — ${fmtDate(s.date)} | حضر: ${pCount}  غاب: ${aCount}`, "الحالة"]],
+        body: rows,
+        headStyles: {fillColor:[67,206,162]},
+        margin: {left:14, right:14},
+        colWidths: [120, 57]
       });
-      yOffset=doc.lastAutoTable.finalY+8;
+      yOffset = doc.lastAutoTable.finalY + 8;
     });
   }
 
@@ -885,75 +983,60 @@ function downloadClassPDF(classId){
 }
 
 function downloadSessionPDF(sessionId){
-  const s=db.sessions.find(x=>x.id===sessionId);
+  const s = db.sessions.find(x=>x.id===sessionId);
   if(!s) return;
-  const c=db.classes.find(x=>x.id===s.classId);
-  const{jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:"p",unit:"mm",format:"a4"});
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(16);
-  doc.text(`Attendance Sheet - ${c?c.name:"Class"}`,105,18,{align:"center"});
-  doc.setFont("helvetica","normal");
-  doc.setFontSize(11);
-  doc.text(`${s.day} — ${fmtDate(s.date)}  |  Present: ${s.records.filter(r=>r.status==="present").length}  Absent: ${s.records.filter(r=>r.status==="absent").length}`,105,26,{align:"center"});
-  doc.autoTable({
-    startY:32,
-    head:[["#","Name","Status"]],
-    body:s.records.map((r,i)=>[i+1,r.memberName,r.status==="present"?"Present ✓":"Absent ✗"]),
-    styles:{font:"helvetica",fontSize:11,halign:"center"},
-    headStyles:{fillColor:[102,126,234],textColor:255,fontStyle:"bold"},
-    alternateRowStyles:{fillColor:[245,245,255]},
-    columnStyles:{0:{cellWidth:15},1:{halign:"left"},2:{halign:"center"}},
-    didDrawCell:(data)=>{
-      if(data.section==="body"&&data.column.index===2){
-        const txt=data.cell.raw;
-        data.cell.styles.textColor=txt.includes("Present")?[21,87,36]:[114,28,36];
-      }
-    }
+  const c = db.classes.find(x=>x.id===s.classId);
+  const doc = buildPdfWithArabic("p");
+
+  addArabicText(doc, `كشف الحضور - ${c?c.name:"الفصل"}`, 105, 16, {fontSize:16, bold:true, align:"center"});
+  const pCount = s.records.filter(r=>r.status==="present").length;
+  const aCount = s.records.filter(r=>r.status==="absent").length;
+  addArabicText(doc, `${s.day} — ${fmtDate(s.date)} | حضر: ${pCount}  غاب: ${aCount}`, 105, 24, {fontSize:10, align:"center", color:"#555555"});
+
+  arAutoTable(doc, {
+    startY: 30,
+    head: [["م","الاسم","الحالة"]],
+    body: s.records.map((r,i)=>[i+1, r.memberName, r.status==="present"?"حضر ✓":"غاب ✗"]),
+    headStyles: {fillColor:[102,126,234]},
+    alternateRowStyles: {fillColor:[245,245,255]},
+    colWidths: [15, 130, 37]
   });
   doc.save(`session_${fmtDate(s.date)}.pdf`);
   toast("📄 تم تنزيل PDF");
 }
 
 function downloadWeeklySheet(classId){
-  const c=db.classes.find(x=>x.id===classId);
+  const c = db.classes.find(x=>x.id===classId);
   if(!c) return;
-  // get sessions from this week
-  const now=new Date();
-  const weekStart=new Date(now);
+  const now = new Date();
+  const weekStart = new Date(now);
   weekStart.setDate(now.getDate()-now.getDay());
-  const weekSessions=db.sessions.filter(s=>{
-    const d=new Date(s.date);
+  const weekSessions = db.sessions.filter(s=>{
+    const d = new Date(s.date);
     return s.classId===classId && d>=weekStart && d<=now;
   }).sort((a,b)=>a.date.localeCompare(b.date));
 
   if(!weekSessions.length){ toast("لا توجد جلسات هذا الأسبوع"); return; }
 
-  const{jsPDF}=window.jspdf;
-  const doc=new jsPDF({orientation:"l",unit:"mm",format:"a4"});
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(15);
-  doc.text(`Weekly Sheet - ${c.name}`,148,14,{align:"center"});
-  doc.setFont("helvetica","normal");
-  doc.setFontSize(10);
-  doc.text(`Week of ${weekStart.toLocaleDateString("en-US")}`,148,21,{align:"center"});
+  const doc = buildPdfWithArabic("l");
+  addArabicText(doc, `الجدول الأسبوعي - ${c.name}`, 148, 12, {fontSize:14, bold:true, align:"center"});
+  addArabicText(doc, `أسبوع: ${weekStart.toLocaleDateString("ar-EG")}`, 148, 20, {fontSize:10, align:"center", color:"#555555"});
 
-  const head=[["#","Name",...weekSessions.map(s=>`${s.day}\n${fmtDate(s.date)}`)]];
-  const body=c.members.map((m,i)=>{
-    const cols=weekSessions.map(s=>{
-      const r=s.records.find(r=>r.memberId===m.id);
-      return r?(r.status==="present"?"✓":"✗"):"—";
+  const pageW = doc.internal.pageSize.getWidth();
+  const tableW = pageW - 28;
+  const fixedW = 10 + 60; // # + name
+  const sessionW = weekSessions.length ? (tableW - fixedW) / weekSessions.length : 30;
+  const colWidths = [10, 60, ...weekSessions.map(()=>sessionW)];
+
+  const head = [["م","الاسم",...weekSessions.map(s=>`${s.day}\n${fmtDate(s.date)}`)]];
+  const body = c.members.map((m,i)=>{
+    const cols = weekSessions.map(s=>{
+      const r = s.records.find(r=>r.memberId===m.id);
+      return r ? (r.status==="present"?"✓":"✗") : "—";
     });
-    return[i+1,m.name,...cols];
+    return[i+1, m.name, ...cols];
   });
-  doc.autoTable({
-    startY:26,
-    head,body,
-    styles:{font:"helvetica",fontSize:10,halign:"center"},
-    headStyles:{fillColor:[118,75,162],textColor:255,fontStyle:"bold"},
-    alternateRowStyles:{fillColor:[245,245,255]},
-    columnStyles:{1:{halign:"left"}},
-  });
+  arAutoTable(doc, {startY:24, head, body, headStyles:{fillColor:[118,75,162]}, alternateRowStyles:{fillColor:[245,245,255]}, colWidths});
   doc.save(`weekly_${c.name}.pdf`);
   toast("📄 تم تنزيل جدول الأسبوع");
 }
